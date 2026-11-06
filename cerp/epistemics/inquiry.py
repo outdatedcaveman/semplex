@@ -42,6 +42,10 @@ DEFAULT_QUERIES = (
 )
 
 
+# Richer measurement set for generation: every effect the protocols can measure.
+EXTENDED_QUERIES = DEFAULT_QUERIES + (("effect", "A", "S1"), ("effect", "A", "S2"))
+
+
 def query_text(q):
     if q[0] == "effect":
         return f"intervening on {q[1]} changes {q[2]}"
@@ -67,7 +71,8 @@ def fmt_do(do):
 # ------------------------------------------------------------------ the loop
 
 def inquire(interface, candidates, *, queries=DEFAULT_QUERIES, n_initial=1500, n_batch=1500,
-            max_rounds=14, alpha=0.05, eig_min=0.003, seed=0, ledger=None, confirm_untested=True):
+            max_rounds=14, alpha=0.05, eig_min=0.003, seed=0, ledger=None, confirm_untested=True,
+            generate_on_refutation=False, max_generations=2):
     rng = random.Random(seed)
     L = ledger or Ledger(prefix="E")
     k = len(candidates)
@@ -88,6 +93,10 @@ def inquire(interface, candidates, *, queries=DEFAULT_QUERIES, n_initial=1500, n
     elim_claims = []
     answers = {}  # q -> claim id
     settled_before = None
+    refuted = []      # structures eliminated so far (generation must not re-propose them)
+    validated = None  # after generation: protocols the generated set has faced on FRESH data
+    generations = 0
+    rep["generations"] = []
 
     for r in range(max_rounds):
         fits = {m.name: em_fit(m, train, rng)[0] for m in alive}
@@ -96,6 +105,8 @@ def inquire(interface, candidates, *, queries=DEFAULT_QUERIES, n_initial=1500, n
         best = max(protocols, key=lambda d: eig[regime_key(d)])
         if eig[regime_key(best)] < eig_min:
             untested = [d for d in protocols if regime_key(d) not in tested]
+            if validated is not None:  # generated after seeing data: re-test on every protocol
+                untested = [d for d in protocols if regime_key(d) not in validated]
             imprecise = _imprecise_arms(train, tested, queries, interface.observables, protocols)
             arms = {regime_key({q[1]: v}) for q in queries if q[0] == "effect" for v in (0, 1)}
             if not alive:  # model-free mode: only arms that measure an effect query are worth running
@@ -106,6 +117,14 @@ def inquire(interface, candidates, *, queries=DEFAULT_QUERIES, n_initial=1500, n
             elif imprecise:
                 best = imprecise[0]  # precision probe: a direct measurement is unresolved
                 why = "precision probe (direct effect estimate cannot yet exclude or confirm the threshold)"
+            elif not alive and generate_on_refutation and generations < max_generations:
+                generations += 1
+                alive, closed_world = _generate(L, interface, train, answers, refuted, rng, rep,
+                                                generations)
+                validated = set()
+                if not alive:
+                    break
+                continue
             else:
                 break
         else:
@@ -151,10 +170,13 @@ def inquire(interface, candidates, *, queries=DEFAULT_QUERIES, n_initial=1500, n
         for k_, v in batch.items():
             train.setdefault(rk, Counter())[k_] += v
         tested.add(rk)
+        if validated is not None:
+            validated.add(rk)
 
         dropped = {m.name for m, _ in new_elims}
         if dropped:
             survivors = [m for m in alive if m.name not in dropped]
+            refuted += [m for m in alive if m.name in dropped]
             ids = sorted({cid for m, cid in new_elims})
             elim_claims += ids
             rev = _revise(L, alive, survivors, ids, answers, settled_before)
@@ -283,6 +305,41 @@ def direct_effect(train, observables, x, y, z):
     d = p1 - p0
     se = math.sqrt(p0 * (1 - p0) / n0 + p1 * (1 - p1) / n1)
     return d, d - z * se, d + z * se
+
+
+def _direct_facts(L, answers):
+    """(x, y, present) for every effect query settled by DIRECT two-arm measurement."""
+    out, ids = [], []
+    for q, cid in answers.items():
+        c = L.claims[cid]
+        if q[0] == "effect" and "[direct" in c.statement and not c.statement.startswith("UNDETERMINED"):
+            out.append((q[1], q[2], c.statement.startswith("YES")))
+            ids.append(cid)
+    return out, ids
+
+
+def _generate(L, interface, train, answers, refuted, rng, rep, generation):
+    from .generate import generate
+
+    facts, fact_ids = _direct_facts(L, answers)
+    faith = L.assumption(
+        f"Faithfulness at resolution 0.05 (generation {generation}): a measured NO-effect means no "
+        "directed causal path", why="needed to turn measured absences into forbidden paths; can fail "
+        "with cancelling paths or effects below the resolution")
+    new, counts = generate(interface.observables, facts, refuted, train, rng)
+    gen = L.derived(
+        f"Ontology generation {generation}: proposed {[m.name for m in new]}",
+        depends_on=fact_ids + [faith.id] if fact_ids else [faith.id], category="ontology-generation",
+        rule="enumerate DAGs (<=1 latent), keep those consistent with directly measured effects and not "
+             "already refuted; order by parameter count (parsimony POLICY); screen on seen data",
+        evidence={"facts": facts, "refuted": [m.name for m in refuted], "counts": counts})
+    rep["generations"].append({"generation": generation, "facts": facts, "counts": counts,
+                               "proposed": [m.name for m in new], "claim": gen.id})
+    rep.setdefault("generated_structures", {}).update({m.name: m for m in new})
+    cw = L.assumption(
+        f"Closed world (generation {generation}): at least one generated ontology is adequate",
+        why=f"generated set {[m.name for m in new]}; provenance {gen.id}")
+    return new, cw
 
 
 def _imprecise_arms(train, tested, queries, observables, protocols, z=3.0, delta=0.05):

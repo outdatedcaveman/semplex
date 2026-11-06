@@ -11,7 +11,7 @@ from cerp.epistemics import inquiry
 from cerp.epistemics.approx_sufficiency import minimal_eps_sufficient
 from cerp.epistemics.bayesnet import distribution, em_fit, loglik
 from cerp.epistemics.inquiry import adequacy_test, inquire
-from cerp.epistemics.ontologies import (CANDIDATES, O1_LATENT_CAUSAL, O2_INDEPENDENT,
+from cerp.epistemics.ontologies import (CANDIDATES, O1_LATENT_CAUSAL, O2_INDEPENDENT, O4_COPY_CHAIN,
                                         O3_LATENT_CONFOUNDED)
 from cerp.epistemics.world import ALL_ACTIONS, WORLDS, Interface
 from cerp.ledger import Ledger, Status
@@ -171,3 +171,42 @@ def test_direct_measurement_survives_collapse_of_every_ontology():
     st, head = answers(rep)["intervening on A changes Y"]
     assert (st, head) == ("EMPIRICALLY-SUPPORTED", "YES")
     assert "no ontology" in rep["answers"]["intervening on A changes Y"]["statement"]
+
+
+# ------------------------------------------------------------ Spike 02b: generation
+
+def test_dag_enumeration_count_matches_known_values():
+    from cerp.epistemics.generate import enumerate_dags
+    assert sum(1 for _ in enumerate_dags(("a", "b", "c", "d"))) == 543       # OEIS A003024
+    assert sum(1 for _ in enumerate_dags(("a", "b", "c"))) == 25
+
+
+def test_generation_respects_measured_facts_and_refutations():
+    from cerp.epistemics.generate import _reach, canon_of_structure, constrained_structures
+    facts = [("A", "Y", True), ("S1", "Y", False)]
+    refuted = {canon_of_structure(O4_COPY_CHAIN)}
+    out, counts = constrained_structures(("A", "S1", "S2", "Y"), facts, refuted)
+    assert counts["after_measured_facts"] < counts["after_hygiene"]
+    for edges, lat in out:
+        assert "Y" in _reach(edges, "A") and "Y" not in _reach(edges, "S1")
+        assert all(sum(a == z for a, _ in edges) >= 2 for z in lat)
+
+
+def test_generation_recovers_a_truth_outside_every_candidate_and_stays_conditional():
+    from cerp.epistemics.generate import canon_of_structure
+    from cerp.epistemics.inquiry import EXTENDED_QUERIES
+    from cerp.epistemics.world import truth
+    rep = inquire(Interface("direct_and_latent", ALL_ACTIONS, seed=11), CANDIDATES, seed=11,
+                  queries=EXTENDED_QUERIES, generate_on_refutation=True, max_rounds=40)
+    true_c = canon_of_structure(truth("direct_and_latent")[0])
+    gs = rep["generated_structures"]
+    assert any(canon_of_structure(gs[n]) == true_c for n in rep["survivors"])
+    L = rep["ledger"]
+    gen = [c for c in L.claims.values() if c.category == "ontology-generation"]
+    assert gen and gen[0].depends_on  # provenance: measured facts + faithfulness premise
+    assert any("Faithfulness" in L.claims[d].statement for d in gen[0].depends_on)
+    # model-derived answers are conditional on the GENERATED closed world, by name
+    for a in rep["answers"].values():
+        if a["status"] == "CONJECTURE":
+            conds = L.effective_warrant(a["claim"]).conditions
+            assert any("generation" in L.claims[c].statement for c in conds)

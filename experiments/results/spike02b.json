@@ -1,0 +1,2386 @@
+{
+ "copy_chain, O4 removed": {
+  "runs": 10,
+  "summary": {
+   "truth proposed": 10,
+   "truth survived validation": 10,
+   "generated set fully refuted": 0,
+   "answer: EMPIRICALLY-SUPPORTED correct": 50,
+   "answer: CONJECTURE correct": 10
+  },
+  "mean_spent": 15000.0,
+  "pruning_example": {
+   "enumerated": 29824,
+   "after_hygiene": 11156,
+   "after_measured_facts": 476,
+   "after_refuted": 476,
+   "screened": 7,
+   "proposed": 3
+  },
+  "rows": [
+   {
+    "seed": 0,
+    "spent": 15000,
+    "survivors": [
+     "G0:A->S1; S1->S2; S1->Y",
+     "G16:A->S1; S1->S2; S1->Y; Y->S2",
+     "G1:A->S1; A->S2; S1->S2; S1->Y"
+    ],
+    "generations": [
+     {
+      "generation": 1,
+      "facts": [
+       [
+        "A",
+        "Y",
+        true
+       ],
+       [
+        "S1",
+        "S2",
+        true
+       ],
+       [
+        "S1",
+        "Y",
+        true
+       ],
+       [
+        "A",
+        "S1",
+        true
+       ],
+       [
+        "A",
+        "S2",
+        true
+       ]
+      ],
+      "counts": {
+       "enumerated": 29824,
+       "after_hygiene": 11156,
+       "after_measured_facts": 476,
+       "after_refuted": 476,
+       "screened": 7,
+       "proposed": 3
+      },
+      "proposed": [
+       "G0:A->S1; S1->S2; S1->Y",
+       "G16:A->S1; S1->S2; S1->Y; Y->S2",
+       "G1:A->S1; A->S2; S1->S2; S1->Y"
+      ],
+      "claim": "E028"
+     }
+    ]
+   },
+   {
+    "seed": 1,
+    "spent": 15000,
+    "survivors": [
+     "G0:A->S1; S1->S2; S1->Y",
+     "G16:A->S1; S1->S2; S1->Y; Y->S2",
+     "G1:A->S1; A->S2; S1->S2; S1->Y"
+    ],
+    "generations": [
+     {
+      "generation": 1,
+      "facts": [
+       [
+        "A",
+        "Y",
+        true
+       ],
+       [
+        "S1",
+        "S2",
+        true
+       ],
+       [
+        "S1",
+        "Y",
+        true
+       ],
+       [
+        "A",
+        "S1",
+        true
+       ],
+       [
+        "A",
+        "S2",
+        true
+       ]
+      ],
+      "counts": {
+       "enumerated": 29824,
+       "after_hygiene": 11156,
+       "after_measured_facts": 476,
+       "after_refuted": 476,
+       "screened": 7,
+       "proposed": 3
+      },
+      "proposed": [
+       "G0:A->S1; S1->S2; S1->Y",
+       "G16:A->S1; S1->S2; S1->Y; Y->S2",
+       "G1:A->S1; A->S2; S1->S2; S1->Y"
+      ],
+      "claim": "E028"
+     }
+    ]
+   },
+   {
+    "seed": 2,
+    "spent": 15000,
+    "survivors": [
+     "G0:A->S1; S1->S2; S1->Y",
+     "G16:A->S1; S1->S2; S1->Y; Y->S2",
+     "G1:A->S1; A->S2; S1->S2; S1->Y"
+    ],
+    "generations": [
+     {
+      "generation": 1,
+      "facts": [
+       [
+        "A",
+        "Y",
+        true
+       ],
+       [
+        "S1",
+        "S2",
+        true
+       ],
+       [
+        "S1",
+        "Y",
+        true
+       ],
+       [
+        "A",
+        "S1",
+        true
+       ],
+       [
+        "A",
+        "S2",
+        true
+       ]
+      ],
+      "counts": {
+       "enumerated": 29824,
+       "after_hygiene": 11156,
+       "after_measured_facts": 476,
+       "after_refuted": 476,
+       "screened": 7,
+       "proposed": 3
+      },
+      "proposed": [
+       "G0:A->S1; S1->S2; S1->Y",
+       "G16:A->S1; S1->S2; S1->Y; Y->S2",
+       "G1:A->S1; A->S2; S1->S2; S1->Y"
+      ],
+      "claim": "E028"
+     }
+    ]
+   },
+   {
+    "seed": 3,
+    "spent": 15000,
+    "survivors": [
+     "G0:A->S1; S1->S2; S1->Y",
+     "G16:A->S1; S1->S2; S1->Y; Y->S2",
+     "G1:A->S1; A->S2; S1->S2; S1->Y"
+    ],
+    "generations": [
+     {
+      "generation": 1,
+      "facts": [
+       [
+        "A",
+        "Y",
+        true
+       ],
+       [
+        "S1",
+        "S2",
+        true
+       ],
+       [
+        "S1",
+        "Y",
+        true
+       ],
+       [
+        "A",
+        "S1",
+        true
+       ],
+       [
+        "A",
+        "S2",
+        true
+       ]
+      ],
+      "counts": {
+       "enumerated": 29824,
+       "after_hygiene": 11156,
+       "after_measured_facts": 476,
+       "after_refuted": 476,
+       "screened": 7,
+       "proposed": 3
+      },
+      "proposed": [
+       "G0:A->S1; S1->S2; S1->Y",
+       "G16:A->S1; S1->S2; S1->Y; Y->S2",
+       "G1:A->S1; A->S2; S1->S2; S1->Y"
+      ],
+      "claim": "E028"
+     }
+    ]
+   },
+   {
+    "seed": 4,
+    "spent": 15000,
+    "survivors": [
+     "G0:A->S1; S1->S2; S1->Y",
+     "G1:A->S1; A->S2; S1->S2; S1->Y"
+    ],
+    "generations": [
+     {
+      "generation": 1,
+      "facts": [
+       [
+        "A",
+        "Y",
+        true
+       ],
+       [
+        "S1",
+        "S2",
+        true
+       ],
+       [
+        "S1",
+        "Y",
+        true
+       ],
+       [
+        "A",
+        "S1",
+        true
+       ],
+       [
+        "A",
+        "S2",
+        true
+       ]
+      ],
+      "counts": {
+       "enumerated": 29824,
+       "after_hygiene": 11156,
+       "after_measured_facts": 476,
+       "after_refuted": 476,
+       "screened": 7,
+       "proposed": 3
+      },
+      "proposed": [
+       "G0:A->S1; S1->S2; S1->Y",
+       "G16:A->S1; S1->S2; S1->Y; Y->S2",
+       "G1:A->S1; A->S2; S1->S2; S1->Y"
+      ],
+      "claim": "E028"
+     }
+    ]
+   },
+   {
+    "seed": 5,
+    "spent": 15000,
+    "survivors": [
+     "G0:A->S1; S1->S2; S1->Y",
+     "G16:A->S1; S1->S2; S1->Y; Y->S2",
+     "G1:A->S1; A->S2; S1->S2; S1->Y"
+    ],
+    "generations": [
+     {
+      "generation": 1,
+      "facts": [
+       [
+        "A",
+        "Y",
+        true
+       ],
+       [
+        "S1",
+        "S2",
+        true
+       ],
+       [
+        "S1",
+        "Y",
+        true
+       ],
+       [
+        "A",
+        "S1",
+        true
+       ],
+       [
+        "A",
+        "S2",
+        true
+       ]
+      ],
+      "counts": {
+       "enumerated": 29824,
+       "after_hygiene": 11156,
+       "after_measured_facts": 476,
+       "after_refuted": 476,
+       "screened": 7,
+       "proposed": 3
+      },
+      "proposed": [
+       "G0:A->S1; S1->S2; S1->Y",
+       "G16:A->S1; S1->S2; S1->Y; Y->S2",
+       "G1:A->S1; A->S2; S1->S2; S1->Y"
+      ],
+      "claim": "E028"
+     }
+    ]
+   },
+   {
+    "seed": 6,
+    "spent": 15000,
+    "survivors": [
+     "G0:A->S1; S1->S2; S1->Y",
+     "G16:A->S1; S1->S2; S1->Y; Y->S2",
+     "G1:A->S1; A->S2; S1->S2; S1->Y"
+    ],
+    "generations": [
+     {
+      "generation": 1,
+      "facts": [
+       [
+        "A",
+        "Y",
+        true
+       ],
+       [
+        "S1",
+        "S2",
+        true
+       ],
+       [
+        "S1",
+        "Y",
+        true
+       ],
+       [
+        "A",
+        "S1",
+        true
+       ],
+       [
+        "A",
+        "S2",
+        true
+       ]
+      ],
+      "counts": {
+       "enumerated": 29824,
+       "after_hygiene": 11156,
+       "after_measured_facts": 476,
+       "after_refuted": 476,
+       "screened": 7,
+       "proposed": 3
+      },
+      "proposed": [
+       "G0:A->S1; S1->S2; S1->Y",
+       "G16:A->S1; S1->S2; S1->Y; Y->S2",
+       "G1:A->S1; A->S2; S1->S2; S1->Y"
+      ],
+      "claim": "E028"
+     }
+    ]
+   },
+   {
+    "seed": 7,
+    "spent": 15000,
+    "survivors": [
+     "G0:A->S1; S1->S2; S1->Y",
+     "G16:A->S1; S1->S2; S1->Y; Y->S2",
+     "G1:A->S1; A->S2; S1->S2; S1->Y"
+    ],
+    "generations": [
+     {
+      "generation": 1,
+      "facts": [
+       [
+        "A",
+        "Y",
+        true
+       ],
+       [
+        "S1",
+        "S2",
+        true
+       ],
+       [
+        "S1",
+        "Y",
+        true
+       ],
+       [
+        "A",
+        "S1",
+        true
+       ],
+       [
+        "A",
+        "S2",
+        true
+       ]
+      ],
+      "counts": {
+       "enumerated": 29824,
+       "after_hygiene": 11156,
+       "after_measured_facts": 476,
+       "after_refuted": 476,
+       "screened": 7,
+       "proposed": 3
+      },
+      "proposed": [
+       "G0:A->S1; S1->S2; S1->Y",
+       "G16:A->S1; S1->S2; S1->Y; Y->S2",
+       "G1:A->S1; A->S2; S1->S2; S1->Y"
+      ],
+      "claim": "E028"
+     }
+    ]
+   },
+   {
+    "seed": 8,
+    "spent": 15000,
+    "survivors": [
+     "G0:A->S1; S1->S2; S1->Y",
+     "G16:A->S1; S1->S2; S1->Y; Y->S2",
+     "G1:A->S1; A->S2; S1->S2; S1->Y"
+    ],
+    "generations": [
+     {
+      "generation": 1,
+      "facts": [
+       [
+        "A",
+        "Y",
+        true
+       ],
+       [
+        "S1",
+        "S2",
+        true
+       ],
+       [
+        "S1",
+        "Y",
+        true
+       ],
+       [
+        "A",
+        "S1",
+        true
+       ],
+       [
+        "A",
+        "S2",
+        true
+       ]
+      ],
+      "counts": {
+       "enumerated": 29824,
+       "after_hygiene": 11156,
+       "after_measured_facts": 476,
+       "after_refuted": 476,
+       "screened": 7,
+       "proposed": 3
+      },
+      "proposed": [
+       "G0:A->S1; S1->S2; S1->Y",
+       "G16:A->S1; S1->S2; S1->Y; Y->S2",
+       "G1:A->S1; A->S2; S1->S2; S1->Y"
+      ],
+      "claim": "E028"
+     }
+    ]
+   },
+   {
+    "seed": 9,
+    "spent": 15000,
+    "survivors": [
+     "G0:A->S1; S1->S2; S1->Y",
+     "G16:A->S1; S1->S2; S1->Y; Y->S2",
+     "G1:A->S1; A->S2; S1->S2; S1->Y"
+    ],
+    "generations": [
+     {
+      "generation": 1,
+      "facts": [
+       [
+        "A",
+        "Y",
+        true
+       ],
+       [
+        "S1",
+        "S2",
+        true
+       ],
+       [
+        "S1",
+        "Y",
+        true
+       ],
+       [
+        "A",
+        "S1",
+        true
+       ],
+       [
+        "A",
+        "S2",
+        true
+       ]
+      ],
+      "counts": {
+       "enumerated": 29824,
+       "after_hygiene": 11156,
+       "after_measured_facts": 476,
+       "after_refuted": 476,
+       "screened": 7,
+       "proposed": 3
+      },
+      "proposed": [
+       "G0:A->S1; S1->S2; S1->Y",
+       "G16:A->S1; S1->S2; S1->Y; Y->S2",
+       "G1:A->S1; A->S2; S1->S2; S1->Y"
+      ],
+      "claim": "E028"
+     }
+    ]
+   }
+  ]
+ },
+ "latent_causal, O1 removed": {
+  "runs": 10,
+  "summary": {
+   "truth proposed": 10,
+   "truth survived validation": 10,
+   "generated set fully refuted": 0,
+   "answer: EMPIRICALLY-SUPPORTED correct": 50,
+   "answer: CONJECTURE correct": 10
+  },
+  "mean_spent": 19200.0,
+  "pruning_example": {
+   "enumerated": 29824,
+   "after_hygiene": 11156,
+   "after_measured_facts": 856,
+   "after_refuted": 856,
+   "screened": 54,
+   "proposed": 3
+  },
+  "rows": [
+   {
+    "seed": 0,
+    "spent": 18000,
+    "survivors": [
+     "G286:A->L0; L0->S1; L0->S2; L0->Y",
+     "G175:A->L0; A->Y; L0->S1; L0->S2; Y->L0",
+     "G287:A->L0; A->S1; L0->S1; L0->S2; L0->Y"
+    ],
+    "generations": [
+     {
+      "generation": 1,
+      "facts": [
+       [
+        "A",
+        "Y",
+        true
+       ],
+       [
+        "S1",
+        "S2",
+        false
+       ],
+       [
+        "S1",
+        "Y",
+        false
+       ],
+       [
+        "A",
+        "S1",
+        true
+       ],
+       [
+        "A",
+        "S2",
+        true
+       ]
+      ],
+      "counts": {
+       "enumerated": 29824,
+       "after_hygiene": 11156,
+       "after_measured_facts": 856,
+       "after_refuted": 856,
+       "screened": 54,
+       "proposed": 3
+      },
+      "proposed": [
+       "G286:A->L0; L0->S1; L0->S2; L0->Y",
+       "G175:A->L0; A->Y; L0->S1; L0->S2; Y->L0",
+       "G287:A->L0; A->S1; L0->S1; L0->S2; L0->Y"
+      ],
+      "claim": "E032"
+     }
+    ]
+   },
+   {
+    "seed": 1,
+    "spent": 19500,
+    "survivors": [
+     "G286:A->L0; L0->S1; L0->S2; L0->Y",
+     "G175:A->L0; A->Y; L0->S1; L0->S2; Y->L0",
+     "G287:A->L0; A->S1; L0->S1; L0->S2; L0->Y"
+    ],
+    "generations": [
+     {
+      "generation": 1,
+      "facts": [
+       [
+        "A",
+        "Y",
+        true
+       ],
+       [
+        "S1",
+        "S2",
+        false
+       ],
+       [
+        "S1",
+        "Y",
+        false
+       ],
+       [
+        "A",
+        "S1",
+        true
+       ],
+       [
+        "A",
+        "S2",
+        true
+       ]
+      ],
+      "counts": {
+       "enumerated": 29824,
+       "after_hygiene": 11156,
+       "after_measured_facts": 856,
+       "after_refuted": 856,
+       "screened": 54,
+       "proposed": 3
+      },
+      "proposed": [
+       "G286:A->L0; L0->S1; L0->S2; L0->Y",
+       "G175:A->L0; A->Y; L0->S1; L0->S2; Y->L0",
+       "G287:A->L0; A->S1; L0->S1; L0->S2; L0->Y"
+      ],
+      "claim": "E032"
+     }
+    ]
+   },
+   {
+    "seed": 2,
+    "spent": 24000,
+    "survivors": [
+     "G286:A->L0; L0->S1; L0->S2; L0->Y",
+     "G175:A->L0; A->Y; L0->S1; L0->S2; Y->L0",
+     "G287:A->L0; A->S1; L0->S1; L0->S2; L0->Y"
+    ],
+    "generations": [
+     {
+      "generation": 1,
+      "facts": [
+       [
+        "A",
+        "Y",
+        true
+       ],
+       [
+        "S1",
+        "S2",
+        false
+       ],
+       [
+        "S1",
+        "Y",
+        false
+       ],
+       [
+        "A",
+        "S1",
+        true
+       ],
+       [
+        "A",
+        "S2",
+        true
+       ]
+      ],
+      "counts": {
+       "enumerated": 29824,
+       "after_hygiene": 11156,
+       "after_measured_facts": 856,
+       "after_refuted": 856,
+       "screened": 54,
+       "proposed": 3
+      },
+      "proposed": [
+       "G286:A->L0; L0->S1; L0->S2; L0->Y",
+       "G175:A->L0; A->Y; L0->S1; L0->S2; Y->L0",
+       "G287:A->L0; A->S1; L0->S1; L0->S2; L0->Y"
+      ],
+      "claim": "E032"
+     }
+    ]
+   },
+   {
+    "seed": 3,
+    "spent": 16500,
+    "survivors": [
+     "G286:A->L0; L0->S1; L0->S2; L0->Y",
+     "G175:A->L0; A->Y; L0->S1; L0->S2; Y->L0",
+     "G287:A->L0; A->S1; L0->S1; L0->S2; L0->Y"
+    ],
+    "generations": [
+     {
+      "generation": 1,
+      "facts": [
+       [
+        "A",
+        "Y",
+        true
+       ],
+       [
+        "S1",
+        "S2",
+        false
+       ],
+       [
+        "S1",
+        "Y",
+        false
+       ],
+       [
+        "A",
+        "S1",
+        true
+       ],
+       [
+        "A",
+        "S2",
+        true
+       ]
+      ],
+      "counts": {
+       "enumerated": 29824,
+       "after_hygiene": 11156,
+       "after_measured_facts": 856,
+       "after_refuted": 856,
+       "screened": 54,
+       "proposed": 3
+      },
+      "proposed": [
+       "G286:A->L0; L0->S1; L0->S2; L0->Y",
+       "G175:A->L0; A->Y; L0->S1; L0->S2; Y->L0",
+       "G287:A->L0; A->S1; L0->S1; L0->S2; L0->Y"
+      ],
+      "claim": "E032"
+     }
+    ]
+   },
+   {
+    "seed": 4,
+    "spent": 21000,
+    "survivors": [
+     "G286:A->L0; L0->S1; L0->S2; L0->Y",
+     "G175:A->L0; A->Y; L0->S1; L0->S2; Y->L0",
+     "G287:A->L0; A->S1; L0->S1; L0->S2; L0->Y"
+    ],
+    "generations": [
+     {
+      "generation": 1,
+      "facts": [
+       [
+        "A",
+        "Y",
+        true
+       ],
+       [
+        "S1",
+        "S2",
+        false
+       ],
+       [
+        "S1",
+        "Y",
+        false
+       ],
+       [
+        "A",
+        "S1",
+        true
+       ],
+       [
+        "A",
+        "S2",
+        true
+       ]
+      ],
+      "counts": {
+       "enumerated": 29824,
+       "after_hygiene": 11156,
+       "after_measured_facts": 856,
+       "after_refuted": 856,
+       "screened": 54,
+       "proposed": 3
+      },
+      "proposed": [
+       "G286:A->L0; L0->S1; L0->S2; L0->Y",
+       "G175:A->L0; A->Y; L0->S1; L0->S2; Y->L0",
+       "G287:A->L0; A->S1; L0->S1; L0->S2; L0->Y"
+      ],
+      "claim": "E032"
+     }
+    ]
+   },
+   {
+    "seed": 5,
+    "spent": 18000,
+    "survivors": [
+     "G286:A->L0; L0->S1; L0->S2; L0->Y",
+     "G175:A->L0; A->Y; L0->S1; L0->S2; Y->L0",
+     "G287:A->L0; A->S1; L0->S1; L0->S2; L0->Y"
+    ],
+    "generations": [
+     {
+      "generation": 1,
+      "facts": [
+       [
+        "A",
+        "Y",
+        true
+       ],
+       [
+        "S1",
+        "S2",
+        false
+       ],
+       [
+        "S1",
+        "Y",
+        false
+       ],
+       [
+        "A",
+        "S1",
+        true
+       ],
+       [
+        "A",
+        "S2",
+        true
+       ]
+      ],
+      "counts": {
+       "enumerated": 29824,
+       "after_hygiene": 11156,
+       "after_measured_facts": 856,
+       "after_refuted": 856,
+       "screened": 54,
+       "proposed": 3
+      },
+      "proposed": [
+       "G286:A->L0; L0->S1; L0->S2; L0->Y",
+       "G175:A->L0; A->Y; L0->S1; L0->S2; Y->L0",
+       "G287:A->L0; A->S1; L0->S1; L0->S2; L0->Y"
+      ],
+      "claim": "E032"
+     }
+    ]
+   },
+   {
+    "seed": 6,
+    "spent": 18000,
+    "survivors": [
+     "G286:A->L0; L0->S1; L0->S2; L0->Y",
+     "G175:A->L0; A->Y; L0->S1; L0->S2; Y->L0",
+     "G287:A->L0; A->S1; L0->S1; L0->S2; L0->Y"
+    ],
+    "generations": [
+     {
+      "generation": 1,
+      "facts": [
+       [
+        "A",
+        "Y",
+        true
+       ],
+       [
+        "S1",
+        "S2",
+        false
+       ],
+       [
+        "S1",
+        "Y",
+        false
+       ],
+       [
+        "A",
+        "S1",
+        true
+       ],
+       [
+        "A",
+        "S2",
+        true
+       ]
+      ],
+      "counts": {
+       "enumerated": 29824,
+       "after_hygiene": 11156,
+       "after_measured_facts": 856,
+       "after_refuted": 856,
+       "screened": 54,
+       "proposed": 3
+      },
+      "proposed": [
+       "G286:A->L0; L0->S1; L0->S2; L0->Y",
+       "G175:A->L0; A->Y; L0->S1; L0->S2; Y->L0",
+       "G287:A->L0; A->S1; L0->S1; L0->S2; L0->Y"
+      ],
+      "claim": "E032"
+     }
+    ]
+   },
+   {
+    "seed": 7,
+    "spent": 18000,
+    "survivors": [
+     "G286:A->L0; L0->S1; L0->S2; L0->Y",
+     "G175:A->L0; A->Y; L0->S1; L0->S2; Y->L0",
+     "G287:A->L0; A->S1; L0->S1; L0->S2; L0->Y"
+    ],
+    "generations": [
+     {
+      "generation": 1,
+      "facts": [
+       [
+        "A",
+        "Y",
+        true
+       ],
+       [
+        "S1",
+        "S2",
+        false
+       ],
+       [
+        "S1",
+        "Y",
+        false
+       ],
+       [
+        "A",
+        "S1",
+        true
+       ],
+       [
+        "A",
+        "S2",
+        true
+       ]
+      ],
+      "counts": {
+       "enumerated": 29824,
+       "after_hygiene": 11156,
+       "after_measured_facts": 856,
+       "after_refuted": 856,
+       "screened": 54,
+       "proposed": 3
+      },
+      "proposed": [
+       "G286:A->L0; L0->S1; L0->S2; L0->Y",
+       "G175:A->L0; A->Y; L0->S1; L0->S2; Y->L0",
+       "G287:A->L0; A->S1; L0->S1; L0->S2; L0->Y"
+      ],
+      "claim": "E032"
+     }
+    ]
+   },
+   {
+    "seed": 8,
+    "spent": 18000,
+    "survivors": [
+     "G286:A->L0; L0->S1; L0->S2; L0->Y",
+     "G175:A->L0; A->Y; L0->S1; L0->S2; Y->L0",
+     "G287:A->L0; A->S1; L0->S1; L0->S2; L0->Y"
+    ],
+    "generations": [
+     {
+      "generation": 1,
+      "facts": [
+       [
+        "A",
+        "Y",
+        true
+       ],
+       [
+        "S1",
+        "S2",
+        false
+       ],
+       [
+        "S1",
+        "Y",
+        false
+       ],
+       [
+        "A",
+        "S1",
+        true
+       ],
+       [
+        "A",
+        "S2",
+        true
+       ]
+      ],
+      "counts": {
+       "enumerated": 29824,
+       "after_hygiene": 11156,
+       "after_measured_facts": 856,
+       "after_refuted": 856,
+       "screened": 54,
+       "proposed": 3
+      },
+      "proposed": [
+       "G286:A->L0; L0->S1; L0->S2; L0->Y",
+       "G175:A->L0; A->Y; L0->S1; L0->S2; Y->L0",
+       "G287:A->L0; A->S1; L0->S1; L0->S2; L0->Y"
+      ],
+      "claim": "E032"
+     }
+    ]
+   },
+   {
+    "seed": 9,
+    "spent": 21000,
+    "survivors": [
+     "G286:A->L0; L0->S1; L0->S2; L0->Y",
+     "G175:A->L0; A->Y; L0->S1; L0->S2; Y->L0",
+     "G287:A->L0; A->S1; L0->S1; L0->S2; L0->Y"
+    ],
+    "generations": [
+     {
+      "generation": 1,
+      "facts": [
+       [
+        "A",
+        "Y",
+        true
+       ],
+       [
+        "S1",
+        "S2",
+        false
+       ],
+       [
+        "S1",
+        "Y",
+        false
+       ],
+       [
+        "A",
+        "S1",
+        true
+       ],
+       [
+        "A",
+        "S2",
+        true
+       ]
+      ],
+      "counts": {
+       "enumerated": 29824,
+       "after_hygiene": 11156,
+       "after_measured_facts": 856,
+       "after_refuted": 856,
+       "screened": 54,
+       "proposed": 3
+      },
+      "proposed": [
+       "G286:A->L0; L0->S1; L0->S2; L0->Y",
+       "G175:A->L0; A->Y; L0->S1; L0->S2; Y->L0",
+       "G287:A->L0; A->S1; L0->S1; L0->S2; L0->Y"
+      ],
+      "claim": "E032"
+     }
+    ]
+   }
+  ]
+ },
+ "direct_and_latent (outside all)": {
+  "runs": 10,
+  "summary": {
+   "truth proposed": 10,
+   "truth survived validation": 10,
+   "generated set fully refuted": 0,
+   "answer: EMPIRICALLY-SUPPORTED correct": 50,
+   "answer: undetermined/retracted": 10
+  },
+  "mean_spent": 19500.0,
+  "pruning_example": {
+   "enumerated": 29824,
+   "after_hygiene": 11156,
+   "after_measured_facts": 856,
+   "after_refuted": 855,
+   "screened": 34,
+   "proposed": 3
+  },
+  "rows": [
+   {
+    "seed": 0,
+    "spent": 19500,
+    "survivors": [
+     "G6:A->S1; A->S2; A->Y; S2->S1",
+     "G169:A->L0; A->Y; L0->S1; L0->S2",
+     "G10:A->S1; A->S2; A->Y; S2->S1; S2->Y"
+    ],
+    "generations": [
+     {
+      "generation": 1,
+      "facts": [
+       [
+        "A",
+        "Y",
+        true
+       ],
+       [
+        "S1",
+        "S2",
+        false
+       ],
+       [
+        "S1",
+        "Y",
+        false
+       ],
+       [
+        "A",
+        "S1",
+        true
+       ],
+       [
+        "A",
+        "S2",
+        true
+       ]
+      ],
+      "counts": {
+       "enumerated": 29824,
+       "after_hygiene": 11156,
+       "after_measured_facts": 856,
+       "after_refuted": 855,
+       "screened": 34,
+       "proposed": 3
+      },
+      "proposed": [
+       "G6:A->S1; A->S2; A->Y; S2->S1",
+       "G169:A->L0; A->Y; L0->S1; L0->S2",
+       "G10:A->S1; A->S2; A->Y; S2->S1; S2->Y"
+      ],
+      "claim": "E027"
+     }
+    ]
+   },
+   {
+    "seed": 1,
+    "spent": 19500,
+    "survivors": [
+     "G6:A->S1; A->S2; A->Y; S2->S1",
+     "G169:A->L0; A->Y; L0->S1; L0->S2",
+     "G10:A->S1; A->S2; A->Y; S2->S1; S2->Y"
+    ],
+    "generations": [
+     {
+      "generation": 1,
+      "facts": [
+       [
+        "A",
+        "Y",
+        true
+       ],
+       [
+        "S1",
+        "S2",
+        false
+       ],
+       [
+        "S1",
+        "Y",
+        false
+       ],
+       [
+        "A",
+        "S1",
+        true
+       ],
+       [
+        "A",
+        "S2",
+        true
+       ]
+      ],
+      "counts": {
+       "enumerated": 29824,
+       "after_hygiene": 11156,
+       "after_measured_facts": 856,
+       "after_refuted": 855,
+       "screened": 34,
+       "proposed": 3
+      },
+      "proposed": [
+       "G6:A->S1; A->S2; A->Y; S2->S1",
+       "G169:A->L0; A->Y; L0->S1; L0->S2",
+       "G10:A->S1; A->S2; A->Y; S2->S1; S2->Y"
+      ],
+      "claim": "E028"
+     }
+    ]
+   },
+   {
+    "seed": 2,
+    "spent": 24000,
+    "survivors": [
+     "G6:A->S1; A->S2; A->Y; S2->S1",
+     "G169:A->L0; A->Y; L0->S1; L0->S2",
+     "G10:A->S1; A->S2; A->Y; S2->S1; S2->Y"
+    ],
+    "generations": [
+     {
+      "generation": 1,
+      "facts": [
+       [
+        "A",
+        "Y",
+        true
+       ],
+       [
+        "S1",
+        "S2",
+        false
+       ],
+       [
+        "S1",
+        "Y",
+        false
+       ],
+       [
+        "A",
+        "S1",
+        true
+       ],
+       [
+        "A",
+        "S2",
+        true
+       ]
+      ],
+      "counts": {
+       "enumerated": 29824,
+       "after_hygiene": 11156,
+       "after_measured_facts": 856,
+       "after_refuted": 855,
+       "screened": 34,
+       "proposed": 3
+      },
+      "proposed": [
+       "G6:A->S1; A->S2; A->Y; S2->S1",
+       "G169:A->L0; A->Y; L0->S1; L0->S2",
+       "G10:A->S1; A->S2; A->Y; S2->S1; S2->Y"
+      ],
+      "claim": "E037"
+     }
+    ]
+   },
+   {
+    "seed": 3,
+    "spent": 16500,
+    "survivors": [
+     "G6:A->S1; A->S2; A->Y; S2->S1",
+     "G169:A->L0; A->Y; L0->S1; L0->S2",
+     "G10:A->S1; A->S2; A->Y; S2->S1; S2->Y"
+    ],
+    "generations": [
+     {
+      "generation": 1,
+      "facts": [
+       [
+        "A",
+        "Y",
+        true
+       ],
+       [
+        "S1",
+        "S2",
+        false
+       ],
+       [
+        "S1",
+        "Y",
+        false
+       ],
+       [
+        "A",
+        "S1",
+        true
+       ],
+       [
+        "A",
+        "S2",
+        true
+       ]
+      ],
+      "counts": {
+       "enumerated": 29824,
+       "after_hygiene": 11156,
+       "after_measured_facts": 856,
+       "after_refuted": 855,
+       "screened": 34,
+       "proposed": 3
+      },
+      "proposed": [
+       "G6:A->S1; A->S2; A->Y; S2->S1",
+       "G169:A->L0; A->Y; L0->S1; L0->S2",
+       "G10:A->S1; A->S2; A->Y; S2->S1; S2->Y"
+      ],
+      "claim": "E027"
+     }
+    ]
+   },
+   {
+    "seed": 4,
+    "spent": 21000,
+    "survivors": [
+     "G6:A->S1; A->S2; A->Y; S2->S1",
+     "G169:A->L0; A->Y; L0->S1; L0->S2",
+     "G10:A->S1; A->S2; A->Y; S2->S1; S2->Y"
+    ],
+    "generations": [
+     {
+      "generation": 1,
+      "facts": [
+       [
+        "A",
+        "Y",
+        true
+       ],
+       [
+        "S1",
+        "S2",
+        false
+       ],
+       [
+        "S1",
+        "Y",
+        false
+       ],
+       [
+        "A",
+        "S1",
+        true
+       ],
+       [
+        "A",
+        "S2",
+        true
+       ]
+      ],
+      "counts": {
+       "enumerated": 29824,
+       "after_hygiene": 11156,
+       "after_measured_facts": 856,
+       "after_refuted": 855,
+       "screened": 34,
+       "proposed": 3
+      },
+      "proposed": [
+       "G6:A->S1; A->S2; A->Y; S2->S1",
+       "G169:A->L0; A->Y; L0->S1; L0->S2",
+       "G10:A->S1; A->S2; A->Y; S2->S1; S2->Y"
+      ],
+      "claim": "E027"
+     }
+    ]
+   },
+   {
+    "seed": 5,
+    "spent": 18000,
+    "survivors": [
+     "G6:A->S1; A->S2; A->Y; S2->S1",
+     "G169:A->L0; A->Y; L0->S1; L0->S2",
+     "G10:A->S1; A->S2; A->Y; S2->S1; S2->Y"
+    ],
+    "generations": [
+     {
+      "generation": 1,
+      "facts": [
+       [
+        "A",
+        "Y",
+        true
+       ],
+       [
+        "S1",
+        "S2",
+        false
+       ],
+       [
+        "S1",
+        "Y",
+        false
+       ],
+       [
+        "A",
+        "S1",
+        true
+       ],
+       [
+        "A",
+        "S2",
+        true
+       ]
+      ],
+      "counts": {
+       "enumerated": 29824,
+       "after_hygiene": 11156,
+       "after_measured_facts": 856,
+       "after_refuted": 855,
+       "screened": 34,
+       "proposed": 3
+      },
+      "proposed": [
+       "G6:A->S1; A->S2; A->Y; S2->S1",
+       "G169:A->L0; A->Y; L0->S1; L0->S2",
+       "G10:A->S1; A->S2; A->Y; S2->S1; S2->Y"
+      ],
+      "claim": "E027"
+     }
+    ]
+   },
+   {
+    "seed": 6,
+    "spent": 18000,
+    "survivors": [
+     "G6:A->S1; A->S2; A->Y; S2->S1",
+     "G169:A->L0; A->Y; L0->S1; L0->S2",
+     "G10:A->S1; A->S2; A->Y; S2->S1; S2->Y"
+    ],
+    "generations": [
+     {
+      "generation": 1,
+      "facts": [
+       [
+        "A",
+        "Y",
+        true
+       ],
+       [
+        "S1",
+        "S2",
+        false
+       ],
+       [
+        "S1",
+        "Y",
+        false
+       ],
+       [
+        "A",
+        "S1",
+        true
+       ],
+       [
+        "A",
+        "S2",
+        true
+       ]
+      ],
+      "counts": {
+       "enumerated": 29824,
+       "after_hygiene": 11156,
+       "after_measured_facts": 856,
+       "after_refuted": 855,
+       "screened": 34,
+       "proposed": 3
+      },
+      "proposed": [
+       "G6:A->S1; A->S2; A->Y; S2->S1",
+       "G169:A->L0; A->Y; L0->S1; L0->S2",
+       "G10:A->S1; A->S2; A->Y; S2->S1; S2->Y"
+      ],
+      "claim": "E027"
+     }
+    ]
+   },
+   {
+    "seed": 7,
+    "spent": 19500,
+    "survivors": [
+     "G6:A->S1; A->S2; A->Y; S2->S1",
+     "G169:A->L0; A->Y; L0->S1; L0->S2",
+     "G10:A->S1; A->S2; A->Y; S2->S1; S2->Y"
+    ],
+    "generations": [
+     {
+      "generation": 1,
+      "facts": [
+       [
+        "A",
+        "Y",
+        true
+       ],
+       [
+        "S1",
+        "S2",
+        false
+       ],
+       [
+        "S1",
+        "Y",
+        false
+       ],
+       [
+        "A",
+        "S1",
+        true
+       ],
+       [
+        "A",
+        "S2",
+        true
+       ]
+      ],
+      "counts": {
+       "enumerated": 29824,
+       "after_hygiene": 11156,
+       "after_measured_facts": 856,
+       "after_refuted": 855,
+       "screened": 34,
+       "proposed": 3
+      },
+      "proposed": [
+       "G6:A->S1; A->S2; A->Y; S2->S1",
+       "G169:A->L0; A->Y; L0->S1; L0->S2",
+       "G10:A->S1; A->S2; A->Y; S2->S1; S2->Y"
+      ],
+      "claim": "E027"
+     }
+    ]
+   },
+   {
+    "seed": 8,
+    "spent": 18000,
+    "survivors": [
+     "G6:A->S1; A->S2; A->Y; S2->S1",
+     "G169:A->L0; A->Y; L0->S1; L0->S2",
+     "G10:A->S1; A->S2; A->Y; S2->S1; S2->Y"
+    ],
+    "generations": [
+     {
+      "generation": 1,
+      "facts": [
+       [
+        "A",
+        "Y",
+        true
+       ],
+       [
+        "S1",
+        "S2",
+        false
+       ],
+       [
+        "S1",
+        "Y",
+        false
+       ],
+       [
+        "A",
+        "S1",
+        true
+       ],
+       [
+        "A",
+        "S2",
+        true
+       ]
+      ],
+      "counts": {
+       "enumerated": 29824,
+       "after_hygiene": 11156,
+       "after_measured_facts": 856,
+       "after_refuted": 855,
+       "screened": 34,
+       "proposed": 3
+      },
+      "proposed": [
+       "G6:A->S1; A->S2; A->Y; S2->S1",
+       "G169:A->L0; A->Y; L0->S1; L0->S2",
+       "G10:A->S1; A->S2; A->Y; S2->S1; S2->Y"
+      ],
+      "claim": "E027"
+     }
+    ]
+   },
+   {
+    "seed": 9,
+    "spent": 21000,
+    "survivors": [
+     "G6:A->S1; A->S2; A->Y; S2->S1",
+     "G169:A->L0; A->Y; L0->S1; L0->S2",
+     "G10:A->S1; A->S2; A->Y; S2->S1; S2->Y"
+    ],
+    "generations": [
+     {
+      "generation": 1,
+      "facts": [
+       [
+        "A",
+        "Y",
+        true
+       ],
+       [
+        "S1",
+        "S2",
+        false
+       ],
+       [
+        "S1",
+        "Y",
+        false
+       ],
+       [
+        "A",
+        "S1",
+        true
+       ],
+       [
+        "A",
+        "S2",
+        true
+       ]
+      ],
+      "counts": {
+       "enumerated": 29824,
+       "after_hygiene": 11156,
+       "after_measured_facts": 856,
+       "after_refuted": 855,
+       "screened": 34,
+       "proposed": 3
+      },
+      "proposed": [
+       "G6:A->S1; A->S2; A->Y; S2->S1",
+       "G169:A->L0; A->Y; L0->S1; L0->S2",
+       "G10:A->S1; A->S2; A->Y; S2->S1; S2->Y"
+      ],
+      "claim": "E027"
+     }
+    ]
+   }
+  ]
+ },
+ "direct_and_latent + do(S2)": {
+  "runs": 10,
+  "summary": {
+   "truth proposed": 10,
+   "truth survived validation": 10,
+   "generated set fully refuted": 0,
+   "answer: EMPIRICALLY-SUPPORTED correct": 70,
+   "answer: CONJECTURE correct": 10
+  },
+  "mean_spent": 30000.0,
+  "pruning_example": {
+   "enumerated": 29824,
+   "after_hygiene": 11156,
+   "after_measured_facts": 236,
+   "after_refuted": 235,
+   "screened": 43,
+   "proposed": 3
+  },
+  "rows": [
+   {
+    "seed": 0,
+    "spent": 28500,
+    "survivors": [
+     "G31:A->L0; A->Y; L0->S1; L0->S2",
+     "G32:A->L0; A->S1; A->Y; L0->S1; L0->S2",
+     "G33:A->L0; A->S2; A->Y; L0->S1; L0->S2"
+    ],
+    "generations": [
+     {
+      "generation": 1,
+      "facts": [
+       [
+        "A",
+        "Y",
+        true
+       ],
+       [
+        "S1",
+        "S2",
+        false
+       ],
+       [
+        "S1",
+        "Y",
+        false
+       ],
+       [
+        "A",
+        "S1",
+        true
+       ],
+       [
+        "A",
+        "S2",
+        true
+       ],
+       [
+        "S2",
+        "S1",
+        false
+       ],
+       [
+        "S2",
+        "Y",
+        false
+       ]
+      ],
+      "counts": {
+       "enumerated": 29824,
+       "after_hygiene": 11156,
+       "after_measured_facts": 236,
+       "after_refuted": 235,
+       "screened": 43,
+       "proposed": 3
+      },
+      "proposed": [
+       "G31:A->L0; A->Y; L0->S1; L0->S2",
+       "G32:A->L0; A->S1; A->Y; L0->S1; L0->S2",
+       "G33:A->L0; A->S2; A->Y; L0->S1; L0->S2"
+      ],
+      "claim": "E033"
+     }
+    ]
+   },
+   {
+    "seed": 1,
+    "spent": 28500,
+    "survivors": [
+     "G31:A->L0; A->Y; L0->S1; L0->S2",
+     "G32:A->L0; A->S1; A->Y; L0->S1; L0->S2",
+     "G33:A->L0; A->S2; A->Y; L0->S1; L0->S2"
+    ],
+    "generations": [
+     {
+      "generation": 1,
+      "facts": [
+       [
+        "A",
+        "Y",
+        true
+       ],
+       [
+        "S1",
+        "S2",
+        false
+       ],
+       [
+        "S1",
+        "Y",
+        false
+       ],
+       [
+        "A",
+        "S1",
+        true
+       ],
+       [
+        "A",
+        "S2",
+        true
+       ],
+       [
+        "S2",
+        "S1",
+        false
+       ],
+       [
+        "S2",
+        "Y",
+        false
+       ]
+      ],
+      "counts": {
+       "enumerated": 29824,
+       "after_hygiene": 11156,
+       "after_measured_facts": 236,
+       "after_refuted": 235,
+       "screened": 43,
+       "proposed": 3
+      },
+      "proposed": [
+       "G31:A->L0; A->Y; L0->S1; L0->S2",
+       "G32:A->L0; A->S1; A->Y; L0->S1; L0->S2",
+       "G33:A->L0; A->S2; A->Y; L0->S1; L0->S2"
+      ],
+      "claim": "E034"
+     }
+    ]
+   },
+   {
+    "seed": 2,
+    "spent": 33000,
+    "survivors": [
+     "G31:A->L0; A->Y; L0->S1; L0->S2",
+     "G32:A->L0; A->S1; A->Y; L0->S1; L0->S2",
+     "G33:A->L0; A->S2; A->Y; L0->S1; L0->S2"
+    ],
+    "generations": [
+     {
+      "generation": 1,
+      "facts": [
+       [
+        "A",
+        "Y",
+        true
+       ],
+       [
+        "S1",
+        "S2",
+        false
+       ],
+       [
+        "S1",
+        "Y",
+        false
+       ],
+       [
+        "A",
+        "S1",
+        true
+       ],
+       [
+        "A",
+        "S2",
+        true
+       ],
+       [
+        "S2",
+        "S1",
+        false
+       ],
+       [
+        "S2",
+        "Y",
+        false
+       ]
+      ],
+      "counts": {
+       "enumerated": 29824,
+       "after_hygiene": 11156,
+       "after_measured_facts": 236,
+       "after_refuted": 235,
+       "screened": 43,
+       "proposed": 3
+      },
+      "proposed": [
+       "G31:A->L0; A->Y; L0->S1; L0->S2",
+       "G32:A->L0; A->S1; A->Y; L0->S1; L0->S2",
+       "G33:A->L0; A->S2; A->Y; L0->S1; L0->S2"
+      ],
+      "claim": "E045"
+     }
+    ]
+   },
+   {
+    "seed": 3,
+    "spent": 28500,
+    "survivors": [
+     "G31:A->L0; A->Y; L0->S1; L0->S2",
+     "G32:A->L0; A->S1; A->Y; L0->S1; L0->S2",
+     "G33:A->L0; A->S2; A->Y; L0->S1; L0->S2"
+    ],
+    "generations": [
+     {
+      "generation": 1,
+      "facts": [
+       [
+        "A",
+        "Y",
+        true
+       ],
+       [
+        "S1",
+        "S2",
+        false
+       ],
+       [
+        "S1",
+        "Y",
+        false
+       ],
+       [
+        "A",
+        "S1",
+        true
+       ],
+       [
+        "A",
+        "S2",
+        true
+       ],
+       [
+        "S2",
+        "S1",
+        false
+       ],
+       [
+        "S2",
+        "Y",
+        false
+       ]
+      ],
+      "counts": {
+       "enumerated": 29824,
+       "after_hygiene": 11156,
+       "after_measured_facts": 236,
+       "after_refuted": 235,
+       "screened": 43,
+       "proposed": 3
+      },
+      "proposed": [
+       "G31:A->L0; A->Y; L0->S1; L0->S2",
+       "G32:A->L0; A->S1; A->Y; L0->S1; L0->S2",
+       "G33:A->L0; A->S2; A->Y; L0->S1; L0->S2"
+      ],
+      "claim": "E033"
+     }
+    ]
+   },
+   {
+    "seed": 4,
+    "spent": 30000,
+    "survivors": [
+     "G31:A->L0; A->Y; L0->S1; L0->S2",
+     "G32:A->L0; A->S1; A->Y; L0->S1; L0->S2",
+     "G33:A->L0; A->S2; A->Y; L0->S1; L0->S2"
+    ],
+    "generations": [
+     {
+      "generation": 1,
+      "facts": [
+       [
+        "A",
+        "Y",
+        true
+       ],
+       [
+        "S1",
+        "S2",
+        false
+       ],
+       [
+        "S1",
+        "Y",
+        false
+       ],
+       [
+        "A",
+        "S1",
+        true
+       ],
+       [
+        "A",
+        "S2",
+        true
+       ],
+       [
+        "S2",
+        "S1",
+        false
+       ],
+       [
+        "S2",
+        "Y",
+        false
+       ]
+      ],
+      "counts": {
+       "enumerated": 29824,
+       "after_hygiene": 11156,
+       "after_measured_facts": 236,
+       "after_refuted": 235,
+       "screened": 43,
+       "proposed": 3
+      },
+      "proposed": [
+       "G31:A->L0; A->Y; L0->S1; L0->S2",
+       "G32:A->L0; A->S1; A->Y; L0->S1; L0->S2",
+       "G33:A->L0; A->S2; A->Y; L0->S1; L0->S2"
+      ],
+      "claim": "E033"
+     }
+    ]
+   },
+   {
+    "seed": 5,
+    "spent": 31500,
+    "survivors": [
+     "G31:A->L0; A->Y; L0->S1; L0->S2",
+     "G32:A->L0; A->S1; A->Y; L0->S1; L0->S2",
+     "G33:A->L0; A->S2; A->Y; L0->S1; L0->S2"
+    ],
+    "generations": [
+     {
+      "generation": 1,
+      "facts": [
+       [
+        "A",
+        "Y",
+        true
+       ],
+       [
+        "S1",
+        "S2",
+        false
+       ],
+       [
+        "S1",
+        "Y",
+        false
+       ],
+       [
+        "A",
+        "S1",
+        true
+       ],
+       [
+        "A",
+        "S2",
+        true
+       ],
+       [
+        "S2",
+        "S1",
+        false
+       ],
+       [
+        "S2",
+        "Y",
+        false
+       ]
+      ],
+      "counts": {
+       "enumerated": 29824,
+       "after_hygiene": 11156,
+       "after_measured_facts": 236,
+       "after_refuted": 235,
+       "screened": 43,
+       "proposed": 3
+      },
+      "proposed": [
+       "G31:A->L0; A->Y; L0->S1; L0->S2",
+       "G32:A->L0; A->S1; A->Y; L0->S1; L0->S2",
+       "G33:A->L0; A->S2; A->Y; L0->S1; L0->S2"
+      ],
+      "claim": "E033"
+     }
+    ]
+   },
+   {
+    "seed": 6,
+    "spent": 28500,
+    "survivors": [
+     "G31:A->L0; A->Y; L0->S1; L0->S2",
+     "G32:A->L0; A->S1; A->Y; L0->S1; L0->S2",
+     "G33:A->L0; A->S2; A->Y; L0->S1; L0->S2"
+    ],
+    "generations": [
+     {
+      "generation": 1,
+      "facts": [
+       [
+        "A",
+        "Y",
+        true
+       ],
+       [
+        "S1",
+        "S2",
+        false
+       ],
+       [
+        "S1",
+        "Y",
+        false
+       ],
+       [
+        "A",
+        "S1",
+        true
+       ],
+       [
+        "A",
+        "S2",
+        true
+       ],
+       [
+        "S2",
+        "S1",
+        false
+       ],
+       [
+        "S2",
+        "Y",
+        false
+       ]
+      ],
+      "counts": {
+       "enumerated": 29824,
+       "after_hygiene": 11156,
+       "after_measured_facts": 236,
+       "after_refuted": 235,
+       "screened": 43,
+       "proposed": 3
+      },
+      "proposed": [
+       "G31:A->L0; A->Y; L0->S1; L0->S2",
+       "G32:A->L0; A->S1; A->Y; L0->S1; L0->S2",
+       "G33:A->L0; A->S2; A->Y; L0->S1; L0->S2"
+      ],
+      "claim": "E033"
+     }
+    ]
+   },
+   {
+    "seed": 7,
+    "spent": 28500,
+    "survivors": [
+     "G31:A->L0; A->Y; L0->S1; L0->S2",
+     "G32:A->L0; A->S1; A->Y; L0->S1; L0->S2",
+     "G33:A->L0; A->S2; A->Y; L0->S1; L0->S2"
+    ],
+    "generations": [
+     {
+      "generation": 1,
+      "facts": [
+       [
+        "A",
+        "Y",
+        true
+       ],
+       [
+        "S1",
+        "S2",
+        false
+       ],
+       [
+        "S1",
+        "Y",
+        false
+       ],
+       [
+        "A",
+        "S1",
+        true
+       ],
+       [
+        "A",
+        "S2",
+        true
+       ],
+       [
+        "S2",
+        "S1",
+        false
+       ],
+       [
+        "S2",
+        "Y",
+        false
+       ]
+      ],
+      "counts": {
+       "enumerated": 29824,
+       "after_hygiene": 11156,
+       "after_measured_facts": 236,
+       "after_refuted": 235,
+       "screened": 43,
+       "proposed": 3
+      },
+      "proposed": [
+       "G31:A->L0; A->Y; L0->S1; L0->S2",
+       "G32:A->L0; A->S1; A->Y; L0->S1; L0->S2",
+       "G33:A->L0; A->S2; A->Y; L0->S1; L0->S2"
+      ],
+      "claim": "E033"
+     }
+    ]
+   },
+   {
+    "seed": 8,
+    "spent": 31500,
+    "survivors": [
+     "G31:A->L0; A->Y; L0->S1; L0->S2",
+     "G32:A->L0; A->S1; A->Y; L0->S1; L0->S2",
+     "G33:A->L0; A->S2; A->Y; L0->S1; L0->S2"
+    ],
+    "generations": [
+     {
+      "generation": 1,
+      "facts": [
+       [
+        "A",
+        "Y",
+        true
+       ],
+       [
+        "S1",
+        "S2",
+        false
+       ],
+       [
+        "S1",
+        "Y",
+        false
+       ],
+       [
+        "A",
+        "S1",
+        true
+       ],
+       [
+        "A",
+        "S2",
+        true
+       ],
+       [
+        "S2",
+        "S1",
+        false
+       ],
+       [
+        "S2",
+        "Y",
+        false
+       ]
+      ],
+      "counts": {
+       "enumerated": 29824,
+       "after_hygiene": 11156,
+       "after_measured_facts": 236,
+       "after_refuted": 235,
+       "screened": 43,
+       "proposed": 3
+      },
+      "proposed": [
+       "G31:A->L0; A->Y; L0->S1; L0->S2",
+       "G32:A->L0; A->S1; A->Y; L0->S1; L0->S2",
+       "G33:A->L0; A->S2; A->Y; L0->S1; L0->S2"
+      ],
+      "claim": "E033"
+     }
+    ]
+   },
+   {
+    "seed": 9,
+    "spent": 31500,
+    "survivors": [
+     "G31:A->L0; A->Y; L0->S1; L0->S2",
+     "G32:A->L0; A->S1; A->Y; L0->S1; L0->S2",
+     "G33:A->L0; A->S2; A->Y; L0->S1; L0->S2"
+    ],
+    "generations": [
+     {
+      "generation": 1,
+      "facts": [
+       [
+        "A",
+        "Y",
+        true
+       ],
+       [
+        "S1",
+        "S2",
+        false
+       ],
+       [
+        "S1",
+        "Y",
+        false
+       ],
+       [
+        "A",
+        "S1",
+        true
+       ],
+       [
+        "A",
+        "S2",
+        true
+       ],
+       [
+        "S2",
+        "S1",
+        false
+       ],
+       [
+        "S2",
+        "Y",
+        false
+       ]
+      ],
+      "counts": {
+       "enumerated": 29824,
+       "after_hygiene": 11156,
+       "after_measured_facts": 236,
+       "after_refuted": 235,
+       "screened": 43,
+       "proposed": 3
+      },
+      "proposed": [
+       "G31:A->L0; A->Y; L0->S1; L0->S2",
+       "G32:A->L0; A->S1; A->Y; L0->S1; L0->S2",
+       "G33:A->L0; A->S2; A->Y; L0->S1; L0->S2"
+      ],
+      "claim": "E033"
+     }
+    ]
+   }
+  ]
+ },
+ "wall_seconds": 351.5
+}

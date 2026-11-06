@@ -45,6 +45,17 @@ WORLDS = {
     ),
 }
 
+# Worlds outside every hand-written candidate (Spike 02b). Kept separate so
+# that Spike 02's experiment (which iterates WORLDS) stays reproducible.
+OUTSIDE_WORLDS = {
+    "direct_and_latent": (
+        Structure("direct_and_latent", OBS, ("Z",),
+                  {"Z": ("A",), "S1": ("Z",), "S2": ("Z",), "Y": ("A",)}),
+        {"A": [0.5], "Z": [0.2, 0.8], "S1": [0.1, 0.9], "S2": [0.15, 0.85], "Y": [0.25, 0.7]},
+    ),
+}
+_ALL = {**WORLDS, **OUTSIDE_WORLDS}
+
 ALL_ACTIONS = ({}, {"A": 0}, {"A": 1}, {"S1": 0}, {"S1": 1})
 
 
@@ -56,7 +67,7 @@ class Interface:
     """What the agent can do: run declared protocols, get counts. Nothing else."""
 
     def __init__(self, world_name: str, actions=ALL_ACTIONS, seed=0, budget=100_000):
-        s, p = WORLDS[world_name]
+        s, p = _ALL[world_name]
         self.__s, self.__p = s, p
         self.__rng = random.Random(seed)
         self.observables = s.observables
@@ -82,12 +93,12 @@ class Interface:
 
 def truth(world_name):
     """For the EVALUATION HARNESS only (experiments/, tests/)."""
-    return WORLDS[world_name]
+    return _ALL[world_name]
 
 
 def true_effect(world_name, do_var, target, delta=0.05):
     """Does intervening on do_var change target's distribution by > delta (TV)?"""
-    s, p = WORLDS[world_name]
+    s, p = _ALL[world_name]
     m = []
     for val in (0, 1):
         d = distribution(s, p, {do_var: val})
