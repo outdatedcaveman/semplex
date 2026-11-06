@@ -1,0 +1,149 @@
+{
+ "csir": "0.1",
+ "nodes": [
+  {
+   "id": "a.(b+c)",
+   "artifact": {
+    "kind": "lts",
+    "body": {
+     "init": "p0",
+     "trans": [
+      [
+       "p0",
+       "a",
+       "p1"
+      ],
+      [
+       "p1",
+       "b",
+       "p2"
+      ],
+      [
+       "p1",
+       "c",
+       "p3"
+      ]
+     ]
+    }
+   },
+   "interface": {
+    "actions": [
+     "a",
+     "b",
+     "c"
+    ]
+   },
+   "ontology": null,
+   "resources": null,
+   "provenance": {}
+  },
+  {
+   "id": "a.b+a.c",
+   "artifact": {
+    "kind": "lts",
+    "body": {
+     "init": "q0",
+     "trans": [
+      [
+       "q0",
+       "a",
+       "q1"
+      ],
+      [
+       "q0",
+       "a",
+       "q2"
+      ],
+      [
+       "q1",
+       "b",
+       "q3"
+      ],
+      [
+       "q2",
+       "c",
+       "q4"
+      ]
+     ]
+    }
+   },
+   "interface": {
+    "actions": [
+     "a",
+     "b",
+     "c"
+    ]
+   },
+   "ontology": null,
+   "resources": null,
+   "provenance": {}
+  }
+ ],
+ "links": [
+  {
+   "from": "a.(b+c)",
+   "to": "a.b+a.c",
+   "relation": "trace",
+   "protocol": {
+    "actions": [
+     "a",
+     "b",
+     "c"
+    ]
+   },
+   "certificate": {
+    "pairs": [
+     [
+      [
+       "p0"
+      ],
+      [
+       "q0"
+      ]
+     ],
+     [
+      [
+       "p1"
+      ],
+      [
+       "q1",
+       "q2"
+      ]
+     ],
+     [
+      [],
+      []
+     ],
+     [
+      [
+       "p2"
+      ],
+      [
+       "q3"
+      ]
+     ],
+     [
+      [
+       "p3"
+      ],
+      [
+       "q4"
+      ]
+     ]
+    ]
+   },
+   "warrant": {
+    "basis": [
+     "kernel-checked"
+    ],
+    "trusted_base": [
+     "cerp/kernel_lts.py",
+     "CPython",
+     "hardware"
+    ],
+    "conditions": []
+   },
+   "claim": null
+  }
+ ]
+}

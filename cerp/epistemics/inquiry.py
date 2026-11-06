@@ -79,7 +79,7 @@ def inquire(interface, candidates, *, queries=DEFAULT_QUERIES, n_initial=1500, n
     n_tests = max_rounds * (k + k * (k - 1) // 2)
     a_each = alpha / n_tests
     z_crit = z_two_sided(a_each)
-    rep = {"rounds": [], "ledger": L, "alpha_per_test": a_each}
+    rep = {"rounds": [], "ledger": L, "alpha_per_test": a_each, "candidate_structures": list(candidates)}
 
     closed_world = L.assumption(
         "Closed world: at least one candidate ontology is adequate to the world",

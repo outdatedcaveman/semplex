@@ -1,0 +1,2847 @@
+{
+ "csir": "0.1",
+ "nodes": [
+  {
+   "id": "source",
+   "artifact": {
+    "kind": "expr",
+    "body": [
+     "or",
+     [
+      "and",
+      [
+       "var",
+       "a"
+      ],
+      [
+       "var",
+       "c"
+      ]
+     ],
+     [
+      "and",
+      [
+       "var",
+       "b"
+      ],
+      [
+       "var",
+       "d"
+      ]
+     ]
+    ]
+   },
+   "interface": {
+    "vars": [
+     "a",
+     "b",
+     "c",
+     "d"
+    ]
+   },
+   "ontology": null,
+   "resources": null,
+   "provenance": {
+    "produced_by": "user"
+   }
+  },
+  {
+   "id": "cand0",
+   "artifact": {
+    "kind": "circuit",
+    "body": {
+     "inputs": [
+      "a",
+      "b",
+      "c",
+      "d"
+     ],
+     "gates": [
+      {
+       "id": "g0",
+       "op": "and",
+       "in": [
+        "a",
+        "c"
+       ]
+      },
+      {
+       "id": "g1",
+       "op": "and",
+       "in": [
+        "b",
+        "d"
+       ]
+      },
+      {
+       "id": "g2",
+       "op": "or",
+       "in": [
+        "g0",
+        "g1"
+       ]
+      }
+     ],
+     "output": "g2"
+    }
+   },
+   "interface": {
+    "vars": [
+     "a",
+     "b",
+     "c",
+     "d"
+    ]
+   },
+   "ontology": null,
+   "resources": {
+    "cost": {
+     "gates": 3,
+     "depth": 2
+    },
+    "cost_model": "F0/circuit"
+   },
+   "provenance": {
+    "produced_by": "expr->circuit",
+    "parents": [
+     "source"
+    ]
+   }
+  },
+  {
+   "id": "cand1",
+   "artifact": {
+    "kind": "bdd",
+    "body": {
+     "order": [
+      "a",
+      "b",
+      "c",
+      "d"
+     ],
+     "nodes": [
+      [
+       -1,
+       0,
+       0
+      ],
+      [
+       -1,
+       1,
+       1
+      ],
+      [
+       3,
+       0,
+       1
+      ],
+      [
+       1,
+       0,
+       2
+      ],
+      [
+       2,
+       0,
+       1
+      ],
+      [
+       2,
+       2,
+       1
+      ],
+      [
+       1,
+       4,
+       5
+      ],
+      [
+       0,
+       3,
+       6
+      ]
+     ],
+     "root": 7
+    }
+   },
+   "interface": {
+    "vars": [
+     "a",
+     "b",
+     "c",
+     "d"
+    ]
+   },
+   "ontology": null,
+   "resources": {
+    "cost": {
+     "bdd_nodes": 6
+    },
+    "cost_model": "F0/bdd"
+   },
+   "provenance": {
+    "produced_by": "nf->bdd",
+    "parents": [
+     "source"
+    ]
+   }
+  },
+  {
+   "id": "cand2",
+   "artifact": {
+    "kind": "circuit",
+    "body": {
+     "inputs": [
+      "a",
+      "b",
+      "c",
+      "d"
+     ],
+     "gates": [
+      {
+       "id": "g0",
+       "op": "or",
+       "in": [
+        "c",
+        "d"
+       ]
+      },
+      {
+       "id": "g1",
+       "op": "and",
+       "in": [
+        "b",
+        "g0"
+       ]
+      },
+      {
+       "id": "g2",
+       "op": "not",
+       "in": [
+        "b"
+       ]
+      },
+      {
+       "id": "g3",
+       "op": "and",
+       "in": [
+        "c",
+        "g2"
+       ]
+      },
+      {
+       "id": "g4",
+       "op": "or",
+       "in": [
+        "g1",
+        "g3"
+       ]
+      },
+      {
+       "id": "g5",
+       "op": "and",
+       "in": [
+        "a",
+        "g4"
+       ]
+      },
+      {
+       "id": "g6",
+       "op": "not",
+       "in": [
+        "a"
+       ]
+      },
+      {
+       "id": "g7",
+       "op": "and",
+       "in": [
+        "b",
+        "d"
+       ]
+      },
+      {
+       "id": "g8",
+       "op": "and",
+       "in": [
+        "g6",
+        "g7"
+       ]
+      },
+      {
+       "id": "g9",
+       "op": "or",
+       "in": [
+        "g5",
+        "g8"
+       ]
+      }
+     ],
+     "output": "g9"
+    }
+   },
+   "interface": {
+    "vars": [
+     "a",
+     "b",
+     "c",
+     "d"
+    ]
+   },
+   "ontology": null,
+   "resources": {
+    "cost": {
+     "gates": 10,
+     "depth": 5
+    },
+    "cost_model": "F0/circuit"
+   },
+   "provenance": {
+    "produced_by": "nf->circuit",
+    "parents": [
+     "source"
+    ]
+   }
+  },
+  {
+   "id": "cand3",
+   "artifact": {
+    "kind": "dfa",
+    "body": {
+     "order": [
+      "a",
+      "b",
+      "c",
+      "d"
+     ],
+     "start": "L0N7",
+     "delta": {
+      "L0N7": [
+       "L1N3",
+       "L1N6"
+      ],
+      "L1N3": [
+       "L2N0",
+       "L2N2"
+      ],
+      "L1N6": [
+       "L2N4",
+       "L2N5"
+      ],
+      "L2N0": [
+       "L3N0",
+       "L3N0"
+      ],
+      "L2N2": [
+       "L3N2",
+       "L3N2"
+      ],
+      "L2N4": [
+       "L3N0",
+       "L3N1"
+      ],
+      "L2N5": [
+       "L3N2",
+       "L3N1"
+      ],
+      "L3N0": [
+       "L4N0",
+       "L4N0"
+      ],
+      "L3N1": [
+       "L4N1",
+       "L4N1"
+      ],
+      "L3N2": [
+       "L4N0",
+       "L4N1"
+      ]
+     },
+     "accept": [
+      "L4N1"
+     ]
+    }
+   },
+   "interface": {
+    "vars": [
+     "a",
+     "b",
+     "c",
+     "d"
+    ]
+   },
+   "ontology": null,
+   "resources": {
+    "cost": {
+     "states": 12,
+     "transitions": 20
+    },
+    "cost_model": "F0/dfa"
+   },
+   "provenance": {
+    "produced_by": "nf->dfa",
+    "parents": [
+     "source"
+    ]
+   }
+  },
+  {
+   "id": "cand4",
+   "artifact": {
+    "kind": "expr",
+    "body": [
+     "ite",
+     [
+      "var",
+      "a"
+     ],
+     [
+      "ite",
+      [
+       "var",
+       "b"
+      ],
+      [
+       "ite",
+       [
+        "var",
+        "c"
+       ],
+       [
+        "const",
+        1
+       ],
+       [
+        "var",
+        "d"
+       ]
+      ],
+      [
+       "var",
+       "c"
+      ]
+     ],
+     [
+      "and",
+      [
+       "var",
+       "b"
+      ],
+      [
+       "var",
+       "d"
+      ]
+     ]
+    ]
+   },
+   "interface": {
+    "vars": [
+     "a",
+     "b",
+     "c",
+     "d"
+    ]
+   },
+   "ontology": null,
+   "resources": {
+    "cost": {
+     "ast_nodes": 12,
+     "depth": 3
+    },
+    "cost_model": "F0/expr"
+   },
+   "provenance": {
+    "produced_by": "nf->expr",
+    "parents": [
+     "source"
+    ]
+   }
+  },
+  {
+   "id": "cand5",
+   "artifact": {
+    "kind": "circuit",
+    "body": {
+     "inputs": [
+      "a",
+      "b",
+      "c",
+      "d"
+     ],
+     "gates": [
+      {
+       "id": "g0",
+       "op": "const1",
+       "in": []
+      },
+      {
+       "id": "g1",
+       "op": "and",
+       "in": [
+        "c",
+        "g0"
+       ]
+      },
+      {
+       "id": "g2",
+       "op": "not",
+       "in": [
+        "c"
+       ]
+      },
+      {
+       "id": "g3",
+       "op": "and",
+       "in": [
+        "d",
+        "g2"
+       ]
+      },
+      {
+       "id": "g4",
+       "op": "or",
+       "in": [
+        "g1",
+        "g3"
+       ]
+      },
+      {
+       "id": "g5",
+       "op": "and",
+       "in": [
+        "b",
+        "g4"
+       ]
+      },
+      {
+       "id": "g6",
+       "op": "not",
+       "in": [
+        "b"
+       ]
+      },
+      {
+       "id": "g7",
+       "op": "and",
+       "in": [
+        "c",
+        "g6"
+       ]
+      },
+      {
+       "id": "g8",
+       "op": "or",
+       "in": [
+        "g5",
+        "g7"
+       ]
+      },
+      {
+       "id": "g9",
+       "op": "and",
+       "in": [
+        "b",
+        "d"
+       ]
+      },
+      {
+       "id": "g10",
+       "op": "and",
+       "in": [
+        "a",
+        "g8"
+       ]
+      },
+      {
+       "id": "g11",
+       "op": "not",
+       "in": [
+        "a"
+       ]
+      },
+      {
+       "id": "g12",
+       "op": "and",
+       "in": [
+        "g11",
+        "g9"
+       ]
+      },
+      {
+       "id": "g13",
+       "op": "or",
+       "in": [
+        "g10",
+        "g12"
+       ]
+      }
+     ],
+     "output": "g13"
+    }
+   },
+   "interface": {
+    "vars": [
+     "a",
+     "b",
+     "c",
+     "d"
+    ]
+   },
+   "ontology": null,
+   "resources": {
+    "cost": {
+     "gates": 14,
+     "depth": 7
+    },
+    "cost_model": "F0/circuit"
+   },
+   "provenance": {
+    "produced_by": "nf->expr->circuit",
+    "parents": [
+     "source"
+    ]
+   }
+  },
+  {
+   "id": "cand7",
+   "artifact": {
+    "kind": "bdd",
+    "body": {
+     "order": [
+      "a",
+      "c",
+      "d"
+     ],
+     "nodes": [
+      [
+       -1,
+       0,
+       0
+      ],
+      [
+       -1,
+       1,
+       1
+      ],
+      [
+       2,
+       0,
+       1
+      ],
+      [
+       1,
+       2,
+       1
+      ],
+      [
+       0,
+       0,
+       3
+      ]
+     ],
+     "root": 4
+    }
+   },
+   "interface": {
+    "vars": [
+     "a",
+     "b",
+     "c",
+     "d"
+    ]
+   },
+   "ontology": null,
+   "resources": {
+    "cost": {
+     "bdd_nodes": 3
+    },
+    "cost_model": "F0/bdd"
+   },
+   "provenance": {
+    "produced_by": "task:proj[a,c,d]:bdd",
+    "parents": [
+     "source"
+    ]
+   }
+  },
+  {
+   "id": "cand8",
+   "artifact": {
+    "kind": "circuit",
+    "body": {
+     "inputs": [
+      "a",
+      "c",
+      "d"
+     ],
+     "gates": [
+      {
+       "id": "g0",
+       "op": "or",
+       "in": [
+        "c",
+        "d"
+       ]
+      },
+      {
+       "id": "g1",
+       "op": "and",
+       "in": [
+        "a",
+        "g0"
+       ]
+      }
+     ],
+     "output": "g1"
+    }
+   },
+   "interface": {
+    "vars": [
+     "a",
+     "b",
+     "c",
+     "d"
+    ]
+   },
+   "ontology": null,
+   "resources": {
+    "cost": {
+     "gates": 2,
+     "depth": 2
+    },
+    "cost_model": "F0/circuit"
+   },
+   "provenance": {
+    "produced_by": "task:proj[a,c,d]:circuit",
+    "parents": [
+     "source"
+    ]
+   }
+  },
+  {
+   "id": "cand9",
+   "artifact": {
+    "kind": "dfa",
+    "body": {
+     "order": [
+      "a",
+      "c",
+      "d"
+     ],
+     "start": "L0N4",
+     "delta": {
+      "L0N4": [
+       "L1N0",
+       "L1N3"
+      ],
+      "L1N0": [
+       "L2N0",
+       "L2N0"
+      ],
+      "L1N3": [
+       "L2N2",
+       "L2N1"
+      ],
+      "L2N0": [
+       "L3N0",
+       "L3N0"
+      ],
+      "L2N1": [
+       "L3N1",
+       "L3N1"
+      ],
+      "L2N2": [
+       "L3N0",
+       "L3N1"
+      ]
+     },
+     "accept": [
+      "L3N1"
+     ]
+    }
+   },
+   "interface": {
+    "vars": [
+     "a",
+     "b",
+     "c",
+     "d"
+    ]
+   },
+   "ontology": null,
+   "resources": {
+    "cost": {
+     "states": 8,
+     "transitions": 12
+    },
+    "cost_model": "F0/dfa"
+   },
+   "provenance": {
+    "produced_by": "task:proj[a,c,d]:dfa",
+    "parents": [
+     "source"
+    ]
+   }
+  },
+  {
+   "id": "cand10",
+   "artifact": {
+    "kind": "expr",
+    "body": [
+     "and",
+     [
+      "var",
+      "a"
+     ],
+     [
+      "ite",
+      [
+       "var",
+       "c"
+      ],
+      [
+       "const",
+       1
+      ],
+      [
+       "var",
+       "d"
+      ]
+     ]
+    ]
+   },
+   "interface": {
+    "vars": [
+     "a",
+     "b",
+     "c",
+     "d"
+    ]
+   },
+   "ontology": null,
+   "resources": {
+    "cost": {
+     "ast_nodes": 6,
+     "depth": 2
+    },
+    "cost_model": "F0/expr"
+   },
+   "provenance": {
+    "produced_by": "task:proj[a,c,d]:expr",
+    "parents": [
+     "source"
+    ]
+   }
+  },
+  {
+   "id": "cand11",
+   "artifact": {
+    "kind": "bdd",
+    "body": {
+     "order": [
+      "b",
+      "c",
+      "d"
+     ],
+     "nodes": [
+      [
+       -1,
+       0,
+       0
+      ],
+      [
+       -1,
+       1,
+       1
+      ],
+      [
+       2,
+       0,
+       1
+      ],
+      [
+       1,
+       2,
+       1
+      ],
+      [
+       0,
+       0,
+       3
+      ]
+     ],
+     "root": 4
+    }
+   },
+   "interface": {
+    "vars": [
+     "a",
+     "b",
+     "c",
+     "d"
+    ]
+   },
+   "ontology": null,
+   "resources": {
+    "cost": {
+     "bdd_nodes": 3
+    },
+    "cost_model": "F0/bdd"
+   },
+   "provenance": {
+    "produced_by": "task:proj[b,c,d]:bdd",
+    "parents": [
+     "source"
+    ]
+   }
+  },
+  {
+   "id": "cand12",
+   "artifact": {
+    "kind": "circuit",
+    "body": {
+     "inputs": [
+      "b",
+      "c",
+      "d"
+     ],
+     "gates": [
+      {
+       "id": "g0",
+       "op": "or",
+       "in": [
+        "c",
+        "d"
+       ]
+      },
+      {
+       "id": "g1",
+       "op": "and",
+       "in": [
+        "b",
+        "g0"
+       ]
+      }
+     ],
+     "output": "g1"
+    }
+   },
+   "interface": {
+    "vars": [
+     "a",
+     "b",
+     "c",
+     "d"
+    ]
+   },
+   "ontology": null,
+   "resources": {
+    "cost": {
+     "gates": 2,
+     "depth": 2
+    },
+    "cost_model": "F0/circuit"
+   },
+   "provenance": {
+    "produced_by": "task:proj[b,c,d]:circuit",
+    "parents": [
+     "source"
+    ]
+   }
+  },
+  {
+   "id": "cand13",
+   "artifact": {
+    "kind": "dfa",
+    "body": {
+     "order": [
+      "b",
+      "c",
+      "d"
+     ],
+     "start": "L0N4",
+     "delta": {
+      "L0N4": [
+       "L1N0",
+       "L1N3"
+      ],
+      "L1N0": [
+       "L2N0",
+       "L2N0"
+      ],
+      "L1N3": [
+       "L2N2",
+       "L2N1"
+      ],
+      "L2N0": [
+       "L3N0",
+       "L3N0"
+      ],
+      "L2N1": [
+       "L3N1",
+       "L3N1"
+      ],
+      "L2N2": [
+       "L3N0",
+       "L3N1"
+      ]
+     },
+     "accept": [
+      "L3N1"
+     ]
+    }
+   },
+   "interface": {
+    "vars": [
+     "a",
+     "b",
+     "c",
+     "d"
+    ]
+   },
+   "ontology": null,
+   "resources": {
+    "cost": {
+     "states": 8,
+     "transitions": 12
+    },
+    "cost_model": "F0/dfa"
+   },
+   "provenance": {
+    "produced_by": "task:proj[b,c,d]:dfa",
+    "parents": [
+     "source"
+    ]
+   }
+  },
+  {
+   "id": "cand14",
+   "artifact": {
+    "kind": "expr",
+    "body": [
+     "and",
+     [
+      "var",
+      "b"
+     ],
+     [
+      "ite",
+      [
+       "var",
+       "c"
+      ],
+      [
+       "const",
+       1
+      ],
+      [
+       "var",
+       "d"
+      ]
+     ]
+    ]
+   },
+   "interface": {
+    "vars": [
+     "a",
+     "b",
+     "c",
+     "d"
+    ]
+   },
+   "ontology": null,
+   "resources": {
+    "cost": {
+     "ast_nodes": 6,
+     "depth": 2
+    },
+    "cost_model": "F0/expr"
+   },
+   "provenance": {
+    "produced_by": "task:proj[b,c,d]:expr",
+    "parents": [
+     "source"
+    ]
+   }
+  },
+  {
+   "id": "cand15",
+   "artifact": {
+    "kind": "bdd",
+    "body": {
+     "order": [
+      "a",
+      "b",
+      "c",
+      "d"
+     ],
+     "nodes": [
+      [
+       -1,
+       0,
+       0
+      ],
+      [
+       -1,
+       1,
+       1
+      ],
+      [
+       3,
+       0,
+       1
+      ],
+      [
+       2,
+       2,
+       1
+      ],
+      [
+       0,
+       0,
+       3
+      ]
+     ],
+     "root": 4
+    }
+   },
+   "interface": {
+    "vars": [
+     "a",
+     "b",
+     "c",
+     "d"
+    ]
+   },
+   "ontology": null,
+   "resources": {
+    "cost": {
+     "bdd_nodes": 3
+    },
+    "cost_model": "F0/bdd"
+   },
+   "provenance": {
+    "produced_by": "task:restrict:bdd",
+    "parents": [
+     "source"
+    ]
+   }
+  },
+  {
+   "id": "cand16",
+   "artifact": {
+    "kind": "circuit",
+    "body": {
+     "inputs": [
+      "a",
+      "b",
+      "c",
+      "d"
+     ],
+     "gates": [
+      {
+       "id": "g0",
+       "op": "or",
+       "in": [
+        "c",
+        "d"
+       ]
+      },
+      {
+       "id": "g1",
+       "op": "and",
+       "in": [
+        "a",
+        "g0"
+       ]
+      }
+     ],
+     "output": "g1"
+    }
+   },
+   "interface": {
+    "vars": [
+     "a",
+     "b",
+     "c",
+     "d"
+    ]
+   },
+   "ontology": null,
+   "resources": {
+    "cost": {
+     "gates": 2,
+     "depth": 2
+    },
+    "cost_model": "F0/circuit"
+   },
+   "provenance": {
+    "produced_by": "task:restrict:circuit",
+    "parents": [
+     "source"
+    ]
+   }
+  },
+  {
+   "id": "cand17",
+   "artifact": {
+    "kind": "dfa",
+    "body": {
+     "order": [
+      "a",
+      "b",
+      "c",
+      "d"
+     ],
+     "start": "L0N4",
+     "delta": {
+      "L0N4": [
+       "L1N0",
+       "L1N3"
+      ],
+      "L1N0": [
+       "L2N0",
+       "L2N0"
+      ],
+      "L1N3": [
+       "L2N3",
+       "L2N3"
+      ],
+      "L2N0": [
+       "L3N0",
+       "L3N0"
+      ],
+      "L2N3": [
+       "L3N2",
+       "L3N1"
+      ],
+      "L3N0": [
+       "L4N0",
+       "L4N0"
+      ],
+      "L3N1": [
+       "L4N1",
+       "L4N1"
+      ],
+      "L3N2": [
+       "L4N0",
+       "L4N1"
+      ]
+     },
+     "accept": [
+      "L4N1"
+     ]
+    }
+   },
+   "interface": {
+    "vars": [
+     "a",
+     "b",
+     "c",
+     "d"
+    ]
+   },
+   "ontology": null,
+   "resources": {
+    "cost": {
+     "states": 10,
+     "transitions": 16
+    },
+    "cost_model": "F0/dfa"
+   },
+   "provenance": {
+    "produced_by": "task:restrict:dfa",
+    "parents": [
+     "source"
+    ]
+   }
+  },
+  {
+   "id": "cand18",
+   "artifact": {
+    "kind": "expr",
+    "body": [
+     "and",
+     [
+      "var",
+      "a"
+     ],
+     [
+      "ite",
+      [
+       "var",
+       "c"
+      ],
+      [
+       "const",
+       1
+      ],
+      [
+       "var",
+       "d"
+      ]
+     ]
+    ]
+   },
+   "interface": {
+    "vars": [
+     "a",
+     "b",
+     "c",
+     "d"
+    ]
+   },
+   "ontology": null,
+   "resources": {
+    "cost": {
+     "ast_nodes": 6,
+     "depth": 2
+    },
+    "cost_model": "F0/expr"
+   },
+   "provenance": {
+    "produced_by": "task:restrict:expr",
+    "parents": [
+     "source"
+    ]
+   }
+  },
+  {
+   "id": "cand19",
+   "artifact": {
+    "kind": "circuit",
+    "body": {
+     "inputs": [
+      "a",
+      "b",
+      "c",
+      "d"
+     ],
+     "gates": [
+      {
+       "id": "g0",
+       "op": "and",
+       "in": [
+        "a",
+        "c"
+       ]
+      },
+      {
+       "id": "g1",
+       "op": "and",
+       "in": [
+        "b",
+        "d"
+       ]
+      },
+      {
+       "id": "g2",
+       "op": "or",
+       "in": [
+        "g0",
+        "g1"
+       ]
+      }
+     ],
+     "output": "g2"
+    }
+   },
+   "interface": {
+    "vars": [
+     "a",
+     "b",
+     "c",
+     "d"
+    ]
+   },
+   "ontology": null,
+   "resources": {
+    "cost": {
+     "gates": 3,
+     "depth": 2
+    },
+    "cost_model": "F0/circuit"
+   },
+   "provenance": {
+    "produced_by": "expr->circuit",
+    "parents": [
+     "source"
+    ]
+   }
+  },
+  {
+   "id": "cand20",
+   "artifact": {
+    "kind": "bdd",
+    "body": {
+     "order": [
+      "a",
+      "b",
+      "c",
+      "d"
+     ],
+     "nodes": [
+      [
+       -1,
+       0,
+       0
+      ],
+      [
+       -1,
+       1,
+       1
+      ],
+      [
+       3,
+       0,
+       1
+      ],
+      [
+       1,
+       0,
+       2
+      ],
+      [
+       2,
+       0,
+       1
+      ],
+      [
+       2,
+       2,
+       1
+      ],
+      [
+       1,
+       4,
+       5
+      ],
+      [
+       0,
+       3,
+       6
+      ]
+     ],
+     "root": 7
+    }
+   },
+   "interface": {
+    "vars": [
+     "a",
+     "b",
+     "c",
+     "d"
+    ]
+   },
+   "ontology": null,
+   "resources": {
+    "cost": {
+     "bdd_nodes": 6
+    },
+    "cost_model": "F0/bdd"
+   },
+   "provenance": {
+    "produced_by": "nf->bdd",
+    "parents": [
+     "source"
+    ]
+   }
+  },
+  {
+   "id": "cand21",
+   "artifact": {
+    "kind": "circuit",
+    "body": {
+     "inputs": [
+      "a",
+      "b",
+      "c",
+      "d"
+     ],
+     "gates": [
+      {
+       "id": "g0",
+       "op": "or",
+       "in": [
+        "c",
+        "d"
+       ]
+      },
+      {
+       "id": "g1",
+       "op": "and",
+       "in": [
+        "b",
+        "g0"
+       ]
+      },
+      {
+       "id": "g2",
+       "op": "not",
+       "in": [
+        "b"
+       ]
+      },
+      {
+       "id": "g3",
+       "op": "and",
+       "in": [
+        "c",
+        "g2"
+       ]
+      },
+      {
+       "id": "g4",
+       "op": "or",
+       "in": [
+        "g1",
+        "g3"
+       ]
+      },
+      {
+       "id": "g5",
+       "op": "and",
+       "in": [
+        "a",
+        "g4"
+       ]
+      },
+      {
+       "id": "g6",
+       "op": "not",
+       "in": [
+        "a"
+       ]
+      },
+      {
+       "id": "g7",
+       "op": "and",
+       "in": [
+        "b",
+        "d"
+       ]
+      },
+      {
+       "id": "g8",
+       "op": "and",
+       "in": [
+        "g6",
+        "g7"
+       ]
+      },
+      {
+       "id": "g9",
+       "op": "or",
+       "in": [
+        "g5",
+        "g8"
+       ]
+      }
+     ],
+     "output": "g9"
+    }
+   },
+   "interface": {
+    "vars": [
+     "a",
+     "b",
+     "c",
+     "d"
+    ]
+   },
+   "ontology": null,
+   "resources": {
+    "cost": {
+     "gates": 10,
+     "depth": 5
+    },
+    "cost_model": "F0/circuit"
+   },
+   "provenance": {
+    "produced_by": "nf->circuit",
+    "parents": [
+     "source"
+    ]
+   }
+  },
+  {
+   "id": "cand22",
+   "artifact": {
+    "kind": "dfa",
+    "body": {
+     "order": [
+      "a",
+      "b",
+      "c",
+      "d"
+     ],
+     "start": "L0N7",
+     "delta": {
+      "L0N7": [
+       "L1N3",
+       "L1N6"
+      ],
+      "L1N3": [
+       "L2N0",
+       "L2N2"
+      ],
+      "L1N6": [
+       "L2N4",
+       "L2N5"
+      ],
+      "L2N0": [
+       "L3N0",
+       "L3N0"
+      ],
+      "L2N2": [
+       "L3N2",
+       "L3N2"
+      ],
+      "L2N4": [
+       "L3N0",
+       "L3N1"
+      ],
+      "L2N5": [
+       "L3N2",
+       "L3N1"
+      ],
+      "L3N0": [
+       "L4N0",
+       "L4N0"
+      ],
+      "L3N1": [
+       "L4N1",
+       "L4N1"
+      ],
+      "L3N2": [
+       "L4N0",
+       "L4N1"
+      ]
+     },
+     "accept": [
+      "L4N1"
+     ]
+    }
+   },
+   "interface": {
+    "vars": [
+     "a",
+     "b",
+     "c",
+     "d"
+    ]
+   },
+   "ontology": null,
+   "resources": {
+    "cost": {
+     "states": 12,
+     "transitions": 20
+    },
+    "cost_model": "F0/dfa"
+   },
+   "provenance": {
+    "produced_by": "nf->dfa",
+    "parents": [
+     "source"
+    ]
+   }
+  },
+  {
+   "id": "cand23",
+   "artifact": {
+    "kind": "expr",
+    "body": [
+     "ite",
+     [
+      "var",
+      "a"
+     ],
+     [
+      "ite",
+      [
+       "var",
+       "b"
+      ],
+      [
+       "ite",
+       [
+        "var",
+        "c"
+       ],
+       [
+        "const",
+        1
+       ],
+       [
+        "var",
+        "d"
+       ]
+      ],
+      [
+       "var",
+       "c"
+      ]
+     ],
+     [
+      "and",
+      [
+       "var",
+       "b"
+      ],
+      [
+       "var",
+       "d"
+      ]
+     ]
+    ]
+   },
+   "interface": {
+    "vars": [
+     "a",
+     "b",
+     "c",
+     "d"
+    ]
+   },
+   "ontology": null,
+   "resources": {
+    "cost": {
+     "ast_nodes": 12,
+     "depth": 3
+    },
+    "cost_model": "F0/expr"
+   },
+   "provenance": {
+    "produced_by": "nf->expr",
+    "parents": [
+     "source"
+    ]
+   }
+  },
+  {
+   "id": "cand24",
+   "artifact": {
+    "kind": "circuit",
+    "body": {
+     "inputs": [
+      "a",
+      "b",
+      "c",
+      "d"
+     ],
+     "gates": [
+      {
+       "id": "g0",
+       "op": "const1",
+       "in": []
+      },
+      {
+       "id": "g1",
+       "op": "and",
+       "in": [
+        "c",
+        "g0"
+       ]
+      },
+      {
+       "id": "g2",
+       "op": "not",
+       "in": [
+        "c"
+       ]
+      },
+      {
+       "id": "g3",
+       "op": "and",
+       "in": [
+        "d",
+        "g2"
+       ]
+      },
+      {
+       "id": "g4",
+       "op": "or",
+       "in": [
+        "g1",
+        "g3"
+       ]
+      },
+      {
+       "id": "g5",
+       "op": "and",
+       "in": [
+        "b",
+        "g4"
+       ]
+      },
+      {
+       "id": "g6",
+       "op": "not",
+       "in": [
+        "b"
+       ]
+      },
+      {
+       "id": "g7",
+       "op": "and",
+       "in": [
+        "c",
+        "g6"
+       ]
+      },
+      {
+       "id": "g8",
+       "op": "or",
+       "in": [
+        "g5",
+        "g7"
+       ]
+      },
+      {
+       "id": "g9",
+       "op": "and",
+       "in": [
+        "b",
+        "d"
+       ]
+      },
+      {
+       "id": "g10",
+       "op": "and",
+       "in": [
+        "a",
+        "g8"
+       ]
+      },
+      {
+       "id": "g11",
+       "op": "not",
+       "in": [
+        "a"
+       ]
+      },
+      {
+       "id": "g12",
+       "op": "and",
+       "in": [
+        "g11",
+        "g9"
+       ]
+      },
+      {
+       "id": "g13",
+       "op": "or",
+       "in": [
+        "g10",
+        "g12"
+       ]
+      }
+     ],
+     "output": "g13"
+    }
+   },
+   "interface": {
+    "vars": [
+     "a",
+     "b",
+     "c",
+     "d"
+    ]
+   },
+   "ontology": null,
+   "resources": {
+    "cost": {
+     "gates": 14,
+     "depth": 7
+    },
+    "cost_model": "F0/circuit"
+   },
+   "provenance": {
+    "produced_by": "nf->expr->circuit",
+    "parents": [
+     "source"
+    ]
+   }
+  }
+ ],
+ "links": [
+  {
+   "from": "source",
+   "to": "cand0",
+   "relation": "extensional",
+   "protocol": {
+    "vars": [
+     "a",
+     "b",
+     "c",
+     "d"
+    ]
+   },
+   "certificate": {
+    "method": "exhaustive"
+   },
+   "warrant": {
+    "basis": [
+     "kernel-checked"
+    ],
+    "trusted_base": [
+     "CPython",
+     "cerp/kernel.py v0.2.0",
+     "hardware"
+    ],
+    "conditions": []
+   },
+   "claim": "C002"
+  },
+  {
+   "from": "source",
+   "to": "cand1",
+   "relation": "extensional",
+   "protocol": {
+    "vars": [
+     "a",
+     "b",
+     "c",
+     "d"
+    ]
+   },
+   "certificate": {
+    "method": "exhaustive"
+   },
+   "warrant": {
+    "basis": [
+     "kernel-checked"
+    ],
+    "trusted_base": [
+     "CPython",
+     "cerp/kernel.py v0.2.0",
+     "hardware"
+    ],
+    "conditions": []
+   },
+   "claim": "C003"
+  },
+  {
+   "from": "source",
+   "to": "cand2",
+   "relation": "extensional",
+   "protocol": {
+    "vars": [
+     "a",
+     "b",
+     "c",
+     "d"
+    ]
+   },
+   "certificate": {
+    "method": "exhaustive"
+   },
+   "warrant": {
+    "basis": [
+     "kernel-checked"
+    ],
+    "trusted_base": [
+     "CPython",
+     "cerp/kernel.py v0.2.0",
+     "hardware"
+    ],
+    "conditions": []
+   },
+   "claim": "C004"
+  },
+  {
+   "from": "source",
+   "to": "cand3",
+   "relation": "extensional",
+   "protocol": {
+    "vars": [
+     "a",
+     "b",
+     "c",
+     "d"
+    ]
+   },
+   "certificate": {
+    "method": "exhaustive"
+   },
+   "warrant": {
+    "basis": [
+     "kernel-checked"
+    ],
+    "trusted_base": [
+     "CPython",
+     "cerp/kernel.py v0.2.0",
+     "hardware"
+    ],
+    "conditions": []
+   },
+   "claim": "C005"
+  },
+  {
+   "from": "source",
+   "to": "cand4",
+   "relation": "extensional",
+   "protocol": {
+    "vars": [
+     "a",
+     "b",
+     "c",
+     "d"
+    ]
+   },
+   "certificate": {
+    "method": "exhaustive"
+   },
+   "warrant": {
+    "basis": [
+     "kernel-checked"
+    ],
+    "trusted_base": [
+     "CPython",
+     "cerp/kernel.py v0.2.0",
+     "hardware"
+    ],
+    "conditions": []
+   },
+   "claim": "C006"
+  },
+  {
+   "from": "source",
+   "to": "cand5",
+   "relation": "extensional",
+   "protocol": {
+    "vars": [
+     "a",
+     "b",
+     "c",
+     "d"
+    ]
+   },
+   "certificate": {
+    "method": "exhaustive"
+   },
+   "warrant": {
+    "basis": [
+     "kernel-checked"
+    ],
+    "trusted_base": [
+     "CPython",
+     "cerp/kernel.py v0.2.0",
+     "hardware"
+    ],
+    "conditions": []
+   },
+   "claim": "C007"
+  },
+  {
+   "from": "source",
+   "to": "cand7",
+   "relation": "task",
+   "protocol": {
+    "vars": [
+     "a",
+     "b",
+     "c",
+     "d"
+    ],
+    "care": {
+     "kind": "expr",
+     "body": [
+      "not",
+      [
+       "xor",
+       [
+        "var",
+        "a"
+       ],
+       [
+        "var",
+        "b"
+       ]
+      ]
+     ]
+    }
+   },
+   "certificate": {
+    "method": "exhaustive"
+   },
+   "warrant": {
+    "basis": [
+     "kernel-checked"
+    ],
+    "trusted_base": [
+     "CPython",
+     "cerp/kernel.py v0.2.0",
+     "hardware"
+    ],
+    "conditions": []
+   },
+   "claim": "C020"
+  },
+  {
+   "from": "source",
+   "to": "cand8",
+   "relation": "task",
+   "protocol": {
+    "vars": [
+     "a",
+     "b",
+     "c",
+     "d"
+    ],
+    "care": {
+     "kind": "expr",
+     "body": [
+      "not",
+      [
+       "xor",
+       [
+        "var",
+        "a"
+       ],
+       [
+        "var",
+        "b"
+       ]
+      ]
+     ]
+    }
+   },
+   "certificate": {
+    "method": "exhaustive"
+   },
+   "warrant": {
+    "basis": [
+     "kernel-checked"
+    ],
+    "trusted_base": [
+     "CPython",
+     "cerp/kernel.py v0.2.0",
+     "hardware"
+    ],
+    "conditions": []
+   },
+   "claim": "C021"
+  },
+  {
+   "from": "source",
+   "to": "cand9",
+   "relation": "task",
+   "protocol": {
+    "vars": [
+     "a",
+     "b",
+     "c",
+     "d"
+    ],
+    "care": {
+     "kind": "expr",
+     "body": [
+      "not",
+      [
+       "xor",
+       [
+        "var",
+        "a"
+       ],
+       [
+        "var",
+        "b"
+       ]
+      ]
+     ]
+    }
+   },
+   "certificate": {
+    "method": "exhaustive"
+   },
+   "warrant": {
+    "basis": [
+     "kernel-checked"
+    ],
+    "trusted_base": [
+     "CPython",
+     "cerp/kernel.py v0.2.0",
+     "hardware"
+    ],
+    "conditions": []
+   },
+   "claim": "C022"
+  },
+  {
+   "from": "source",
+   "to": "cand10",
+   "relation": "task",
+   "protocol": {
+    "vars": [
+     "a",
+     "b",
+     "c",
+     "d"
+    ],
+    "care": {
+     "kind": "expr",
+     "body": [
+      "not",
+      [
+       "xor",
+       [
+        "var",
+        "a"
+       ],
+       [
+        "var",
+        "b"
+       ]
+      ]
+     ]
+    }
+   },
+   "certificate": {
+    "method": "exhaustive"
+   },
+   "warrant": {
+    "basis": [
+     "kernel-checked"
+    ],
+    "trusted_base": [
+     "CPython",
+     "cerp/kernel.py v0.2.0",
+     "hardware"
+    ],
+    "conditions": []
+   },
+   "claim": "C023"
+  },
+  {
+   "from": "source",
+   "to": "cand11",
+   "relation": "task",
+   "protocol": {
+    "vars": [
+     "a",
+     "b",
+     "c",
+     "d"
+    ],
+    "care": {
+     "kind": "expr",
+     "body": [
+      "not",
+      [
+       "xor",
+       [
+        "var",
+        "a"
+       ],
+       [
+        "var",
+        "b"
+       ]
+      ]
+     ]
+    }
+   },
+   "certificate": {
+    "method": "exhaustive"
+   },
+   "warrant": {
+    "basis": [
+     "kernel-checked"
+    ],
+    "trusted_base": [
+     "CPython",
+     "cerp/kernel.py v0.2.0",
+     "hardware"
+    ],
+    "conditions": []
+   },
+   "claim": "C024"
+  },
+  {
+   "from": "source",
+   "to": "cand12",
+   "relation": "task",
+   "protocol": {
+    "vars": [
+     "a",
+     "b",
+     "c",
+     "d"
+    ],
+    "care": {
+     "kind": "expr",
+     "body": [
+      "not",
+      [
+       "xor",
+       [
+        "var",
+        "a"
+       ],
+       [
+        "var",
+        "b"
+       ]
+      ]
+     ]
+    }
+   },
+   "certificate": {
+    "method": "exhaustive"
+   },
+   "warrant": {
+    "basis": [
+     "kernel-checked"
+    ],
+    "trusted_base": [
+     "CPython",
+     "cerp/kernel.py v0.2.0",
+     "hardware"
+    ],
+    "conditions": []
+   },
+   "claim": "C025"
+  },
+  {
+   "from": "source",
+   "to": "cand13",
+   "relation": "task",
+   "protocol": {
+    "vars": [
+     "a",
+     "b",
+     "c",
+     "d"
+    ],
+    "care": {
+     "kind": "expr",
+     "body": [
+      "not",
+      [
+       "xor",
+       [
+        "var",
+        "a"
+       ],
+       [
+        "var",
+        "b"
+       ]
+      ]
+     ]
+    }
+   },
+   "certificate": {
+    "method": "exhaustive"
+   },
+   "warrant": {
+    "basis": [
+     "kernel-checked"
+    ],
+    "trusted_base": [
+     "CPython",
+     "cerp/kernel.py v0.2.0",
+     "hardware"
+    ],
+    "conditions": []
+   },
+   "claim": "C026"
+  },
+  {
+   "from": "source",
+   "to": "cand14",
+   "relation": "task",
+   "protocol": {
+    "vars": [
+     "a",
+     "b",
+     "c",
+     "d"
+    ],
+    "care": {
+     "kind": "expr",
+     "body": [
+      "not",
+      [
+       "xor",
+       [
+        "var",
+        "a"
+       ],
+       [
+        "var",
+        "b"
+       ]
+      ]
+     ]
+    }
+   },
+   "certificate": {
+    "method": "exhaustive"
+   },
+   "warrant": {
+    "basis": [
+     "kernel-checked"
+    ],
+    "trusted_base": [
+     "CPython",
+     "cerp/kernel.py v0.2.0",
+     "hardware"
+    ],
+    "conditions": []
+   },
+   "claim": "C027"
+  },
+  {
+   "from": "source",
+   "to": "cand15",
+   "relation": "task",
+   "protocol": {
+    "vars": [
+     "a",
+     "b",
+     "c",
+     "d"
+    ],
+    "care": {
+     "kind": "expr",
+     "body": [
+      "not",
+      [
+       "xor",
+       [
+        "var",
+        "a"
+       ],
+       [
+        "var",
+        "b"
+       ]
+      ]
+     ]
+    }
+   },
+   "certificate": {
+    "method": "exhaustive"
+   },
+   "warrant": {
+    "basis": [
+     "kernel-checked"
+    ],
+    "trusted_base": [
+     "CPython",
+     "cerp/kernel.py v0.2.0",
+     "hardware"
+    ],
+    "conditions": []
+   },
+   "claim": "C028"
+  },
+  {
+   "from": "source",
+   "to": "cand16",
+   "relation": "task",
+   "protocol": {
+    "vars": [
+     "a",
+     "b",
+     "c",
+     "d"
+    ],
+    "care": {
+     "kind": "expr",
+     "body": [
+      "not",
+      [
+       "xor",
+       [
+        "var",
+        "a"
+       ],
+       [
+        "var",
+        "b"
+       ]
+      ]
+     ]
+    }
+   },
+   "certificate": {
+    "method": "exhaustive"
+   },
+   "warrant": {
+    "basis": [
+     "kernel-checked"
+    ],
+    "trusted_base": [
+     "CPython",
+     "cerp/kernel.py v0.2.0",
+     "hardware"
+    ],
+    "conditions": []
+   },
+   "claim": "C029"
+  },
+  {
+   "from": "source",
+   "to": "cand17",
+   "relation": "task",
+   "protocol": {
+    "vars": [
+     "a",
+     "b",
+     "c",
+     "d"
+    ],
+    "care": {
+     "kind": "expr",
+     "body": [
+      "not",
+      [
+       "xor",
+       [
+        "var",
+        "a"
+       ],
+       [
+        "var",
+        "b"
+       ]
+      ]
+     ]
+    }
+   },
+   "certificate": {
+    "method": "exhaustive"
+   },
+   "warrant": {
+    "basis": [
+     "kernel-checked"
+    ],
+    "trusted_base": [
+     "CPython",
+     "cerp/kernel.py v0.2.0",
+     "hardware"
+    ],
+    "conditions": []
+   },
+   "claim": "C030"
+  },
+  {
+   "from": "source",
+   "to": "cand18",
+   "relation": "task",
+   "protocol": {
+    "vars": [
+     "a",
+     "b",
+     "c",
+     "d"
+    ],
+    "care": {
+     "kind": "expr",
+     "body": [
+      "not",
+      [
+       "xor",
+       [
+        "var",
+        "a"
+       ],
+       [
+        "var",
+        "b"
+       ]
+      ]
+     ]
+    }
+   },
+   "certificate": {
+    "method": "exhaustive"
+   },
+   "warrant": {
+    "basis": [
+     "kernel-checked"
+    ],
+    "trusted_base": [
+     "CPython",
+     "cerp/kernel.py v0.2.0",
+     "hardware"
+    ],
+    "conditions": []
+   },
+   "claim": "C031"
+  },
+  {
+   "from": "source",
+   "to": "cand19",
+   "relation": "task",
+   "protocol": {
+    "vars": [
+     "a",
+     "b",
+     "c",
+     "d"
+    ],
+    "care": {
+     "kind": "expr",
+     "body": [
+      "not",
+      [
+       "xor",
+       [
+        "var",
+        "a"
+       ],
+       [
+        "var",
+        "b"
+       ]
+      ]
+     ]
+    }
+   },
+   "certificate": {
+    "method": "exhaustive"
+   },
+   "warrant": {
+    "basis": [
+     "kernel-checked"
+    ],
+    "trusted_base": [
+     "CPython",
+     "cerp/kernel.py v0.2.0",
+     "hardware"
+    ],
+    "conditions": []
+   },
+   "claim": "C032"
+  },
+  {
+   "from": "source",
+   "to": "cand20",
+   "relation": "task",
+   "protocol": {
+    "vars": [
+     "a",
+     "b",
+     "c",
+     "d"
+    ],
+    "care": {
+     "kind": "expr",
+     "body": [
+      "not",
+      [
+       "xor",
+       [
+        "var",
+        "a"
+       ],
+       [
+        "var",
+        "b"
+       ]
+      ]
+     ]
+    }
+   },
+   "certificate": {
+    "method": "exhaustive"
+   },
+   "warrant": {
+    "basis": [
+     "kernel-checked"
+    ],
+    "trusted_base": [
+     "CPython",
+     "cerp/kernel.py v0.2.0",
+     "hardware"
+    ],
+    "conditions": []
+   },
+   "claim": "C033"
+  },
+  {
+   "from": "source",
+   "to": "cand21",
+   "relation": "task",
+   "protocol": {
+    "vars": [
+     "a",
+     "b",
+     "c",
+     "d"
+    ],
+    "care": {
+     "kind": "expr",
+     "body": [
+      "not",
+      [
+       "xor",
+       [
+        "var",
+        "a"
+       ],
+       [
+        "var",
+        "b"
+       ]
+      ]
+     ]
+    }
+   },
+   "certificate": {
+    "method": "exhaustive"
+   },
+   "warrant": {
+    "basis": [
+     "kernel-checked"
+    ],
+    "trusted_base": [
+     "CPython",
+     "cerp/kernel.py v0.2.0",
+     "hardware"
+    ],
+    "conditions": []
+   },
+   "claim": "C034"
+  },
+  {
+   "from": "source",
+   "to": "cand22",
+   "relation": "task",
+   "protocol": {
+    "vars": [
+     "a",
+     "b",
+     "c",
+     "d"
+    ],
+    "care": {
+     "kind": "expr",
+     "body": [
+      "not",
+      [
+       "xor",
+       [
+        "var",
+        "a"
+       ],
+       [
+        "var",
+        "b"
+       ]
+      ]
+     ]
+    }
+   },
+   "certificate": {
+    "method": "exhaustive"
+   },
+   "warrant": {
+    "basis": [
+     "kernel-checked"
+    ],
+    "trusted_base": [
+     "CPython",
+     "cerp/kernel.py v0.2.0",
+     "hardware"
+    ],
+    "conditions": []
+   },
+   "claim": "C035"
+  },
+  {
+   "from": "source",
+   "to": "cand23",
+   "relation": "task",
+   "protocol": {
+    "vars": [
+     "a",
+     "b",
+     "c",
+     "d"
+    ],
+    "care": {
+     "kind": "expr",
+     "body": [
+      "not",
+      [
+       "xor",
+       [
+        "var",
+        "a"
+       ],
+       [
+        "var",
+        "b"
+       ]
+      ]
+     ]
+    }
+   },
+   "certificate": {
+    "method": "exhaustive"
+   },
+   "warrant": {
+    "basis": [
+     "kernel-checked"
+    ],
+    "trusted_base": [
+     "CPython",
+     "cerp/kernel.py v0.2.0",
+     "hardware"
+    ],
+    "conditions": []
+   },
+   "claim": "C036"
+  },
+  {
+   "from": "source",
+   "to": "cand24",
+   "relation": "task",
+   "protocol": {
+    "vars": [
+     "a",
+     "b",
+     "c",
+     "d"
+    ],
+    "care": {
+     "kind": "expr",
+     "body": [
+      "not",
+      [
+       "xor",
+       [
+        "var",
+        "a"
+       ],
+       [
+        "var",
+        "b"
+       ]
+      ]
+     ]
+    }
+   },
+   "certificate": {
+    "method": "exhaustive"
+   },
+   "warrant": {
+    "basis": [
+     "kernel-checked"
+    ],
+    "trusted_base": [
+     "CPython",
+     "cerp/kernel.py v0.2.0",
+     "hardware"
+    ],
+    "conditions": []
+   },
+   "claim": "C037"
+  }
+ ]
+}

@@ -1,0 +1,205 @@
+{
+ "csir": "0.1",
+ "nodes": [
+  {
+   "id": "world",
+   "artifact": {
+    "kind": "world",
+    "body": null
+   },
+   "interface": {
+    "observables": [
+     "A",
+     "S1",
+     "S2",
+     "Y"
+    ],
+    "protocols": [
+     "{}",
+     "{'A': 0}",
+     "{'A': 1}",
+     "{'S1': 0}",
+     "{'S1': 1}"
+    ]
+   },
+   "ontology": null,
+   "resources": null,
+   "provenance": {
+    "produced_by": "measurement interface"
+   }
+  },
+  {
+   "id": "O1",
+   "artifact": {
+    "kind": "causal-model",
+    "body": {
+     "parents": {
+      "Z": [
+       "A"
+      ],
+      "S1": [
+       "Z"
+      ],
+      "S2": [
+       "Z"
+      ],
+      "Y": [
+       "Z"
+      ],
+      "A": []
+     },
+     "latents": [
+      "Z"
+     ]
+    }
+   },
+   "interface": {
+    "observables": [
+     "A",
+     "S1",
+     "S2",
+     "Y"
+    ],
+    "latents": [
+     "Z"
+    ]
+   },
+   "ontology": {
+    "commitments": [
+     [
+      "causes",
+      "A",
+      "Z"
+     ],
+     [
+      "causes",
+      "Z",
+      "S1"
+     ],
+     [
+      "causes",
+      "Z",
+      "S2"
+     ],
+     [
+      "causes",
+      "Z",
+      "Y"
+     ],
+     [
+      "exists-latent",
+      "Z"
+     ]
+    ]
+   },
+   "resources": null,
+   "provenance": {
+    "produced_by": "researcher"
+   }
+  }
+ ],
+ "links": [
+  {
+   "from": "O1",
+   "to": "world",
+   "relation": "adequate-to",
+   "protocol": {
+    "protocols": [
+     "do(A=0)",
+     "do(A=1)",
+     "do(S1=0)",
+     "do(S1=1)",
+     "observe"
+    ]
+   },
+   "certificate": {
+    "evidence": [
+     {
+      "protocol": "G-test of a prediction made before the data, null calibrated by parametric bootstrap (B=30, Satterthwaite); Bonferroni alpha=3.57e-04",
+      "data": {
+       "n": 1500,
+       "G": 5.24,
+       "df_eff": 5.86
+      },
+      "uncertainty": "p=0.845; adequacy is protocol- and n-indexed (charter \u00a75.8)"
+     },
+     {
+      "protocol": "G-test of a prediction made before the data, null calibrated by parametric bootstrap (B=30, Satterthwaite); Bonferroni alpha=3.57e-04",
+      "data": {
+       "n": 1500,
+       "G": 3.49,
+       "df_eff": 9.12
+      },
+      "uncertainty": "p=0.986; adequacy is protocol- and n-indexed (charter \u00a75.8)"
+     },
+     {
+      "protocol": "G-test of a prediction made before the data, null calibrated by parametric bootstrap (B=30, Satterthwaite); Bonferroni alpha=3.57e-04",
+      "data": {
+       "n": 1500,
+       "G": 7.79,
+       "df_eff": 5.84
+      },
+      "uncertainty": "p=0.715; adequacy is protocol- and n-indexed (charter \u00a75.8)"
+     },
+     {
+      "protocol": "G-test of a prediction made before the data, null calibrated by parametric bootstrap (B=30, Satterthwaite); Bonferroni alpha=3.57e-04",
+      "data": {
+       "n": 1500,
+       "G": 18.46,
+       "df_eff": 2.75
+      },
+      "uncertainty": "p=0.091; adequacy is protocol- and n-indexed (charter \u00a75.8)"
+     },
+     {
+      "protocol": "G-test of a prediction made before the data, null calibrated by parametric bootstrap (B=30, Satterthwaite); Bonferroni alpha=3.57e-04",
+      "data": {
+       "n": 1500,
+       "G": 4.04,
+       "df_eff": 10.06
+      },
+      "uncertainty": "p=0.902; adequacy is protocol- and n-indexed (charter \u00a75.8)"
+     },
+     {
+      "protocol": "G-test of a prediction made before the data, null calibrated by parametric bootstrap (B=30, Satterthwaite); Bonferroni alpha=3.57e-04",
+      "data": {
+       "n": 1500,
+       "G": 3.7,
+       "df_eff": 5.56
+      },
+      "uncertainty": "p=0.816; adequacy is protocol- and n-indexed (charter \u00a75.8)"
+     },
+     {
+      "protocol": "G-test of a prediction made before the data, null calibrated by parametric bootstrap (B=30, Satterthwaite); Bonferroni alpha=3.57e-04",
+      "data": {
+       "n": 1500,
+       "G": 6.77,
+       "df_eff": 6.19
+      },
+      "uncertainty": "p=0.448; adequacy is protocol- and n-indexed (charter \u00a75.8)"
+     },
+     {
+      "protocol": "G-test of a prediction made before the data, null calibrated by parametric bootstrap (B=30, Satterthwaite); Bonferroni alpha=3.57e-04",
+      "data": {
+       "n": 1500,
+       "G": 7.55,
+       "df_eff": 5.96
+      },
+      "uncertainty": "p=0.491; adequacy is protocol- and n-indexed (charter \u00a75.8)"
+     }
+    ]
+   },
+   "warrant": {
+    "basis": [
+     "empirical"
+    ],
+    "trusted_base": [
+     "CPython",
+     "analysis code",
+     "hardware"
+    ],
+    "conditions": []
+   },
+   "claim": "E030"
+  }
+ ]
+}
