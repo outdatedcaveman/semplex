@@ -29,27 +29,16 @@ Rules of thumb:
 | **03** | Succinct equivalence certificates (RUP) | Proof-carrying translation past the exhaustive wall (S01 F3) | **done**, see `experiments/SPIKE_03_REPORT.md` |
 | **04** | Status as structured warrant | §10 taxonomy as a partial order (S01 F7, S02 F8) | **done**, see `experiments/SPIKE_04_REPORT.md`, ADR-0004 |
 | **05** | F1: stateful systems (LTS) | Trace vs completed-trace vs bisimulation; "don't collapse into I/O functions" | **done**, see `experiments/SPIKE_05_REPORT.md` |
-| 06 | Kernel in a proof assistant (Lean 4) | Layer A: prove the kernel's decision procedures correct | **blocked**: Lean 4.12 downloads fine, but running a downloaded binary needs your permission (see plan below) |
+| **06** | Kernel in a proof assistant (Lean 4) | Layer A: prove the kernel's decision procedures correct | **done**, see `experiments/SPIKE_06_REPORT.md` |
+| **T** | Protocol-Frame Theory | Unify the spikes formally | **v0.1 done**: `THEORY.md`, 11 theorems in `proofs/lean/Theory.lean` |
 | **07** | CSIR v0.1 extraction | One schema across fragments; composition along the relation order | **done**, see `experiments/SPIKE_07_REPORT.md` |
 | — | Bibliography verification | Charter §13: no unverified citations | **done**, see `charter/BIBLIOGRAPHY.md` (two corroborations, one discrepancy) |
-
-### Spike 06 plan (ready to run once the toolchain is permitted)
-
-Goal: move the PROVED-IN-FRAGMENT trusted base from "220 lines of Python + CPython" toward a proof-assistant kernel. The smallest slice, in Lean 4 core (no Mathlib):
-
-1. Define `Expr` (const, var, not, and, or, xor, ite) and `eval : Expr → (Fin n → Bool) → Bool`.
-2. Define `allAssignments n : List (Fin n → Bool)` and prove completeness: every assignment is in the list.
-3. Define `decideEquiv e₁ e₂ := allAssignments.all (fun σ => eval e₁ σ == eval e₂ σ)` and prove `decideEquiv e₁ e₂ = true ↔ ∀ σ, eval e₁ σ = eval e₂ σ`. That is soundness and completeness of Spike 01's exhaustive kernel, in a fragment.
-4. Stretch goal: a verified RUP checker for Spike 03 (unit propagation soundness), the step that would make large-n proofs proof-assistant-backed.
-
-**Kill criterion:** the proofs need more than core Lean, or the Lean statement cannot be connected to the Python artifacts without a large trusted translation. In that case, record the bridge as the new weakest link.
-
-**What is needed from you:** permission to run the Lean 4 toolchain, downloaded from the official `leanprover/lean4` GitHub releases (a `Bash` permission rule, or approval when prompted).
 
 ### Proposed next spikes
 
 | Spike | Focus | Why now |
 |---|---|---|
+| T2 | Theory conjectures C1–C5 (`THEORY.md` §5) | C1 (statistical lift) and C2 (limit representations) first: they decide whether the theory survives contact with finite data and with the long-run properties science cares about |
 | 08 | Bridge: world-model ↔ executable artifact | CSIR has no link from a causal model to a circuit or program implementing its decision rule. This is the charter's §8 steps 9–10 (distill, then translate and verify) |
 | 09 | LRAT certificates | S03 F3: hint-carrying proofs should make checking linear (literature agrees, see `charter/BIBLIOGRAPHY.md`) |
 | 10 | Stress the epistemic agent | A non-parsimonious truth (S02b gap), cancelling paths (faithfulness premise), noisy interventions, more latents |

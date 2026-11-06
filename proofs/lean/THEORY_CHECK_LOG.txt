@@ -1,0 +1,20 @@
+# Lean (version 4.12.0, x86_64-unknown-linux-gnu, commit dc2533473114, Release)
+# Theory.lean compiled with no errors; grep for sorry in source: 0 occurrences
+'PFT.indist_antitone' does not depend on any axioms
+'PFT.galois' does not depend on any axioms
+'PFT.duality' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PFT.determines_mono' does not depend on any axioms
+'PFT.decisive_necessary' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PFT.least_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PFT.realizable' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PFT.gated_sound' does not depend on any axioms
+'PFT.gated_complete' does not depend on any axioms
+'PFT.no_flip' does not depend on any axioms
+'PFT.closed_world_necessary' depends on axioms: [propext]
+'PFT.underdetermination' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PFT.join_is_greatest_lower_bound' does not depend on any axioms
+'PFT.stronger_trans' does not depend on any axioms
+'PFT.canonical_factorization' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PFT.no_minimal_representation' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PFT.finitary_least' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PFT.eventuallyOn_upd' depends on axioms: [propext, Quot.sound]

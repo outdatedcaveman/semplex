@@ -19,13 +19,22 @@ We build toward it **agilely**. Each step is a thin end-to-end *spike* that test
 - **05, stateful systems:** equivalence is protocol-indexed; trace ≠ bisimulation, and the difference is observable in a context.
 - **07, CSIR v0.1:** one schema across all fragments, with certified links re-verifiable from the bundle alone.
 
-Citations are verified in `charter/BIBLIOGRAPHY.md`. **Spike 06 (Lean kernel)** is blocked on permission to run the toolchain; its plan is in `ROADMAP.md`.
+**Spike 06 is done**: the kernel's deciders are *proved* correct in Lean 4, and concrete claims are checked by Lean's kernel through an audited bridge.
+
+**The theory: [`THEORY.md`](THEORY.md).** Protocol-Frame Theory unifies the spikes. Its 11 theorems are machine-checked in `proofs/lean/Theory.lean`:
+- representation, inquiry and testing are one hitting-set problem;
+- canonical objects are relative to observational power;
+- minimal representations are unique exactly when every distinction has a decisive protocol, and can fail to exist at all for tail properties;
+- honest abstention is sound and never flips;
+- the ledger's weakest-link rule is the optimal safe rule.
+
+Citations are verified in `charter/BIBLIOGRAPHY.md`.
 
 ## Run it
 
 ```bash
 pip install pytest
-python -m pytest -q                                   # 81 tests
+python -m pytest -q                                   # 86 tests (Lean tests need CERP_LEAN=/path/to/lean)
 python -m cerp.demo                                   # spike 01: redundant-sensor alarm, full ledger
 python -m cerp.epistemics.demo latent_confounded all  # spike 02: watch an inquiry into a hidden world
 python -m experiments.spike01                         # -> experiments/results/spike01.json
@@ -46,6 +55,8 @@ python -m experiments.spike05                         # LTS equivalence hierarch
 | `cerp/epistemics/` | Spikes 02/02b: causal Bayes nets with latents, sandbox worlds (ground truth, agent may not import), rival ontologies, the inquiry loop, ontology generation |
 | `cerp/sat.py`, `cerp/lts.py`, `cerp/csir.py` | Spikes 03, 05, 07: untrusted CDCL solver, LTS algorithms, CSIR schema |
 | `csir/examples/` | Example CSIR bundles from three fragments |
+| `proofs/lean/` | Lean 4 proofs: kernel deciders (`Cerp.lean`) and the theory (`Theory.lean`), with axiom audits |
+| `THEORY.md` | Protocol-Frame Theory: definitions, theorems, conjectures |
 | `tests/` | Correctness and adversarial tests, including charter §12.1 criteria |
 | `experiments/` | Spike experiments, reports and raw results |
 | `claims/REGISTER.md` | Program-level claims, with honest status |
