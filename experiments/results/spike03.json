@@ -1,0 +1,366 @@
+{
+ "families": {
+  "carry: ripple vs prefix": [
+   {
+    "n": 8,
+    "status": "unsat",
+    "search_s": 0.001,
+    "conflicts": 25,
+    "certified": true,
+    "lemmas": 25,
+    "check_s": 0.001,
+    "lemma_literals": 81,
+    "correct": true,
+    "exhaustive_s": 0.005,
+    "exhaustive_agrees": true
+   },
+   {
+    "n": 16,
+    "status": "unsat",
+    "search_s": 0.001,
+    "conflicts": 45,
+    "certified": true,
+    "lemmas": 45,
+    "check_s": 0.001,
+    "lemma_literals": 154,
+    "correct": true,
+    "exhaustive_s": 2.492,
+    "exhaustive_agrees": true
+   },
+   {
+    "n": 24,
+    "status": "unsat",
+    "search_s": 0.004,
+    "conflicts": 86,
+    "certified": true,
+    "lemmas": 86,
+    "check_s": 0.002,
+    "lemma_literals": 287,
+    "correct": true
+   },
+   {
+    "n": 32,
+    "status": "unsat",
+    "search_s": 0.007,
+    "conflicts": 117,
+    "certified": true,
+    "lemmas": 117,
+    "check_s": 0.003,
+    "lemma_literals": 402,
+    "correct": true
+   },
+   {
+    "n": 48,
+    "status": "unsat",
+    "search_s": 0.013,
+    "conflicts": 165,
+    "certified": true,
+    "lemmas": 165,
+    "check_s": 0.005,
+    "lemma_literals": 603,
+    "correct": true
+   },
+   {
+    "n": 64,
+    "status": "unsat",
+    "search_s": 0.03,
+    "conflicts": 250,
+    "certified": true,
+    "lemmas": 250,
+    "check_s": 0.01,
+    "lemma_literals": 897,
+    "correct": true
+   }
+  ],
+  "carry: ripple vs BUGGY prefix": [
+   {
+    "n": 8,
+    "status": "sat",
+    "search_s": 0.0,
+    "conflicts": 8,
+    "certified": true,
+    "check_s": 3e-05,
+    "correct": true,
+    "exhaustive_s": 0.001,
+    "exhaustive_agrees": true
+   },
+   {
+    "n": 16,
+    "status": "sat",
+    "search_s": 0.001,
+    "conflicts": 20,
+    "certified": true,
+    "check_s": 4e-05,
+    "correct": true,
+    "exhaustive_s": 0.116,
+    "exhaustive_agrees": true
+   },
+   {
+    "n": 24,
+    "status": "sat",
+    "search_s": 0.001,
+    "conflicts": 27,
+    "certified": true,
+    "check_s": 5e-05,
+    "correct": true
+   },
+   {
+    "n": 32,
+    "status": "sat",
+    "search_s": 0.002,
+    "conflicts": 35,
+    "certified": true,
+    "check_s": 7e-05,
+    "correct": true
+   },
+   {
+    "n": 48,
+    "status": "sat",
+    "search_s": 0.004,
+    "conflicts": 54,
+    "certified": true,
+    "check_s": 0.0001,
+    "correct": true
+   },
+   {
+    "n": 64,
+    "status": "sat",
+    "search_s": 0.008,
+    "conflicts": 80,
+    "certified": true,
+    "check_s": 0.00015,
+    "correct": true
+   }
+  ],
+  "a<b: msb-scan vs borrow-chain": [
+   {
+    "n": 8,
+    "status": "unsat",
+    "search_s": 0.001,
+    "conflicts": 26,
+    "certified": true,
+    "lemmas": 26,
+    "check_s": 0.001,
+    "lemma_literals": 99,
+    "correct": true,
+    "exhaustive_s": 0.008,
+    "exhaustive_agrees": true
+   },
+   {
+    "n": 16,
+    "status": "unsat",
+    "search_s": 0.005,
+    "conflicts": 97,
+    "certified": true,
+    "lemmas": 97,
+    "check_s": 0.005,
+    "lemma_literals": 781,
+    "correct": true,
+    "exhaustive_s": 3.797,
+    "exhaustive_agrees": true
+   },
+   {
+    "n": 24,
+    "status": "unsat",
+    "search_s": 0.011,
+    "conflicts": 156,
+    "certified": true,
+    "lemmas": 156,
+    "check_s": 0.01,
+    "lemma_literals": 2195,
+    "correct": true
+   },
+   {
+    "n": 32,
+    "status": "unsat",
+    "search_s": 0.022,
+    "conflicts": 258,
+    "certified": true,
+    "lemmas": 258,
+    "check_s": 0.023,
+    "lemma_literals": 5955,
+    "correct": true
+   },
+   {
+    "n": 48,
+    "status": "unsat",
+    "search_s": 0.043,
+    "conflicts": 321,
+    "certified": true,
+    "lemmas": 321,
+    "check_s": 0.028,
+    "lemma_literals": 4804,
+    "correct": true
+   },
+   {
+    "n": 64,
+    "status": "unsat",
+    "search_s": 0.083,
+    "conflicts": 370,
+    "certified": true,
+    "lemmas": 370,
+    "check_s": 0.037,
+    "lemma_literals": 6768,
+    "correct": true
+   }
+  ]
+ },
+ "random_expr_vs_canonical": [
+  {
+   "n": 12,
+   "status": "unsat",
+   "search_s": 0.119,
+   "conflicts": 504,
+   "certified": true,
+   "lemmas": 504,
+   "check_s": 0.146,
+   "lemma_literals": 9475,
+   "correct": true,
+   "exhaustive_s": 0.984,
+   "exhaustive_agrees": true,
+   "bdd_nodes": 229
+  },
+  {
+   "n": 12,
+   "status": "unsat",
+   "search_s": 0.081,
+   "conflicts": 432,
+   "certified": true,
+   "lemmas": 432,
+   "check_s": 0.092,
+   "lemma_literals": 5674,
+   "correct": true,
+   "exhaustive_s": 0.746,
+   "exhaustive_agrees": true,
+   "bdd_nodes": 151
+  },
+  {
+   "n": 12,
+   "status": "unsat",
+   "search_s": 0.767,
+   "conflicts": 1418,
+   "certified": true,
+   "lemmas": 1418,
+   "check_s": 1.051,
+   "lemma_literals": 34513,
+   "correct": true,
+   "exhaustive_s": 2.642,
+   "exhaustive_agrees": true,
+   "bdd_nodes": 543
+  },
+  {
+   "n": 16,
+   "status": "unsat",
+   "search_s": 79.965,
+   "conflicts": 14050,
+   "certified": true,
+   "lemmas": 14050,
+   "check_s": 116.545,
+   "lemma_literals": 1208404,
+   "correct": true,
+   "exhaustive_s": 371.028,
+   "exhaustive_agrees": true,
+   "bdd_nodes": 4515
+  },
+  {
+   "n": 16,
+   "status": "unsat",
+   "search_s": 11.157,
+   "conflicts": 5727,
+   "certified": true,
+   "lemmas": 5727,
+   "check_s": 15.016,
+   "lemma_literals": 263097,
+   "correct": true,
+   "exhaustive_s": 151.283,
+   "exhaustive_agrees": true,
+   "bdd_nodes": 1987
+  },
+  {
+   "n": 16,
+   "status": "unsat",
+   "search_s": 0.0,
+   "conflicts": 0,
+   "certified": true,
+   "lemmas": 1,
+   "check_s": 0.0,
+   "lemma_literals": 0,
+   "correct": true,
+   "exhaustive_s": 0.079,
+   "exhaustive_agrees": true,
+   "bdd_nodes": 1
+  },
+  {
+   "n": 20,
+   "status": "unsat",
+   "search_s": 0.0,
+   "conflicts": 0,
+   "certified": true,
+   "lemmas": 1,
+   "check_s": 0.0,
+   "lemma_literals": 0,
+   "correct": true,
+   "bdd_nodes": 1
+  },
+  {
+   "n": 20,
+   "status": "unsat",
+   "search_s": 1.509,
+   "conflicts": 1870,
+   "certified": true,
+   "lemmas": 1870,
+   "check_s": 2.062,
+   "lemma_literals": 48931,
+   "correct": true,
+   "bdd_nodes": 1040
+  },
+  {
+   "n": 20,
+   "status": "unsat",
+   "search_s": 0.436,
+   "conflicts": 1134,
+   "certified": true,
+   "lemmas": 1134,
+   "check_s": 0.551,
+   "lemma_literals": 22821,
+   "correct": true,
+   "bdd_nodes": 515
+  },
+  {
+   "n": 24,
+   "status": "unsat",
+   "search_s": 0.0,
+   "conflicts": 0,
+   "certified": true,
+   "lemmas": 1,
+   "check_s": 0.0,
+   "lemma_literals": 0,
+   "correct": true,
+   "bdd_nodes": 1
+  },
+  {
+   "n": 24,
+   "status": "unsat",
+   "search_s": 0.0,
+   "conflicts": 0,
+   "certified": true,
+   "lemmas": 1,
+   "check_s": 0.0,
+   "lemma_literals": 0,
+   "correct": true,
+   "bdd_nodes": 1
+  },
+  {
+   "n": 24,
+   "status": "unsat",
+   "search_s": 0.0,
+   "conflicts": 0,
+   "certified": true,
+   "lemmas": 1,
+   "check_s": 0.0,
+   "lemma_literals": 0,
+   "correct": true,
+   "bdd_nodes": 1
+  }
+ ]
+}

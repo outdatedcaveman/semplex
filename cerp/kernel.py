@@ -38,7 +38,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from itertools import product
 
-KERNEL_VERSION = "0.1.0"
+KERNEL_VERSION = "0.2.0"
 MAX_VARS = 16
 
 _TOKEN = object()  # only this module can mint verdicts
@@ -218,3 +218,196 @@ def check_insufficiency(claim) -> Verdict:
         and evaluate(claim["f"], x) != evaluate(claim["f"], y)
     )
     return Verdict(ok, "insufficient", names, 2, None, KERNEL_VERSION, _TOKEN)
+
+
+# ---------------------------------------------------------------- spike 03
+# Proof-carrying equivalence beyond the exhaustive wall.
+#
+# The kernel itself builds the miter CNF from the claim (Tseitin encoding
+# below), so an untrusted encoder cannot substitute a different formula.
+# An untrusted SAT solver may then supply a RUP certificate: a list of
+# lemmas, each of which must follow from the formula plus earlier lemmas by
+# unit propagation alone, ending with the empty clause. Checking needs only
+# unit propagation -- far simpler than the search that found the lemmas.
+
+MAX_RUP_VARS = 200_000
+
+
+def _tseitin(art, var_of, fresh, out):
+    """Encode artifact (expr or circuit); return the literal of its output."""
+    kind, body = art["kind"], art["body"]
+
+    def gate(op, ins):
+        z = fresh()
+        if op == "and":
+            a, b = ins
+            out.extend([[-z, a], [-z, b], [z, -a, -b]])
+        elif op == "or":
+            a, b = ins
+            out.extend([[z, -a], [z, -b], [-z, a, b]])
+        elif op == "xor":
+            a, b = ins
+            out.extend([[-z, a, b], [-z, -a, -b], [z, -a, b], [z, a, -b]])
+        elif op == "not":
+            (a,) = ins
+            out.extend([[z, a], [-z, -a]])
+        elif op == "ite":
+            c, t, e = ins
+            out.extend([[-c, -t, z], [-c, t, -z], [c, -e, z], [c, e, -z]])
+        elif op in ("const0", "const1"):
+            out.append([z] if op == "const1" else [-z])
+        else:
+            raise KernelError(f"unknown op {op!r}")
+        return z
+
+    if kind == "expr":
+        def go(e):
+            op = e[0]
+            if op == "var":
+                return var_of[e[1]]
+            if op == "const":
+                return gate("const1" if _bit(e[1]) else "const0", [])
+            return gate(op, [go(x) for x in e[1:]])
+        return go(body)
+    if kind == "circuit":
+        lit = {name: var_of[name] for name in body["inputs"]}
+        for g in body["gates"]:
+            if g["op"] not in _ARITY or len(g["in"]) != _ARITY[g["op"]]:
+                raise KernelError(f"bad gate {g!r}")
+            if g["id"] in lit:
+                raise KernelError(f"duplicate id {g['id']!r}")
+            lit[g["id"]] = gate(g["op"], [lit[r] for r in g["in"]])
+        return lit[body["output"]]
+    raise KernelError(f"RUP route supports expr and circuit artifacts, not {kind!r}")
+
+
+def miter_cnf(claim):
+    """(n_vars, clauses) satisfiable  <=>  left and right differ somewhere in care.
+    Inputs are variables 1..n in the declared order. Public so untrusted
+    solvers can work on exactly the formula the kernel will check."""
+    names = tuple(claim["vars"])
+    if len(set(names)) != len(names):
+        raise KernelError("duplicate variable names")
+    var_of = {v: i + 1 for i, v in enumerate(names)}
+    counter = [len(names)]
+    clauses = []
+
+    def fresh():
+        counter[0] += 1
+        if counter[0] > MAX_RUP_VARS:
+            raise KernelError("formula too large for the RUP kernel")
+        return counter[0]
+
+    try:
+        lo = _tseitin(claim["left"], var_of, fresh, clauses)
+        ro = _tseitin(claim["right"], var_of, fresh, clauses)
+        m = fresh()
+        clauses += [[-m, lo, ro], [-m, -lo, -ro], [m, -lo, ro], [m, lo, -ro], [m]]
+        if claim.get("care") is not None:
+            clauses.append([_tseitin(claim["care"], var_of, fresh, clauses)])
+    except KeyError as exc:
+        raise KernelError(f"undeclared variable or dangling reference {exc}") from exc
+    return counter[0], clauses
+
+
+def _rup_refutes(clauses, lemmas):
+    db, watches, units = [], {}, []
+
+    def add(c):
+        c = list(dict.fromkeys(c))
+        if any(-l in c for l in c):
+            return  # tautology: always satisfied, adds nothing
+        if not c:
+            db.append(c)
+        elif len(c) == 1:
+            units.append(c[0])
+        else:
+            idx = len(db)
+            db.append(c)
+            watches.setdefault(c[0], []).append(idx)
+            watches.setdefault(c[1], []).append(idx)
+
+    def conflict_under(assumptions):
+        if any(not c for c in db):
+            return True
+        val = {}
+
+        def value(l):  # True / False / None
+            v = val.get(abs(l))
+            return None if v is None else (v if l > 0 else not v)
+
+        trail = []
+        for l in list(assumptions) + units:
+            x = value(l)
+            if x is False:
+                return True
+            if x is None:
+                val[abs(l)] = l > 0
+                trail.append(l)
+        i = 0
+        while i < len(trail):
+            false_lit = -trail[i]
+            i += 1
+            ws = watches.get(false_lit, [])
+            j = 0
+            while j < len(ws):
+                c = db[ws[j]]
+                if c[0] == false_lit:
+                    c[0], c[1] = c[1], c[0]
+                if value(c[0]) is True:
+                    j += 1
+                    continue
+                for k in range(2, len(c)):
+                    if value(c[k]) is not False:
+                        c[1], c[k] = c[k], c[1]
+                        watches.setdefault(c[1], []).append(ws[j])
+                        ws[j] = ws[-1]
+                        ws.pop()
+                        break
+                else:
+                    first = value(c[0])
+                    if first is False:
+                        return True
+                    if first is None:
+                        val[abs(c[0])] = c[0] > 0
+                        trail.append(c[0])
+                    j += 1
+        return False
+
+    for c in clauses:
+        add(c)
+    for n, lemma in enumerate(lemmas):
+        if not conflict_under([-l for l in lemma]):
+            return False, n
+        add(lemma)
+        if not lemma:
+            return True, n + 1
+    return False, len(lemmas)
+
+
+def check_rup(claim) -> Verdict:
+    """Equivalence (or task-equivalence, with 'care') of two expr/circuit
+    artifacts, certified by claim['certificate'] = list of RUP lemmas.
+    ok => the miter is unsatisfiable => left == right on every care point."""
+    n, clauses = miter_cnf(claim)
+    lemmas = claim["certificate"]
+    for lem in lemmas:
+        for l in lem:
+            if not isinstance(l, int) or l == 0 or abs(l) > n:
+                raise KernelError("certificate literal out of range")
+    ok, checked = _rup_refutes(clauses, lemmas)
+    return Verdict(ok, "rup", tuple(claim["vars"]), checked, None, KERNEL_VERSION, _TOKEN)
+
+
+def check_counterexample(claim) -> Verdict:
+    """ok iff the given total assignment is in care and left != right there.
+    Two evaluations at any domain size: a succinct certificate of NON-equivalence."""
+    names = tuple(claim["vars"])
+    x = claim["x"]
+    if set(x) != set(names):
+        raise KernelError("witness must assign exactly the declared vars")
+    for v in x.values():
+        _bit(v)
+    care = claim.get("care")
+    ok = (care is None or evaluate(care, x) == 1) and evaluate(claim["left"], x) != evaluate(claim["right"], x)
+    return Verdict(ok, "counterexample", names, 2, dict(x) if ok else None, KERNEL_VERSION, _TOKEN)
