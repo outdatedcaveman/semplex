@@ -76,11 +76,11 @@ def inquire(interface, candidates, *, queries=DEFAULT_QUERIES, n_initial=1500, n
     z_crit = z_two_sided(a_each)
     rep = {"rounds": [], "ledger": L, "alpha_per_test": a_each}
 
-    closed_world = L.conjecture(
+    closed_world = L.assumption(
         "Closed world: at least one candidate ontology is adequate to the world",
-        rationale="researcher-chosen candidate set: " + ", ".join(c.name for c in candidates),
-        open_obligation="cannot be established from inside the candidate set; only refuted "
-                        "(if every candidate fails adequacy)", category="assumption")
+        why="researcher-chosen candidate set: " + ", ".join(c.name for c in candidates)
+            + ". Cannot be established from inside the candidate set; only refuted "
+              "(if every candidate fails adequacy).")
 
     train = {(): interface.run({}, n_initial)}
     tested = {()}
@@ -337,7 +337,7 @@ def _answer(L, alive, fits, queries, tested, elim_claims, closed_world_id, answe
                             uncertainty=f"normal approximation, z={z}", category="answer")
         elif head == "UNDETERMINED":
             c = L.boundary(stmt, reason="not measured directly, and the surviving ontologies "
-                                        "(if any) do not agree", category="answer")
+                                        "(if any) do not agree", category="answer", undetermined=True)
         else:
             c = L.derived(stmt, depends_on=[closed_world_id] + elim_claims[-20:], category="answer",
                           rule="all surviving candidate ontologies agree",
@@ -366,12 +366,13 @@ def _witness_equivalence(L, alive, fits, regimes, rng, n_pseudo=20000):
         worst = max(kl(distribution(a, fits[a.name], dict(rk)), distribution(b, pb, dict(rk)))
                     for rk in regimes)
         ok = worst < 1e-3
-        c = L.conjecture(
-            f"{b.name} {'CAN' if ok else 'could not be fitted to'} reproduce {a.name}'s fitted predictions "
-            f"on protocols {[fmt_do(dict(r)) for r in regimes]} (max KL {worst:.2e})",
-            rationale="witness parameters found by EM; KL recomputed exactly from them"
-                      if ok else "EM failure is not proof of non-equivalence (local optima)",
-            open_obligation="status label pending Q-L1: a numerically checked witness is stronger "
-                            "than CONJECTURE but is not a kernel proof", category="equivalence")
+        stmt = (f"{b.name} {'CAN' if ok else 'could not be fitted to'} reproduce {a.name}'s fitted "
+                f"predictions on protocols {[fmt_do(dict(r)) for r in regimes]} (max KL {worst:.2e})")
+        if ok:
+            c = L.witnessed(stmt, witness_check="KL recomputed in float64 from EM witness parameters",
+                            category="equivalence")
+        else:
+            c = L.heuristic(stmt, procedure="EM fit failure is not proof of non-equivalence (local optima)",
+                            category="equivalence")
         out[f"{b.name} ⊒ {a.name}"] = {"max_kl": worst, "witnessed": ok, "claim": c.id}
     return out

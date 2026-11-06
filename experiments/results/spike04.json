@@ -1,0 +1,70 @@
+{
+ "spike01_alarm": {
+  "claims": 41,
+  "distinct_warrants_per_label": {
+   "COMPUTED-UNCERTIFIED": [
+    "exact-uncertified"
+   ],
+   "PROVED-IN-FRAGMENT": [
+    "kernel-checked"
+   ]
+  },
+  "asserted_pairs": 820,
+  "incomparable_fraction": 0.049
+ },
+ "spike02_latent_causal": {
+  "claims": 31,
+  "distinct_warrants_per_label": {
+   "CONJECTURE": [
+    "assumption | conditional on ['E001']",
+    "assumption+empirical | conditional on ['E001']"
+   ],
+   "EMPIRICALLY-SUPPORTED": [
+    "empirical"
+   ],
+   "RETRACTED": [
+    "assumption+empirical | conditional on ['E001']",
+    "empirical",
+    "heuristic"
+   ]
+  },
+  "asserted_pairs": 300,
+  "incomparable_fraction": 0.077
+ },
+ "spike02_latent_confounded": {
+  "claims": 36,
+  "distinct_warrants_per_label": {
+   "CONJECTURE": [
+    "assumption | conditional on ['E001']",
+    "assumption+empirical | conditional on ['E001']"
+   ],
+   "EMPIRICALLY-SUPPORTED": [
+    "empirical"
+   ],
+   "RETRACTED": [
+    "assumption+empirical | conditional on ['E001']",
+    "empirical",
+    "heuristic"
+   ]
+  },
+  "asserted_pairs": 406,
+  "incomparable_fraction": 0.067
+ },
+ "spike02_copy_chain": {
+  "claims": 22,
+  "distinct_warrants_per_label": {
+   "CONJECTURE": [
+    "assumption | conditional on ['E001']",
+    "assumption+empirical | conditional on ['E001']"
+   ],
+   "EMPIRICALLY-SUPPORTED": [
+    "empirical"
+   ],
+   "RETRACTED": [
+    "assumption+empirical | conditional on ['E001']"
+   ]
+  },
+  "asserted_pairs": 171,
+  "incomparable_fraction": 0.099
+ }
+}

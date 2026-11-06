@@ -48,7 +48,7 @@ def test_demo_end_to_end():
     improvements = [c for c in L.claims.values() if c.category == "improvement"]
     assert improvements and all("task fidelity" in c.statement for c in improvements)
     # enumeration completeness is honestly NOT proved
-    assert any(c.status is Status.CONJECTURE and "minimal sufficient sets" in c.statement
+    assert any(c.status is Status.COMPUTED_UNCERTIFIED and "minimal sufficient sets" in c.statement
                for c in L.claims.values())
 
 

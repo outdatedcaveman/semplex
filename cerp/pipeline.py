@@ -143,12 +143,12 @@ def _task_stage(rep, L, source, care, tt, vars, name, max_task_sets):
     sets = minimal_sufficient_sets(tt, care_tt)
     srep = sufficiency_report(tt, care_tt)
     rep["sufficiency"] = srep
-    c_enum = L.conjecture(
-        f"{name}: minimal sufficient sets under care = {srep['minimal_sufficient_sets']}",
-        rationale="exact minimal-transversal enumeration (cerp/sufficiency.py), untrusted code",
-        open_obligation="completeness of the enumeration is not certified; "
-                        "each listed set's sufficiency and minimality IS kernel-checked below",
-        category="task-sufficiency")
+    L.computed(
+        f"{name}: minimal sufficient sets under care = {srep['minimal_sufficient_sets']} (complete list)",
+        algorithm="cerp/sufficiency.py minimal-transversal enumeration",
+        category="task-sufficiency",
+        notes="completeness is not certified; each listed set's sufficiency and minimality IS "
+              "kernel-checked below")
 
     task_realizations = []
     for s in sets[:max_task_sets]:
