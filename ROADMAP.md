@@ -24,35 +24,31 @@ Rules of thumb:
 | Spike | Fragment / focus | Main assumptions under test | Status |
 |---|---|---|---|
 | **01** | F0: finite Boolean functions, 3 substrates | Canonical forms; untrusted translation + small verifier; task sufficiency; resource gain; status taxonomy | **done**, see `experiments/SPIKE_01_REPORT.md` |
-| **02** | World-facing sandbox: synthetic world with known latent structure | Natural semantics (§3.3); measurement maps; rival ontologies; evidence ledger; ontology revision (§3.4); "observation can hide causal difference" (§10) | **next** |
+| **02** | World-facing sandbox: synthetic world with known latent structure | Natural semantics (§3.3); measurement maps; rival ontologies; evidence ledger; ontology revision (§3.4); "observation can hide causal difference" (§10) | **done**, see `experiments/SPIKE_02_REPORT.md` |
+| **02b** | Ontology *generation*: propose new candidates when the closed world is refuted | Can revision go beyond elimination without becoming unconstrained (§1.3 last bullet)? | **proposed next** |
 | 03 | Succinct equivalence certificates | Proof-carrying translation that scales past the exhaustive wall (F3) | planned |
 | 04 | Status as structured warrant | Redesign of the §10 taxonomy into a partial order (F7) | planned |
 | 05 | F1: stateful systems (Mealy machines, LTS) | Trace equivalence vs bisimulation vs I/O; "don't collapse into functions" | planned |
 | 06 | Kernel in a proof assistant | Layer A: restate F0 kernel judgments in Lean 4 and prove the decision procedure correct | planned |
 | 07 | CSIR v0 extraction | First schema, after 01, 02 and 05 have shown what is actually shared | planned |
 
-### Spike 02 (next): sketch
+### Spike 02b (proposed next): ontology generation
 
-**World:** a simulator with a known latent structure. For example, a hidden quantity Z drives two noisy sensors S₁ and S₂, and an actuator A affects an outcome Y through Z. The data-generating process is known *to us* but not to the system.
+Spike 02's agent can *refute* its candidate set but cannot *repair* it. The charter's revision story (§3.4, §8.11) needs both.
 
-**Rival ontologies:**
-- O₁: S₁ and S₂ measure one latent Z
-- O₂: S₁ and S₂ are independent causes of Y
-- O₃: a confounded variant that is observationally equivalent to O₁ but differs under intervention
+- **Smallest slice:** a generator that enumerates small DAGs over the observables plus at most one or two latents, constrained by everything already settled (directly measured interventional facts, refuted structures, the screening-off/complementarity signatures from F6). Generated candidates enter the same adequacy loop.
+- **H2b.1:** after closed-world refutation, a constrained generator recovers an adequate ontology within a bounded number of candidates. *Kill:* the space blows up, or adequacy-passing candidates are mostly artifacts.
+- **H2b.2:** settled interventional facts prune the generated space by a large factor. *Kill:* pruning is negligible.
+- **H2b.3:** generated-then-accepted ontologies carry their provenance (which constraints produced them) and remain CONJECTURE-capped. *Kill:* the ledger can't express generation provenance.
 
-**Hypotheses and kill criteria:**
-- H2.1: The ledger can represent an ontology revision, i.e. which commitments changed, why, what is invalidated, and what new predictions follow (§3.4). *Kill:* revisions need information the ledger can't type.
-- H2.2: From observation alone, O₁ and O₃ are not distinguished, and the system **abstains** rather than picking one. Interventions on A distinguish them. *Kill:* the system confidently picks the wrong ontology from observational data.
-- H2.3: Spike 01's F4 conjecture holds: substitutable variables in task sufficiency predict "shared latent cause". *Kill:* substitutability fails to track latent sharing in the simulator's known ground truth.
-- H2.4: Measurement adequacy (§5.8) can be stated as a checkable claim indexed to protocol and evidence, without a truth oracle. *Kill:* every formulation smuggles in the simulator's ground truth.
-
-**Smallest slice:** discrete variables, so F0's machinery can reuse care sets and sufficiency; Bayesian model comparison over 3 hand-written ontologies; experiment selection by expected information gain; a calibration check against held-out simulated data.
-
-**Explicit non-claim:** the synthetic world is a calibration sandbox, not evidence that natural-world grounding is solved (charter §11.1).
+Alternative next steps, if you prefer: **Spike 04** (status as a structured warrant, now with two independent motivations, F7/S01 and F8/S02), or **Spike 03** (scaling verification past n≈16).
 
 ## Open questions carried forward
 
 - **Q-L1** (F7): status labels form a partial order, not a chain. What structure is it?
 - **Q-G1** (F1): should canonical-form parameters (like variable order) live in Ω or in the CSIR node?
 - **Q-F1** (F6): do the equivalence relations of Layer F form a lattice with useful meets and joins, and does candidate and certificate transport along inclusions generalize beyond F0?
-- **Q-H1** (F4): does "substitutable ⇒ shared latent" hold beyond equality constraints, for example with noisy redundancy?
+- ~~**Q-H1**~~: answered by Spike 02 F6. With noise, the signature is complementarity vs screening-off, not substitutability.
+- **Q-B1** (S02 F4): identity criteria for latent entities across rival ontologies (currently by name).
+- **Q-E1** (S02 F7): task-relative stopping. When does an agent need absence claims at all?
+- **Q-A1** (S02 F2): a general recipe for calibrating adequacy tests of fitted predictors (bootstrap, e-values, or held-out refits).

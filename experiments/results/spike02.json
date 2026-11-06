@@ -1,0 +1,4135 @@
+{
+ "seeds": 15,
+ "batch": 1500,
+ "initial_obs": 1500,
+ "main": {
+  "label": "truth among candidates",
+  "rows": [
+   {
+    "world": "latent_causal",
+    "interface": "observe-only",
+    "seed": 0,
+    "survivors": [
+     "O1:latent-causal",
+     "O3:latent-confounded"
+    ],
+    "spent": 3000,
+    "protocols": [
+     "observe"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.34
+   },
+   {
+    "world": "latent_causal",
+    "interface": "observe-only",
+    "seed": 1,
+    "survivors": [
+     "O1:latent-causal",
+     "O3:latent-confounded"
+    ],
+    "spent": 3000,
+    "protocols": [
+     "observe"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.3
+   },
+   {
+    "world": "latent_causal",
+    "interface": "observe-only",
+    "seed": 2,
+    "survivors": [
+     "O1:latent-causal",
+     "O3:latent-confounded"
+    ],
+    "spent": 3000,
+    "protocols": [
+     "observe"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.31
+   },
+   {
+    "world": "latent_causal",
+    "interface": "observe-only",
+    "seed": 3,
+    "survivors": [
+     "O1:latent-causal",
+     "O3:latent-confounded"
+    ],
+    "spent": 3000,
+    "protocols": [
+     "observe"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.33
+   },
+   {
+    "world": "latent_causal",
+    "interface": "observe-only",
+    "seed": 4,
+    "survivors": [
+     "O1:latent-causal",
+     "O3:latent-confounded"
+    ],
+    "spent": 3000,
+    "protocols": [
+     "observe"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.33
+   },
+   {
+    "world": "latent_causal",
+    "interface": "observe-only",
+    "seed": 5,
+    "survivors": [
+     "O1:latent-causal",
+     "O3:latent-confounded"
+    ],
+    "spent": 3000,
+    "protocols": [
+     "observe"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.31
+   },
+   {
+    "world": "latent_causal",
+    "interface": "observe-only",
+    "seed": 6,
+    "survivors": [
+     "O1:latent-causal",
+     "O3:latent-confounded"
+    ],
+    "spent": 3000,
+    "protocols": [
+     "observe"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.32
+   },
+   {
+    "world": "latent_causal",
+    "interface": "observe-only",
+    "seed": 7,
+    "survivors": [
+     "O1:latent-causal",
+     "O3:latent-confounded"
+    ],
+    "spent": 3000,
+    "protocols": [
+     "observe"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.32
+   },
+   {
+    "world": "latent_causal",
+    "interface": "observe-only",
+    "seed": 8,
+    "survivors": [
+     "O1:latent-causal",
+     "O3:latent-confounded"
+    ],
+    "spent": 3000,
+    "protocols": [
+     "observe"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.33
+   },
+   {
+    "world": "latent_causal",
+    "interface": "observe-only",
+    "seed": 9,
+    "survivors": [
+     "O1:latent-causal",
+     "O3:latent-confounded"
+    ],
+    "spent": 3000,
+    "protocols": [
+     "observe"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.31
+   },
+   {
+    "world": "latent_causal",
+    "interface": "observe-only",
+    "seed": 10,
+    "survivors": [
+     "O1:latent-causal",
+     "O3:latent-confounded"
+    ],
+    "spent": 3000,
+    "protocols": [
+     "observe"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.31
+   },
+   {
+    "world": "latent_causal",
+    "interface": "observe-only",
+    "seed": 11,
+    "survivors": [
+     "O1:latent-causal",
+     "O3:latent-confounded"
+    ],
+    "spent": 3000,
+    "protocols": [
+     "observe"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.3
+   },
+   {
+    "world": "latent_causal",
+    "interface": "observe-only",
+    "seed": 12,
+    "survivors": [
+     "O1:latent-causal",
+     "O3:latent-confounded"
+    ],
+    "spent": 3000,
+    "protocols": [
+     "observe"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.33
+   },
+   {
+    "world": "latent_causal",
+    "interface": "observe-only",
+    "seed": 13,
+    "survivors": [
+     "O1:latent-causal",
+     "O3:latent-confounded"
+    ],
+    "spent": 3000,
+    "protocols": [
+     "observe"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.3
+   },
+   {
+    "world": "latent_causal",
+    "interface": "observe-only",
+    "seed": 14,
+    "survivors": [
+     "O1:latent-causal",
+     "O3:latent-confounded"
+    ],
+    "spent": 3000,
+    "protocols": [
+     "observe"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.3
+   },
+   {
+    "world": "latent_causal",
+    "interface": "observe+do(A)",
+    "seed": 0,
+    "survivors": [
+     "O1:latent-causal"
+    ],
+    "spent": 4500,
+    "protocols": [
+     "do(A=0)",
+     "do(A=1)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.48
+   },
+   {
+    "world": "latent_causal",
+    "interface": "observe+do(A)",
+    "seed": 1,
+    "survivors": [
+     "O1:latent-causal"
+    ],
+    "spent": 4500,
+    "protocols": [
+     "do(A=0)",
+     "do(A=1)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.46
+   },
+   {
+    "world": "latent_causal",
+    "interface": "observe+do(A)",
+    "seed": 2,
+    "survivors": [
+     "O1:latent-causal"
+    ],
+    "spent": 4500,
+    "protocols": [
+     "do(A=0)",
+     "do(A=1)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.46
+   },
+   {
+    "world": "latent_causal",
+    "interface": "observe+do(A)",
+    "seed": 3,
+    "survivors": [
+     "O1:latent-causal"
+    ],
+    "spent": 4500,
+    "protocols": [
+     "do(A=0)",
+     "do(A=1)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.49
+   },
+   {
+    "world": "latent_causal",
+    "interface": "observe+do(A)",
+    "seed": 4,
+    "survivors": [
+     "O1:latent-causal"
+    ],
+    "spent": 4500,
+    "protocols": [
+     "do(A=0)",
+     "do(A=1)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.49
+   },
+   {
+    "world": "latent_causal",
+    "interface": "observe+do(A)",
+    "seed": 5,
+    "survivors": [
+     "O1:latent-causal"
+    ],
+    "spent": 4500,
+    "protocols": [
+     "do(A=1)",
+     "do(A=0)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.46
+   },
+   {
+    "world": "latent_causal",
+    "interface": "observe+do(A)",
+    "seed": 6,
+    "survivors": [
+     "O1:latent-causal"
+    ],
+    "spent": 4500,
+    "protocols": [
+     "do(A=0)",
+     "do(A=1)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.51
+   },
+   {
+    "world": "latent_causal",
+    "interface": "observe+do(A)",
+    "seed": 7,
+    "survivors": [
+     "O1:latent-causal"
+    ],
+    "spent": 4500,
+    "protocols": [
+     "do(A=0)",
+     "do(A=1)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.46
+   },
+   {
+    "world": "latent_causal",
+    "interface": "observe+do(A)",
+    "seed": 8,
+    "survivors": [
+     "O1:latent-causal"
+    ],
+    "spent": 4500,
+    "protocols": [
+     "do(A=1)",
+     "do(A=0)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.48
+   },
+   {
+    "world": "latent_causal",
+    "interface": "observe+do(A)",
+    "seed": 9,
+    "survivors": [
+     "O1:latent-causal"
+    ],
+    "spent": 4500,
+    "protocols": [
+     "do(A=1)",
+     "do(A=0)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.47
+   },
+   {
+    "world": "latent_causal",
+    "interface": "observe+do(A)",
+    "seed": 10,
+    "survivors": [
+     "O1:latent-causal"
+    ],
+    "spent": 4500,
+    "protocols": [
+     "do(A=1)",
+     "do(A=0)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.5
+   },
+   {
+    "world": "latent_causal",
+    "interface": "observe+do(A)",
+    "seed": 11,
+    "survivors": [
+     "O1:latent-causal"
+    ],
+    "spent": 4500,
+    "protocols": [
+     "do(A=1)",
+     "do(A=0)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.49
+   },
+   {
+    "world": "latent_causal",
+    "interface": "observe+do(A)",
+    "seed": 12,
+    "survivors": [
+     "O1:latent-causal"
+    ],
+    "spent": 4500,
+    "protocols": [
+     "do(A=0)",
+     "do(A=1)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.48
+   },
+   {
+    "world": "latent_causal",
+    "interface": "observe+do(A)",
+    "seed": 13,
+    "survivors": [
+     "O1:latent-causal"
+    ],
+    "spent": 4500,
+    "protocols": [
+     "do(A=0)",
+     "do(A=1)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.45
+   },
+   {
+    "world": "latent_causal",
+    "interface": "observe+do(A)",
+    "seed": 14,
+    "survivors": [
+     "O1:latent-causal"
+    ],
+    "spent": 4500,
+    "protocols": [
+     "do(A=0)",
+     "do(A=1)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.46
+   },
+   {
+    "world": "latent_causal",
+    "interface": "all",
+    "seed": 0,
+    "survivors": [
+     "O1:latent-causal"
+    ],
+    "spent": 10500,
+    "protocols": [
+     "do(S1=1)",
+     "do(A=1)",
+     "do(A=0)",
+     "do(S1=0)",
+     "do(S1=0)",
+     "do(S1=1)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 1.95
+   },
+   {
+    "world": "latent_causal",
+    "interface": "all",
+    "seed": 1,
+    "survivors": [
+     "O1:latent-causal"
+    ],
+    "spent": 10500,
+    "protocols": [
+     "do(S1=0)",
+     "do(A=0)",
+     "do(A=1)",
+     "do(S1=1)",
+     "do(S1=0)",
+     "do(S1=1)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 1.95
+   },
+   {
+    "world": "latent_causal",
+    "interface": "all",
+    "seed": 2,
+    "survivors": [
+     "O1:latent-causal"
+    ],
+    "spent": 13500,
+    "protocols": [
+     "do(S1=1)",
+     "do(A=0)",
+     "do(A=1)",
+     "do(S1=0)",
+     "do(S1=0)",
+     "do(S1=1)",
+     "do(S1=0)",
+     "do(S1=1)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 2.71
+   },
+   {
+    "world": "latent_causal",
+    "interface": "all",
+    "seed": 3,
+    "survivors": [
+     "O1:latent-causal"
+    ],
+    "spent": 15000,
+    "protocols": [
+     "do(S1=1)",
+     "do(A=0)",
+     "do(A=1)",
+     "do(S1=0)",
+     "do(S1=0)",
+     "do(S1=1)",
+     "do(S1=0)",
+     "do(S1=1)",
+     "do(S1=0)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 3.22
+   },
+   {
+    "world": "latent_causal",
+    "interface": "all",
+    "seed": 4,
+    "survivors": [
+     "O1:latent-causal"
+    ],
+    "spent": 10500,
+    "protocols": [
+     "do(S1=1)",
+     "do(A=1)",
+     "do(A=0)",
+     "do(S1=0)",
+     "do(S1=0)",
+     "do(S1=1)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 1.99
+   },
+   {
+    "world": "latent_causal",
+    "interface": "all",
+    "seed": 5,
+    "survivors": [
+     "O1:latent-causal"
+    ],
+    "spent": 10500,
+    "protocols": [
+     "do(S1=1)",
+     "do(A=0)",
+     "do(A=1)",
+     "do(S1=0)",
+     "do(S1=0)",
+     "do(S1=1)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 1.93
+   },
+   {
+    "world": "latent_causal",
+    "interface": "all",
+    "seed": 6,
+    "survivors": [
+     "O1:latent-causal"
+    ],
+    "spent": 12000,
+    "protocols": [
+     "do(S1=0)",
+     "do(A=0)",
+     "do(A=1)",
+     "do(S1=1)",
+     "do(S1=0)",
+     "do(S1=1)",
+     "do(S1=0)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 2.41
+   },
+   {
+    "world": "latent_causal",
+    "interface": "all",
+    "seed": 7,
+    "survivors": [
+     "O1:latent-causal"
+    ],
+    "spent": 9000,
+    "protocols": [
+     "do(S1=0)",
+     "do(A=1)",
+     "do(A=0)",
+     "do(S1=1)",
+     "do(S1=0)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 1.57
+   },
+   {
+    "world": "latent_causal",
+    "interface": "all",
+    "seed": 8,
+    "survivors": [
+     "O1:latent-causal"
+    ],
+    "spent": 12000,
+    "protocols": [
+     "do(S1=0)",
+     "do(A=0)",
+     "do(A=1)",
+     "do(S1=1)",
+     "do(S1=0)",
+     "do(S1=1)",
+     "do(S1=0)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 2.34
+   },
+   {
+    "world": "latent_causal",
+    "interface": "all",
+    "seed": 9,
+    "survivors": [
+     "O1:latent-causal"
+    ],
+    "spent": 10500,
+    "protocols": [
+     "do(S1=0)",
+     "do(A=1)",
+     "do(A=0)",
+     "do(S1=1)",
+     "do(S1=0)",
+     "do(S1=1)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 1.93
+   },
+   {
+    "world": "latent_causal",
+    "interface": "all",
+    "seed": 10,
+    "survivors": [
+     "O1:latent-causal"
+    ],
+    "spent": 15000,
+    "protocols": [
+     "do(S1=0)",
+     "do(A=0)",
+     "do(A=1)",
+     "do(S1=1)",
+     "do(S1=0)",
+     "do(S1=1)",
+     "do(S1=0)",
+     "do(S1=1)",
+     "do(S1=0)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 3.29
+   },
+   {
+    "world": "latent_causal",
+    "interface": "all",
+    "seed": 11,
+    "survivors": [
+     "O1:latent-causal"
+    ],
+    "spent": 10500,
+    "protocols": [
+     "do(S1=1)",
+     "do(A=1)",
+     "do(A=0)",
+     "do(S1=0)",
+     "do(S1=0)",
+     "do(S1=1)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 1.87
+   },
+   {
+    "world": "latent_causal",
+    "interface": "all",
+    "seed": 12,
+    "survivors": [
+     "O1:latent-causal"
+    ],
+    "spent": 12000,
+    "protocols": [
+     "do(S1=0)",
+     "do(A=1)",
+     "do(A=0)",
+     "do(S1=1)",
+     "do(S1=0)",
+     "do(S1=1)",
+     "do(S1=0)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 2.43
+   },
+   {
+    "world": "latent_causal",
+    "interface": "all",
+    "seed": 13,
+    "survivors": [
+     "O1:latent-causal"
+    ],
+    "spent": 12000,
+    "protocols": [
+     "do(S1=0)",
+     "do(A=0)",
+     "do(A=1)",
+     "do(S1=1)",
+     "do(S1=0)",
+     "do(S1=1)",
+     "do(S1=0)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 2.38
+   },
+   {
+    "world": "latent_causal",
+    "interface": "all",
+    "seed": 14,
+    "survivors": [
+     "O1:latent-causal"
+    ],
+    "spent": 16500,
+    "protocols": [
+     "do(S1=1)",
+     "do(A=0)",
+     "do(A=1)",
+     "do(S1=0)",
+     "do(S1=0)",
+     "do(S1=1)",
+     "do(S1=0)",
+     "do(S1=1)",
+     "do(S1=0)",
+     "do(S1=1)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 3.66
+   },
+   {
+    "world": "latent_confounded",
+    "interface": "observe-only",
+    "seed": 0,
+    "survivors": [
+     "O1:latent-causal",
+     "O3:latent-confounded"
+    ],
+    "spent": 3000,
+    "protocols": [
+     "observe"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.31
+   },
+   {
+    "world": "latent_confounded",
+    "interface": "observe-only",
+    "seed": 1,
+    "survivors": [
+     "O1:latent-causal",
+     "O3:latent-confounded"
+    ],
+    "spent": 3000,
+    "protocols": [
+     "observe"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.3
+   },
+   {
+    "world": "latent_confounded",
+    "interface": "observe-only",
+    "seed": 2,
+    "survivors": [
+     "O1:latent-causal",
+     "O3:latent-confounded"
+    ],
+    "spent": 3000,
+    "protocols": [
+     "observe"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.3
+   },
+   {
+    "world": "latent_confounded",
+    "interface": "observe-only",
+    "seed": 3,
+    "survivors": [
+     "O1:latent-causal",
+     "O3:latent-confounded"
+    ],
+    "spent": 3000,
+    "protocols": [
+     "observe"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.32
+   },
+   {
+    "world": "latent_confounded",
+    "interface": "observe-only",
+    "seed": 4,
+    "survivors": [
+     "O1:latent-causal",
+     "O3:latent-confounded"
+    ],
+    "spent": 3000,
+    "protocols": [
+     "observe"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.32
+   },
+   {
+    "world": "latent_confounded",
+    "interface": "observe-only",
+    "seed": 5,
+    "survivors": [
+     "O1:latent-causal",
+     "O3:latent-confounded"
+    ],
+    "spent": 3000,
+    "protocols": [
+     "observe"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.29
+   },
+   {
+    "world": "latent_confounded",
+    "interface": "observe-only",
+    "seed": 6,
+    "survivors": [
+     "O1:latent-causal",
+     "O3:latent-confounded"
+    ],
+    "spent": 3000,
+    "protocols": [
+     "observe"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.33
+   },
+   {
+    "world": "latent_confounded",
+    "interface": "observe-only",
+    "seed": 7,
+    "survivors": [
+     "O1:latent-causal",
+     "O3:latent-confounded"
+    ],
+    "spent": 3000,
+    "protocols": [
+     "observe"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.31
+   },
+   {
+    "world": "latent_confounded",
+    "interface": "observe-only",
+    "seed": 8,
+    "survivors": [
+     "O1:latent-causal",
+     "O3:latent-confounded"
+    ],
+    "spent": 3000,
+    "protocols": [
+     "observe"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.32
+   },
+   {
+    "world": "latent_confounded",
+    "interface": "observe-only",
+    "seed": 9,
+    "survivors": [
+     "O1:latent-causal",
+     "O3:latent-confounded"
+    ],
+    "spent": 3000,
+    "protocols": [
+     "observe"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.3
+   },
+   {
+    "world": "latent_confounded",
+    "interface": "observe-only",
+    "seed": 10,
+    "survivors": [
+     "O1:latent-causal",
+     "O3:latent-confounded"
+    ],
+    "spent": 3000,
+    "protocols": [
+     "observe"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.31
+   },
+   {
+    "world": "latent_confounded",
+    "interface": "observe-only",
+    "seed": 11,
+    "survivors": [
+     "O1:latent-causal",
+     "O3:latent-confounded"
+    ],
+    "spent": 3000,
+    "protocols": [
+     "observe"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.29
+   },
+   {
+    "world": "latent_confounded",
+    "interface": "observe-only",
+    "seed": 12,
+    "survivors": [
+     "O1:latent-causal",
+     "O3:latent-confounded"
+    ],
+    "spent": 3000,
+    "protocols": [
+     "observe"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.32
+   },
+   {
+    "world": "latent_confounded",
+    "interface": "observe-only",
+    "seed": 13,
+    "survivors": [
+     "O1:latent-causal",
+     "O3:latent-confounded"
+    ],
+    "spent": 3000,
+    "protocols": [
+     "observe"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.3
+   },
+   {
+    "world": "latent_confounded",
+    "interface": "observe-only",
+    "seed": 14,
+    "survivors": [
+     "O1:latent-causal",
+     "O3:latent-confounded"
+    ],
+    "spent": 3000,
+    "protocols": [
+     "observe"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.31
+   },
+   {
+    "world": "latent_confounded",
+    "interface": "observe+do(A)",
+    "seed": 0,
+    "survivors": [
+     "O3:latent-confounded"
+    ],
+    "spent": 10500,
+    "protocols": [
+     "do(A=0)",
+     "do(A=1)",
+     "do(A=0)",
+     "do(A=1)",
+     "do(A=0)",
+     "do(A=1)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 1.64
+   },
+   {
+    "world": "latent_confounded",
+    "interface": "observe+do(A)",
+    "seed": 1,
+    "survivors": [
+     "O3:latent-confounded"
+    ],
+    "spent": 9000,
+    "protocols": [
+     "do(A=0)",
+     "do(A=1)",
+     "do(A=0)",
+     "do(A=1)",
+     "do(A=0)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 1.33
+   },
+   {
+    "world": "latent_confounded",
+    "interface": "observe+do(A)",
+    "seed": 2,
+    "survivors": [
+     "O3:latent-confounded"
+    ],
+    "spent": 9000,
+    "protocols": [
+     "do(A=1)",
+     "do(A=0)",
+     "do(A=0)",
+     "do(A=1)",
+     "do(A=0)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 1.32
+   },
+   {
+    "world": "latent_confounded",
+    "interface": "observe+do(A)",
+    "seed": 3,
+    "survivors": [
+     "O3:latent-confounded"
+    ],
+    "spent": 7500,
+    "protocols": [
+     "do(A=0)",
+     "do(A=1)",
+     "do(A=0)",
+     "do(A=1)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 1.08
+   },
+   {
+    "world": "latent_confounded",
+    "interface": "observe+do(A)",
+    "seed": 4,
+    "survivors": [
+     "O3:latent-confounded"
+    ],
+    "spent": 9000,
+    "protocols": [
+     "do(A=0)",
+     "do(A=1)",
+     "do(A=0)",
+     "do(A=1)",
+     "do(A=0)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 1.3
+   },
+   {
+    "world": "latent_confounded",
+    "interface": "observe+do(A)",
+    "seed": 5,
+    "survivors": [
+     "O3:latent-confounded"
+    ],
+    "spent": 10500,
+    "protocols": [
+     "do(A=1)",
+     "do(A=0)",
+     "do(A=0)",
+     "do(A=1)",
+     "do(A=0)",
+     "do(A=1)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 1.59
+   },
+   {
+    "world": "latent_confounded",
+    "interface": "observe+do(A)",
+    "seed": 6,
+    "survivors": [
+     "O3:latent-confounded"
+    ],
+    "spent": 6000,
+    "protocols": [
+     "do(A=0)",
+     "do(A=1)",
+     "do(A=0)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.8
+   },
+   {
+    "world": "latent_confounded",
+    "interface": "observe+do(A)",
+    "seed": 7,
+    "survivors": [
+     "O3:latent-confounded"
+    ],
+    "spent": 9000,
+    "protocols": [
+     "do(A=0)",
+     "do(A=1)",
+     "do(A=0)",
+     "do(A=1)",
+     "do(A=0)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 1.34
+   },
+   {
+    "world": "latent_confounded",
+    "interface": "observe+do(A)",
+    "seed": 8,
+    "survivors": [
+     "O3:latent-confounded"
+    ],
+    "spent": 7500,
+    "protocols": [
+     "do(A=1)",
+     "do(A=0)",
+     "do(A=0)",
+     "do(A=1)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 1.04
+   },
+   {
+    "world": "latent_confounded",
+    "interface": "observe+do(A)",
+    "seed": 9,
+    "survivors": [
+     "O3:latent-confounded"
+    ],
+    "spent": 7500,
+    "protocols": [
+     "do(A=0)",
+     "do(A=1)",
+     "do(A=0)",
+     "do(A=1)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 1.04
+   },
+   {
+    "world": "latent_confounded",
+    "interface": "observe+do(A)",
+    "seed": 10,
+    "survivors": [
+     "O3:latent-confounded"
+    ],
+    "spent": 7500,
+    "protocols": [
+     "do(A=0)",
+     "do(A=1)",
+     "do(A=0)",
+     "do(A=1)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 1.06
+   },
+   {
+    "world": "latent_confounded",
+    "interface": "observe+do(A)",
+    "seed": 11,
+    "survivors": [
+     "O3:latent-confounded"
+    ],
+    "spent": 7500,
+    "protocols": [
+     "do(A=1)",
+     "do(A=0)",
+     "do(A=0)",
+     "do(A=1)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.99
+   },
+   {
+    "world": "latent_confounded",
+    "interface": "observe+do(A)",
+    "seed": 12,
+    "survivors": [
+     "O3:latent-confounded"
+    ],
+    "spent": 7500,
+    "protocols": [
+     "do(A=0)",
+     "do(A=1)",
+     "do(A=0)",
+     "do(A=1)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 1.06
+   },
+   {
+    "world": "latent_confounded",
+    "interface": "observe+do(A)",
+    "seed": 13,
+    "survivors": [
+     "O3:latent-confounded"
+    ],
+    "spent": 7500,
+    "protocols": [
+     "do(A=0)",
+     "do(A=1)",
+     "do(A=0)",
+     "do(A=1)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.98
+   },
+   {
+    "world": "latent_confounded",
+    "interface": "observe+do(A)",
+    "seed": 14,
+    "survivors": [
+     "O3:latent-confounded"
+    ],
+    "spent": 7500,
+    "protocols": [
+     "do(A=0)",
+     "do(A=1)",
+     "do(A=0)",
+     "do(A=1)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 1.04
+   },
+   {
+    "world": "latent_confounded",
+    "interface": "all",
+    "seed": 0,
+    "survivors": [
+     "O3:latent-confounded"
+    ],
+    "spent": 15000,
+    "protocols": [
+     "do(S1=1)",
+     "do(A=1)",
+     "do(A=0)",
+     "do(S1=0)",
+     "do(A=0)",
+     "do(A=1)",
+     "do(A=0)",
+     "do(S1=0)",
+     "do(S1=1)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 3.72
+   },
+   {
+    "world": "latent_confounded",
+    "interface": "all",
+    "seed": 1,
+    "survivors": [
+     "O3:latent-confounded"
+    ],
+    "spent": 18000,
+    "protocols": [
+     "do(S1=0)",
+     "do(A=0)",
+     "do(A=1)",
+     "do(S1=1)",
+     "do(A=0)",
+     "do(A=1)",
+     "do(A=0)",
+     "do(A=1)",
+     "do(S1=0)",
+     "do(S1=1)",
+     "do(S1=0)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 4.78
+   },
+   {
+    "world": "latent_confounded",
+    "interface": "all",
+    "seed": 2,
+    "survivors": [
+     "O3:latent-confounded"
+    ],
+    "spent": 13500,
+    "protocols": [
+     "do(S1=1)",
+     "do(A=1)",
+     "do(A=0)",
+     "do(S1=0)",
+     "do(A=0)",
+     "do(A=1)",
+     "do(S1=0)",
+     "do(S1=1)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 3.17
+   },
+   {
+    "world": "latent_confounded",
+    "interface": "all",
+    "seed": 3,
+    "survivors": [
+     "O3:latent-confounded"
+    ],
+    "spent": 16500,
+    "protocols": [
+     "do(S1=1)",
+     "do(A=1)",
+     "do(A=0)",
+     "do(S1=0)",
+     "do(A=0)",
+     "do(A=1)",
+     "do(S1=0)",
+     "do(S1=1)",
+     "do(S1=0)",
+     "do(S1=1)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 4.33
+   },
+   {
+    "world": "latent_confounded",
+    "interface": "all",
+    "seed": 4,
+    "survivors": [
+     "O3:latent-confounded"
+    ],
+    "spent": 18000,
+    "protocols": [
+     "do(S1=1)",
+     "do(A=0)",
+     "do(A=1)",
+     "do(S1=0)",
+     "do(A=0)",
+     "do(A=1)",
+     "do(A=0)",
+     "do(S1=0)",
+     "do(S1=1)",
+     "do(S1=0)",
+     "do(S1=1)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 4.67
+   },
+   {
+    "world": "latent_confounded",
+    "interface": "all",
+    "seed": 5,
+    "survivors": [
+     "O3:latent-confounded"
+    ],
+    "spent": 12000,
+    "protocols": [
+     "do(S1=1)",
+     "do(A=1)",
+     "do(A=0)",
+     "do(S1=0)",
+     "do(A=0)",
+     "do(S1=0)",
+     "do(S1=1)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 2.73
+   },
+   {
+    "world": "latent_confounded",
+    "interface": "all",
+    "seed": 6,
+    "survivors": [
+     "O3:latent-confounded"
+    ],
+    "spent": 13500,
+    "protocols": [
+     "do(S1=0)",
+     "do(A=1)",
+     "do(A=0)",
+     "do(S1=1)",
+     "do(A=0)",
+     "do(A=1)",
+     "do(A=0)",
+     "do(S1=0)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 3.34
+   },
+   {
+    "world": "latent_confounded",
+    "interface": "all",
+    "seed": 7,
+    "survivors": [
+     "O3:latent-confounded"
+    ],
+    "spent": 13500,
+    "protocols": [
+     "do(S1=0)",
+     "do(A=1)",
+     "do(A=0)",
+     "do(S1=1)",
+     "do(A=0)",
+     "do(S1=0)",
+     "do(S1=1)",
+     "do(S1=0)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 3.3
+   },
+   {
+    "world": "latent_confounded",
+    "interface": "all",
+    "seed": 8,
+    "survivors": [
+     "O3:latent-confounded"
+    ],
+    "spent": 16500,
+    "protocols": [
+     "do(S1=0)",
+     "do(A=0)",
+     "do(A=1)",
+     "do(S1=1)",
+     "do(A=0)",
+     "do(A=1)",
+     "do(S1=0)",
+     "do(S1=1)",
+     "do(S1=0)",
+     "do(S1=1)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 4.27
+   },
+   {
+    "world": "latent_confounded",
+    "interface": "all",
+    "seed": 9,
+    "survivors": [
+     "O3:latent-confounded"
+    ],
+    "spent": 13500,
+    "protocols": [
+     "do(S1=0)",
+     "do(A=1)",
+     "do(A=0)",
+     "do(S1=1)",
+     "do(A=0)",
+     "do(A=1)",
+     "do(S1=0)",
+     "do(S1=1)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 3.27
+   },
+   {
+    "world": "latent_confounded",
+    "interface": "all",
+    "seed": 10,
+    "survivors": [
+     "O3:latent-confounded"
+    ],
+    "spent": 15000,
+    "protocols": [
+     "do(S1=1)",
+     "do(A=0)",
+     "do(A=1)",
+     "do(S1=0)",
+     "do(A=0)",
+     "do(A=1)",
+     "do(S1=0)",
+     "do(S1=1)",
+     "do(S1=0)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 3.77
+   },
+   {
+    "world": "latent_confounded",
+    "interface": "all",
+    "seed": 11,
+    "survivors": [
+     "O3:latent-confounded"
+    ],
+    "spent": 13500,
+    "protocols": [
+     "do(S1=1)",
+     "do(A=1)",
+     "do(A=0)",
+     "do(S1=0)",
+     "do(A=0)",
+     "do(A=1)",
+     "do(S1=0)",
+     "do(S1=1)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 3.14
+   },
+   {
+    "world": "latent_confounded",
+    "interface": "all",
+    "seed": 12,
+    "survivors": [
+     "O3:latent-confounded"
+    ],
+    "spent": 21000,
+    "protocols": [
+     "do(S1=1)",
+     "do(A=0)",
+     "do(A=1)",
+     "do(S1=0)",
+     "do(A=0)",
+     "do(A=1)",
+     "do(A=0)",
+     "do(S1=0)",
+     "do(S1=1)",
+     "do(S1=0)",
+     "do(S1=1)",
+     "do(S1=0)",
+     "do(S1=1)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 5.77
+   },
+   {
+    "world": "latent_confounded",
+    "interface": "all",
+    "seed": 13,
+    "survivors": [
+     "O3:latent-confounded"
+    ],
+    "spent": 13500,
+    "protocols": [
+     "do(S1=0)",
+     "do(A=0)",
+     "do(A=1)",
+     "do(S1=1)",
+     "do(A=0)",
+     "do(A=1)",
+     "do(S1=0)",
+     "do(S1=1)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 3.11
+   },
+   {
+    "world": "latent_confounded",
+    "interface": "all",
+    "seed": 14,
+    "survivors": [
+     "O3:latent-confounded"
+    ],
+    "spent": 15000,
+    "protocols": [
+     "do(S1=0)",
+     "do(A=1)",
+     "do(A=0)",
+     "do(S1=1)",
+     "do(A=0)",
+     "do(A=1)",
+     "do(S1=0)",
+     "do(S1=1)",
+     "do(S1=0)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 3.77
+   },
+   {
+    "world": "copy_chain",
+    "interface": "observe-only",
+    "seed": 0,
+    "survivors": [
+     "O1:latent-causal",
+     "O3:latent-confounded",
+     "O4:copy-chain"
+    ],
+    "spent": 3000,
+    "protocols": [
+     "observe"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.49
+   },
+   {
+    "world": "copy_chain",
+    "interface": "observe-only",
+    "seed": 1,
+    "survivors": [
+     "O1:latent-causal",
+     "O3:latent-confounded",
+     "O4:copy-chain"
+    ],
+    "spent": 3000,
+    "protocols": [
+     "observe"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.46
+   },
+   {
+    "world": "copy_chain",
+    "interface": "observe-only",
+    "seed": 2,
+    "survivors": [
+     "O1:latent-causal",
+     "O3:latent-confounded",
+     "O4:copy-chain"
+    ],
+    "spent": 3000,
+    "protocols": [
+     "observe"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.49
+   },
+   {
+    "world": "copy_chain",
+    "interface": "observe-only",
+    "seed": 3,
+    "survivors": [
+     "O1:latent-causal",
+     "O3:latent-confounded",
+     "O4:copy-chain"
+    ],
+    "spent": 3000,
+    "protocols": [
+     "observe"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.44
+   },
+   {
+    "world": "copy_chain",
+    "interface": "observe-only",
+    "seed": 4,
+    "survivors": [
+     "O1:latent-causal",
+     "O3:latent-confounded",
+     "O4:copy-chain"
+    ],
+    "spent": 3000,
+    "protocols": [
+     "observe"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.46
+   },
+   {
+    "world": "copy_chain",
+    "interface": "observe-only",
+    "seed": 5,
+    "survivors": [
+     "O1:latent-causal",
+     "O3:latent-confounded",
+     "O4:copy-chain"
+    ],
+    "spent": 3000,
+    "protocols": [
+     "observe"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.46
+   },
+   {
+    "world": "copy_chain",
+    "interface": "observe-only",
+    "seed": 6,
+    "survivors": [
+     "O1:latent-causal",
+     "O3:latent-confounded",
+     "O4:copy-chain"
+    ],
+    "spent": 3000,
+    "protocols": [
+     "observe"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.46
+   },
+   {
+    "world": "copy_chain",
+    "interface": "observe-only",
+    "seed": 7,
+    "survivors": [
+     "O1:latent-causal",
+     "O3:latent-confounded",
+     "O4:copy-chain"
+    ],
+    "spent": 3000,
+    "protocols": [
+     "observe"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.44
+   },
+   {
+    "world": "copy_chain",
+    "interface": "observe-only",
+    "seed": 8,
+    "survivors": [
+     "O1:latent-causal",
+     "O3:latent-confounded",
+     "O4:copy-chain"
+    ],
+    "spent": 3000,
+    "protocols": [
+     "observe"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.48
+   },
+   {
+    "world": "copy_chain",
+    "interface": "observe-only",
+    "seed": 9,
+    "survivors": [
+     "O1:latent-causal",
+     "O3:latent-confounded",
+     "O4:copy-chain"
+    ],
+    "spent": 3000,
+    "protocols": [
+     "observe"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.48
+   },
+   {
+    "world": "copy_chain",
+    "interface": "observe-only",
+    "seed": 10,
+    "survivors": [
+     "O1:latent-causal",
+     "O3:latent-confounded",
+     "O4:copy-chain"
+    ],
+    "spent": 3000,
+    "protocols": [
+     "observe"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.49
+   },
+   {
+    "world": "copy_chain",
+    "interface": "observe-only",
+    "seed": 11,
+    "survivors": [
+     "O1:latent-causal",
+     "O3:latent-confounded",
+     "O4:copy-chain"
+    ],
+    "spent": 3000,
+    "protocols": [
+     "observe"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.45
+   },
+   {
+    "world": "copy_chain",
+    "interface": "observe-only",
+    "seed": 12,
+    "survivors": [
+     "O1:latent-causal",
+     "O3:latent-confounded",
+     "O4:copy-chain"
+    ],
+    "spent": 3000,
+    "protocols": [
+     "observe"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.51
+   },
+   {
+    "world": "copy_chain",
+    "interface": "observe-only",
+    "seed": 13,
+    "survivors": [
+     "O1:latent-causal",
+     "O3:latent-confounded",
+     "O4:copy-chain"
+    ],
+    "spent": 3000,
+    "protocols": [
+     "observe"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.44
+   },
+   {
+    "world": "copy_chain",
+    "interface": "observe-only",
+    "seed": 14,
+    "survivors": [
+     "O1:latent-causal",
+     "O3:latent-confounded",
+     "O4:copy-chain"
+    ],
+    "spent": 3000,
+    "protocols": [
+     "observe"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.5
+   },
+   {
+    "world": "copy_chain",
+    "interface": "observe+do(A)",
+    "seed": 0,
+    "survivors": [
+     "O1:latent-causal",
+     "O4:copy-chain"
+    ],
+    "spent": 4500,
+    "protocols": [
+     "do(A=0)",
+     "do(A=1)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.78
+   },
+   {
+    "world": "copy_chain",
+    "interface": "observe+do(A)",
+    "seed": 1,
+    "survivors": [
+     "O1:latent-causal",
+     "O4:copy-chain"
+    ],
+    "spent": 4500,
+    "protocols": [
+     "do(A=0)",
+     "do(A=1)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.78
+   },
+   {
+    "world": "copy_chain",
+    "interface": "observe+do(A)",
+    "seed": 2,
+    "survivors": [
+     "O1:latent-causal",
+     "O4:copy-chain"
+    ],
+    "spent": 4500,
+    "protocols": [
+     "do(A=1)",
+     "do(A=0)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.76
+   },
+   {
+    "world": "copy_chain",
+    "interface": "observe+do(A)",
+    "seed": 3,
+    "survivors": [
+     "O1:latent-causal",
+     "O4:copy-chain"
+    ],
+    "spent": 4500,
+    "protocols": [
+     "do(A=0)",
+     "do(A=1)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.71
+   },
+   {
+    "world": "copy_chain",
+    "interface": "observe+do(A)",
+    "seed": 4,
+    "survivors": [
+     "O1:latent-causal",
+     "O4:copy-chain"
+    ],
+    "spent": 4500,
+    "protocols": [
+     "do(A=0)",
+     "do(A=1)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.71
+   },
+   {
+    "world": "copy_chain",
+    "interface": "observe+do(A)",
+    "seed": 5,
+    "survivors": [
+     "O1:latent-causal",
+     "O4:copy-chain"
+    ],
+    "spent": 4500,
+    "protocols": [
+     "do(A=1)",
+     "do(A=0)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.71
+   },
+   {
+    "world": "copy_chain",
+    "interface": "observe+do(A)",
+    "seed": 6,
+    "survivors": [
+     "O1:latent-causal",
+     "O4:copy-chain"
+    ],
+    "spent": 4500,
+    "protocols": [
+     "do(A=0)",
+     "do(A=1)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.69
+   },
+   {
+    "world": "copy_chain",
+    "interface": "observe+do(A)",
+    "seed": 7,
+    "survivors": [
+     "O1:latent-causal",
+     "O4:copy-chain"
+    ],
+    "spent": 4500,
+    "protocols": [
+     "do(A=1)",
+     "do(A=0)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.7
+   },
+   {
+    "world": "copy_chain",
+    "interface": "observe+do(A)",
+    "seed": 8,
+    "survivors": [
+     "O1:latent-causal",
+     "O4:copy-chain"
+    ],
+    "spent": 4500,
+    "protocols": [
+     "do(A=1)",
+     "do(A=0)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.74
+   },
+   {
+    "world": "copy_chain",
+    "interface": "observe+do(A)",
+    "seed": 9,
+    "survivors": [
+     "O1:latent-causal",
+     "O4:copy-chain"
+    ],
+    "spent": 4500,
+    "protocols": [
+     "do(A=1)",
+     "do(A=0)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.75
+   },
+   {
+    "world": "copy_chain",
+    "interface": "observe+do(A)",
+    "seed": 10,
+    "survivors": [
+     "O1:latent-causal",
+     "O4:copy-chain"
+    ],
+    "spent": 4500,
+    "protocols": [
+     "do(A=1)",
+     "do(A=0)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.74
+   },
+   {
+    "world": "copy_chain",
+    "interface": "observe+do(A)",
+    "seed": 11,
+    "survivors": [
+     "O1:latent-causal",
+     "O4:copy-chain"
+    ],
+    "spent": 4500,
+    "protocols": [
+     "do(A=1)",
+     "do(A=0)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.73
+   },
+   {
+    "world": "copy_chain",
+    "interface": "observe+do(A)",
+    "seed": 12,
+    "survivors": [
+     "O1:latent-causal",
+     "O4:copy-chain"
+    ],
+    "spent": 4500,
+    "protocols": [
+     "do(A=0)",
+     "do(A=1)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.82
+   },
+   {
+    "world": "copy_chain",
+    "interface": "observe+do(A)",
+    "seed": 13,
+    "survivors": [
+     "O1:latent-causal",
+     "O4:copy-chain"
+    ],
+    "spent": 4500,
+    "protocols": [
+     "do(A=0)",
+     "do(A=1)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.69
+   },
+   {
+    "world": "copy_chain",
+    "interface": "observe+do(A)",
+    "seed": 14,
+    "survivors": [
+     "O1:latent-causal",
+     "O4:copy-chain"
+    ],
+    "spent": 4500,
+    "protocols": [
+     "do(A=1)",
+     "do(A=0)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.81
+   },
+   {
+    "world": "copy_chain",
+    "interface": "all",
+    "seed": 0,
+    "survivors": [
+     "O4:copy-chain"
+    ],
+    "spent": 7500,
+    "protocols": [
+     "do(S1=1)",
+     "do(A=0)",
+     "do(A=1)",
+     "do(S1=0)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.42
+   },
+   {
+    "world": "copy_chain",
+    "interface": "all",
+    "seed": 1,
+    "survivors": [
+     "O4:copy-chain"
+    ],
+    "spent": 7500,
+    "protocols": [
+     "do(S1=1)",
+     "do(A=0)",
+     "do(A=1)",
+     "do(S1=0)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.41
+   },
+   {
+    "world": "copy_chain",
+    "interface": "all",
+    "seed": 2,
+    "survivors": [
+     "O4:copy-chain"
+    ],
+    "spent": 7500,
+    "protocols": [
+     "do(S1=1)",
+     "do(A=0)",
+     "do(A=1)",
+     "do(S1=0)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.42
+   },
+   {
+    "world": "copy_chain",
+    "interface": "all",
+    "seed": 3,
+    "survivors": [
+     "O4:copy-chain"
+    ],
+    "spent": 7500,
+    "protocols": [
+     "do(S1=0)",
+     "do(A=0)",
+     "do(A=1)",
+     "do(S1=1)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.39
+   },
+   {
+    "world": "copy_chain",
+    "interface": "all",
+    "seed": 4,
+    "survivors": [
+     "O4:copy-chain"
+    ],
+    "spent": 7500,
+    "protocols": [
+     "do(S1=1)",
+     "do(A=0)",
+     "do(A=1)",
+     "do(S1=0)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.4
+   },
+   {
+    "world": "copy_chain",
+    "interface": "all",
+    "seed": 5,
+    "survivors": [
+     "O4:copy-chain"
+    ],
+    "spent": 7500,
+    "protocols": [
+     "do(S1=1)",
+     "do(A=0)",
+     "do(A=1)",
+     "do(S1=0)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.4
+   },
+   {
+    "world": "copy_chain",
+    "interface": "all",
+    "seed": 6,
+    "survivors": [
+     "O4:copy-chain"
+    ],
+    "spent": 7500,
+    "protocols": [
+     "do(S1=1)",
+     "do(A=0)",
+     "do(A=1)",
+     "do(S1=0)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.39
+   },
+   {
+    "world": "copy_chain",
+    "interface": "all",
+    "seed": 7,
+    "survivors": [
+     "O4:copy-chain"
+    ],
+    "spent": 7500,
+    "protocols": [
+     "do(S1=1)",
+     "do(A=0)",
+     "do(A=1)",
+     "do(S1=0)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.38
+   },
+   {
+    "world": "copy_chain",
+    "interface": "all",
+    "seed": 8,
+    "survivors": [
+     "O4:copy-chain"
+    ],
+    "spent": 7500,
+    "protocols": [
+     "do(S1=1)",
+     "do(A=0)",
+     "do(A=1)",
+     "do(S1=0)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.41
+   },
+   {
+    "world": "copy_chain",
+    "interface": "all",
+    "seed": 9,
+    "survivors": [
+     "O4:copy-chain"
+    ],
+    "spent": 7500,
+    "protocols": [
+     "do(S1=1)",
+     "do(A=0)",
+     "do(A=1)",
+     "do(S1=0)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.4
+   },
+   {
+    "world": "copy_chain",
+    "interface": "all",
+    "seed": 10,
+    "survivors": [
+     "O4:copy-chain"
+    ],
+    "spent": 7500,
+    "protocols": [
+     "do(S1=0)",
+     "do(A=0)",
+     "do(A=1)",
+     "do(S1=1)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.41
+   },
+   {
+    "world": "copy_chain",
+    "interface": "all",
+    "seed": 11,
+    "survivors": [
+     "O4:copy-chain"
+    ],
+    "spent": 7500,
+    "protocols": [
+     "do(S1=1)",
+     "do(A=0)",
+     "do(A=1)",
+     "do(S1=0)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.39
+   },
+   {
+    "world": "copy_chain",
+    "interface": "all",
+    "seed": 12,
+    "survivors": [
+     "O4:copy-chain"
+    ],
+    "spent": 7500,
+    "protocols": [
+     "do(S1=0)",
+     "do(A=0)",
+     "do(A=1)",
+     "do(S1=1)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.43
+   },
+   {
+    "world": "copy_chain",
+    "interface": "all",
+    "seed": 13,
+    "survivors": [
+     "O4:copy-chain"
+    ],
+    "spent": 7500,
+    "protocols": [
+     "do(S1=0)",
+     "do(A=0)",
+     "do(A=1)",
+     "do(S1=1)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.38
+   },
+   {
+    "world": "copy_chain",
+    "interface": "all",
+    "seed": 14,
+    "survivors": [
+     "O4:copy-chain"
+    ],
+    "spent": 7500,
+    "protocols": [
+     "do(S1=1)",
+     "do(A=0)",
+     "do(A=1)",
+     "do(S1=0)"
+    ],
+    "true_model_survived": true,
+    "true_model_in_candidates": true,
+    "secs": 0.48
+   }
+  ],
+  "summary": {
+   "ALL | ALL | ALL": {
+    "undetermined": 135,
+    "CONJECTURE/correct": 225,
+    "EMPIRICALLY-SUPPORTED/correct": 180
+   },
+   "copy_chain | all | S1 and S2 measure a shared hidden quantity": {
+    "CONJECTURE/correct": 15
+   },
+   "copy_chain | all | intervening on A changes Y": {
+    "EMPIRICALLY-SUPPORTED/correct": 15
+   },
+   "copy_chain | all | intervening on S1 changes S2": {
+    "EMPIRICALLY-SUPPORTED/correct": 15
+   },
+   "copy_chain | all | intervening on S1 changes Y": {
+    "EMPIRICALLY-SUPPORTED/correct": 15
+   },
+   "copy_chain | observe+do(A) | S1 and S2 measure a shared hidden quantity": {
+    "undetermined": 15
+   },
+   "copy_chain | observe+do(A) | intervening on A changes Y": {
+    "EMPIRICALLY-SUPPORTED/correct": 15
+   },
+   "copy_chain | observe+do(A) | intervening on S1 changes S2": {
+    "undetermined": 15
+   },
+   "copy_chain | observe+do(A) | intervening on S1 changes Y": {
+    "undetermined": 15
+   },
+   "copy_chain | observe-only | S1 and S2 measure a shared hidden quantity": {
+    "undetermined": 15
+   },
+   "copy_chain | observe-only | intervening on A changes Y": {
+    "undetermined": 15
+   },
+   "copy_chain | observe-only | intervening on S1 changes S2": {
+    "undetermined": 15
+   },
+   "copy_chain | observe-only | intervening on S1 changes Y": {
+    "undetermined": 15
+   },
+   "latent_causal | all | S1 and S2 measure a shared hidden quantity": {
+    "CONJECTURE/correct": 15
+   },
+   "latent_causal | all | intervening on A changes Y": {
+    "EMPIRICALLY-SUPPORTED/correct": 15
+   },
+   "latent_causal | all | intervening on S1 changes S2": {
+    "EMPIRICALLY-SUPPORTED/correct": 15
+   },
+   "latent_causal | all | intervening on S1 changes Y": {
+    "EMPIRICALLY-SUPPORTED/correct": 15
+   },
+   "latent_causal | observe+do(A) | S1 and S2 measure a shared hidden quantity": {
+    "CONJECTURE/correct": 15
+   },
+   "latent_causal | observe+do(A) | intervening on A changes Y": {
+    "EMPIRICALLY-SUPPORTED/correct": 15
+   },
+   "latent_causal | observe+do(A) | intervening on S1 changes S2": {
+    "CONJECTURE/correct": 15
+   },
+   "latent_causal | observe+do(A) | intervening on S1 changes Y": {
+    "CONJECTURE/correct": 15
+   },
+   "latent_causal | observe-only | S1 and S2 measure a shared hidden quantity": {
+    "CONJECTURE/correct": 15
+   },
+   "latent_causal | observe-only | intervening on A changes Y": {
+    "undetermined": 15
+   },
+   "latent_causal | observe-only | intervening on S1 changes S2": {
+    "CONJECTURE/correct": 15
+   },
+   "latent_causal | observe-only | intervening on S1 changes Y": {
+    "CONJECTURE/correct": 15
+   },
+   "latent_confounded | all | S1 and S2 measure a shared hidden quantity": {
+    "CONJECTURE/correct": 15
+   },
+   "latent_confounded | all | intervening on A changes Y": {
+    "EMPIRICALLY-SUPPORTED/correct": 15
+   },
+   "latent_confounded | all | intervening on S1 changes S2": {
+    "EMPIRICALLY-SUPPORTED/correct": 15
+   },
+   "latent_confounded | all | intervening on S1 changes Y": {
+    "EMPIRICALLY-SUPPORTED/correct": 15
+   },
+   "latent_confounded | observe+do(A) | S1 and S2 measure a shared hidden quantity": {
+    "CONJECTURE/correct": 15
+   },
+   "latent_confounded | observe+do(A) | intervening on A changes Y": {
+    "EMPIRICALLY-SUPPORTED/correct": 15
+   },
+   "latent_confounded | observe+do(A) | intervening on S1 changes S2": {
+    "CONJECTURE/correct": 15
+   },
+   "latent_confounded | observe+do(A) | intervening on S1 changes Y": {
+    "CONJECTURE/correct": 15
+   },
+   "latent_confounded | observe-only | S1 and S2 measure a shared hidden quantity": {
+    "CONJECTURE/correct": 15
+   },
+   "latent_confounded | observe-only | intervening on A changes Y": {
+    "undetermined": 15
+   },
+   "latent_confounded | observe-only | intervening on S1 changes S2": {
+    "CONJECTURE/correct": 15
+   },
+   "latent_confounded | observe-only | intervening on S1 changes Y": {
+    "CONJECTURE/correct": 15
+   }
+  }
+ },
+ "truth_missing": {
+  "copy_chain without O4": {
+   "label": "O4 removed",
+   "rows": [
+    {
+     "world": "copy_chain",
+     "interface": "observe-only",
+     "seed": 0,
+     "survivors": [
+      "O1:latent-causal",
+      "O3:latent-confounded"
+     ],
+     "spent": 3000,
+     "protocols": [
+      "observe"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.42
+    },
+    {
+     "world": "copy_chain",
+     "interface": "observe-only",
+     "seed": 1,
+     "survivors": [
+      "O1:latent-causal",
+      "O3:latent-confounded"
+     ],
+     "spent": 3000,
+     "protocols": [
+      "observe"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.39
+    },
+    {
+     "world": "copy_chain",
+     "interface": "observe-only",
+     "seed": 2,
+     "survivors": [
+      "O1:latent-causal",
+      "O3:latent-confounded"
+     ],
+     "spent": 3000,
+     "protocols": [
+      "observe"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.42
+    },
+    {
+     "world": "copy_chain",
+     "interface": "observe-only",
+     "seed": 3,
+     "survivors": [
+      "O1:latent-causal",
+      "O3:latent-confounded"
+     ],
+     "spent": 3000,
+     "protocols": [
+      "observe"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.38
+    },
+    {
+     "world": "copy_chain",
+     "interface": "observe-only",
+     "seed": 4,
+     "survivors": [
+      "O1:latent-causal",
+      "O3:latent-confounded"
+     ],
+     "spent": 3000,
+     "protocols": [
+      "observe"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.4
+    },
+    {
+     "world": "copy_chain",
+     "interface": "observe-only",
+     "seed": 5,
+     "survivors": [
+      "O1:latent-causal",
+      "O3:latent-confounded"
+     ],
+     "spent": 3000,
+     "protocols": [
+      "observe"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.41
+    },
+    {
+     "world": "copy_chain",
+     "interface": "observe-only",
+     "seed": 6,
+     "survivors": [
+      "O1:latent-causal",
+      "O3:latent-confounded"
+     ],
+     "spent": 3000,
+     "protocols": [
+      "observe"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.38
+    },
+    {
+     "world": "copy_chain",
+     "interface": "observe-only",
+     "seed": 7,
+     "survivors": [
+      "O1:latent-causal",
+      "O3:latent-confounded"
+     ],
+     "spent": 3000,
+     "protocols": [
+      "observe"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.38
+    },
+    {
+     "world": "copy_chain",
+     "interface": "observe-only",
+     "seed": 8,
+     "survivors": [
+      "O1:latent-causal",
+      "O3:latent-confounded"
+     ],
+     "spent": 3000,
+     "protocols": [
+      "observe"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.41
+    },
+    {
+     "world": "copy_chain",
+     "interface": "observe-only",
+     "seed": 9,
+     "survivors": [
+      "O1:latent-causal",
+      "O3:latent-confounded"
+     ],
+     "spent": 3000,
+     "protocols": [
+      "observe"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.41
+    },
+    {
+     "world": "copy_chain",
+     "interface": "observe-only",
+     "seed": 10,
+     "survivors": [
+      "O1:latent-causal",
+      "O3:latent-confounded"
+     ],
+     "spent": 3000,
+     "protocols": [
+      "observe"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.41
+    },
+    {
+     "world": "copy_chain",
+     "interface": "observe-only",
+     "seed": 11,
+     "survivors": [
+      "O1:latent-causal",
+      "O3:latent-confounded"
+     ],
+     "spent": 3000,
+     "protocols": [
+      "observe"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.39
+    },
+    {
+     "world": "copy_chain",
+     "interface": "observe-only",
+     "seed": 12,
+     "survivors": [
+      "O1:latent-causal",
+      "O3:latent-confounded"
+     ],
+     "spent": 3000,
+     "protocols": [
+      "observe"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.44
+    },
+    {
+     "world": "copy_chain",
+     "interface": "observe-only",
+     "seed": 13,
+     "survivors": [
+      "O1:latent-causal",
+      "O3:latent-confounded"
+     ],
+     "spent": 3000,
+     "protocols": [
+      "observe"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.39
+    },
+    {
+     "world": "copy_chain",
+     "interface": "observe-only",
+     "seed": 14,
+     "survivors": [
+      "O1:latent-causal",
+      "O3:latent-confounded"
+     ],
+     "spent": 3000,
+     "protocols": [
+      "observe"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.43
+    },
+    {
+     "world": "copy_chain",
+     "interface": "observe+do(A)",
+     "seed": 0,
+     "survivors": [
+      "O1:latent-causal"
+     ],
+     "spent": 4500,
+     "protocols": [
+      "do(A=0)",
+      "do(A=1)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.65
+    },
+    {
+     "world": "copy_chain",
+     "interface": "observe+do(A)",
+     "seed": 1,
+     "survivors": [
+      "O1:latent-causal"
+     ],
+     "spent": 4500,
+     "protocols": [
+      "do(A=0)",
+      "do(A=1)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.61
+    },
+    {
+     "world": "copy_chain",
+     "interface": "observe+do(A)",
+     "seed": 2,
+     "survivors": [
+      "O1:latent-causal"
+     ],
+     "spent": 4500,
+     "protocols": [
+      "do(A=1)",
+      "do(A=0)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.65
+    },
+    {
+     "world": "copy_chain",
+     "interface": "observe+do(A)",
+     "seed": 3,
+     "survivors": [
+      "O1:latent-causal"
+     ],
+     "spent": 4500,
+     "protocols": [
+      "do(A=0)",
+      "do(A=1)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.62
+    },
+    {
+     "world": "copy_chain",
+     "interface": "observe+do(A)",
+     "seed": 4,
+     "survivors": [
+      "O1:latent-causal"
+     ],
+     "spent": 4500,
+     "protocols": [
+      "do(A=0)",
+      "do(A=1)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.61
+    },
+    {
+     "world": "copy_chain",
+     "interface": "observe+do(A)",
+     "seed": 5,
+     "survivors": [
+      "O1:latent-causal"
+     ],
+     "spent": 4500,
+     "protocols": [
+      "do(A=1)",
+      "do(A=0)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.61
+    },
+    {
+     "world": "copy_chain",
+     "interface": "observe+do(A)",
+     "seed": 6,
+     "survivors": [
+      "O1:latent-causal"
+     ],
+     "spent": 4500,
+     "protocols": [
+      "do(A=0)",
+      "do(A=1)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.58
+    },
+    {
+     "world": "copy_chain",
+     "interface": "observe+do(A)",
+     "seed": 7,
+     "survivors": [
+      "O1:latent-causal"
+     ],
+     "spent": 4500,
+     "protocols": [
+      "do(A=1)",
+      "do(A=0)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.59
+    },
+    {
+     "world": "copy_chain",
+     "interface": "observe+do(A)",
+     "seed": 8,
+     "survivors": [
+      "O1:latent-causal"
+     ],
+     "spent": 4500,
+     "protocols": [
+      "do(A=1)",
+      "do(A=0)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.63
+    },
+    {
+     "world": "copy_chain",
+     "interface": "observe+do(A)",
+     "seed": 9,
+     "survivors": [
+      "O1:latent-causal"
+     ],
+     "spent": 4500,
+     "protocols": [
+      "do(A=1)",
+      "do(A=0)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.62
+    },
+    {
+     "world": "copy_chain",
+     "interface": "observe+do(A)",
+     "seed": 10,
+     "survivors": [
+      "O1:latent-causal"
+     ],
+     "spent": 4500,
+     "protocols": [
+      "do(A=1)",
+      "do(A=0)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.64
+    },
+    {
+     "world": "copy_chain",
+     "interface": "observe+do(A)",
+     "seed": 11,
+     "survivors": [
+      "O1:latent-causal"
+     ],
+     "spent": 4500,
+     "protocols": [
+      "do(A=1)",
+      "do(A=0)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.64
+    },
+    {
+     "world": "copy_chain",
+     "interface": "observe+do(A)",
+     "seed": 12,
+     "survivors": [
+      "O1:latent-causal"
+     ],
+     "spent": 4500,
+     "protocols": [
+      "do(A=0)",
+      "do(A=1)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.66
+    },
+    {
+     "world": "copy_chain",
+     "interface": "observe+do(A)",
+     "seed": 13,
+     "survivors": [
+      "O1:latent-causal"
+     ],
+     "spent": 4500,
+     "protocols": [
+      "do(A=0)",
+      "do(A=1)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.57
+    },
+    {
+     "world": "copy_chain",
+     "interface": "observe+do(A)",
+     "seed": 14,
+     "survivors": [
+      "O1:latent-causal"
+     ],
+     "spent": 4500,
+     "protocols": [
+      "do(A=1)",
+      "do(A=0)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.64
+    },
+    {
+     "world": "copy_chain",
+     "interface": "all",
+     "seed": 0,
+     "survivors": [],
+     "spent": 7500,
+     "protocols": [
+      "do(A=0)",
+      "do(A=1)",
+      "do(S1=0)",
+      "do(S1=1)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.98
+    },
+    {
+     "world": "copy_chain",
+     "interface": "all",
+     "seed": 1,
+     "survivors": [],
+     "spent": 7500,
+     "protocols": [
+      "do(A=0)",
+      "do(A=1)",
+      "do(S1=0)",
+      "do(S1=1)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.92
+    },
+    {
+     "world": "copy_chain",
+     "interface": "all",
+     "seed": 2,
+     "survivors": [],
+     "spent": 7500,
+     "protocols": [
+      "do(A=1)",
+      "do(A=0)",
+      "do(S1=0)",
+      "do(S1=1)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.95
+    },
+    {
+     "world": "copy_chain",
+     "interface": "all",
+     "seed": 3,
+     "survivors": [],
+     "spent": 7500,
+     "protocols": [
+      "do(A=0)",
+      "do(A=1)",
+      "do(S1=0)",
+      "do(S1=1)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.91
+    },
+    {
+     "world": "copy_chain",
+     "interface": "all",
+     "seed": 4,
+     "survivors": [],
+     "spent": 7500,
+     "protocols": [
+      "do(A=0)",
+      "do(A=1)",
+      "do(S1=0)",
+      "do(S1=1)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.96
+    },
+    {
+     "world": "copy_chain",
+     "interface": "all",
+     "seed": 5,
+     "survivors": [],
+     "spent": 7500,
+     "protocols": [
+      "do(A=1)",
+      "do(A=0)",
+      "do(S1=0)",
+      "do(S1=1)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.92
+    },
+    {
+     "world": "copy_chain",
+     "interface": "all",
+     "seed": 6,
+     "survivors": [],
+     "spent": 7500,
+     "protocols": [
+      "do(A=0)",
+      "do(A=1)",
+      "do(S1=0)",
+      "do(S1=1)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.9
+    },
+    {
+     "world": "copy_chain",
+     "interface": "all",
+     "seed": 7,
+     "survivors": [],
+     "spent": 7500,
+     "protocols": [
+      "do(A=1)",
+      "do(A=0)",
+      "do(S1=0)",
+      "do(S1=1)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.89
+    },
+    {
+     "world": "copy_chain",
+     "interface": "all",
+     "seed": 8,
+     "survivors": [],
+     "spent": 7500,
+     "protocols": [
+      "do(A=1)",
+      "do(A=0)",
+      "do(S1=0)",
+      "do(S1=1)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.95
+    },
+    {
+     "world": "copy_chain",
+     "interface": "all",
+     "seed": 9,
+     "survivors": [],
+     "spent": 7500,
+     "protocols": [
+      "do(A=1)",
+      "do(A=0)",
+      "do(S1=0)",
+      "do(S1=1)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.97
+    },
+    {
+     "world": "copy_chain",
+     "interface": "all",
+     "seed": 10,
+     "survivors": [],
+     "spent": 7500,
+     "protocols": [
+      "do(A=1)",
+      "do(A=0)",
+      "do(S1=0)",
+      "do(S1=1)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 1.06
+    },
+    {
+     "world": "copy_chain",
+     "interface": "all",
+     "seed": 11,
+     "survivors": [],
+     "spent": 7500,
+     "protocols": [
+      "do(A=1)",
+      "do(A=0)",
+      "do(S1=0)",
+      "do(S1=1)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.94
+    },
+    {
+     "world": "copy_chain",
+     "interface": "all",
+     "seed": 12,
+     "survivors": [],
+     "spent": 7500,
+     "protocols": [
+      "do(A=0)",
+      "do(A=1)",
+      "do(S1=0)",
+      "do(S1=1)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.98
+    },
+    {
+     "world": "copy_chain",
+     "interface": "all",
+     "seed": 13,
+     "survivors": [],
+     "spent": 7500,
+     "protocols": [
+      "do(A=0)",
+      "do(A=1)",
+      "do(S1=0)",
+      "do(S1=1)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.91
+    },
+    {
+     "world": "copy_chain",
+     "interface": "all",
+     "seed": 14,
+     "survivors": [],
+     "spent": 7500,
+     "protocols": [
+      "do(A=1)",
+      "do(A=0)",
+      "do(S1=0)",
+      "do(S1=1)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.99
+    }
+   ],
+   "summary": {
+    "ALL | ALL | ALL": {
+     "undetermined": 30,
+     "CONJECTURE/WRONG": 90,
+     "EMPIRICALLY-SUPPORTED/correct": 60
+    },
+    "copy_chain | all | S1 and S2 measure a shared hidden quantity": {
+     "undetermined": 15
+    },
+    "copy_chain | all | intervening on A changes Y": {
+     "EMPIRICALLY-SUPPORTED/correct": 15
+    },
+    "copy_chain | all | intervening on S1 changes S2": {
+     "EMPIRICALLY-SUPPORTED/correct": 15
+    },
+    "copy_chain | all | intervening on S1 changes Y": {
+     "EMPIRICALLY-SUPPORTED/correct": 15
+    },
+    "copy_chain | observe+do(A) | S1 and S2 measure a shared hidden quantity": {
+     "CONJECTURE/WRONG": 15
+    },
+    "copy_chain | observe+do(A) | intervening on A changes Y": {
+     "EMPIRICALLY-SUPPORTED/correct": 15
+    },
+    "copy_chain | observe+do(A) | intervening on S1 changes S2": {
+     "CONJECTURE/WRONG": 15
+    },
+    "copy_chain | observe+do(A) | intervening on S1 changes Y": {
+     "CONJECTURE/WRONG": 15
+    },
+    "copy_chain | observe-only | S1 and S2 measure a shared hidden quantity": {
+     "CONJECTURE/WRONG": 15
+    },
+    "copy_chain | observe-only | intervening on A changes Y": {
+     "undetermined": 15
+    },
+    "copy_chain | observe-only | intervening on S1 changes S2": {
+     "CONJECTURE/WRONG": 15
+    },
+    "copy_chain | observe-only | intervening on S1 changes Y": {
+     "CONJECTURE/WRONG": 15
+    }
+   }
+  },
+  "latent_causal without O1": {
+   "label": "O1 removed",
+   "rows": [
+    {
+     "world": "latent_causal",
+     "interface": "observe-only",
+     "seed": 0,
+     "survivors": [
+      "O3:latent-confounded"
+     ],
+     "spent": 3000,
+     "protocols": [
+      "observe"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.16
+    },
+    {
+     "world": "latent_causal",
+     "interface": "observe-only",
+     "seed": 1,
+     "survivors": [
+      "O3:latent-confounded"
+     ],
+     "spent": 3000,
+     "protocols": [
+      "observe"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.15
+    },
+    {
+     "world": "latent_causal",
+     "interface": "observe-only",
+     "seed": 2,
+     "survivors": [
+      "O3:latent-confounded"
+     ],
+     "spent": 3000,
+     "protocols": [
+      "observe"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.16
+    },
+    {
+     "world": "latent_causal",
+     "interface": "observe-only",
+     "seed": 3,
+     "survivors": [
+      "O3:latent-confounded"
+     ],
+     "spent": 3000,
+     "protocols": [
+      "observe"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.17
+    },
+    {
+     "world": "latent_causal",
+     "interface": "observe-only",
+     "seed": 4,
+     "survivors": [
+      "O3:latent-confounded"
+     ],
+     "spent": 3000,
+     "protocols": [
+      "observe"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.17
+    },
+    {
+     "world": "latent_causal",
+     "interface": "observe-only",
+     "seed": 5,
+     "survivors": [
+      "O3:latent-confounded"
+     ],
+     "spent": 3000,
+     "protocols": [
+      "observe"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.15
+    },
+    {
+     "world": "latent_causal",
+     "interface": "observe-only",
+     "seed": 6,
+     "survivors": [
+      "O3:latent-confounded"
+     ],
+     "spent": 3000,
+     "protocols": [
+      "observe"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.17
+    },
+    {
+     "world": "latent_causal",
+     "interface": "observe-only",
+     "seed": 7,
+     "survivors": [
+      "O3:latent-confounded"
+     ],
+     "spent": 3000,
+     "protocols": [
+      "observe"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.16
+    },
+    {
+     "world": "latent_causal",
+     "interface": "observe-only",
+     "seed": 8,
+     "survivors": [
+      "O3:latent-confounded"
+     ],
+     "spent": 3000,
+     "protocols": [
+      "observe"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.16
+    },
+    {
+     "world": "latent_causal",
+     "interface": "observe-only",
+     "seed": 9,
+     "survivors": [
+      "O3:latent-confounded"
+     ],
+     "spent": 3000,
+     "protocols": [
+      "observe"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.16
+    },
+    {
+     "world": "latent_causal",
+     "interface": "observe-only",
+     "seed": 10,
+     "survivors": [
+      "O3:latent-confounded"
+     ],
+     "spent": 3000,
+     "protocols": [
+      "observe"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.16
+    },
+    {
+     "world": "latent_causal",
+     "interface": "observe-only",
+     "seed": 11,
+     "survivors": [
+      "O3:latent-confounded"
+     ],
+     "spent": 3000,
+     "protocols": [
+      "observe"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.16
+    },
+    {
+     "world": "latent_causal",
+     "interface": "observe-only",
+     "seed": 12,
+     "survivors": [
+      "O3:latent-confounded"
+     ],
+     "spent": 3000,
+     "protocols": [
+      "observe"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.17
+    },
+    {
+     "world": "latent_causal",
+     "interface": "observe-only",
+     "seed": 13,
+     "survivors": [
+      "O3:latent-confounded"
+     ],
+     "spent": 3000,
+     "protocols": [
+      "observe"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.15
+    },
+    {
+     "world": "latent_causal",
+     "interface": "observe-only",
+     "seed": 14,
+     "survivors": [
+      "O3:latent-confounded"
+     ],
+     "spent": 3000,
+     "protocols": [
+      "observe"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.19
+    },
+    {
+     "world": "latent_causal",
+     "interface": "observe+do(A)",
+     "seed": 0,
+     "survivors": [],
+     "spent": 4500,
+     "protocols": [
+      "do(A=0)",
+      "do(A=1)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.17
+    },
+    {
+     "world": "latent_causal",
+     "interface": "observe+do(A)",
+     "seed": 1,
+     "survivors": [],
+     "spent": 4500,
+     "protocols": [
+      "do(A=0)",
+      "do(A=1)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.14
+    },
+    {
+     "world": "latent_causal",
+     "interface": "observe+do(A)",
+     "seed": 2,
+     "survivors": [],
+     "spent": 4500,
+     "protocols": [
+      "do(A=0)",
+      "do(A=1)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.14
+    },
+    {
+     "world": "latent_causal",
+     "interface": "observe+do(A)",
+     "seed": 3,
+     "survivors": [],
+     "spent": 4500,
+     "protocols": [
+      "do(A=0)",
+      "do(A=1)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.16
+    },
+    {
+     "world": "latent_causal",
+     "interface": "observe+do(A)",
+     "seed": 4,
+     "survivors": [],
+     "spent": 4500,
+     "protocols": [
+      "do(A=0)",
+      "do(A=1)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.16
+    },
+    {
+     "world": "latent_causal",
+     "interface": "observe+do(A)",
+     "seed": 5,
+     "survivors": [],
+     "spent": 4500,
+     "protocols": [
+      "do(A=1)",
+      "do(A=0)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.14
+    },
+    {
+     "world": "latent_causal",
+     "interface": "observe+do(A)",
+     "seed": 6,
+     "survivors": [],
+     "spent": 4500,
+     "protocols": [
+      "do(A=0)",
+      "do(A=1)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.16
+    },
+    {
+     "world": "latent_causal",
+     "interface": "observe+do(A)",
+     "seed": 7,
+     "survivors": [],
+     "spent": 4500,
+     "protocols": [
+      "do(A=0)",
+      "do(A=1)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.15
+    },
+    {
+     "world": "latent_causal",
+     "interface": "observe+do(A)",
+     "seed": 8,
+     "survivors": [],
+     "spent": 4500,
+     "protocols": [
+      "do(A=1)",
+      "do(A=0)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.15
+    },
+    {
+     "world": "latent_causal",
+     "interface": "observe+do(A)",
+     "seed": 9,
+     "survivors": [],
+     "spent": 4500,
+     "protocols": [
+      "do(A=1)",
+      "do(A=0)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.14
+    },
+    {
+     "world": "latent_causal",
+     "interface": "observe+do(A)",
+     "seed": 10,
+     "survivors": [],
+     "spent": 4500,
+     "protocols": [
+      "do(A=1)",
+      "do(A=0)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.15
+    },
+    {
+     "world": "latent_causal",
+     "interface": "observe+do(A)",
+     "seed": 11,
+     "survivors": [],
+     "spent": 4500,
+     "protocols": [
+      "do(A=1)",
+      "do(A=0)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.15
+    },
+    {
+     "world": "latent_causal",
+     "interface": "observe+do(A)",
+     "seed": 12,
+     "survivors": [],
+     "spent": 4500,
+     "protocols": [
+      "do(A=0)",
+      "do(A=1)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.16
+    },
+    {
+     "world": "latent_causal",
+     "interface": "observe+do(A)",
+     "seed": 13,
+     "survivors": [],
+     "spent": 4500,
+     "protocols": [
+      "do(A=0)",
+      "do(A=1)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.15
+    },
+    {
+     "world": "latent_causal",
+     "interface": "observe+do(A)",
+     "seed": 14,
+     "survivors": [],
+     "spent": 4500,
+     "protocols": [
+      "do(A=0)",
+      "do(A=1)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.14
+    },
+    {
+     "world": "latent_causal",
+     "interface": "all",
+     "seed": 0,
+     "survivors": [],
+     "spent": 10500,
+     "protocols": [
+      "do(S1=1)",
+      "do(A=0)",
+      "do(A=1)",
+      "do(S1=0)",
+      "do(S1=0)",
+      "do(S1=1)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.37
+    },
+    {
+     "world": "latent_causal",
+     "interface": "all",
+     "seed": 1,
+     "survivors": [],
+     "spent": 10500,
+     "protocols": [
+      "do(S1=0)",
+      "do(A=0)",
+      "do(A=1)",
+      "do(S1=1)",
+      "do(S1=0)",
+      "do(S1=1)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.35
+    },
+    {
+     "world": "latent_causal",
+     "interface": "all",
+     "seed": 2,
+     "survivors": [],
+     "spent": 13500,
+     "protocols": [
+      "do(S1=1)",
+      "do(A=0)",
+      "do(A=1)",
+      "do(S1=0)",
+      "do(S1=0)",
+      "do(S1=1)",
+      "do(S1=0)",
+      "do(S1=1)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.38
+    },
+    {
+     "world": "latent_causal",
+     "interface": "all",
+     "seed": 3,
+     "survivors": [],
+     "spent": 15000,
+     "protocols": [
+      "do(S1=1)",
+      "do(A=0)",
+      "do(A=1)",
+      "do(S1=0)",
+      "do(S1=0)",
+      "do(S1=1)",
+      "do(S1=0)",
+      "do(S1=1)",
+      "do(S1=0)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.41
+    },
+    {
+     "world": "latent_causal",
+     "interface": "all",
+     "seed": 4,
+     "survivors": [],
+     "spent": 10500,
+     "protocols": [
+      "do(S1=1)",
+      "do(A=0)",
+      "do(A=1)",
+      "do(S1=0)",
+      "do(S1=0)",
+      "do(S1=1)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.4
+    },
+    {
+     "world": "latent_causal",
+     "interface": "all",
+     "seed": 5,
+     "survivors": [],
+     "spent": 10500,
+     "protocols": [
+      "do(S1=1)",
+      "do(A=0)",
+      "do(A=1)",
+      "do(S1=0)",
+      "do(S1=0)",
+      "do(S1=1)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.36
+    },
+    {
+     "world": "latent_causal",
+     "interface": "all",
+     "seed": 6,
+     "survivors": [],
+     "spent": 12000,
+     "protocols": [
+      "do(S1=0)",
+      "do(A=0)",
+      "do(A=1)",
+      "do(S1=1)",
+      "do(S1=0)",
+      "do(S1=1)",
+      "do(S1=0)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.4
+    },
+    {
+     "world": "latent_causal",
+     "interface": "all",
+     "seed": 7,
+     "survivors": [],
+     "spent": 9000,
+     "protocols": [
+      "do(S1=0)",
+      "do(A=0)",
+      "do(A=1)",
+      "do(S1=1)",
+      "do(S1=0)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.36
+    },
+    {
+     "world": "latent_causal",
+     "interface": "all",
+     "seed": 8,
+     "survivors": [],
+     "spent": 12000,
+     "protocols": [
+      "do(S1=0)",
+      "do(A=0)",
+      "do(A=1)",
+      "do(S1=1)",
+      "do(S1=0)",
+      "do(S1=1)",
+      "do(S1=0)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.37
+    },
+    {
+     "world": "latent_causal",
+     "interface": "all",
+     "seed": 9,
+     "survivors": [],
+     "spent": 10500,
+     "protocols": [
+      "do(S1=0)",
+      "do(A=0)",
+      "do(A=1)",
+      "do(S1=1)",
+      "do(S1=0)",
+      "do(S1=1)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.37
+    },
+    {
+     "world": "latent_causal",
+     "interface": "all",
+     "seed": 10,
+     "survivors": [],
+     "spent": 15000,
+     "protocols": [
+      "do(S1=0)",
+      "do(A=0)",
+      "do(A=1)",
+      "do(S1=1)",
+      "do(S1=0)",
+      "do(S1=1)",
+      "do(S1=0)",
+      "do(S1=1)",
+      "do(S1=0)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.4
+    },
+    {
+     "world": "latent_causal",
+     "interface": "all",
+     "seed": 11,
+     "survivors": [],
+     "spent": 10500,
+     "protocols": [
+      "do(S1=1)",
+      "do(A=0)",
+      "do(A=1)",
+      "do(S1=0)",
+      "do(S1=0)",
+      "do(S1=1)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.36
+    },
+    {
+     "world": "latent_causal",
+     "interface": "all",
+     "seed": 12,
+     "survivors": [],
+     "spent": 12000,
+     "protocols": [
+      "do(S1=0)",
+      "do(A=0)",
+      "do(A=1)",
+      "do(S1=1)",
+      "do(S1=0)",
+      "do(S1=1)",
+      "do(S1=0)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.39
+    },
+    {
+     "world": "latent_causal",
+     "interface": "all",
+     "seed": 13,
+     "survivors": [],
+     "spent": 12000,
+     "protocols": [
+      "do(S1=0)",
+      "do(A=0)",
+      "do(A=1)",
+      "do(S1=1)",
+      "do(S1=0)",
+      "do(S1=1)",
+      "do(S1=0)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.35
+    },
+    {
+     "world": "latent_causal",
+     "interface": "all",
+     "seed": 14,
+     "survivors": [],
+     "spent": 12000,
+     "protocols": [
+      "do(S1=0)",
+      "do(A=0)",
+      "do(A=1)",
+      "do(S1=1)",
+      "do(S1=0)",
+      "do(S1=1)",
+      "do(S1=0)"
+     ],
+     "true_model_survived": false,
+     "true_model_in_candidates": false,
+     "secs": 0.37
+    }
+   ],
+   "summary": {
+    "ALL | ALL | ALL": {
+     "CONJECTURE/WRONG": 15,
+     "CONJECTURE/correct": 45,
+     "EMPIRICALLY-SUPPORTED/correct": 60,
+     "undetermined": 60
+    },
+    "latent_causal | all | S1 and S2 measure a shared hidden quantity": {
+     "undetermined": 15
+    },
+    "latent_causal | all | intervening on A changes Y": {
+     "EMPIRICALLY-SUPPORTED/correct": 15
+    },
+    "latent_causal | all | intervening on S1 changes S2": {
+     "EMPIRICALLY-SUPPORTED/correct": 15
+    },
+    "latent_causal | all | intervening on S1 changes Y": {
+     "EMPIRICALLY-SUPPORTED/correct": 15
+    },
+    "latent_causal | observe+do(A) | S1 and S2 measure a shared hidden quantity": {
+     "undetermined": 15
+    },
+    "latent_causal | observe+do(A) | intervening on A changes Y": {
+     "EMPIRICALLY-SUPPORTED/correct": 15
+    },
+    "latent_causal | observe+do(A) | intervening on S1 changes S2": {
+     "undetermined": 15
+    },
+    "latent_causal | observe+do(A) | intervening on S1 changes Y": {
+     "undetermined": 15
+    },
+    "latent_causal | observe-only | S1 and S2 measure a shared hidden quantity": {
+     "CONJECTURE/correct": 15
+    },
+    "latent_causal | observe-only | intervening on A changes Y": {
+     "CONJECTURE/WRONG": 15
+    },
+    "latent_causal | observe-only | intervening on S1 changes S2": {
+     "CONJECTURE/correct": 15
+    },
+    "latent_causal | observe-only | intervening on S1 changes Y": {
+     "CONJECTURE/correct": 15
+    }
+   }
+  }
+ },
+ "calibration": {
+  "latent_causal / O1:latent-causal / do{'S1': 1}": {
+   "alpha_per_test": 0.000625,
+   "naive_false_rejection_rate": 0.05,
+   "calibrated_false_rejection_rate": 0.0,
+   "naive_p_below_0.05": 0.275,
+   "calibrated_p_below_0.05": 0.025
+  },
+  "latent_causal / O1:latent-causal / do{'A': 1}": {
+   "alpha_per_test": 0.000625,
+   "naive_false_rejection_rate": 0.1,
+   "calibrated_false_rejection_rate": 0.0,
+   "naive_p_below_0.05": 0.35,
+   "calibrated_p_below_0.05": 0.05
+  },
+  "latent_confounded / O3:latent-confounded / do{'S1': 0}": {
+   "alpha_per_test": 0.000625,
+   "naive_false_rejection_rate": 0.075,
+   "calibrated_false_rejection_rate": 0.0,
+   "naive_p_below_0.05": 0.325,
+   "calibrated_p_below_0.05": 0.075
+  }
+ },
+ "sufficiency_signature": {
+  "latent_causal": {
+   "{A,S1,S2}": 15
+  },
+  "latent_confounded": {
+   "{A,S1,S2}": 15
+  },
+  "copy_chain": {
+   "{S1}": 15
+  }
+ },
+ "wall_seconds": 205.5
+}

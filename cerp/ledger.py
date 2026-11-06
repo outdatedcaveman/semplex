@@ -33,6 +33,7 @@ class Status(Enum):
     HEURISTIC = 2
     OUT_OF_SCOPE = 1
     REFUTED = 0
+    RETRACTED = -1  # withdrawn by a recorded revision; kept for history (charter §3.4)
 
     @property
     def label(self):
@@ -50,6 +51,7 @@ class Claim:
     depends_on: list = field(default_factory=list)
     trusted_base: list = field(default_factory=list)
     notes: str = ""
+    retracted_by: str | None = None
 
 
 class LedgerError(Exception):
@@ -128,6 +130,22 @@ class Ledger:
                          assumptions=list(assumptions), evidence=ev,
                          depends_on=list(depends_on), notes=notes)
 
+    def retract(self, cid, *, by):
+        """Withdraw a claim because of revision claim `by`. Nothing is deleted;
+        every claim depending on it becomes effectively RETRACTED too."""
+        if by not in self.claims or cid not in self.claims:
+            raise LedgerError("unknown claim")
+        self.claims[cid].retracted_by = by
+
+    def affected_by(self, cid):
+        """All claims that (transitively) depend on cid -- the invalidation set."""
+        out, frontier = set(), {cid}
+        while frontier:
+            nxt = {c.id for c in self.claims.values() if set(c.depends_on) & frontier} - out
+            out |= nxt
+            frontier = nxt
+        return sorted(out)
+
     def boundary(self, statement, *, reason, category="boundary", notes=""):
         return self._add(statement=statement, status=Status.OUT_OF_SCOPE, category=category,
                          evidence={"reason": reason}, notes=notes)
@@ -138,6 +156,8 @@ class Ledger:
         if cid in _seen:
             raise LedgerError(f"dependency cycle through {cid}")
         c = self.claims[cid]
+        if c.retracted_by:
+            return Status.RETRACTED
         s = c.status
         for d in c.depends_on:
             ds = self.effective_status(d, _seen | {cid})
