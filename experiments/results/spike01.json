@@ -1,0 +1,422 @@
+{
+  "workload": {
+    "seed": 20261106,
+    "vars": 6,
+    "trials": 300,
+    "expr_depth": 6,
+    "filter": "support >= 3"
+  },
+  "E3_canonical_vs_direct_circuit_gates": {
+    "direct": {
+      "n": 300,
+      "mean": 49.03,
+      "median": 45,
+      "p10": 23,
+      "p90": 81,
+      "min": 3,
+      "max": 124
+    },
+    "canonical": {
+      "n": 300,
+      "mean": 20.17,
+      "median": 19,
+      "p10": 7,
+      "p90": 36,
+      "min": 2,
+      "max": 51
+    },
+    "canonical_over_direct": {
+      "n": 300,
+      "mean": 0.472,
+      "median": 0.4074074074074074,
+      "p10": 0.15151515151515152,
+      "p90": 0.8245614035087719,
+      "min": 0.020618556701030927,
+      "max": 3.0
+    },
+    "canonical_strictly_smaller_frac": 0.947,
+    "canonical_strictly_larger_frac": 0.05
+  },
+  "E6_circuit_to_expr_size_ratio": {
+    "n": 300,
+    "mean": 1.572,
+    "median": 1.4754098360655739,
+    "p10": 1.1403508771929824,
+    "p90": 2.08955223880597,
+    "min": 1.0,
+    "max": 3.6984126984126986
+  },
+  "E4_bdd_size_max_over_min_across_20_orders": {
+    "n": 100,
+    "mean": 1.579,
+    "median": 1.5333333333333334,
+    "p10": 1.25,
+    "p90": 2.0,
+    "min": 1.0,
+    "max": 3.0
+  },
+  "E1_E2_task_restriction": {
+    "density=0.9": {
+      "tasks": 150,
+      "frac_with_multiple_minimal_sets": 0.007,
+      "num_minimal_sets": {
+        "n": 150,
+        "mean": 1.007,
+        "median": 1,
+        "p10": 1,
+        "p90": 1,
+        "min": 1,
+        "max": 2
+      },
+      "min_sufficient_size": {
+        "n": 150,
+        "mean": 5.32,
+        "median": 6,
+        "p10": 4,
+        "p90": 6,
+        "min": 1,
+        "max": 6
+      },
+      "full_support_size": {
+        "n": 150,
+        "mean": 5.407,
+        "median": 6,
+        "p10": 4,
+        "p90": 6,
+        "min": 3,
+        "max": 6
+      },
+      "gate_ratio_vs_best_exact": {
+        "naive_projection": {
+          "n": 150,
+          "mean": 1.231,
+          "median": 1.0666666666666667,
+          "p10": 1.0,
+          "p90": 1.75,
+          "min": 0.07692307692307693,
+          "max": 3.5454545454545454
+        },
+        "restrict": {
+          "n": 150,
+          "mean": 0.993,
+          "median": 1.0,
+          "p10": 0.8857142857142857,
+          "p90": 1.03125,
+          "min": 0.07692307692307693,
+          "max": 3.0
+        },
+        "best_of_all_incl_exact": {
+          "n": 150,
+          "mean": 0.96,
+          "median": 1.0,
+          "p10": 0.8484848484848485,
+          "p90": 1.0,
+          "min": 0.07692307692307693,
+          "max": 1.0
+        }
+      },
+      "frac_strict_improvement": {
+        "naive_projection": 0.08,
+        "restrict": 0.207,
+        "best_of_all_incl_exact": 0.227
+      },
+      "frac_worse_than_exact": {
+        "naive_projection": 0.553,
+        "restrict": 0.1
+      },
+      "kernel_verified_task_realizations": 301
+    },
+    "density=0.6": {
+      "tasks": 150,
+      "frac_with_multiple_minimal_sets": 0.087,
+      "num_minimal_sets": {
+        "n": 150,
+        "mean": 1.12,
+        "median": 1,
+        "p10": 1,
+        "p90": 1,
+        "min": 1,
+        "max": 4
+      },
+      "min_sufficient_size": {
+        "n": 150,
+        "mean": 4.88,
+        "median": 5,
+        "p10": 3,
+        "p90": 6,
+        "min": 0,
+        "max": 6
+      },
+      "full_support_size": {
+        "n": 150,
+        "mean": 5.407,
+        "median": 6,
+        "p10": 4,
+        "p90": 6,
+        "min": 3,
+        "max": 6
+      },
+      "gate_ratio_vs_best_exact": {
+        "naive_projection": {
+          "n": 150,
+          "mean": 1.161,
+          "median": 1.04,
+          "p10": 0.6,
+          "p90": 1.9130434782608696,
+          "min": 0.0,
+          "max": 3.625
+        },
+        "restrict": {
+          "n": 150,
+          "mean": 0.865,
+          "median": 0.9024390243902439,
+          "p10": 0.6,
+          "p90": 1.0,
+          "min": 0.07692307692307693,
+          "max": 3.0
+        },
+        "best_of_all_incl_exact": {
+          "n": 150,
+          "mean": 0.808,
+          "median": 0.875,
+          "p10": 0.5217391304347826,
+          "p90": 1.0,
+          "min": 0.0,
+          "max": 1.0
+        }
+      },
+      "frac_strict_improvement": {
+        "naive_projection": 0.327,
+        "restrict": 0.607,
+        "best_of_all_incl_exact": 0.653
+      },
+      "frac_worse_than_exact": {
+        "naive_projection": 0.507,
+        "restrict": 0.06
+      },
+      "kernel_verified_task_realizations": 318
+    },
+    "density=0.3": {
+      "tasks": 150,
+      "frac_with_multiple_minimal_sets": 0.513,
+      "num_minimal_sets": {
+        "n": 150,
+        "mean": 1.86,
+        "median": 2,
+        "p10": 1,
+        "p90": 3,
+        "min": 1,
+        "max": 6
+      },
+      "min_sufficient_size": {
+        "n": 150,
+        "mean": 3.527,
+        "median": 4,
+        "p10": 2,
+        "p90": 5,
+        "min": 0,
+        "max": 6
+      },
+      "full_support_size": {
+        "n": 150,
+        "mean": 5.407,
+        "median": 6,
+        "p10": 4,
+        "p90": 6,
+        "min": 3,
+        "max": 6
+      },
+      "gate_ratio_vs_best_exact": {
+        "naive_projection": {
+          "n": 150,
+          "mean": 0.54,
+          "median": 0.5,
+          "p10": 0.125,
+          "p90": 1.0,
+          "min": 0.0,
+          "max": 3.0
+        },
+        "restrict": {
+          "n": 150,
+          "mean": 0.582,
+          "median": 0.5652173913043478,
+          "p10": 0.22727272727272727,
+          "p90": 1.0,
+          "min": 0.07692307692307693,
+          "max": 3.0
+        },
+        "best_of_all_incl_exact": {
+          "n": 150,
+          "mean": 0.453,
+          "median": 0.4358974358974359,
+          "p10": 0.125,
+          "p90": 0.8571428571428571,
+          "min": 0.0,
+          "max": 1.0
+        }
+      },
+      "frac_strict_improvement": {
+        "naive_projection": 0.86,
+        "restrict": 0.847,
+        "best_of_all_incl_exact": 0.92
+      },
+      "frac_worse_than_exact": {
+        "naive_projection": 0.087,
+        "restrict": 0.02
+      },
+      "kernel_verified_task_realizations": 423
+    },
+    "correlated=1": {
+      "tasks": 150,
+      "frac_with_multiple_minimal_sets": 0.92,
+      "num_minimal_sets": {
+        "n": 150,
+        "mean": 1.92,
+        "median": 2,
+        "p10": 2,
+        "p90": 2,
+        "min": 1,
+        "max": 2
+      },
+      "min_sufficient_size": {
+        "n": 150,
+        "mean": 4.26,
+        "median": 5,
+        "p10": 3,
+        "p90": 5,
+        "min": 0,
+        "max": 5
+      },
+      "full_support_size": {
+        "n": 150,
+        "mean": 5.407,
+        "median": 6,
+        "p10": 4,
+        "p90": 6,
+        "min": 3,
+        "max": 6
+      },
+      "gate_ratio_vs_best_exact": {
+        "naive_projection": {
+          "n": 150,
+          "mean": 0.627,
+          "median": 0.6,
+          "p10": 0.2727272727272727,
+          "p90": 1.0,
+          "min": 0.0,
+          "max": 3.0
+        },
+        "restrict": {
+          "n": 150,
+          "mean": 0.644,
+          "median": 0.6111111111111112,
+          "p10": 0.2777777777777778,
+          "p90": 1.0,
+          "min": 0.0,
+          "max": 3.0
+        },
+        "best_of_all_incl_exact": {
+          "n": 150,
+          "mean": 0.613,
+          "median": 0.6,
+          "p10": 0.2727272727272727,
+          "p90": 1.0,
+          "min": 0.0,
+          "max": 1.0
+        }
+      },
+      "frac_strict_improvement": {
+        "naive_projection": 0.833,
+        "restrict": 0.793,
+        "best_of_all_incl_exact": 0.833
+      },
+      "frac_worse_than_exact": {
+        "naive_projection": 0.013,
+        "restrict": 0.02
+      },
+      "kernel_verified_task_realizations": 438
+    },
+    "correlated=2": {
+      "tasks": 150,
+      "frac_with_multiple_minimal_sets": 0.9,
+      "num_minimal_sets": {
+        "n": 150,
+        "mean": 3.0,
+        "median": 3,
+        "p10": 2,
+        "p90": 4,
+        "min": 1,
+        "max": 4
+      },
+      "min_sufficient_size": {
+        "n": 150,
+        "mean": 3.12,
+        "median": 4,
+        "p10": 1,
+        "p90": 4,
+        "min": 0,
+        "max": 5
+      },
+      "full_support_size": {
+        "n": 150,
+        "mean": 5.407,
+        "median": 6,
+        "p10": 4,
+        "p90": 6,
+        "min": 3,
+        "max": 6
+      },
+      "gate_ratio_vs_best_exact": {
+        "naive_projection": {
+          "n": 150,
+          "mean": 0.368,
+          "median": 0.3181818181818182,
+          "p10": 0.07692307692307693,
+          "p90": 0.7647058823529411,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "restrict": {
+          "n": 150,
+          "mean": 0.408,
+          "median": 0.36,
+          "p10": 0.07692307692307693,
+          "p90": 0.8666666666666667,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "best_of_all_incl_exact": {
+          "n": 150,
+          "mean": 0.368,
+          "median": 0.3181818181818182,
+          "p10": 0.07692307692307693,
+          "p90": 0.7647058823529411,
+          "min": 0.0,
+          "max": 1.0
+        }
+      },
+      "frac_strict_improvement": {
+        "naive_projection": 0.94,
+        "restrict": 0.927,
+        "best_of_all_incl_exact": 0.94
+      },
+      "frac_worse_than_exact": {
+        "naive_projection": 0.0,
+        "restrict": 0.0
+      },
+      "kernel_verified_task_realizations": 600
+    }
+  },
+  "E5_kernel_seconds_by_n": {
+    "8": 0.0004,
+    "10": 0.0695,
+    "12": 0.0759,
+    "14": 0.0193,
+    "16": 2.3405
+  },
+  "E5_extrapolated_seconds": {
+    "n=24": 599,
+    "n=32": 153387,
+    "n=64 (years)": "2.1e+07"
+  }
+}
