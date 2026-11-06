@@ -12,17 +12,28 @@ We build toward it **agilely**. Each step is a thin end-to-end *spike* that test
 
 **Spike 02 is done**: a world-facing sandbox. A hidden world is reachable only through observation and intervention protocols, and an agent holds four rival ontologies, chooses experiments by information gain, tests predictions on fresh data, records typed ontology revisions, and abstains where evidence underdetermines. Across 900 answers it gave **no wrong answer labeled EMPIRICALLY-SUPPORTED**, including when the true ontology was missing from its candidates. Findings are in `experiments/SPIKE_02_REPORT.md`.
 
-**Proposed next: Spike 02b**, ontology *generation* when the candidate set is refuted (see `ROADMAP.md`).
+**Spikes 02b, 03, 04, 05 and 07 are done:**
+- **02b, ontology generation:** after refuting its candidates, the agent proposes new ontologies constrained by its own measurements and validates them on fresh data. The truth was recovered in 40/40 runs.
+- **03, proof-carrying equivalence:** RUP certificates certify n=64 circuit equivalences in milliseconds, past the exhaustive wall.
+- **04, structured warrants:** status is a partial order, and labels are a projection of it.
+- **05, stateful systems:** equivalence is protocol-indexed; trace ≠ bisimulation, and the difference is observable in a context.
+- **07, CSIR v0.1:** one schema across all fragments, with certified links re-verifiable from the bundle alone.
+
+Citations are verified in `charter/BIBLIOGRAPHY.md`. **Spike 06 (Lean kernel)** is blocked on permission to run the toolchain; its plan is in `ROADMAP.md`.
 
 ## Run it
 
 ```bash
 pip install pytest
-python -m pytest -q                                   # 49 tests
+python -m pytest -q                                   # 81 tests
 python -m cerp.demo                                   # spike 01: redundant-sensor alarm, full ledger
 python -m cerp.epistemics.demo latent_confounded all  # spike 02: watch an inquiry into a hidden world
 python -m experiments.spike01                         # -> experiments/results/spike01.json
 python -m experiments.spike02                         # -> experiments/results/spike02.json (~3 min)
+python -m experiments.spike02b                        # ontology generation (~3 min)
+python -m experiments.spike03                         # proof-carrying equivalence (~15 min)
+python -m experiments.spike04                         # warrant structure in real ledgers
+python -m experiments.spike05                         # LTS equivalence hierarchy
 ```
 
 ## Layout
@@ -30,9 +41,11 @@ python -m experiments.spike02                         # -> experiments/results/s
 | Path | Contents |
 |---|---|
 | `charter/` | The foundational brief (original .docx and markdown conversion) |
-| `cerp/kernel.py` | **Trusted** verification kernel: stdlib only, independent interpreters |
+| `cerp/kernel.py`, `cerp/kernel_lts.py` | **Trusted** kernels: stdlib only, independent interpreters, exhaustive decision, RUP checking, LTS certificate checks |
 | `cerp/` (rest) | Untrusted machinery: semantics, substrates, BDD canonicalization, translators, sufficiency, resources, ledger, pipeline |
-| `cerp/epistemics/` | Spike 02: causal Bayes nets with latents, sandbox worlds (ground truth, agent may not import), rival ontologies, the inquiry loop |
+| `cerp/epistemics/` | Spikes 02/02b: causal Bayes nets with latents, sandbox worlds (ground truth, agent may not import), rival ontologies, the inquiry loop, ontology generation |
+| `cerp/sat.py`, `cerp/lts.py`, `cerp/csir.py` | Spikes 03, 05, 07: untrusted CDCL solver, LTS algorithms, CSIR schema |
+| `csir/examples/` | Example CSIR bundles from three fragments |
 | `tests/` | Correctness and adversarial tests, including charter §12.1 criteria |
 | `experiments/` | Spike experiments, reports and raw results |
 | `claims/REGISTER.md` | Program-level claims, with honest status |
@@ -41,4 +54,4 @@ python -m experiments.spike02                         # -> experiments/results/s
 
 ## The one rule
 
-Nothing is called *proved*, *canonical*, *optimal*, *verified* or *grounded* without a stated scope and a warrant of the right kind. In code, the ledger refuses to record proof status without a kernel-minted verdict, and a derived claim can never be stronger than its weakest dependency.
+Nothing is called *proved*, *canonical*, *optimal*, *verified* or *grounded* without a stated scope and a warrant of the right kind. In code, the ledger refuses to record kernel-checked status without a kernel-minted verdict, and every claim carries a structured warrant (methods, trusted base, named premises). A derived claim can never be stronger than what it rests on.

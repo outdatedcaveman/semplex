@@ -90,7 +90,7 @@ Generalization worth pursuing: the equivalence relations of Layer F form a **ref
 - Minimal sufficient sets = **rough-set reducts** via discernibility matrices (Pawlak; Skowron & Rauszer, 1992); finding a minimum one is NP-hard
 - Quasi-reduced BDD ≅ DFA for fixed-length languages
 
-*Bibliographic details are to be verified before any formal citation (charter §13).*
+*Verification status of each reference: `charter/BIBLIOGRAPHY.md`.*
 
 ## What did not get tested (honest gaps)
 

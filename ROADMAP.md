@@ -25,29 +25,44 @@ Rules of thumb:
 |---|---|---|---|
 | **01** | F0: finite Boolean functions, 3 substrates | Canonical forms; untrusted translation + small verifier; task sufficiency; resource gain; status taxonomy | **done**, see `experiments/SPIKE_01_REPORT.md` |
 | **02** | World-facing sandbox: synthetic world with known latent structure | Natural semantics (§3.3); measurement maps; rival ontologies; evidence ledger; ontology revision (§3.4); "observation can hide causal difference" (§10) | **done**, see `experiments/SPIKE_02_REPORT.md` |
-| **02b** | Ontology *generation*: propose new candidates when the closed world is refuted | Can revision go beyond elimination without becoming unconstrained (§1.3 last bullet)? | **proposed next** |
-| 03 | Succinct equivalence certificates | Proof-carrying translation that scales past the exhaustive wall (F3) | planned |
-| 04 | Status as structured warrant | Redesign of the §10 taxonomy into a partial order (F7) | planned |
-| 05 | F1: stateful systems (Mealy machines, LTS) | Trace equivalence vs bisimulation vs I/O; "don't collapse into functions" | planned |
-| 06 | Kernel in a proof assistant | Layer A: restate F0 kernel judgments in Lean 4 and prove the decision procedure correct | planned |
-| 07 | CSIR v0 extraction | First schema, after 01, 02 and 05 have shown what is actually shared | planned |
+| **02b** | Ontology *generation* when the closed world is refuted | Revision beyond elimination, without relativism (§1.3) | **done**, see `experiments/SPIKE_02b_REPORT.md` |
+| **03** | Succinct equivalence certificates (RUP) | Proof-carrying translation past the exhaustive wall (S01 F3) | **done**, see `experiments/SPIKE_03_REPORT.md` |
+| **04** | Status as structured warrant | §10 taxonomy as a partial order (S01 F7, S02 F8) | **done**, see `experiments/SPIKE_04_REPORT.md`, ADR-0004 |
+| **05** | F1: stateful systems (LTS) | Trace vs completed-trace vs bisimulation; "don't collapse into I/O functions" | **done**, see `experiments/SPIKE_05_REPORT.md` |
+| 06 | Kernel in a proof assistant (Lean 4) | Layer A: prove the kernel's decision procedures correct | **blocked**: Lean 4.12 downloads fine, but running a downloaded binary needs your permission (see plan below) |
+| **07** | CSIR v0.1 extraction | One schema across fragments; composition along the relation order | **done**, see `experiments/SPIKE_07_REPORT.md` |
+| — | Bibliography verification | Charter §13: no unverified citations | **done**, see `charter/BIBLIOGRAPHY.md` (two corroborations, one discrepancy) |
 
-### Spike 02b (proposed next): ontology generation
+### Spike 06 plan (ready to run once the toolchain is permitted)
 
-Spike 02's agent can *refute* its candidate set but cannot *repair* it. The charter's revision story (§3.4, §8.11) needs both.
+Goal: move the PROVED-IN-FRAGMENT trusted base from "220 lines of Python + CPython" toward a proof-assistant kernel. The smallest slice, in Lean 4 core (no Mathlib):
 
-- **Smallest slice:** a generator that enumerates small DAGs over the observables plus at most one or two latents, constrained by everything already settled (directly measured interventional facts, refuted structures, the screening-off/complementarity signatures from F6). Generated candidates enter the same adequacy loop.
-- **H2b.1:** after closed-world refutation, a constrained generator recovers an adequate ontology within a bounded number of candidates. *Kill:* the space blows up, or adequacy-passing candidates are mostly artifacts.
-- **H2b.2:** settled interventional facts prune the generated space by a large factor. *Kill:* pruning is negligible.
-- **H2b.3:** generated-then-accepted ontologies carry their provenance (which constraints produced them) and remain CONJECTURE-capped. *Kill:* the ledger can't express generation provenance.
+1. Define `Expr` (const, var, not, and, or, xor, ite) and `eval : Expr → (Fin n → Bool) → Bool`.
+2. Define `allAssignments n : List (Fin n → Bool)` and prove completeness: every assignment is in the list.
+3. Define `decideEquiv e₁ e₂ := allAssignments.all (fun σ => eval e₁ σ == eval e₂ σ)` and prove `decideEquiv e₁ e₂ = true ↔ ∀ σ, eval e₁ σ = eval e₂ σ`. That is soundness and completeness of Spike 01's exhaustive kernel, in a fragment.
+4. Stretch goal: a verified RUP checker for Spike 03 (unit propagation soundness), the step that would make large-n proofs proof-assistant-backed.
 
-Alternative next steps, if you prefer: **Spike 04** (status as a structured warrant, now with two independent motivations, F7/S01 and F8/S02), or **Spike 03** (scaling verification past n≈16).
+**Kill criterion:** the proofs need more than core Lean, or the Lean statement cannot be connected to the Python artifacts without a large trusted translation. In that case, record the bridge as the new weakest link.
+
+**What is needed from you:** permission to run the Lean 4 toolchain, downloaded from the official `leanprover/lean4` GitHub releases (a `Bash` permission rule, or approval when prompted).
+
+### Proposed next spikes
+
+| Spike | Focus | Why now |
+|---|---|---|
+| 08 | Bridge: world-model ↔ executable artifact | CSIR has no link from a causal model to a circuit or program implementing its decision rule. This is the charter's §8 steps 9–10 (distill, then translate and verify) |
+| 09 | LRAT certificates | S03 F3: hint-carrying proofs should make checking linear (literature agrees, see `charter/BIBLIOGRAPHY.md`) |
+| 10 | Stress the epistemic agent | A non-parsimonious truth (S02b gap), cancelling paths (faithfulness premise), noisy interventions, more latents |
+| 11 | First non-synthetic case study | Charter §11.1: only after the measurement-adequacy protocol is clear, which S02/02b now make concrete |
 
 ## Open questions carried forward
 
-- **Q-L1** (F7): status labels form a partial order, not a chain. What structure is it?
+- ~~**Q-L1**~~: answered by Spike 04. Warrants = (method basis, trusted base, conditions), partially ordered; labels are a projection.
+- **Q-W1** (S04): quantitative strength inside empirical warrants (p-values, effect sizes) is not yet ordered.
+- **Q-C1** (S03 F3): certificate formats that are cheaper to check than to find (LRAT).
 - **Q-G1** (F1): should canonical-form parameters (like variable order) live in Ω or in the CSIR node?
-- **Q-F1** (F6): do the equivalence relations of Layer F form a lattice with useful meets and joins, and does candidate and certificate transport along inclusions generalize beyond F0?
+- **Q-F1** (F6): partially answered by Spikes 05 and 07. The inclusion order (ext ⊆ task; bisim ⊆ ctrace ⊆ trace) generalizes and drives CSIR composition. Meets and joins remain open.
+- **Q-O1** (S05 F2): which equivalence is "right" is the coarsest one that the declared Ω can still observe. Needs a formal Ω → relation mapping.
 - ~~**Q-H1**~~: answered by Spike 02 F6. With noise, the signature is complementarity vs screening-off, not substitutability.
 - **Q-B1** (S02 F4): identity criteria for latent entities across rival ontologies (currently by name).
 - **Q-E1** (S02 F7): task-relative stopping. When does an agent need absence claims at all?
