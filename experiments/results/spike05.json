@@ -1,0 +1,23 @@
+{
+ "nondeterministic": {
+  "pairs": 3000,
+  "categories": {
+   "different traces": 2734,
+   "bisimilar": 196,
+   "trace-eq only": 28,
+   "completed-trace-eq only": 42
+  },
+  "trace_eq_not_bisimilar_contexts": {
+   "distinguished by some tested context": 68,
+   "no context found": 2
+  }
+ },
+ "deterministic": {
+  "pairs": 3000,
+  "categories": {
+   "different traces": 2725,
+   "bisimilar": 275
+  },
+  "trace_eq_not_bisimilar_contexts": {}
+ }
+}
