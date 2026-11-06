@@ -1,0 +1,94 @@
+{
+ "exhaustive_expr": [
+  {
+   "n": 4,
+   "python_ok": true,
+   "python_s": 0.0,
+   "lean_ok": true,
+   "lean_s": 0.184
+  },
+  {
+   "n": 6,
+   "python_ok": true,
+   "python_s": 0.0,
+   "lean_ok": true,
+   "lean_s": 0.459
+  },
+  {
+   "n": 8,
+   "python_ok": true,
+   "python_s": 0.001,
+   "lean_ok": true,
+   "lean_s": 1.418
+  },
+  {
+   "n": 10,
+   "python_ok": true,
+   "python_s": 0.005,
+   "lean_ok": true,
+   "lean_s": 7.173
+  }
+ ],
+ "rup_carry": [
+  {
+   "inputs": 4,
+   "clauses": 47,
+   "lemmas": 8,
+   "python_ok": true,
+   "python_s": 0.0,
+   "lean_ok": true,
+   "lean_s": 5.367,
+   "native_ok": true,
+   "native_s": 0.391
+  },
+  {
+   "inputs": 6,
+   "clauses": 75,
+   "lemmas": 18,
+   "python_ok": true,
+   "python_s": 0.0,
+   "lean_ok": true,
+   "lean_s": 22.788,
+   "native_ok": true,
+   "native_s": 0.814
+  },
+  {
+   "inputs": 8,
+   "clauses": 100,
+   "lemmas": 25,
+   "python_ok": true,
+   "python_s": 0.001,
+   "lean_ok": true,
+   "lean_s": 46.632,
+   "native_ok": true,
+   "native_s": 1.369
+  },
+  {
+   "inputs": 16,
+   "clauses": 209,
+   "lemmas": 45,
+   "python_ok": true,
+   "python_s": 0.002,
+   "native_ok": true,
+   "native_s": 5.992
+  },
+  {
+   "inputs": 32,
+   "clauses": 430,
+   "lemmas": 117,
+   "python_ok": true,
+   "python_s": 0.003,
+   "native_ok": true,
+   "native_s": 26.275
+  },
+  {
+   "inputs": 64,
+   "clauses": 875,
+   "lemmas": 250,
+   "python_ok": true,
+   "python_s": 0.015,
+   "native_ok": true,
+   "native_s": 145.952
+  }
+ ]
+}

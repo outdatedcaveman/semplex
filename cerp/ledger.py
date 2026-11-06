@@ -223,6 +223,22 @@ class Ledger:
                       "points_checked": verdict.points_checked, "counterexample": verdict.counterexample},
             depends_on=depends_on, notes=notes)
 
+    def proof_assistant(self, statement, check, *, category, bridge=(), depends_on=(), notes=""):
+        """A theorem checked by Lean (cerp.lean_bridge). The trusted base names the
+        Lean kernel, the compiler if native evaluation was used, and every
+        unverified bridge step (e.g. the Python Tseitin encoder)."""
+        from . import lean_bridge
+        if not isinstance(check, lean_bridge.LeanCheck) or not check.authentic or not check.ok:
+            raise LedgerError("only an authentic, successful LeanCheck can back a proof-assistant claim")
+        tb = {f"Lean kernel ({check.lean_version.split(',')[0]})"} | set(bridge)
+        if "Lean.ofReduceBool" in check.axioms:
+            tb.add("Lean compiler + runtime (native_decide)")
+        return self._add(statement=statement, category=category,
+                         warrant=Warrant(frozenset({Method.PROOF_ASSISTANT}), frozenset(tb)),
+                         evidence={"theorem": check.theorem, "lean_statement": check.statement,
+                                   "axioms": list(check.axioms), "source_sha256": check.source_sha256},
+                         depends_on=depends_on, notes=notes)
+
     def empirical(self, statement, *, protocol, data, uncertainty, category="empirical",
                   assumptions=(), depends_on=(), trusted_base=("analysis code",), notes=""):
         if not protocol or data is None or not uncertainty:

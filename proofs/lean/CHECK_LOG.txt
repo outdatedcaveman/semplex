@@ -1,0 +1,11 @@
+# Lean Lean (version 4.12.0, x86_64-unknown-linux-gnu, commit dc2533473114, Release)
+# compiled Cerp.lean: OK, no errors, no warnings-as-errors
+# the word "sorry" occurs once in Cerp.lean: in the header comment stating that none is used; the axiom audit below confirms no sorryAx
+'Cerp.decideEquiv_correct' depends on axioms: [propext, Quot.sound]
+'Cerp.decideTask_correct' depends on axioms: [propext, Quot.sound]
+'Cerp.eval_congr' depends on axioms: [propext]
+'Cerp.allEnvs_complete' depends on axioms: [propext, Quot.sound]
+'Cerp.propagate_sound' depends on axioms: [propext, Quot.sound]
+'Cerp.rup_sound' depends on axioms: [propext, Quot.sound]
+'Cerp.checkAll_sound' depends on axioms: [propext, Quot.sound]
+'Cerp.unsat_of_certificate' depends on axioms: [propext, Quot.sound]
