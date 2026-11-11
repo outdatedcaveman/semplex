@@ -57,45 +57,77 @@ def _canon(names, edges):
     return best
 
 
-def enumerate_monomials(power, K=4):
-    """All distinct trace monomials of order 2..K over the variables of `power`
-    that involve W or Y (the others have zero first-layer gradient)."""
+def _partitions(items, group):
+    """Partitions of the hidden-index legs into blocks that share one summed index.
+    O: blocks of size exactly 2 (orthogonal invariants = trace monomials)
+    B: blocks of even size       (signed permutations: the symmetry of an odd activation)
+    S: blocks of any size        (permutations: the symmetry of a generic activation)"""
+    if not items:
+        yield []
+        return
+    first, rest = items[0], items[1:]
+    for r in range(len(rest) + 1):
+        if group == "O" and r != 1:
+            continue
+        if group == "B" and r % 2 == 0:
+            continue
+        for others in itertools.combinations(range(len(rest)), r):
+            block = [first] + [rest[i] for i in others]
+            remaining = [x for i, x in enumerate(rest) if i not in others]
+            for tail in _partitions(remaining, group):
+                yield [block] + tail
+
+
+def _canon_blocks(names, blocks):
+    groups = {}
+    for i, nm in enumerate(names):
+        groups.setdefault(nm, []).append(i)
+    best = None
+    for perms in itertools.product(*[itertools.permutations(g) for g in groups.values()]):
+        mp = {}
+        for g, p in zip(groups.values(), perms):
+            for x, y in zip(g, p):
+                mp[x] = y
+        e = tuple(sorted((sym, tuple(sorted(mp[t] for t in blk))) for sym, blk in blocks))
+        if best is None or e < best:
+            best = e
+    return best
+
+
+def enumerate_monomials(power, K=4, group="O"):
+    """All distinct invariant monomials of order 2..K over the variables of `power`
+    that involve W or Y (the others have zero first-layer gradient).
+
+    `group` is the symmetry assumed on the HIDDEN index (see _partitions). With
+    group="O" these are exactly the trace monomials of Perin et al. The input
+    index always uses pair contractions."""
     names_all = POWERS[power]
     out, seen = [], set()
-    for k in range(2, K + 1):
+    for k in range(1 if group == "S" else 2, K + 1):
         for names in itertools.combinations_with_replacement(names_all, k):
             if "W" not in names and "Y" not in names:
                 continue
-            legs = {}
+            legs = {"d": [], "m": []}
             for ti, nm in enumerate(names):
                 for li, sym in enumerate(SHAPES[nm]):
-                    legs.setdefault(sym, []).append((ti, li))
-            if any(len(v) % 2 for v in legs.values()):
+                    legs[sym].append((ti, li))
+            if len(legs["m"]) % 2:
                 continue
-            for choice in itertools.product(*[list(_pairings(v)) for v in legs.values()]):
-                edges = []
-                ok = True
-                for sym, pairs in zip(legs, choice):
-                    for (t1, _), (t2, _) in pairs:
-                        if t1 == t2:
-                            ok = False
-                        edges.append((t1, t2, sym))
-                if not ok:
-                    continue
-                key = (names, _canon(names, edges))
-                if key in seen:
-                    continue
-                seen.add(key)
-                # einsum subscripts: one letter per contracted pair
-                subs = [[None] * len(SHAPES[nm]) for nm in names]
-                letter = iter("abcdefghijklmnopqrstuvw")
-                for sym, pairs in zip(legs, choice):
-                    for (t1, l1), (t2, l2) in pairs:
+            for pm in _partitions(legs["m"], "O"):
+                for pd in _partitions(legs["d"], group):
+                    blocks = [("m", [t for t, _ in blk]) for blk in pm] + [("d", [t for t, _ in blk]) for blk in pd]
+                    key = (names, _canon_blocks(names, blocks))
+                    if key in seen:
+                        continue
+                    seen.add(key)
+                    subs = [[None] * len(SHAPES[nm]) for nm in names]
+                    letter = iter("abcdefghijklmnopqrstuvw")
+                    for blk in pm + pd:
                         ch = next(letter)
-                        subs[t1][l1] = ch
-                        subs[t2][l2] = ch
-                out.append({"names": names, "subs": ["".join(s) for s in subs],
-                            "label": "*".join(f"{nm}[{''.join(s)}]" if s else nm for nm, s in zip(names, subs))})
+                        for t, l in blk:
+                            subs[t][l] = ch
+                    out.append({"names": names, "subs": ["".join(x) for x in subs],
+                                "label": "*".join(f"{nm}[{''.join(x)}]" if x else nm for nm, x in zip(names, subs))})
     return out
 
 
@@ -187,10 +219,10 @@ def normalisation(monos, trainer, X, H, n, rng, samples=64):
 
 
 def meta_learn(monos, trainer, scales, X, targets, cares, H, n, rng, horizons=(10, 25, 50, 100, 200),
-               iters=120, batch=64, lr=0.02, l1=1e-4, log=None):
+               iters=120, batch=64, lr=0.02, l1=1e-4, log=None, start=None):
     """Adam on the rule coefficients, differentiating the final loss through training."""
     import jax.numpy as jnp
-    a = np.zeros(len(monos), dtype=np.float32)
+    a = np.zeros(len(monos), dtype=np.float32) if start is None else np.array(start, dtype=np.float32)
     m, v2, t = np.zeros_like(a), np.zeros_like(a), 0
     hist = []
     for T in horizons:

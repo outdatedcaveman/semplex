@@ -89,23 +89,36 @@ def main():
     res["backprop (same inner loop)"] = evaluate(bp, np.zeros(0, dtype=np.float32), 40)
     print("backprop", json.dumps(res["backprop (same inner loop)"]), flush=True)
 
-    for P in ("A", "B", "C"):
-        monos = L.enumerate_monomials(P, 4)
+    configs = [("A", "O", None), ("B", "O", None), ("B", "S", None), ("B", "S", "Y[a]*E"),
+               ("C", "O", None), ("C", "O", "Y[a]*E*V[a]")]
+    for P, G, warm in configs:
+        monos = L.enumerate_monomials(P, 4, G)
+        labels = [m["label"] for m in monos]
         tr = L.make_trainer(monos, N)
         rng = np.random.default_rng(70)
         scales = L.normalisation(monos, tr, X, H, N, rng)
+        name = f"power {P}, hidden symmetry {G}"
         if P == "A":
             res["no first-layer learning"] = evaluate(tr, np.zeros(len(monos), dtype=np.float32), 40)
             print("frozen", json.dumps(res["no first-layer learning"]), flush=True)
+        start = None
+        if warm:
+            fixed = np.zeros(len(monos), dtype=np.float32)
+            fixed[labels.index(warm)] = 0.5
+            ev = evaluate(tr, fixed, 40)
+            res[f"{name}: the single term {warm} with coefficient 0.5 (not learned)"] = ev
+            print("fixed", warm, json.dumps(ev), flush=True)
+            start = np.where(scales > 0, fixed / np.maximum(scales, 1e-12), 0.0)
+            name += f", started from {warm}"
         t1 = time.time()
-        a, hist = L.meta_learn(monos, tr, scales, X, mt_f, mt_c, H, N, rng, log=lambda s: print(P, s, flush=True))
+        a, hist = L.meta_learn(monos, tr, scales, X, mt_f, mt_c, H, N, rng, iters=200, lr=0.03, start=start,
+                               log=lambda s_: print(P, G, s_, flush=True))
         ev = evaluate(tr, a * scales, 40)
-        order = np.argsort(-np.abs(a))
+        order = np.argsort(-np.abs(a * scales))
         ev.update({"dictionary_size": len(monos), "meta_loss_by_horizon": hist, "meta_seconds": round(time.time() - t1, 1),
-                   "largest_terms": [[monos[i]["label"], round(float(a[i]), 3)] for i in order[:8]],
-                   "terms_above_10pct_of_max": int((np.abs(a) > 0.1 * np.abs(a).max()).sum())})
-        res[f"power {P}"] = ev
-        print("power", P, json.dumps(ev), flush=True)
+                   "largest_terms_by_effective_coefficient": [[labels[i], round(float(a[i] * scales[i]), 4)] for i in order[:6]]})
+        res[name + " (meta-learned)"] = ev
+        print(name, json.dumps(ev), flush=True)
     res["wall_seconds"] = round(time.time() - t0, 1)
     (ROOT / "experiments" / "results" / "spike10b_rules.json").write_text(json.dumps(res, indent=1))
     print("done", res["wall_seconds"])
