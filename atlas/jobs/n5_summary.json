@@ -1,0 +1,16 @@
+{
+ "candidates": 100000,
+ "constant_skipped": 89,
+ "distinct_functions": 93948,
+ "depth2_neurons": {
+  "1": 11196,
+  "3": 72659,
+  "4": 16052,
+  "5": 4
+ },
+ "depth_sensitive": 0,
+ "solver_timeouts": 0,
+ "weight_box": 5,
+ "all_depth3_witnesses_kernel_verified": true,
+ "all_depth2_nets_kernel_verified": true
+}

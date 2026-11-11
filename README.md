@@ -32,6 +32,8 @@ We build toward it **agilely**. Each step is a thin end-to-end *spike* that test
 
 **Spike 08b** hardens it: kernel-checked lower-bound certificates, tables for skip-connection and ReLU families, weight-space geometry, and resumable overnight jobs (`python -m cerp.crunch`). Literature notes: `charter/LITERATURE_ATLAS.md`.
 
+**Spike 09** trains about 27,000 small real-valued networks against the table: on underspecified tasks, gradient descent picks a table-cheapest function in 88–95% of runs, but different seeds find different circuits (`experiments/SPIKE_09_REPORT.md`).
+
 Citations are verified in `charter/BIBLIOGRAPHY.md`.
 
 ## Run it

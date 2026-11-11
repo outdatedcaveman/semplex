@@ -1,0 +1,261 @@
+{
+ "hidden_units": 8,
+ "weight_decays": [
+  0.0,
+  0.03,
+  0.1
+ ],
+ "n4_classes_at_4_neurons": 78,
+ "n4_classes_at_4_neurons_that_are_xor_of_two_neurons": 31,
+ "E1_full_tasks": {
+  "0.0": {
+   "trajectory": {
+    "100": {
+     "fit": 0.986,
+     "mean_excess_width": 0.681,
+     "frac_minimal": 0.422
+    },
+    "300": {
+     "fit": 0.9946,
+     "mean_excess_width": 0.563,
+     "frac_minimal": 0.483
+    },
+    "1000": {
+     "fit": 0.9955,
+     "mean_excess_width": 0.521,
+     "frac_minimal": 0.513
+    },
+    "3000": {
+     "fit": 0.9968,
+     "mean_excess_width": 0.507,
+     "frac_minimal": 0.522
+    },
+    "6000": {
+     "fit": 0.9977,
+     "mean_excess_width": 0.498,
+     "frac_minimal": 0.528
+    }
+   },
+   "faithful_when_fit": 1.0,
+   "mean_distinct_hidden_functions": 6.79,
+   "by_minimum_width": {
+    "0": {
+     "nets": 10,
+     "frac_minimal": 1.0,
+     "mean_excess": 0.0
+    },
+    "1": {
+     "nets": 140,
+     "frac_minimal": 1.0,
+     "mean_excess": 0.0
+    },
+    "2": {
+     "nets": 1585,
+     "frac_minimal": 0.383,
+     "mean_excess": 0.651
+    },
+    "3": {
+     "nets": 470,
+     "frac_minimal": 0.87,
+     "mean_excess": 0.14
+    },
+    "4": {
+     "nets": 10,
+     "frac_minimal": 0.4,
+     "mean_excess": 0.6
+    }
+   },
+   "tasks_with_all_seeds_fit": 219,
+   "mean_distinct_circuits_per_task": 7.06,
+   "tasks_where_every_seed_found_the_same_circuit": 17,
+   "tasks_where_every_seed_found_a_different_circuit": 52
+  },
+  "0.03": {
+   "trajectory": {
+    "100": {
+     "fit": 0.9838,
+     "mean_excess_width": 0.673,
+     "frac_minimal": 0.426
+    },
+    "300": {
+     "fit": 0.9946,
+     "mean_excess_width": 0.551,
+     "frac_minimal": 0.491
+    },
+    "1000": {
+     "fit": 0.9964,
+     "mean_excess_width": 0.503,
+     "frac_minimal": 0.523
+    },
+    "3000": {
+     "fit": 0.9991,
+     "mean_excess_width": 0.467,
+     "frac_minimal": 0.55
+    },
+    "6000": {
+     "fit": 1.0,
+     "mean_excess_width": 0.45,
+     "frac_minimal": 0.563
+    }
+   },
+   "faithful_when_fit": 1.0,
+   "mean_distinct_hidden_functions": 6.72,
+   "by_minimum_width": {
+    "0": {
+     "nets": 10,
+     "frac_minimal": 1.0,
+     "mean_excess": 0.0
+    },
+    "1": {
+     "nets": 140,
+     "frac_minimal": 1.0,
+     "mean_excess": 0.0
+    },
+    "2": {
+     "nets": 1590,
+     "frac_minimal": 0.421,
+     "mean_excess": 0.597
+    },
+    "3": {
+     "nets": 470,
+     "frac_minimal": 0.909,
+     "mean_excess": 0.094
+    },
+    "4": {
+     "nets": 10,
+     "frac_minimal": 0.3,
+     "mean_excess": 0.7
+    }
+   },
+   "tasks_with_all_seeds_fit": 222,
+   "mean_distinct_circuits_per_task": 6.64,
+   "tasks_where_every_seed_found_the_same_circuit": 21,
+   "tasks_where_every_seed_found_a_different_circuit": 38
+  },
+  "0.1": {
+   "trajectory": {
+    "100": {
+     "fit": 0.9788,
+     "mean_excess_width": 0.682,
+     "frac_minimal": 0.419
+    },
+    "300": {
+     "fit": 0.9959,
+     "mean_excess_width": 0.537,
+     "frac_minimal": 0.502
+    },
+    "1000": {
+     "fit": 0.9982,
+     "mean_excess_width": 0.484,
+     "frac_minimal": 0.54
+    },
+    "3000": {
+     "fit": 0.9995,
+     "mean_excess_width": 0.447,
+     "frac_minimal": 0.57
+    },
+    "6000": {
+     "fit": 1.0,
+     "mean_excess_width": 0.42,
+     "frac_minimal": 0.593
+    }
+   },
+   "faithful_when_fit": 1.0,
+   "mean_distinct_hidden_functions": 6.56,
+   "by_minimum_width": {
+    "0": {
+     "nets": 10,
+     "frac_minimal": 1.0,
+     "mean_excess": 0.0
+    },
+    "1": {
+     "nets": 140,
+     "frac_minimal": 1.0,
+     "mean_excess": 0.0
+    },
+    "2": {
+     "nets": 1590,
+     "frac_minimal": 0.462,
+     "mean_excess": 0.553
+    },
+    "3": {
+     "nets": 470,
+     "frac_minimal": 0.909,
+     "mean_excess": 0.1
+    },
+    "4": {
+     "nets": 10,
+     "frac_minimal": 0.5,
+     "mean_excess": 0.5
+    }
+   },
+   "tasks_with_all_seeds_fit": 222,
+   "mean_distinct_circuits_per_task": 6.18,
+   "tasks_where_every_seed_found_the_same_circuit": 21,
+   "tasks_where_every_seed_found_a_different_circuit": 36
+  }
+ },
+ "E2_partial_tasks": {
+  "0.0": {
+   "12": {
+    "nets_fit": 3326,
+    "fit_rate": 0.9988,
+    "frac_learned_completion_is_cheapest": 0.888,
+    "chance_level": 0.545,
+    "mean_neurons_learned": 2.762,
+    "mean_neurons_cheapest": 2.649,
+    "mean_neurons_random_completion": 3.285
+   },
+   "8": {
+    "nets_fit": 3330,
+    "fit_rate": 1.0,
+    "frac_learned_completion_is_cheapest": 0.952,
+    "chance_level": 0.248,
+    "mean_neurons_learned": 1.836,
+    "mean_neurons_cheapest": 1.784,
+    "mean_neurons_random_completion": 3.295
+   }
+  },
+  "0.03": {
+   "12": {
+    "nets_fit": 3330,
+    "fit_rate": 1.0,
+    "frac_learned_completion_is_cheapest": 0.882,
+    "chance_level": 0.545,
+    "mean_neurons_learned": 2.768,
+    "mean_neurons_cheapest": 2.65,
+    "mean_neurons_random_completion": 3.285
+   },
+   "8": {
+    "nets_fit": 3330,
+    "fit_rate": 1.0,
+    "frac_learned_completion_is_cheapest": 0.934,
+    "chance_level": 0.248,
+    "mean_neurons_learned": 1.854,
+    "mean_neurons_cheapest": 1.784,
+    "mean_neurons_random_completion": 3.295
+   }
+  },
+  "0.1": {
+   "12": {
+    "nets_fit": 3330,
+    "fit_rate": 1.0,
+    "frac_learned_completion_is_cheapest": 0.878,
+    "chance_level": 0.545,
+    "mean_neurons_learned": 2.772,
+    "mean_neurons_cheapest": 2.65,
+    "mean_neurons_random_completion": 3.285
+   },
+   "8": {
+    "nets_fit": 3330,
+    "fit_rate": 1.0,
+    "frac_learned_completion_is_cheapest": 0.94,
+    "chance_level": 0.248,
+    "mean_neurons_learned": 1.846,
+    "mean_neurons_cheapest": 1.784,
+    "mean_neurons_random_completion": 3.295
+   }
+  }
+ },
+ "wall_seconds": 571.8
+}
