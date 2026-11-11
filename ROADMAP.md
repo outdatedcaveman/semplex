@@ -31,6 +31,7 @@ Rules of thumb:
 | **05** | F1: stateful systems (LTS) | Trace vs completed-trace vs bisimulation; "don't collapse into I/O functions" | **done**, see `experiments/SPIKE_05_REPORT.md` |
 | **06** | Kernel in a proof assistant (Lean 4) | Layer A: prove the kernel's decision procedures correct | **done**, see `experiments/SPIKE_06_REPORT.md` |
 | **T** | Protocol-Frame Theory | Unify the spikes formally | **v0.1 done**: `THEORY.md`, 11 theorems in `proofs/lean/Theory.lean` |
+| **08** | Periodic table of threshold circuits (n ≤ 4) + compiler v1 | Exhaustive, verifiable optimal circuits per function class; first layer as observational power | **done**, see `experiments/SPIKE_08_REPORT.md`, `atlas/` |
 | **07** | CSIR v0.1 extraction | One schema across fragments; composition along the relation order | **done**, see `experiments/SPIKE_07_REPORT.md` |
 | — | Bibliography verification | Charter §13: no unverified citations | **done**, see `charter/BIBLIOGRAPHY.md` (two corroborations, one discrepancy) |
 
@@ -39,7 +40,8 @@ Rules of thumb:
 | Spike | Focus | Why now |
 |---|---|---|
 | T2 | Theory conjectures C1–C5 (`THEORY.md` §5) | C1 (statistical lift) and C2 (limit representations) first: they decide whether the theory survives contact with finite data and with the long-run properties science cares about |
-| 08 | Bridge: world-model ↔ executable artifact | CSIR has no link from a causal model to a circuit or program implementing its decision rule. This is the charter's §8 steps 9–10 (distill, then translate and verify) |
+| 08b | Periodic table, next parameters | In order: (1) certify lower bounds; (2) n=5 by class-level search, hunting the first depth-sensitive element; (3) skip connections and ReLU; (4) weight-space geometry (the manifold proper); (5) prove the one-bit-flip ≤ 2 conjecture |
+| 12 | Bridge: world-model ↔ executable artifact | CSIR has no link from a causal model to a circuit or program implementing its decision rule. This is the charter's §8 steps 9–10 (distill, then translate and verify) |
 | 09 | LRAT certificates | S03 F3: hint-carrying proofs should make checking linear (literature agrees, see `charter/BIBLIOGRAPHY.md`) |
 | 10 | Stress the epistemic agent | A non-parsimonious truth (S02b gap), cancelling paths (faithfulness premise), noisy interventions, more latents |
 | 11 | First non-synthetic case study | Charter §11.1: only after the measurement-adequacy protocol is clear, which S02/02b now make concrete |

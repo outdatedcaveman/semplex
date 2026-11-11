@@ -28,12 +28,14 @@ We build toward it **agilely**. Each step is a thin end-to-end *spike* that test
 - honest abstention is sound and never flips;
 - the ledger's weakest-link rule is the optimal safe rule.
 
+**Spike 08 is done: a verifiable periodic table of circuits** (`atlas/`, `experiments/SPIKE_08_REPORT.md`). For strictly layered threshold networks on up to 4 inputs, every function class has an exact minimum neuron count with a kernel-verified witness circuit, and a table-driven compiler returns provably optimal task circuits.
+
 Citations are verified in `charter/BIBLIOGRAPHY.md`.
 
 ## Run it
 
 ```bash
-pip install pytest
+pip install pytest numpy
 python -m pytest -q                                   # 86 tests (Lean tests need CERP_LEAN=/path/to/lean)
 python -m cerp.demo                                   # spike 01: redundant-sensor alarm, full ledger
 python -m cerp.epistemics.demo latent_confounded all  # spike 02: watch an inquiry into a hidden world
@@ -43,6 +45,7 @@ python -m experiments.spike02b                        # ontology generation (~3 
 python -m experiments.spike03                         # proof-carrying equivalence (~15 min)
 python -m experiments.spike04                         # warrant structure in real ledgers
 python -m experiments.spike05                         # LTS equivalence hierarchy
+python -m experiments.spike08                         # periodic table of circuits + compiler v1 (~2 min, needs numpy)
 ```
 
 ## Layout
@@ -54,6 +57,7 @@ python -m experiments.spike05                         # LTS equivalence hierarch
 | `cerp/` (rest) | Untrusted machinery: semantics, substrates, BDD canonicalization, translators, sufficiency, resources, ledger, pipeline |
 | `cerp/epistemics/` | Spikes 02/02b: causal Bayes nets with latents, sandbox worlds (ground truth, agent may not import), rival ontologies, the inquiry loop, ontology generation |
 | `cerp/sat.py`, `cerp/lts.py`, `cerp/csir.py` | Spikes 03, 05, 07: untrusted CDCL solver, LTS algorithms, CSIR schema |
+| `cerp/atlas.py`, `atlas/` | Spike 08: circuit atlas builder and compiler; the generated tables |
 | `csir/examples/` | Example CSIR bundles from three fragments |
 | `proofs/lean/` | Lean 4 proofs: kernel deciders (`Cerp.lean`) and the theory (`Theory.lean`), with axiom audits |
 | `THEORY.md` | Protocol-Frame Theory: definitions, theorems, conjectures |

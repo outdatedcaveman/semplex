@@ -38,7 +38,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from itertools import product
 
-KERNEL_VERSION = "0.2.0"
+KERNEL_VERSION = "0.3.0"
 MAX_VARS = 16
 
 _TOKEN = object()  # only this module can mint verdicts
@@ -139,7 +139,37 @@ def _eval_bdd(b, env):
     return i
 
 
-_EVAL = {"expr": _eval_expr, "circuit": _eval_circuit, "dfa": _eval_dfa, "bdd": _eval_bdd}
+def _eval_tnet(b, env):
+    """Strictly layered threshold network (spike 08):
+    {"inputs": [names], "layers": [[{"w": [ints], "t": int}, ...], ...]}
+    A neuron outputs 1 iff sum(w_i * in_i) >= t; it reads only the previous
+    layer; the last layer must hold exactly one neuron."""
+    vals = [env[n] for n in b["inputs"]]
+    layers = b["layers"]
+    if not layers or len(layers[-1]) != 1:
+        raise KernelError("tnet needs a final layer with exactly one neuron")
+    for layer in layers:
+        nxt = []
+        for nrn in layer:
+            w, t = nrn["w"], nrn["t"]
+            if len(w) != len(vals) or not all(type(v) is int for v in w) or type(t) is not int:
+                raise KernelError("bad neuron")
+            nxt.append(1 if sum(a * v for a, v in zip(w, vals)) >= t else 0)
+        vals = nxt
+    return vals[0]
+
+
+def _eval_table(b, env):
+    """Explicit truth table: {"order": [names], "bits": int}; the value at
+    assignment x is bit number sum(x_j << j) of `bits`."""
+    order, bits = b["order"], b["bits"]
+    if type(bits) is not int or not 0 <= bits < (1 << (1 << len(order))):
+        raise KernelError("bad table")
+    return (bits >> sum(env[n] << j for j, n in enumerate(order))) & 1
+
+
+_EVAL = {"expr": _eval_expr, "circuit": _eval_circuit, "dfa": _eval_dfa, "bdd": _eval_bdd,
+         "tnet": _eval_tnet, "table": _eval_table}
 
 
 def evaluate(artifact, env):
