@@ -62,12 +62,17 @@ Read: title, abstract, introduction and related-work sections of the alphaXiv fu
 - **Use for this project now: none.** Our objects are exact and discrete (truth tables, integer-weight circuits); we classify them by exact canonical forms, not by clustering.
 - **Possible use later:** when the atlas idea is applied to large trained networks, exact canonicalization stops being possible, and clustering hidden units or activations is the obvious way to define approximate "elements". A fast k-means would matter there. A codebook is also a partition of activation space, so "smallest codebook that still determines the task" is a Protocol-Frame question worth trying at that stage.
 
-### Perin, Anselmi, Deny, "A method to automatically discover symbolic local learning rules" (arXiv:2611.12248) — ABSTRACT LEVEL ONLY
+### Perin, Anselmi, Deny, "A method to automatically discover symbolic local learning rules" (arXiv:2611.12248) — READ IN FULL (alphaXiv full text, including appendices)
 
-Source: a web-search summary of the arXiv listing. The paper itself could not be opened from this session (arxiv.org is outside the session's allowed network, and the alphaXiv tool's approval prompt went unanswered).
-
-- **What it proposes:** build a library of candidate terms from variables local to a layer, then fit coefficients so that minimizing each layer's local loss also lowers the global loss; the result is a symbolic local learning rule intended as an alternative to backpropagation. Tested on small networks and datasets. One search snippet mentions 67% accuracy for a discovered rule against 71% for backpropagation; not checked in context.
-- **Possible relevance:**
-  - The atlas gives exact ground truth for tiny tasks, so candidate learning rules could be scored on *which element and which completion they reach* (Spike 09's measurements), not only on loss.
-  - Their method is a search over symbolic rules checked against a global criterion; ours is a search over circuits checked by a kernel. A learning rule could be treated as one more artifact whose claims ("this rule reaches the optimum on these tasks") go in the ledger.
-- **To do before relying on any of this:** read the paper.
+- **What it does:** for each layer, it builds a dictionary of scalar "trace monomials" from the layer's local variables (inputs, weights, outputs, and those of layers up to d steps downstream), generated systematically with Penrose tensor-diagram notation up to order 4. A local loss is a weighted sum of these monomials. The weights are meta-learned so that following the local gradients lowers a chosen global loss.
+- **Reported results (small 3-layer networks, sliced MNIST):**
+  - Classification: discovered rule 67% accuracy, backpropagation 71%, first layer frozen 63%, frozen to PCA 68%, frozen to ICA 65%. The rule beat the frozen and ICA baselines, not the PCA baseline.
+  - Reconstruction loss: rule 1.90, frozen 3.35, backpropagation 1.27.
+  - Self-supervised loss: rule 17.11, frozen 22.47, backpropagation 5.50.
+- **Limitations the authors state:** the meta-optimization is numerically delicate and sensitive to hyperparameters; global-degree rules did not recover backpropagation even when its terms were available; transfer to a differently sized network was only partial; all experiments are small.
+- **Relevance to this project:**
+  - **Scoring learning rules against ground truth.** They judge a rule by the global loss it reaches. The atlas allows a sharper test on tiny tasks: which element the rule reaches, whether it picks a table-cheapest completion (Spike 09 found backpropagation does in 88–95% of runs), and which of the equivalent minimal circuits it lands on. A local rule could match backpropagation's loss while having a different simplicity bias, and only this kind of test would show it.
+  - **"Degree" is an observational power.** Their neighbourhood degree is how much of the downstream network a layer may observe. Their finding that classification needs degree 2 while reconstruction manages with degree 1 is a statement of the same shape as our determinacy results: which information suffices for which task. It may be expressible as a Protocol-Frame question.
+  - **Their dictionary enumeration parallels our circuit enumeration**: a finite, symmetry-aware list of all candidates up to a size bound. Their appendix code is short and reusable.
+- **Not established:** that any of this carries over. Their networks are real-valued with ReLU on 28-dimensional inputs; ours are threshold circuits on 4 bits.
+- **Concrete follow-up (roadmap 10b):** implement their order-4 dictionary for our 4-input tanh networks and run Spike 09's measurements with a discovered local rule in place of backpropagation.
