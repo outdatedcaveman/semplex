@@ -1,0 +1,389 @@
+{
+ "local_rule": {
+  "coefficients": [
+   1.438,
+   -0.178,
+   0.006,
+   1.522,
+   -0.989
+  ],
+  "meta_loss": 0.003,
+  "best_loss_per_generation": [
+   0.0178,
+   0.0387,
+   0.0227,
+   0.0767,
+   0.0346,
+   0.008,
+   0.0273,
+   0.0107,
+   0.0681,
+   0.023,
+   0.004,
+   0.0122,
+   0.003,
+   0.0089,
+   0.0054,
+   0.0032,
+   0.0041,
+   0.0082,
+   0.0092,
+   0.004,
+   0.0062,
+   0.0137,
+   0.005,
+   0.0101,
+   0.0112
+  ],
+  "seconds": 409.3,
+  "terms": [
+   "error broadcast * own slope",
+   "error-modulated Hebbian",
+   "Hebbian",
+   "Oja-style decay",
+   "weight decay"
+  ]
+ },
+ "A_rules": {
+  "backprop": {
+   "full_tasks": {
+    "fit": 0.9982,
+    "fit_held_out_classes": 0.9991,
+    "frac_minimal_width": 0.539
+   },
+   "partial_12_all": {
+    "fit": 0.9991,
+    "frac_cheapest": 0.887,
+    "mean_neurons": 2.762
+   },
+   "partial_12_held_out_classes": {
+    "fit": 0.9988,
+    "frac_cheapest": 0.889,
+    "mean_neurons": 2.747
+   },
+   "partial_8_all": {
+    "fit": 1.0,
+    "frac_cheapest": 0.945,
+    "mean_neurons": 1.844
+   },
+   "partial_8_held_out_classes": {
+    "fit": 1.0,
+    "frac_cheapest": 0.934,
+    "mean_neurons": 1.82
+   }
+  },
+  "feedback alignment": {
+   "full_tasks": {
+    "fit": 0.95,
+    "fit_held_out_classes": 0.9586,
+    "frac_minimal_width": 0.413
+   },
+   "partial_12_all": {
+    "fit": 0.9706,
+    "frac_cheapest": 0.901,
+    "mean_neurons": 2.737
+   },
+   "partial_12_held_out_classes": {
+    "fit": 0.9742,
+    "frac_cheapest": 0.904,
+    "mean_neurons": 2.721
+   },
+   "partial_8_all": {
+    "fit": 0.9916,
+    "frac_cheapest": 0.955,
+    "mean_neurons": 1.823
+   },
+   "partial_8_held_out_classes": {
+    "fit": 0.9934,
+    "frac_cheapest": 0.949,
+    "mean_neurons": 1.798
+   }
+  },
+  "error broadcast (unlearned)": {
+   "full_tasks": {
+    "fit": 0.9419,
+    "fit_held_out_classes": 0.945,
+    "frac_minimal_width": 0.432
+   },
+   "partial_12_all": {
+    "fit": 0.9697,
+    "frac_cheapest": 0.899,
+    "mean_neurons": 2.738
+   },
+   "partial_12_held_out_classes": {
+    "fit": 0.9748,
+    "frac_cheapest": 0.902,
+    "mean_neurons": 2.723
+   },
+   "partial_8_all": {
+    "fit": 0.9937,
+    "frac_cheapest": 0.955,
+    "mean_neurons": 1.826
+   },
+   "partial_8_held_out_classes": {
+    "fit": 0.9952,
+    "frac_cheapest": 0.947,
+    "mean_neurons": 1.802
+   }
+  },
+  "meta-learned local rule": {
+   "full_tasks": {
+    "fit": 0.9977,
+    "fit_held_out_classes": 0.9955,
+    "frac_minimal_width": 0.172
+   },
+   "partial_12_all": {
+    "fit": 0.9991,
+    "frac_cheapest": 0.902,
+    "mean_neurons": 2.754
+   },
+   "partial_12_held_out_classes": {
+    "fit": 0.9994,
+    "frac_cheapest": 0.904,
+    "mean_neurons": 2.737
+   },
+   "partial_8_all": {
+    "fit": 1.0,
+    "frac_cheapest": 0.873,
+    "mean_neurons": 2.004
+   },
+   "partial_8_held_out_classes": {
+    "fit": 1.0,
+    "frac_cheapest": 0.867,
+    "mean_neurons": 1.983
+   }
+  },
+  "frozen first layer": {
+   "full_tasks": {
+    "fit": 0.5464,
+    "fit_held_out_classes": 0.5613,
+    "frac_minimal_width": 0.014
+   },
+   "partial_12_all": {
+    "fit": 0.9048,
+    "frac_cheapest": 0.852,
+    "mean_neurons": 2.759
+   },
+   "partial_12_held_out_classes": {
+    "fit": 0.9009,
+    "frac_cheapest": 0.849,
+    "mean_neurons": 2.746
+   },
+   "partial_8_all": {
+    "fit": 1.0,
+    "frac_cheapest": 0.896,
+    "mean_neurons": 1.948
+   },
+   "partial_8_held_out_classes": {
+    "fit": 1.0,
+    "frac_cheapest": 0.883,
+    "mean_neurons": 1.93
+   }
+  }
+ },
+ "A_volume_prior": {
+  "0.5": {
+   "samples": 8000000,
+   "functions_seen": 28858,
+   "mass_on_single_neuron_functions": 0.9192,
+   "partial_12": {
+    "tasks_with_any_sample": 617,
+    "of": 666,
+    "frac_cheapest_under_volume": 0.9,
+    "chance": 0.549
+   },
+   "partial_8": {
+    "tasks_with_any_sample": 666,
+    "of": 666,
+    "frac_cheapest_under_volume": 0.891,
+    "chance": 0.248
+   }
+  },
+  "2.0": {
+   "samples": 8000000,
+   "functions_seen": 59423,
+   "mass_on_single_neuron_functions": 0.6789,
+   "partial_12": {
+    "tasks_with_any_sample": 666,
+    "of": 666,
+    "frac_cheapest_under_volume": 0.818,
+    "chance": 0.545
+   },
+   "partial_8": {
+    "tasks_with_any_sample": 666,
+    "of": 666,
+    "frac_cheapest_under_volume": 0.711,
+    "chance": 0.248
+   }
+  }
+ },
+ "B_setup": {
+  "inputs": 6,
+  "hidden": 16,
+  "target": "x0 XOR x1 (3 neurons in the layered family)",
+  "train_points": 32,
+  "single_neuron_fits_training_half": 0,
+  "splits_checked": 16,
+  "solver_unknown": 0
+ },
+ "B_grokking": {
+  "init_scale=0.5, weight_decay=0.0": {
+   "runs": 64,
+   "fit_training_half": 64,
+   "ended_on_planted_function": 60,
+   "median_step_train_fit": 100,
+   "median_step_generalized": 200,
+   "median_delay_ratio": 2.0,
+   "runs_with_delay_over_10x": 8,
+   "final_effective_width": {
+    "2": 60,
+    "4": 1,
+    "5": 3
+   },
+   "train_test_accuracy_by_step": {
+    "100": [
+     1.0,
+     0.813
+    ],
+    "300": [
+     1.0,
+     0.944
+    ],
+    "1000": [
+     1.0,
+     0.978
+    ],
+    "3000": [
+     1.0,
+     0.985
+    ],
+    "10000": [
+     1.0,
+     0.991
+    ],
+    "30000": [
+     1.0,
+     0.996
+    ]
+   }
+  },
+  "init_scale=0.5, weight_decay=0.1": {
+   "runs": 64,
+   "fit_training_half": 64,
+   "ended_on_planted_function": 64,
+   "median_step_train_fit": 100,
+   "median_step_generalized": 200,
+   "median_delay_ratio": 2.0,
+   "runs_with_delay_over_10x": 6,
+   "final_effective_width": {
+    "2": 64
+   },
+   "train_test_accuracy_by_step": {
+    "100": [
+     1.0,
+     0.822
+    ],
+    "300": [
+     1.0,
+     0.959
+    ],
+    "1000": [
+     1.0,
+     0.991
+    ],
+    "3000": [
+     1.0,
+     0.994
+    ],
+    "10000": [
+     1.0,
+     0.999
+    ],
+    "30000": [
+     1.0,
+     1.0
+    ]
+   }
+  },
+  "init_scale=3.0, weight_decay=0.0": {
+   "runs": 64,
+   "fit_training_half": 64,
+   "ended_on_planted_function": 8,
+   "median_step_train_fit": 300,
+   "median_step_generalized": 16350,
+   "median_delay_ratio": 65.8,
+   "runs_with_delay_over_10x": 6,
+   "final_effective_width": {
+    "2": 7,
+    "3": 2,
+    "4": 2,
+    "5": 53
+   },
+   "train_test_accuracy_by_step": {
+    "100": [
+     0.846,
+     0.494
+    ],
+    "300": [
+     0.988,
+     0.531
+    ],
+    "1000": [
+     1.0,
+     0.584
+    ],
+    "3000": [
+     1.0,
+     0.632
+    ],
+    "10000": [
+     1.0,
+     0.707
+    ],
+    "30000": [
+     1.0,
+     0.787
+    ]
+   }
+  },
+  "init_scale=3.0, weight_decay=0.1": {
+   "runs": 64,
+   "fit_training_half": 64,
+   "ended_on_planted_function": 64,
+   "median_step_train_fit": 200,
+   "median_step_generalized": 1700,
+   "median_delay_ratio": 7.0,
+   "runs_with_delay_over_10x": 14,
+   "final_effective_width": {
+    "2": 64
+   },
+   "train_test_accuracy_by_step": {
+    "100": [
+     0.856,
+     0.495
+    ],
+    "300": [
+     0.994,
+     0.554
+    ],
+    "1000": [
+     1.0,
+     0.779
+    ],
+    "3000": [
+     1.0,
+     0.991
+    ],
+    "10000": [
+     1.0,
+     1.0
+    ],
+    "30000": [
+     1.0,
+     1.0
+    ]
+   }
+  }
+ },
+ "wall_seconds": 1737.2
+}
