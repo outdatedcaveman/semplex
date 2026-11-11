@@ -89,7 +89,7 @@ def main():
     res["backprop (same inner loop)"] = evaluate(bp, np.zeros(0, dtype=np.float32), 40)
     print("backprop", json.dumps(res["backprop (same inner loop)"]), flush=True)
 
-    configs = [("A", "O", None), ("B", "O", None), ("B", "S", None), ("B", "S", "Y[a]*E"),
+    configs = [("A", "O", None), ("B", "O", None), ("B", "B", None), ("B", "S", None), ("B", "S", "Y[a]*E"),
                ("C", "O", None), ("C", "O", "Y[a]*E*V[a]")]
     for P, G, warm in configs:
         monos = L.enumerate_monomials(P, 4, G)
@@ -111,7 +111,7 @@ def main():
             start = np.where(scales > 0, fixed / np.maximum(scales, 1e-12), 0.0)
             name += f", started from {warm}"
         t1 = time.time()
-        a, hist = L.meta_learn(monos, tr, scales, X, mt_f, mt_c, H, N, rng, iters=200, lr=0.03, start=start,
+        a, hist = L.meta_learn(monos, tr, scales, X, mt_f, mt_c, H, N, rng, iters=250, lr=0.002, l1=1e-5, start=start,
                                log=lambda s_: print(P, G, s_, flush=True))
         ev = evaluate(tr, a * scales, 40)
         order = np.argsort(-np.abs(a * scales))
