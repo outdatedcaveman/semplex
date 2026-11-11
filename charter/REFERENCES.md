@@ -29,7 +29,7 @@ One row per external source used anywhere in the project. Details and discussion
 | HennessyMilner85 | M. Hennessy, R. Milner, "Algebraic laws for nondeterminism and concurrency", J. ACM 1985 | ABSTRACT | S05 | I/O semantics inadequate under nondeterminism |
 | OEIS-A003024 | Number of labelled DAGs | MEMORY (reproduced by our enumerator) | S02b | 543 and 29,281 |
 | OEIS-A000609 | Number of threshold functions | MEMORY; **superseded**: the n ≤ 4 counts are now kernel-checked (P039) | S08 | 104 and 1,882 |
-| Leroy09 | X. Leroy, "Formal verification of a realistic compiler", CACM 2009 | MEMORY (charter reference) | Charter | Verified compilation |
+| Leroy09 | X. Leroy, "Formal verification of a realistic compiler", CACM 52(7), 2009 | META (confirmed in CompCert's own documentation, v3.18) | Charter §17, Review §3 | Verified compilation |
 | Nanda23 | N. Nanda, L. Chan, T. Lieberum, J. Smith, J. Steinhardt, "Progress measures for grokking via mechanistic interpretability", arXiv:2301.05217 | REPORT | S09, S10b | Grokking phases; reverse-engineered circuits |
 | Bessa26 | S. Bessa et al., "e-means: outperforming k-means (in one-tenth the epochs)", arXiv:2611.09501 | Abstract, introduction and related work read in full text; experiments not read. Code presence checked in `faiss-cpu` 1.16.0 | Notes only | Possible future clustering tool |
 | Perin26 | A. Perin, F. Anselmi, S. Deny, "A method to automatically discover symbolic local learning rules", arXiv:2611.12248 | FULL | S10b | Local learning rules; motivates scoring rules against the table |
@@ -67,4 +67,11 @@ One row per external source used anywhere in the project. Details and discussion
 | Chiang23 | P. Chiang et al., "Loss landscapes are all you need" (guess and check) | MEMORY | S10b F2 | Random fitting networks generalize |
 | Nokland16 | A. Nøkland, direct feedback alignment | MEMORY | S10b | Error broadcast |
 | BaldiSadowski15 | P. Baldi, P. Sadowski, "A theory of local learning, the learning channel, and the optimality of backpropagation" | META (cited in Perin26) | THEORY Thm 12 | Backward channel is necessary |
-| Cammarata26 | N. Cammarata, "Neural Networks Are Already Clean", Goodfire essay, 15 Oct 2026 | SECONDARY ONLY (site not reachable from this session) | Review §3 | Neuron-level interpretability claim |
+| Cammarata26 | N. Cammarata, "Neural Networks Are Already Clean", Goodfire essay, 15 Oct 2026 | Opening "Short Version" read from the primary source; remainder keyword-scanned only | Review §3b, H-D | Neuron-level legibility; recursive generalization; width claim |
+| Abate19 | C. Abate et al., "Trace-Relating Compiler Correctness and Secure Compilation", arXiv:1907.05320 (conference version of the TOPLAS paper in charter §17) | ABSTRACT (read on arXiv) | Review §3, S07 | Prior art for relation-indexed certified translation |
+| SEP-SR | Stanford Encyclopedia of Philosophy, "Structural Realism" | Introduction and Newman passage read | THEORY §3.4 correction | Newman's objection |
+| SEP-ScR | Stanford Encyclopedia of Philosophy, "Scientific Realism" | Underdetermination / Duhem passage read | THEORY §3.4, S02b | Auxiliary assumptions |
+| SEP-Comp, SEP-Cat | Stanford Encyclopedia of Philosophy, "Compositionality", "Category Theory" | Introductions only | Charter §17 | Not yet used |
+| Smith10 | B. Smith, "Ontological realism", Applied Ontology 5(3–4), 2010 | UNREAD (doi.org not reachable) | Charter §17 | |
+| ObsCalculi15 | "Observational program calculi and the correctness of translations", TCS 577, 2015 | UNREAD (doi.org not reachable) | Charter §17 | |
+| CompCertDoc | CompCert documentation, version 3.18 (2026-08-31) | Index page read | Review §3 | Benchmark for verified translation |

@@ -109,7 +109,9 @@ So Spike 01's sufficiency machinery and Spike 02's experiment selection are one 
 
 *The ontological conditionality principle.* Spike 02 F4 observed that "a hidden entity exists" never rose above CONJECTURE. Theorems 6d and 7 explain why. Any ontological commitment that is not Ω-determined on the candidate set can be warranted only conditionally on a premise that selects among indistinguishable candidates (closed world, parsimony, faithfulness), and the warrant must name that premise. What *is* Ω-determined, such as the directly measured effects in Spike 02 F5, holds for every survivor and needs no such premise.
 
-This is a precise, checkable form of a structural-realist intuition: **the empirically secure part of an ontology is its Ω-profile.** The rest is model-relative, and the theory says exactly which premise each further commitment rests on.
+**The empirically secure part of an ontology is its Ω-profile.** The rest is model-relative, and the theory says exactly which premise each further commitment rests on.
+
+*Correction (2026-11-11).* An earlier version called this a structural-realist reading. It is weaker than that. By Newman's objection to structural realism (see the Stanford Encyclopedia entry, in the charter's own reference list), a purely structural claim about unobservables reduces to its observational consequences plus a cardinality claim. Our statement is therefore empirical adequacy relative to Ω, which is Theorem 7 restated; it gives no support to realism about structure. Likewise, when a prediction fails, the data do not determine which named premise to retract (Duhem); our retraction rules encode a policy.
 
 ### 3.5 The warrant calculus
 

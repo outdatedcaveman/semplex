@@ -2,9 +2,14 @@
 
 **Date:** 2026-11-11 · **Scope:** every result in `THEORY.md` and Spikes 08–10b that was described as possibly new.
 
-**What this is not.** It is a first-pass review from index searches (alphaXiv, Consensus, web search), mostly at abstract level. Two requested starting points could not be used:
-- **The Codex dossier** is not in the repository or in this session's uploads. Please add it (for example as `charter/dossier.md`) and this review will be redone against its links.
-- **Nick Cammarata's essay** "Neural Networks Are Already Clean" (Goodfire, 15 Oct 2026) could not be opened: its site is outside this session's allowed network. Everything below about it is from secondary write-ups and is marked as such.
+**What this is.** A first-pass review from index searches (alphaXiv, Consensus, web search), mostly at abstract level, plus direct reads of the sources listed in the charter's §17 (the dossier) and of Nick Cammarata's essay, once the session's network was opened to those sites.
+
+**Read directly on 2026-11-11:**
+- Cammarata, "Neural Networks Are Already Clean" (Goodfire): the opening "Short Version" (about the first 2,500 of 43,000 words) in full; the rest only by keyword scan.
+- Stanford Encyclopedia entries on Structural Realism, Scientific Realism, Compositionality and Category Theory: introductions and the passages quoted below, not the whole entries.
+- Abate et al., "Trace-Relating Compiler Correctness and Secure Compilation" (arXiv:1907.05320, the conference version of the TOPLAS paper in the dossier): abstract.
+- CompCert documentation index (version 3.18, 2026-08-31).
+- Not reachable: `doi.org` links (Smith 2010; "Observational program calculi", TCS 2015).
 
 Verification levels are those of `REFERENCES.md`.
 
@@ -33,14 +38,30 @@ Verification levels are those of `REFERENCES.md`.
 - **What is ours:** the integration (one framework, machine-checked, tied to running code with kernel-checked certificates), and exact small-scale measurements against a certified optimum.
 - **Process failure to record:** several of these should have been found before the experiments were run. The spike protocol now has a prior-art gate (`ROADMAP.md`).
 
-## 3. Cammarata, "Neural Networks Are Already Clean" (secondary sources only)
+## 3. The dossier's own sources (charter §17) against our results
 
-As reported by secondary write-ups (IBM Think, Wikipedia's polysemanticity article, others of lower quality):
-- Most neurons in current large models have one clear role (a figure of about 90% for Qwen3-32B is quoted, from preliminary audits).
-- Earlier polysemanticity is attributed to ordinary, fixable causes rather than superposition; some sources name a "recursive generalization" hypothesis in which related concepts form branches of a shared tree.
-- The essay calls itself an informal working hypothesis; a technical companion is promised.
+| Dossier source | What it says (as read) | Consequence for us |
+|---|---|---|
+| Abate et al., trace-relating compiler correctness | Compiler correctness generalized to source and target traces from different sets, connected by an arbitrary relation; characterizes which target property a source property guarantees, and the reverse | **Prior art for the CSIR's central idea** (Spike 07): a certified link is a relation between differently-typed semantics, and what it preserves depends on that relation. Our "relation order" and composition rule should be restated in their terms before any claim |
+| CompCert (Leroy 2009; docs v3.18) | A compiler written and proved correct in Coq: generated code is semantically equivalent to its source | The benchmark for "verified translation". Our kernel-checked translations (Spikes 01, 03, 06) are translation *validation* on tiny languages, far short of this. No novelty there |
+| SEP, Structural Realism | Epistemic structural realism: we can know only the structure of the unobservable world. **Newman's objection** (1928; Demopoulos & Friedman 1985): structure alone is not sufficient to pick out any relations; any collection of the right size can be given that structure, so a purely structural claim reduces to its observational consequences plus a cardinality claim | **Corrects THEORY §3.4.** We wrote that "the empirically secure part of an ontology is its Ω-profile" and called this a structural-realist reading. By Newman's objection, that is no more than empirical adequacy relative to Ω. It is a restatement of Thm 7, not support for realism about structure. Text corrected |
+| SEP, Scientific Realism | Underdetermination of theory by data; Duhem: a hypothesis yields predictions only together with auxiliary assumptions, so a failed prediction does not say which assumption failed | Our named premises (closed world, faithfulness, parsimony) are Duhem's auxiliaries made explicit. Our retraction rule blames a named premise; Duhem's point is that the blame is not determined by the data. Spike 02b assumed one culprit; that needs stating as a policy |
+| SEP, Compositionality; Category Theory | Not examined beyond the introductions | Open: charter §14 asks for a compositional semantics across system classes; nothing here addresses it yet |
+| Smith 2010 (ontological realism); "Observational program calculi" (TCS 2015) | Not reachable | To read |
 
-**Why it matters here:** the atlas is a neuron-level object. If neurons are the right unit in large models, an exact neuron-level theory at small scale is more relevant than it would be under strong superposition. The tiny exact setting can also *test* the disagreement (H-D below). None of this can be relied on until the essay itself is read.
+## 3b. Cammarata, "Neural Networks Are Already Clean" (opening section read from the primary source)
+
+The essay describes itself as "an informal research essay and working hypothesis". Its claims, as stated there:
+- "A network's own mechanisms are its legible building blocks." The canonical evidence for polysemanticity and superposition "was misread".
+- **Recursive generalization**: "as a neuron grows, it sprouts offshoots the way a tree branch sprouts sub-branches" (example: a neuron for "iy" grows to "diy", then "do it yourself"). "Generalization is fractal."
+- On running out of room: "With less room, the network doesn't fold unrelated things together; its neurons just cover coarser-grained concepts"; with more room, a broad neuron "differentiates into many specific" ones. He reports training InceptionV1 variants across a 300× size range.
+- Numbers: with ordinary architectural fixes, "99-100% of neurons" in InceptionV1's last layer are "easily interpretable"; for Qwen3-32B, "roughly 90% of neuron poles have one main job", about 7% two related jobs, 2–4% not yet understood. He cautions that a single cleanliness score depends on thresholds and should be read as "a broad pointer".
+- A technical companion paper is promised.
+
+**Why it matters here:**
+- The atlas is a neuron-level object. If neurons are the right unit in large models, an exact neuron-level theory at small scale is more relevant than it would be under strong superposition.
+- The essay makes a specific, testable claim about width: fewer neurons give *coarser* neurons, not arbitrary mixtures. In our setting "coarser" has an exact meaning (a unit whose threshold function is a union of the cells that a wider minimal layer separates), so the claim can be tested with a certified notion of the features. This sharpens H-D below.
+- His method of watching neurons grow over training matches what Spike 09's trajectories measure only crudely.
 
 ## 4. Where the frontier appears to be: proposed new hypotheses
 
@@ -51,6 +72,6 @@ Each is stated so it can fail, and each needs its own prior-art check before wor
 | H-A | **Learnability atlas.** Which elements a rule can learn is governed by what the rule observes and by the layer's symmetry, and this ordering differs from the circuit-cost ordering | The volume literature studies which function is chosen, not which are reachable per rule class; needs exact ground truth, which we have | Spike 10c (running): 9 dictionaries × 222 elements |
 | H-B | **Volume law for mechanisms.** Among the many minimal circuits of one function, the one training lands on is predicted by each circuit's own weight-space volume | The volume hypothesis is stated for functions; extending it to *which circuit* speaks directly to the universality question | Count each isomer's volume on the weight grid (`cerp/geometry.py`), compare with Spike 09's observed isomer frequencies |
 | H-C | **Grokking delay law.** The delay between fitting and generalizing scales with the log ratio of the memorizing and generalizing regions' volumes at the current weight norm | Omnigrok gives the qualitative picture; an exact, predictive law at a scale where both volumes are computable was not found | 6-input runs across planted functions and initialization scales |
-| H-D | **Clean vs superposed, exactly.** Define a hidden unit as clean if its threshold function belongs to some minimal determining set. Cleanness stays high until the hidden width falls below the function's minimum width, then drops sharply | Gives the superposition debate a setting with a certified notion of "the features" | Train at widths from 2 to 16 on all 222 elements |
+| H-D | **Coarser, not folded (Cammarata's width claim, exactly).** When hidden width is reduced, trained units become *coarsenings* of the units of a wider minimal layer (unions of its cells), not unrelated mixtures; cleanness, defined as membership in some minimal determining set, falls only below the function's minimum width | The essay asserts this from large vision models; no exact test with a certified feature set was found | Train at widths from 2 to 16 on all 222 elements; classify each unit as minimal-set member, coarsening, or neither |
 | H-E | **First depth-sensitive element.** Find and certify the smallest function for which three layers beat two | Asymptotic separations are known; the first exact instance in this family was not found | Solver search at 5 and 6 inputs over more depth-3 shapes |
 | H-F | **Limit representations.** For tail properties (no minimal representation), minimal ε-determining sets exist and converge | Follows from our Thm 9; statistics has related results to check first | Lean plus a constructive example |
