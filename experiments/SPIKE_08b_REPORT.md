@@ -45,7 +45,7 @@ Every found network is kernel-checked. Every "no smaller network" answer is a so
 Findings:
 - **Skip connections fill the empty period 2.** With them, every 3-input function needs at most 2 neurons, including parity (4 → 2).
 - **A ReLU hidden layer without skip connections bought nothing at 3 inputs**: the table is identical to the threshold one. At 4 inputs it helped 8 classes (4 → 3) and parity (5 → 4).
-- **With skip connections, no 4-input function needs more than 3 threshold neurons.** Skip connections saved a neuron for 179 of the 207 non-trivial classes, and two neurons for 27.
+- **With skip connections, no 4-input function needs more than 3 threshold neurons.** Of the 207 classes that are not single neurons, skip connections saved one neuron for 137 and two for 27; 43 were unchanged.
 - The periodic table is therefore **a family of tables indexed by wiring and activation**, and the element ordering changes between them.
 
 ## Step 4: weight-space geometry (first version of the "manifold")
