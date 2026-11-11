@@ -480,3 +480,20 @@ theorem task_blind {S : Type u1} {O : Type u2} {T : Type u3}
   | succ k ih => simp only [ih]
 
 end PFT
+
+namespace PFT
+
+/-- Theorem 13 (symmetry gap, core). A quantity that is unchanged when a unit's
+    sign is flipped cannot equal one that changes sign, unless the latter is zero.
+    Applied to learning rules: every monomial in which a hidden index occurs an
+    even number of times is unchanged by flipping that unit, so no combination
+    of them equals the error-broadcast term, which changes sign. -/
+theorem even_span_excludes_odd (f g : Int → Int)
+    (hf : ∀ y, f (-y) = f y) (hg : ∀ y, g (-y) = -g y) (h : ∀ y, f y = g y) : ∀ y, g y = 0 := by
+  intro y
+  have h1 := h y
+  have h2 := h (-y)
+  rw [hf y, hg y] at h2
+  omega
+
+end PFT

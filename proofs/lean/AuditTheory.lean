@@ -19,3 +19,4 @@ open PFT
 #print axioms finitary_least
 #print axioms eventuallyOn_upd
 #print axioms task_blind
+#print axioms even_span_excludes_odd

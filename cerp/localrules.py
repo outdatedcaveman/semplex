@@ -253,3 +253,64 @@ def read_states(states, n):
     z = np.einsum("bxh,bh->bx", np.tanh(pre), v) + c[:, None]
     pw = (1 << np.arange(1 << n)).astype(np.int64)
     return ((z >= 0).astype(np.int64) * pw).sum(-1), ((np.transpose(pre >= 0, (0, 2, 1))).astype(np.int64) * pw).sum(-1)
+
+
+# ------------------------------------------------------------ derivative-free meta-search (Spike 10c)
+
+def natural_units(monos, trainer, X, H, n, rng, samples=64, ref_rms=None):
+    """Per-term scale so that a coefficient of 1 gives a first-layer update of the
+    same RMS size as backpropagation with step 0.5 at initialization."""
+    import jax
+    import jax.numpy as jnp
+    W, v, _ = init_states(samples, H, n, rng)
+    e = rng.normal(0, 0.5, (samples, X.shape[0])).astype(np.float32)
+    care = jnp.ones(X.shape[0])
+    if ref_rms is None:
+        y = np.tanh(np.einsum("bhm,xm->bxh", W, np.asarray(X)))
+        g = np.einsum("bx,bh,bxh,xm->bhm", e, v, 1 - y * y, np.asarray(X)) / X.shape[0]
+        ref_rms = 0.5 * float(np.sqrt(np.mean(g ** 2)))
+    out = []
+    for i in range(len(monos)):
+        coef = jnp.zeros(len(monos)).at[i].set(1.0)
+        g = jax.vmap(lambda Wi, ei, vi: trainer["grad_local"](Wi, X, care, ei, vi, coef))(W, e, v)
+        rms = float(jnp.sqrt(jnp.mean(g ** 2)))
+        out.append(ref_rms / rms if rms > 1e-9 else 0.0)
+    return np.array(out, dtype=np.float32)
+
+
+def cem_search(trainer, units, X, targets, cares, H, n, rng, T=200, pop=32, elite=6, gens=40,
+               sigma0=0.5, start=None, l1=0.002, log=None):
+    """Cross-entropy method over rule coefficients (in natural units), scoring the
+    FINAL loss after T training steps. Each generation uses fresh initial networks
+    shared by all candidates; the incumbent is re-scored every generation, so a
+    lucky draw cannot be kept forever."""
+    import jax.numpy as jnp
+    d = len(units)
+    run = trainer["run"](T)
+
+    def score(a, st):
+        fin = run(jnp.asarray(a * units), st, X, targets, cares)
+        W, v, c = (np.asarray(s, dtype=np.float64) for s in fin)
+        z = np.einsum("bxh,bh->bx", np.tanh(np.einsum("bhm,xm->bxh", W, np.asarray(X, dtype=np.float64))), v) + c[:, None]
+        z = np.clip(np.nan_to_num(z, nan=0.0), -30, 30)
+        l = (np.log1p(np.exp(-z)) * targets + np.log1p(np.exp(z)) * (1 - targets)) * cares
+        fit = (((z >= 0) == (targets > 0.5)) | (cares < 0.5)).all(1).mean()
+        return float(np.mean(np.minimum(l.sum(1) / cares.sum(1), 3.0))) + l1 * float(np.abs(a).sum()), float(fit)
+
+    mean = np.zeros(d, dtype=np.float32) if start is None else np.array(start, dtype=np.float32)
+    sig = np.full(d, sigma0, dtype=np.float32)
+    best = mean.copy()
+    hist = []
+    for g in range(gens):
+        st = tuple(map(jnp.asarray, init_states(len(targets), H, n, rng)))
+        cands = [best] + [mean + sig * rng.normal(size=d).astype(np.float32) for _ in range(pop - 1)]
+        sc = [score(c, st) for c in cands]
+        order = np.argsort([s[0] for s in sc])
+        el = np.array([cands[i] for i in order[:elite]])
+        mean = el.mean(0)
+        sig = np.maximum(0.7 * sig + 0.3 * el.std(0), 0.02)
+        best = cands[order[0]].copy()
+        hist.append([round(sc[order[0]][0], 4), round(sc[order[0]][1], 3)])
+        if log and (g % 5 == 0 or g == gens - 1):
+            log(f"  gen {g}: loss {sc[order[0]][0]:.4f} fit {sc[order[0]][1]:.3f} (incumbent {sc[0][0]:.4f})")
+    return best, hist
