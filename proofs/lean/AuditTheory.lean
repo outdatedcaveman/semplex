@@ -18,3 +18,4 @@ open PFT
 #print axioms no_minimal_representation
 #print axioms finitary_least
 #print axioms eventuallyOn_upd
+#print axioms task_blind

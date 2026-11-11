@@ -458,3 +458,25 @@ theorem finitary_least (q : (Nat → Bool) → A) (n : Nat)
   exact heq
 
 end PFT
+
+/-! ## §10 Learning rules as observational powers -/
+
+namespace PFT
+
+universe u1 u2 u3
+
+/-- Theorem 12 (task-blindness). Let training update a pair (s, o): s is the part
+    of the parameters whose update rule observes only s itself (no task signal),
+    while o may observe everything including the task t. Then after any number of
+    steps s is the same for every task. A layer trained by a rule that cannot
+    observe the task carries no information about it. -/
+theorem task_blind {S : Type u1} {O : Type u2} {T : Type u3}
+    (us : S → S) (uo : T → S → O → O) (s₀ : S) (o₀ : O) (t₁ t₂ : T) :
+    ∀ k : Nat, (Nat.rec (motive := fun _ => S × O) (s₀, o₀) (fun _ p => (us p.1, uo t₁ p.1 p.2)) k).1 =
+               (Nat.rec (motive := fun _ => S × O) (s₀, o₀) (fun _ p => (us p.1, uo t₂ p.1 p.2)) k).1 := by
+  intro k
+  induction k with
+  | zero => rfl
+  | succ k ih => simp only [ih]
+
+end PFT
