@@ -38,7 +38,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from itertools import product
 
-KERNEL_VERSION = "0.3.0"
+KERNEL_VERSION = "0.4.0"
 MAX_VARS = 16
 
 _TOKEN = object()  # only this module can mint verdicts
@@ -168,8 +168,33 @@ def _eval_table(b, env):
     return (bits >> sum(env[n] << j for j, n in enumerate(order))) & 1
 
 
+def _eval_dnet(b, env):
+    """General feedforward net (spike 08b): skip connections and ReLU allowed.
+    {"inputs": [names], "neurons": [{"in": [refs], "w": [ints], "b": int, "act": "step"|"relu"}]}
+    Values are indexed inputs first, then neurons in order; a neuron may read
+    any EARLIER value. pre = sum(w * value) + b; step -> [pre >= 0];
+    relu -> max(0, pre). The output is the last neuron, which must be a step."""
+    vals = [env[n] for n in b["inputs"]]
+    ns = b["neurons"]
+    if not ns or ns[-1]["act"] != "step":
+        raise KernelError("dnet must end in a step neuron")
+    for nrn in ns:
+        refs, w, bias, act = nrn["in"], nrn["w"], nrn["b"], nrn["act"]
+        if (len(refs) != len(w) or type(bias) is not int or not all(type(v) is int for v in w)
+                or not all(type(r) is int and 0 <= r < len(vals) for r in refs)):
+            raise KernelError("bad neuron")
+        pre = sum(a * vals[r] for a, r in zip(w, refs)) + bias
+        if act == "step":
+            vals.append(1 if pre >= 0 else 0)
+        elif act == "relu":
+            vals.append(pre if pre > 0 else 0)
+        else:
+            raise KernelError(f"unknown activation {act!r}")
+    return vals[-1]
+
+
 _EVAL = {"expr": _eval_expr, "circuit": _eval_circuit, "dfa": _eval_dfa, "bdd": _eval_bdd,
-         "tnet": _eval_tnet, "table": _eval_table}
+         "tnet": _eval_tnet, "table": _eval_table, "dnet": _eval_dnet}
 
 
 def evaluate(artifact, env):

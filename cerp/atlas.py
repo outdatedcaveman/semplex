@@ -369,3 +369,24 @@ def hamming_landscape(tb):
         for v, c in zip(*np.unique(d, return_counts=True)):
             out[int(v)] = out.get(int(v), 0) + int(c)
     return out
+
+
+# ------------------------------------------------------------ one-bit flips (Spike 08b, step 5)
+
+def flip_bit_layers(layers, n, f, p):
+    """Net for f XOR (indicator of point p), built from a depth <= 2 net for f.
+
+    Depth 2: add ONE hidden neuron that fires only at p, with an output weight
+    large enough to override everything else there (+1 neuron).
+    Depth 1 (f is a single neuron g): hidden layer {g, indicator}, output
+    g OR ind (if f(p) = 0) or g AND NOT ind (if f(p) = 1)  (+2 neurons)."""
+    ind = {"w": [1 if (p >> j) & 1 else -1 for j in range(n)], "t": bin(p).count("1")}
+    fp = (f >> p) & 1
+    if len(layers) == 1:
+        return [[dict(layers[0][0]), ind], [{"w": [1, -1 if fp else 1], "t": 1}]]
+    if len(layers) != 2:
+        raise ValueError("construction is for depth <= 2")
+    out = layers[1][0]
+    big = sum(abs(v) for v in out["w"]) + abs(out["t"]) + 1
+    return [[dict(x) for x in layers[0]] + [ind],
+            [{"w": list(out["w"]) + [-big if fp else big], "t": out["t"]}]]

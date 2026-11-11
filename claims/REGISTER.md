@@ -42,3 +42,8 @@ These are claims *about the research program and its artifacts*, held to the sam
 | P036 | For n=3, neurons = minimum determining width + 1 for every non-threshold function | COMPUTED-UNCERTIFIED | Family T | Spike 08 F2, `tests/test_atlas.py` | | n=4 unchecked | Check n=4 |
 | P037 | In family T, depth > 2 never reduces neuron count for n ≤ 4 | COMPUTED-UNCERTIFIED | | Spike 08 F3 | | Expected to fail at larger n | Find first depth-sensitive element |
 | P038 | A one-bit truth-table flip changes minimum neurons by at most 2 | COMPUTED-UNCERTIFIED for n ≤ 4; CONJECTURE for all n | Family T | Spike 08 F5 | | | Prove |
+| P039 | There are exactly 1,882 single-neuron (threshold) functions of 4 inputs | **kernel-checked** (witness or certificate for all 65,536 functions) | Integer-weight threshold neurons | Spike 08b step 1 | | Supersedes the literature dependency in P035 | |
+| P040 | All 79 four-input classes listed at ≥ 4 neurons need ≥ 4 | **kernel-checked** certificates | Layered threshold family | Spike 08b step 1 | P039 | Parity's ≥ 5 still uncertified | Certificate for parity |
+| P041 | With skip connections every 3-input function needs ≤ 2 threshold neurons | SAT side kernel-checked; minimality = solver claim in weight box [-3,3] | | `atlas/jobs/families.jsonl` | | | |
+| P042 | One-bit flip changes minimum neurons by ≤ 1 (depth-2 optimum) or ≤ 2 (single neuron); d−1 in general | PROVED (informal) + construction kernel-checked on 26,048 instances | Layered threshold family | Spike 08b step 5 | | P038's "≤ 2 for all n" remains open | Mechanize |
+| P043 | Single-neuron functions occupy > 99% of the weight space of a 2-hidden-neuron net | COMPUTED-UNCERTIFIED | n ≤ 3, weights in [-2,2] | Spike 08b step 4 | | Small grids | Larger grids overnight |

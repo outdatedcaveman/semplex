@@ -30,12 +30,14 @@ We build toward it **agilely**. Each step is a thin end-to-end *spike* that test
 
 **Spike 08 is done: a verifiable periodic table of circuits** (`atlas/`, `experiments/SPIKE_08_REPORT.md`). For strictly layered threshold networks on up to 4 inputs, every function class has an exact minimum neuron count with a kernel-verified witness circuit, and a table-driven compiler returns provably optimal task circuits.
 
+**Spike 08b** hardens it: kernel-checked lower-bound certificates, tables for skip-connection and ReLU families, weight-space geometry, and resumable overnight jobs (`python -m cerp.crunch`). Literature notes: `charter/LITERATURE_ATLAS.md`.
+
 Citations are verified in `charter/BIBLIOGRAPHY.md`.
 
 ## Run it
 
 ```bash
-pip install pytest numpy
+pip install pytest numpy ortools
 python -m pytest -q                                   # 86 tests (Lean tests need CERP_LEAN=/path/to/lean)
 python -m cerp.demo                                   # spike 01: redundant-sensor alarm, full ledger
 python -m cerp.epistemics.demo latent_confounded all  # spike 02: watch an inquiry into a hidden world
