@@ -1,0 +1,2138 @@
+{
+ "elements": 128,
+ "omega_samples": 40000000,
+ "threshold_functions_seen": 941,
+ "steps": 3000,
+ "weight_decay": 0.03,
+ "isomers_per_element": {
+  "min": 5,
+  "max": 1457,
+  "mean": 54.8984375
+ },
+ "mean_predicted_share_of_favourite": 0.28742026233005796,
+ "A_width2": {
+  "nets": 25600,
+  "fit": 6376,
+  "faithful_when_fit": 0.9905897114178168,
+  "fit_with_minimal_pair": 6316,
+  "share_final_units_equal_initial_units": 0.0,
+  "elements_scored": 123,
+  "gain_bits_per_run": 0.24515205426294256,
+  "ceiling_bits_per_run_in_sample": 4.639204045202061,
+  "share_elements_gain_positive": 0.43089430894308944,
+  "median_spearman": 0.18781835141806683,
+  "top1_hit_rate": 0.15447154471544716,
+  "top1_hit_rate_uniform_chance": 0.06035143003810001,
+  "calibration_bins": [
+   {
+    "mean_predicted": 0.0005530414413725589,
+    "mean_observed": 0.0012578616352201257,
+    "isomers": 695
+   },
+   {
+    "mean_predicted": 0.001043568918096993,
+    "mean_observed": 0.001361957637127534,
+    "isomers": 696
+   },
+   {
+    "mean_predicted": 0.001804290373175592,
+    "mean_observed": 0.002306555314536014,
+    "isomers": 695
+   },
+   {
+    "mean_predicted": 0.0026069942997187096,
+    "mean_observed": 0.0038343017587359344,
+    "isomers": 695
+   },
+   {
+    "mean_predicted": 0.00471627753770299,
+    "mean_observed": 0.006464530095320091,
+    "isomers": 696
+   },
+   {
+    "mean_predicted": 0.007655132286920197,
+    "mean_observed": 0.012093569195407671,
+    "isomers": 695
+   },
+   {
+    "mean_predicted": 0.013056786528698227,
+    "mean_observed": 0.02210107808100615,
+    "isomers": 696
+   },
+   {
+    "mean_predicted": 0.024884811755940758,
+    "mean_observed": 0.038692290763522805,
+    "isomers": 695
+   },
+   {
+    "mean_predicted": 0.12020624602046281,
+    "mean_observed": 0.0886955919827263,
+    "isomers": 696
+   }
+  ],
+  "pooled_loglog_slope": 0.8871184746530433
+ },
+ "A_width2_per_element": {
+  "6": {
+   "gain_bits": 1.2698008032982373,
+   "ceiling_bits": 8.272550334246837,
+   "spearman": 0.09857667391689116,
+   "top1": false,
+   "isomers": 1457,
+   "runs": 137.0
+  },
+  "27": {
+   "gain_bits": -1.3936249137301713,
+   "ceiling_bits": 8.016371291124177,
+   "spearman": 0.08322769372237648,
+   "top1": false,
+   "isomers": 433,
+   "runs": 159.0
+  },
+  "30": {
+   "gain_bits": 0.48663795479870947,
+   "ceiling_bits": 5.3158389999070215,
+   "spearman": 0.2143342316286003,
+   "top1": false,
+   "isomers": 121,
+   "runs": 32.0
+  },
+  "61": {
+   "gain_bits": 2.8111025282075044,
+   "ceiling_bits": 6.064388740709707,
+   "spearman": 0.2169355714490334,
+   "top1": true,
+   "isomers": 167,
+   "runs": 132.0
+  },
+  "43966": {
+   "gain_bits": 0.09516327310999971,
+   "ceiling_bits": 3.0,
+   "spearman": 0.5773502691896257,
+   "top1": true,
+   "isomers": 8,
+   "runs": 6.0
+  },
+  "126": {
+   "gain_bits": 1.8341099801932754,
+   "ceiling_bits": 5.655869495764953,
+   "spearman": 0.19908154097331687,
+   "top1": false,
+   "isomers": 192,
+   "runs": 159.0
+  },
+  "278": {
+   "gain_bits": 1.3761209800056793,
+   "ceiling_bits": 3.0,
+   "spearman": 0.5773502691896257,
+   "top1": true,
+   "isomers": 8,
+   "runs": 10.0
+  },
+  "317": {
+   "gain_bits": 2.569516959807005,
+   "ceiling_bits": 3.8436089278502727,
+   "spearman": 0.45758497916005364,
+   "top1": true,
+   "isomers": 28,
+   "runs": 21.0
+  },
+  "318": {
+   "gain_bits": 0.14074348782536325,
+   "ceiling_bits": 3.0,
+   "spearman": 0.41239304942116123,
+   "top1": false,
+   "isomers": 8,
+   "runs": 27.0
+  },
+  "384": {
+   "gain_bits": -0.893339828891085,
+   "ceiling_bits": 6.484433074942925,
+   "spearman": 0.1937558969059462,
+   "top1": false,
+   "isomers": 99,
+   "runs": 169.0
+  },
+  "448": {
+   "gain_bits": 0.05021752697900422,
+   "ceiling_bits": 5.6471273186672875,
+   "spearman": 0.22711652740906965,
+   "top1": false,
+   "isomers": 53,
+   "runs": 100.0
+  },
+  "736": {
+   "gain_bits": -0.2343807265227977,
+   "ceiling_bits": 5.270025825709385,
+   "spearman": 0.09748188920278153,
+   "top1": false,
+   "isomers": 42,
+   "runs": 60.0
+  },
+  "2792": {
+   "gain_bits": 1.079670456448977,
+   "ceiling_bits": 3.580233583489381,
+   "spearman": 0.36066422886513544,
+   "top1": false,
+   "isomers": 43,
+   "runs": 60.0
+  },
+  "480": {
+   "gain_bits": -1.6282617779308306,
+   "ceiling_bits": 4.8978419635913495,
+   "spearman": -0.01834215739121214,
+   "top1": false,
+   "isomers": 32,
+   "runs": 75.0
+  },
+  "2744": {
+   "gain_bits": -0.8002570350429659,
+   "ceiling_bits": 3.7122838315978797,
+   "spearman": 0.12124206122028738,
+   "top1": false,
+   "isomers": 23,
+   "runs": 32.0
+  },
+  "1276": {
+   "gain_bits": 0.3638903310166349,
+   "ceiling_bits": 3.8165822086841956,
+   "spearman": 0.11516954649394985,
+   "top1": false,
+   "isomers": 83,
+   "runs": 104.0
+  },
+  "2302": {
+   "gain_bits": 0.7799823955699662,
+   "ceiling_bits": 5.711629428851778,
+   "spearman": 0.24863259899335627,
+   "top1": false,
+   "isomers": 184,
+   "runs": 198.0
+  },
+  "828": {
+   "gain_bits": 2.157324482794008,
+   "ceiling_bits": 4.523561956057013,
+   "spearman": 0.25712973861329,
+   "top1": false,
+   "isomers": 23,
+   "runs": 47.0
+  },
+  "3822": {
+   "gain_bits": 4.048202995028641,
+   "ceiling_bits": 5.709329557695374,
+   "spearman": 0.30156303389846956,
+   "top1": true,
+   "isomers": 90,
+   "runs": 144.0
+  },
+  "2798": {
+   "gain_bits": 0.9888294303687198,
+   "ceiling_bits": 4.533035831459885,
+   "spearman": 0.31421744850719086,
+   "top1": false,
+   "isomers": 146,
+   "runs": 180.0
+  },
+  "888": {
+   "gain_bits": -1.3089198619755358,
+   "ceiling_bits": 3.0,
+   "spearman": -0.41239304942116123,
+   "top1": false,
+   "isomers": 8,
+   "runs": 6.0
+  },
+  "9184": {
+   "gain_bits": -2.1112652533894996,
+   "ceiling_bits": 4.4889920977252835,
+   "spearman": -0.11604280434480682,
+   "top1": false,
+   "isomers": 24,
+   "runs": 81.0
+  },
+  "3324": {
+   "gain_bits": 3.30667618246029,
+   "ceiling_bits": 5.366246673034647,
+   "spearman": 0.2572434028359159,
+   "top1": false,
+   "isomers": 82,
+   "runs": 155.0
+  },
+  "1904": {
+   "gain_bits": -0.5358194590274848,
+   "ceiling_bits": 3.391014558581209,
+   "spearman": 0.1972412820989908,
+   "top1": false,
+   "isomers": 49,
+   "runs": 86.0
+  },
+  "3816": {
+   "gain_bits": 1.9581040902147064,
+   "ceiling_bits": 4.049814852662381,
+   "spearman": 0.31237900883588565,
+   "top1": true,
+   "isomers": 31,
+   "runs": 100.0
+  },
+  "36584": {
+   "gain_bits": 1.8680419993594273,
+   "ceiling_bits": 4.170053244801464,
+   "spearman": 0.3970612769556579,
+   "top1": true,
+   "isomers": 36,
+   "runs": 150.0
+  },
+  "1918": {
+   "gain_bits": -0.10692402599030837,
+   "ceiling_bits": 3.4594316186372973,
+   "spearman": 0.10000000000000002,
+   "top1": false,
+   "isomers": 11,
+   "runs": 21.0
+  },
+  "2016": {
+   "gain_bits": -4.016188323462864,
+   "ceiling_bits": 4.6504223374671225,
+   "spearman": -0.2173728958361025,
+   "top1": false,
+   "isomers": 45,
+   "runs": 80.0
+  },
+  "2032": {
+   "gain_bits": -0.777389881258839,
+   "ceiling_bits": 4.0935759620284795,
+   "spearman": 0.16692862292824331,
+   "top1": false,
+   "isomers": 51,
+   "runs": 97.0
+  },
+  "3832": {
+   "gain_bits": 1.8703765207157674,
+   "ceiling_bits": 4.008923940161778,
+   "spearman": 0.4196860298322588,
+   "top1": true,
+   "isomers": 32,
+   "runs": 108.0
+  },
+  "3064": {
+   "gain_bits": -1.820196777500859,
+   "ceiling_bits": 3.9071791538557084,
+   "spearman": -0.20470112342943406,
+   "top1": false,
+   "isomers": 30,
+   "runs": 100.0
+  },
+  "2040": {
+   "gain_bits": -3.9920523446881115,
+   "ceiling_bits": 2.9207645109782803,
+   "spearman": -0.45879802399548036,
+   "top1": false,
+   "isomers": 15,
+   "runs": 65.0
+  },
+  "4080": {
+   "gain_bits": 0.9292837596911532,
+   "ceiling_bits": 5.686561242412564,
+   "spearman": 0.23424477496250892,
+   "top1": false,
+   "isomers": 103,
+   "runs": 109.0
+  },
+  "5736": {
+   "gain_bits": 0.8409918140845388,
+   "ceiling_bits": 4.523561956057013,
+   "spearman": 0.22498852128662877,
+   "top1": false,
+   "isomers": 23,
+   "runs": 22.0
+  },
+  "6120": {
+   "gain_bits": -4.31686351723338,
+   "ceiling_bits": 3.394496238479028,
+   "spearman": -0.5096471914376255,
+   "top1": false,
+   "isomers": 21,
+   "runs": 91.0
+  },
+  "22": {
+   "gain_bits": 2.1031196727705654,
+   "ceiling_bits": 5.399523774917979,
+   "spearman": 0.29795357710765935,
+   "top1": false,
+   "isomers": 165,
+   "runs": 63.0
+  },
+  "24": {
+   "gain_bits": 1.340892547191197,
+   "ceiling_bits": 6.794058820272755,
+   "spearman": 0.262662430755957,
+   "top1": false,
+   "isomers": 281,
+   "runs": 107.0
+  },
+  "111": {
+   "gain_bits": 1.657023061830368,
+   "ceiling_bits": 5.059715798678148,
+   "spearman": 0.2280277433179989,
+   "top1": false,
+   "isomers": 141,
+   "runs": 143.0
+  },
+  "283": {
+   "gain_bits": 1.41527097015236,
+   "ceiling_bits": 6.40815680922995,
+   "spearman": 0.19276819455348573,
+   "top1": false,
+   "isomers": 155,
+   "runs": 79.0
+  },
+  "303": {
+   "gain_bits": 0.6253146926398241,
+   "ceiling_bits": 4.951318613152606,
+   "spearman": 0.18781835141806683,
+   "top1": false,
+   "isomers": 150,
+   "runs": 156.0
+  },
+  "928": {
+   "gain_bits": 1.7538081266238175,
+   "ceiling_bits": 5.152984128075472,
+   "spearman": 0.4291411513709109,
+   "top1": false,
+   "isomers": 42,
+   "runs": 91.0
+  },
+  "880": {
+   "gain_bits": -0.789316695964271,
+   "ceiling_bits": 2.9367404297228936,
+   "spearman": -0.2497083058800746,
+   "top1": false,
+   "isomers": 44,
+   "runs": 52.0
+  },
+  "5468": {
+   "gain_bits": 0.5340772719764056,
+   "ceiling_bits": 4.3270793761123825,
+   "spearman": 0.2059733376613896,
+   "top1": false,
+   "isomers": 30,
+   "runs": 62.0
+  },
+  "1404": {
+   "gain_bits": -0.5295569463110202,
+   "ceiling_bits": 2.4742034826030457,
+   "spearman": -0.026967994498529685,
+   "top1": false,
+   "isomers": 11,
+   "runs": 14.0
+  },
+  "1008": {
+   "gain_bits": 0.6568322347675675,
+   "ceiling_bits": 4.000999274556274,
+   "spearman": 0.36072038520269567,
+   "top1": false,
+   "isomers": 50,
+   "runs": 49.0
+  },
+  "11000": {
+   "gain_bits": -0.5357400516750126,
+   "ceiling_bits": 4.172988892782437,
+   "spearman": -0.2041880758749948,
+   "top1": false,
+   "isomers": 23,
+   "runs": 56.0
+  },
+  "5112": {
+   "gain_bits": -1.6833008126838955,
+   "ceiling_bits": 3.32415562279738,
+   "spearman": -0.16019300836548966,
+   "top1": false,
+   "isomers": 20,
+   "runs": 36.0
+  },
+  "60": {
+   "gain_bits": 3.498265293368874,
+   "ceiling_bits": 6.973543666498803,
+   "spearman": 0.22407795192465352,
+   "top1": false,
+   "isomers": 210,
+   "runs": 123.0
+  },
+  "8928": {
+   "gain_bits": -0.2146522734744894,
+   "ceiling_bits": 3.306895575414603,
+   "spearman": 0.30637425733765916,
+   "top1": false,
+   "isomers": 33,
+   "runs": 83.0
+  },
+  "488": {
+   "gain_bits": -2.3512943230052357,
+   "ceiling_bits": 3.9068905956085187,
+   "spearman": 0.3092947870658709,
+   "top1": false,
+   "isomers": 15,
+   "runs": 77.0
+  },
+  "504": {
+   "gain_bits": -1.5259871016435416,
+   "ceiling_bits": 3.8414402630300075,
+   "spearman": -0.10502100630210073,
+   "top1": false,
+   "isomers": 17,
+   "runs": 49.0
+  },
+  "510": {
+   "gain_bits": -1.131804353321994,
+   "ceiling_bits": 2.9158145357702967,
+   "spearman": 0.49501892062670255,
+   "top1": false,
+   "isomers": 15,
+   "runs": 9.0
+  },
+  "958": {
+   "gain_bits": -0.2583388541194604,
+   "ceiling_bits": 2.584962500721156,
+   "spearman": 0.13093073414159545,
+   "top1": false,
+   "isomers": 6,
+   "runs": 21.0
+  },
+  "894": {
+   "gain_bits": -0.3342793911032881,
+   "ceiling_bits": 3.321928094887362,
+   "spearman": -0.058025885318565944,
+   "top1": false,
+   "isomers": 10,
+   "runs": 28.0
+  },
+  "960": {
+   "gain_bits": -1.8011967318505948,
+   "ceiling_bits": 5.4466754326286,
+   "spearman": 0.23749358098074652,
+   "top1": false,
+   "isomers": 59,
+   "runs": 138.0
+  },
+  "4600": {
+   "gain_bits": -0.7830485115392547,
+   "ceiling_bits": 2.1987588499564477,
+   "spearman": -0.22722954016817234,
+   "top1": false,
+   "isomers": 17,
+   "runs": 46.0
+  },
+  "3548": {
+   "gain_bits": 1.3445353657555557,
+   "ceiling_bits": 3.4303062287698594,
+   "spearman": 0.48707021801890843,
+   "top1": true,
+   "isomers": 32,
+   "runs": 58.0
+  },
+  "3040": {
+   "gain_bits": -1.7944924590081168,
+   "ceiling_bits": 3.432758418829827,
+   "spearman": -0.2772007000702329,
+   "top1": false,
+   "isomers": 28,
+   "runs": 63.0
+  },
+  "3048": {
+   "gain_bits": -0.9279993317751237,
+   "ceiling_bits": 3.1962137417523957,
+   "spearman": 0.08451542547285165,
+   "top1": false,
+   "isomers": 15,
+   "runs": 72.0
+  },
+  "5864": {
+   "gain_bits": -0.10550297574300593,
+   "ceiling_bits": 3.4594316186372973,
+   "spearman": 0.4000000000000001,
+   "top1": false,
+   "isomers": 11,
+   "runs": 30.0
+  },
+  "316": {
+   "gain_bits": 0.09221513321139399,
+   "ceiling_bits": 2.8449932752481963,
+   "spearman": 0.0041427613249958055,
+   "top1": false,
+   "isomers": 19,
+   "runs": 23.0
+  },
+  "4344": {
+   "gain_bits": -0.6654578893257493,
+   "ceiling_bits": 5.155805624650185,
+   "spearman": 0.25149291104720733,
+   "top1": false,
+   "isomers": 68,
+   "runs": 137.0
+  },
+  "10942": {
+   "gain_bits": 1.8641473542754812,
+   "ceiling_bits": 4.44929778474447,
+   "spearman": 0.4376844049406999,
+   "top1": true,
+   "isomers": 59,
+   "runs": 88.0
+  },
+  "992": {
+   "gain_bits": -1.624948921025417,
+   "ceiling_bits": 4.731569306700711,
+   "spearman": -0.19856407112755112,
+   "top1": false,
+   "isomers": 32,
+   "runs": 103.0
+  },
+  "2808": {
+   "gain_bits": -0.10994135484814117,
+   "ceiling_bits": 2.494524921830903,
+   "spearman": 0.006289156151783848,
+   "top1": true,
+   "isomers": 31,
+   "runs": 59.0
+  },
+  "14200": {
+   "gain_bits": -1.6749513214911969,
+   "ceiling_bits": 2.321928094887362,
+   "spearman": -0.7071067811865475,
+   "top1": false,
+   "isomers": 5,
+   "runs": 7.0
+  },
+  "1020": {
+   "gain_bits": -1.70933334021313,
+   "ceiling_bits": 3.4213668283240914,
+   "spearman": 0.26501653954756527,
+   "top1": false,
+   "isomers": 21,
+   "runs": 30.0
+  },
+  "366": {
+   "gain_bits": 2.0301168781559085,
+   "ceiling_bits": 3.1699250014423126,
+   "spearman": 0.5477225575051661,
+   "top1": true,
+   "isomers": 9,
+   "runs": 11.0
+  },
+  "13176": {
+   "gain_bits": -2.1714415243471614,
+   "ceiling_bits": 3.4594316186372973,
+   "spearman": 0.0,
+   "top1": false,
+   "isomers": 11,
+   "runs": 7.0
+  },
+  "7976": {
+   "gain_bits": -0.8965400495576499,
+   "ceiling_bits": 1.9760758636556097,
+   "spearman": -0.6092717958449425,
+   "top1": false,
+   "isomers": 11,
+   "runs": 12.0
+  },
+  "1916": {
+   "gain_bits": 0.28635570990702297,
+   "ceiling_bits": 3.321928094887362,
+   "spearman": 0.2901294265928297,
+   "top1": false,
+   "isomers": 10,
+   "runs": 25.0
+  },
+  "2024": {
+   "gain_bits": -2.7491563543154056,
+   "ceiling_bits": 3.0874628412503395,
+   "spearman": -0.5590169943749476,
+   "top1": false,
+   "isomers": 17,
+   "runs": 60.0
+  },
+  "6012": {
+   "gain_bits": 1.5962812895927436,
+   "ceiling_bits": 3.4594316186372973,
+   "spearman": 0.4000000000000001,
+   "top1": false,
+   "isomers": 11,
+   "runs": 41.0
+  },
+  "22396": {
+   "gain_bits": 0.18405623847806615,
+   "ceiling_bits": 3.0,
+   "spearman": 0.08247860988423225,
+   "top1": false,
+   "isomers": 8,
+   "runs": 27.0
+  },
+  "1532": {
+   "gain_bits": 1.6858550761250175,
+   "ceiling_bits": 3.5273200510206224,
+   "spearman": 0.3994350122670962,
+   "top1": false,
+   "isomers": 22,
+   "runs": 23.0
+  },
+  "6008": {
+   "gain_bits": 0.06379311029393271,
+   "ceiling_bits": 3.3219280948873626,
+   "spearman": 0.1740776559556978,
+   "top1": false,
+   "isomers": 10,
+   "runs": 20.0
+  },
+  "6014": {
+   "gain_bits": -0.011635413496426567,
+   "ceiling_bits": 2.321928094887362,
+   "spearman": -0.7071067811865475,
+   "top1": false,
+   "isomers": 5,
+   "runs": 30.0
+  },
+  "26": {
+   "gain_bits": -1.0302212266720876,
+   "ceiling_bits": 5.807794378714312,
+   "spearman": -0.049209692329533684,
+   "top1": false,
+   "isomers": 285,
+   "runs": 52.0
+  },
+  "1760": {
+   "gain_bits": -1.7110563954995353,
+   "ceiling_bits": 4.091075741820244,
+   "spearman": -0.27830129878106175,
+   "top1": false,
+   "isomers": 31,
+   "runs": 7.0
+  },
+  "3944": {
+   "gain_bits": -1.593760672264748,
+   "ceiling_bits": 2.321928094887362,
+   "spearman": -0.7071067811865475,
+   "top1": false,
+   "isomers": 5,
+   "runs": 9.0
+  },
+  "9208": {
+   "gain_bits": -2.1915023441549457,
+   "ceiling_bits": 2.488481024182629,
+   "spearman": -0.06741998624632421,
+   "top1": false,
+   "isomers": 11,
+   "runs": 15.0
+  },
+  "744": {
+   "gain_bits": -0.00723645647033414,
+   "ceiling_bits": 4.377682759243694,
+   "spearman": 0.3209865135489992,
+   "top1": false,
+   "isomers": 26,
+   "runs": 17.0
+  },
+  "1500": {
+   "gain_bits": 0.958878652930908,
+   "ceiling_bits": 3.7889784157369224,
+   "spearman": 0.5139940529625884,
+   "top1": true,
+   "isomers": 18,
+   "runs": 27.0
+  },
+  "3006": {
+   "gain_bits": -0.24544046229599906,
+   "ceiling_bits": 2.321928094887362,
+   "spearman": 0.35355339059327373,
+   "top1": false,
+   "isomers": 5,
+   "runs": 14.0
+  },
+  "5500": {
+   "gain_bits": 0.19235981540187178,
+   "ceiling_bits": 2.5718440046726183,
+   "spearman": 0.07738389938049528,
+   "top1": false,
+   "isomers": 17,
+   "runs": 54.0
+  },
+  "367": {
+   "gain_bits": 1.5683101529258665,
+   "ceiling_bits": 3.670255443157787,
+   "spearman": 0.5625686771261945,
+   "top1": true,
+   "isomers": 14,
+   "runs": 52.0
+  },
+  "382": {
+   "gain_bits": 1.0419417732883396,
+   "ceiling_bits": 2.321928094887362,
+   "spearman": 0.7071067811865475,
+   "top1": true,
+   "isomers": 5,
+   "runs": 23.0
+  },
+  "496": {
+   "gain_bits": 0.9661791784763816,
+   "ceiling_bits": 4.573557262275185,
+   "spearman": 0.22652169597303923,
+   "top1": false,
+   "isomers": 45,
+   "runs": 6.0
+  },
+  "2296": {
+   "gain_bits": 1.7219381295609182,
+   "ceiling_bits": 4.400766851836893,
+   "spearman": 0.23824191246507662,
+   "top1": true,
+   "isomers": 45,
+   "runs": 29.0
+  },
+  "1640": {
+   "gain_bits": 0.24421687108782245,
+   "ceiling_bits": 3.2479275134435857,
+   "spearman": 0.28180093098831727,
+   "top1": false,
+   "isomers": 19,
+   "runs": 14.0
+  },
+  "8040": {
+   "gain_bits": -0.9509013900121567,
+   "ceiling_bits": 2.5849625007211565,
+   "spearman": -0.13093073414159545,
+   "top1": false,
+   "isomers": 6,
+   "runs": 14.0
+  },
+  "286": {
+   "gain_bits": -0.0814310449106223,
+   "ceiling_bits": 2.584962500721156,
+   "spearman": 0.39279220242478635,
+   "top1": false,
+   "isomers": 6,
+   "runs": 33.0
+  },
+  "11198": {
+   "gain_bits": 1.3853513192461484,
+   "ceiling_bits": 3.0,
+   "spearman": 0.5773502691896257,
+   "top1": true,
+   "isomers": 8,
+   "runs": 8.0
+  },
+  "892": {
+   "gain_bits": -0.623755512365119,
+   "ceiling_bits": 3.4594316186372973,
+   "spearman": -0.20000000000000004,
+   "top1": false,
+   "isomers": 11,
+   "runs": 32.0
+  },
+  "3000": {
+   "gain_bits": -1.3546276385684217,
+   "ceiling_bits": 4.392317422778761,
+   "spearman": -0.03692744729379982,
+   "top1": false,
+   "isomers": 21,
+   "runs": 15.0
+  },
+  "21884": {
+   "gain_bits": 0.1900927225927899,
+   "ceiling_bits": 3.3159615643609586,
+   "spearman": 0.18151504736054436,
+   "top1": false,
+   "isomers": 16,
+   "runs": 11.0
+  },
+  "1912": {
+   "gain_bits": -1.7213693905868543,
+   "ceiling_bits": 2.321928094887362,
+   "spearman": -0.7071067811865475,
+   "top1": false,
+   "isomers": 5,
+   "runs": 28.0
+  },
+  "11240": {
+   "gain_bits": -0.6242246195307876,
+   "ceiling_bits": 2.002497453630885,
+   "spearman": -0.34291382751370236,
+   "top1": false,
+   "isomers": 8,
+   "runs": 34.0
+  },
+  "936": {
+   "gain_bits": -0.5718294881587119,
+   "ceiling_bits": 2.4275476020799593,
+   "spearman": -0.15869914049453845,
+   "top1": false,
+   "isomers": 18,
+   "runs": 21.0
+  },
+  "508": {
+   "gain_bits": -0.10724139138239852,
+   "ceiling_bits": 3.1116479582159786,
+   "spearman": 0.20140385236935257,
+   "top1": false,
+   "isomers": 18,
+   "runs": 19.0
+  },
+  "1000": {
+   "gain_bits": -0.8990745769094514,
+   "ceiling_bits": 3.628777025049799,
+   "spearman": 0.36757352205735255,
+   "top1": false,
+   "isomers": 17,
+   "runs": 31.0
+  },
+  "1896": {
+   "gain_bits": -0.5554150955049086,
+   "ceiling_bits": 3.0,
+   "spearman": 0.24743582965269675,
+   "top1": false,
+   "isomers": 8,
+   "runs": 11.0
+  },
+  "766": {
+   "gain_bits": 1.4671485354259322,
+   "ceiling_bits": 4.197729488104353,
+   "spearman": 0.3675675163201354,
+   "top1": false,
+   "isomers": 58,
+   "runs": 35.0
+  },
+  "282": {
+   "gain_bits": 1.007532189341014,
+   "ceiling_bits": 2.9742153726425813,
+   "spearman": 0.3404745534581136,
+   "top1": false,
+   "isomers": 27,
+   "runs": 12.0
+  },
+  "5088": {
+   "gain_bits": -1.6221714119724173,
+   "ceiling_bits": 3.2350576626008607,
+   "spearman": -0.36319764679476507,
+   "top1": false,
+   "isomers": 17,
+   "runs": 18.0
+  },
+  "4984": {
+   "gain_bits": -1.3551796982737119,
+   "ceiling_bits": 3.321928094887362,
+   "spearman": 0.058025885318565944,
+   "top1": false,
+   "isomers": 10,
+   "runs": 15.0
+  },
+  "2750": {
+   "gain_bits": 0.6434772771408455,
+   "ceiling_bits": 3.7637219898375665,
+   "spearman": 0.4234517506103553,
+   "top1": false,
+   "isomers": 33,
+   "runs": 12.0
+  },
+  "829": {
+   "gain_bits": 2.4001535873243216,
+   "ceiling_bits": 3.4594316186372973,
+   "spearman": 0.5,
+   "top1": true,
+   "isomers": 11,
+   "runs": 4.0
+  },
+  "1016": {
+   "gain_bits": -1.4389682885072124,
+   "ceiling_bits": 3.129909357535591,
+   "spearman": -0.08314162998916308,
+   "top1": false,
+   "isomers": 17,
+   "runs": 29.0
+  },
+  "298": {
+   "gain_bits": -0.1557810777085475,
+   "ceiling_bits": 4.6794298012606,
+   "spearman": 0.11677403690730666,
+   "top1": false,
+   "isomers": 84,
+   "runs": 20.0
+  },
+  "760": {
+   "gain_bits": -0.13151931622580168,
+   "ceiling_bits": 3.799368720350422,
+   "spearman": 0.16019300836548966,
+   "top1": false,
+   "isomers": 20,
+   "runs": 17.0
+  },
+  "872": {
+   "gain_bits": -1.5161214308607878,
+   "ceiling_bits": 2.584962500721156,
+   "spearman": -0.6546536707079772,
+   "top1": false,
+   "isomers": 6,
+   "runs": 3.0
+  },
+  "3936": {
+   "gain_bits": -1.7848987470684101,
+   "ceiling_bits": 3.8133247105806474,
+   "spearman": -0.11886491777182745,
+   "top1": false,
+   "isomers": 28,
+   "runs": 11.0
+  },
+  "1768": {
+   "gain_bits": -1.0628231908755041,
+   "ceiling_bits": 2.5975939273715145,
+   "spearman": 0.18670137787456642,
+   "top1": false,
+   "isomers": 15,
+   "runs": 11.0
+  },
+  "952": {
+   "gain_bits": -1.9865305160601159,
+   "ceiling_bits": 3.807354922057604,
+   "spearman": -0.10320313742306722,
+   "top1": false,
+   "isomers": 14,
+   "runs": 2.0
+  },
+  "616": {
+   "gain_bits": -1.1919464223787704,
+   "ceiling_bits": 3.523561956057013,
+   "spearman": -0.16283473681973237,
+   "top1": false,
+   "isomers": 23,
+   "runs": 2.0
+  },
+  "302": {
+   "gain_bits": 1.0843334987426678,
+   "ceiling_bits": 4.087462841250339,
+   "spearman": 0.408248290463863,
+   "top1": true,
+   "isomers": 17,
+   "runs": 3.0
+  },
+  "362": {
+   "gain_bits": -0.1823080049203934,
+   "ceiling_bits": 2.584962500721156,
+   "spearman": 0.13093073414159545,
+   "top1": false,
+   "isomers": 6,
+   "runs": 1.0
+  },
+  "1632": {
+   "gain_bits": -2.350840476341356,
+   "ceiling_bits": 3.988594761554029,
+   "spearman": 0.1960044468965142,
+   "top1": false,
+   "isomers": 60,
+   "runs": 6.0
+  },
+  "4920": {
+   "gain_bits": -2.003974428345645,
+   "ceiling_bits": 3.807354922057604,
+   "spearman": -0.3096094122692017,
+   "top1": false,
+   "isomers": 14,
+   "runs": 2.0
+  },
+  "608": {
+   "gain_bits": -1.5488103468858783,
+   "ceiling_bits": 5.700439718141092,
+   "spearman": -0.19126538243790536,
+   "top1": false,
+   "isomers": 52,
+   "runs": 1.0
+  },
+  "280": {
+   "gain_bits": -1.3508408199643869,
+   "ceiling_bits": 5.087462841250339,
+   "spearman": -0.1508209203647733,
+   "top1": false,
+   "isomers": 34,
+   "runs": 2.0
+  },
+  "1832": {
+   "gain_bits": -0.6003156194870579,
+   "ceiling_bits": 2.5411357845828078,
+   "spearman": -0.256195947736032,
+   "top1": false,
+   "isomers": 11,
+   "runs": 3.0
+  }
+ },
+ "B_width8": {
+  "nets": 12800,
+  "fit": 12783,
+  "faithful_when_fit": 0.9999217711022451,
+  "fit_with_minimal_pair": 6584,
+  "elements_scored": 126,
+  "gain_bits_per_run": -0.02416580258819038,
+  "ceiling_bits_per_run_in_sample": 3.4222017871587496,
+  "share_elements_gain_positive": 0.4603174603174603,
+  "median_spearman": 0.19392890774174973,
+  "top1_hit_rate": 0.09523809523809523,
+  "top1_hit_rate_uniform_chance": 0.06080704312022094,
+  "calibration_bins": [
+   {
+    "mean_predicted": 0.00025112323248271127,
+    "mean_observed": 8.214285714285715e-05,
+    "isomers": 700
+   },
+   {
+    "mean_predicted": 0.0005569538644217191,
+    "mean_observed": 0.0003841272606603617,
+    "isomers": 700
+   },
+   {
+    "mean_predicted": 0.0010527983761623506,
+    "mean_observed": 0.0011082227218828747,
+    "isomers": 700
+   },
+   {
+    "mean_predicted": 0.0018209184775304684,
+    "mean_observed": 0.0028111396658799504,
+    "isomers": 700
+   },
+   {
+    "mean_predicted": 0.002645546474975592,
+    "mean_observed": 0.004350258445765917,
+    "isomers": 700
+   },
+   {
+    "mean_predicted": 0.004819105307054763,
+    "mean_observed": 0.007621900327003585,
+    "isomers": 700
+   },
+   {
+    "mean_predicted": 0.007796552841409869,
+    "mean_observed": 0.014949212208304119,
+    "isomers": 701
+   },
+   {
+    "mean_predicted": 0.013088898605635654,
+    "mean_observed": 0.023989359539833336,
+    "isomers": 699
+   },
+   {
+    "mean_predicted": 0.0249752977678443,
+    "mean_observed": 0.03936845919160164,
+    "isomers": 700
+   },
+   {
+    "mean_predicted": 0.12282490140157208,
+    "mean_observed": 0.08522634036330852,
+    "isomers": 701
+   }
+  ],
+  "pooled_loglog_slope": 1.129546243184952
+ },
+ "B_width8_per_element": {
+  "6": {
+   "gain_bits": 1.0700658352879284,
+   "ceiling_bits": 7.501611852398733,
+   "spearman": 0.07832982473199808,
+   "top1": false,
+   "isomers": 1457,
+   "runs": 100.0
+  },
+  "22": {
+   "gain_bits": 1.0607541884495828,
+   "ceiling_bits": 3.5877589488775463,
+   "spearman": 0.32819796799999534,
+   "top1": false,
+   "isomers": 165,
+   "runs": 37.0
+  },
+  "24": {
+   "gain_bits": 0.9800384457607082,
+   "ceiling_bits": 4.175205542259536,
+   "spearman": 0.17924332084411096,
+   "top1": false,
+   "isomers": 281,
+   "runs": 72.0
+  },
+  "26": {
+   "gain_bits": 0.35275887435119835,
+   "ceiling_bits": 4.01279881559064,
+   "spearman": 0.13892805865146393,
+   "top1": false,
+   "isomers": 285,
+   "runs": 97.0
+  },
+  "27": {
+   "gain_bits": 1.7772382549895116,
+   "ceiling_bits": 4.344965920658358,
+   "spearman": 0.24146437976405372,
+   "top1": true,
+   "isomers": 433,
+   "runs": 100.0
+  },
+  "60": {
+   "gain_bits": 3.347553616303212,
+   "ceiling_bits": 6.478260050781371,
+   "spearman": 0.2880507249422398,
+   "top1": false,
+   "isomers": 210,
+   "runs": 100.0
+  },
+  "61": {
+   "gain_bits": 1.172968797679853,
+   "ceiling_bits": 4.386607206549321,
+   "spearman": 0.23850750513962204,
+   "top1": false,
+   "isomers": 167,
+   "runs": 93.0
+  },
+  "126": {
+   "gain_bits": 1.2110693838566717,
+   "ceiling_bits": 3.7249817854737644,
+   "spearman": 0.4068476850467232,
+   "top1": false,
+   "isomers": 192,
+   "runs": 99.99999999999999
+  },
+  "298": {
+   "gain_bits": 1.2433907148801706,
+   "ceiling_bits": 5.371028143619224,
+   "spearman": 0.2948269126203537,
+   "top1": false,
+   "isomers": 84,
+   "runs": 89.99999999999999
+  },
+  "283": {
+   "gain_bits": 1.4771365373787175,
+   "ceiling_bits": 3.620005815856584,
+   "spearman": 0.36365311007352574,
+   "top1": false,
+   "isomers": 155,
+   "runs": 82.0
+  },
+  "448": {
+   "gain_bits": -0.5974707129403196,
+   "ceiling_bits": 3.4593213759551773,
+   "spearman": -0.022563098274452322,
+   "top1": false,
+   "isomers": 53,
+   "runs": 61.99999999999999
+  },
+  "736": {
+   "gain_bits": 0.20480162493085338,
+   "ceiling_bits": 3.036332426025748,
+   "spearman": 0.3047982832040508,
+   "top1": false,
+   "isomers": 42,
+   "runs": 39.0
+  },
+  "744": {
+   "gain_bits": 1.0980597682757065,
+   "ceiling_bits": 3.301914582677407,
+   "spearman": 0.4865995233459618,
+   "top1": true,
+   "isomers": 26,
+   "runs": 62.0
+  },
+  "928": {
+   "gain_bits": 1.701582794225742,
+   "ceiling_bits": 3.7046323131239483,
+   "spearman": 0.5171259482347973,
+   "top1": false,
+   "isomers": 42,
+   "runs": 95.0
+  },
+  "8928": {
+   "gain_bits": 0.3710849442570876,
+   "ceiling_bits": 2.218553824359985,
+   "spearman": 0.33757763273462027,
+   "top1": false,
+   "isomers": 33,
+   "runs": 81.99999999999999
+  },
+  "4344": {
+   "gain_bits": -0.31862022849083466,
+   "ceiling_bits": 2.559664697878737,
+   "spearman": 0.25172475379391396,
+   "top1": false,
+   "isomers": 68,
+   "runs": 99.0
+  },
+  "880": {
+   "gain_bits": -1.3196687529922566,
+   "ceiling_bits": 2.584128989930951,
+   "spearman": -0.3078715526354745,
+   "top1": false,
+   "isomers": 44,
+   "runs": 97.0
+  },
+  "2792": {
+   "gain_bits": 0.9996179773385157,
+   "ceiling_bits": 2.729415019054985,
+   "spearman": 0.5555067161598427,
+   "top1": false,
+   "isomers": 43,
+   "runs": 90.99999999999999
+  },
+  "10942": {
+   "gain_bits": 0.8237564984005189,
+   "ceiling_bits": 2.698753769058588,
+   "spearman": 0.5631086469624027,
+   "top1": false,
+   "isomers": 59,
+   "runs": 91.99999999999999
+  },
+  "936": {
+   "gain_bits": -0.7992953750361296,
+   "ceiling_bits": 2.6429942290885573,
+   "spearman": -0.20687566528752332,
+   "top1": false,
+   "isomers": 18,
+   "runs": 77.0
+  },
+  "496": {
+   "gain_bits": 0.4029006009155324,
+   "ceiling_bits": 2.236111864689678,
+   "spearman": 0.21032853415701575,
+   "top1": false,
+   "isomers": 45,
+   "runs": 80.0
+  },
+  "2296": {
+   "gain_bits": 2.4565105060079837,
+   "ceiling_bits": 3.74330981592879,
+   "spearman": 0.5450553934427332,
+   "top1": true,
+   "isomers": 45,
+   "runs": 93.99999999999999
+  },
+  "2744": {
+   "gain_bits": -0.8499682362481796,
+   "ceiling_bits": 2.915776358458504,
+   "spearman": 0.18091891701733012,
+   "top1": false,
+   "isomers": 23,
+   "runs": 42.0
+  },
+  "1276": {
+   "gain_bits": 0.3298998706147718,
+   "ceiling_bits": 2.3868850969808464,
+   "spearman": 0.29733059594711014,
+   "top1": false,
+   "isomers": 83,
+   "runs": 97.0
+  },
+  "5468": {
+   "gain_bits": 0.026901515957070868,
+   "ceiling_bits": 2.4777381944388455,
+   "spearman": 0.14878603926970238,
+   "top1": false,
+   "isomers": 30,
+   "runs": 89.0
+  },
+  "2302": {
+   "gain_bits": 2.0994060193590336,
+   "ceiling_bits": 3.781164600820172,
+   "spearman": 0.42319165378066576,
+   "top1": false,
+   "isomers": 184,
+   "runs": 99.99999999999999
+  },
+  "488": {
+   "gain_bits": -2.3537867064482607,
+   "ceiling_bits": 3.207749289273255,
+   "spearman": 0.368245782417425,
+   "top1": false,
+   "isomers": 15,
+   "runs": 45.0
+  },
+  "766": {
+   "gain_bits": 0.8133687337893721,
+   "ceiling_bits": 2.7177606752577197,
+   "spearman": 0.37881127008852356,
+   "top1": false,
+   "isomers": 58,
+   "runs": 71.0
+  },
+  "3822": {
+   "gain_bits": 2.074475983252953,
+   "ceiling_bits": 2.8747139186047304,
+   "spearman": 0.5558959805830744,
+   "top1": true,
+   "isomers": 90,
+   "runs": 99.99999999999999
+  },
+  "1500": {
+   "gain_bits": 0.16521490020150206,
+   "ceiling_bits": 1.7631266826408423,
+   "spearman": 0.3921195022599228,
+   "top1": false,
+   "isomers": 18,
+   "runs": 72.0
+  },
+  "2798": {
+   "gain_bits": 1.473793341529339,
+   "ceiling_bits": 2.5833261108084073,
+   "spearman": 0.34314794989092556,
+   "top1": false,
+   "isomers": 146,
+   "runs": 100.00000000000001
+  },
+  "1404": {
+   "gain_bits": -0.5761117980302938,
+   "ceiling_bits": 2.0692644294296563,
+   "spearman": -0.28906080628930014,
+   "top1": false,
+   "isomers": 11,
+   "runs": 29.0
+  },
+  "892": {
+   "gain_bits": -0.623755512365119,
+   "ceiling_bits": 3.4594316186372978,
+   "spearman": -0.20000000000000004,
+   "top1": false,
+   "isomers": 11,
+   "runs": 24.0
+  },
+  "960": {
+   "gain_bits": -1.8026591934598015,
+   "ceiling_bits": 4.359951440162234,
+   "spearman": 0.23883459498967227,
+   "top1": false,
+   "isomers": 59,
+   "runs": 96.00000000000001
+  },
+  "992": {
+   "gain_bits": -1.6096110600319178,
+   "ceiling_bits": 3.636053940261696,
+   "spearman": -0.20363687586438636,
+   "top1": false,
+   "isomers": 32,
+   "runs": 87.0
+  },
+  "1008": {
+   "gain_bits": 0.5805916224802082,
+   "ceiling_bits": 3.722469704688048,
+   "spearman": 0.36078331973980643,
+   "top1": false,
+   "isomers": 50,
+   "runs": 95.99999999999999
+  },
+  "5088": {
+   "gain_bits": -1.6227274664873266,
+   "ceiling_bits": 3.121596152534239,
+   "spearman": -0.36319764679476507,
+   "top1": false,
+   "isomers": 17,
+   "runs": 60.0
+  },
+  "2808": {
+   "gain_bits": -0.12953118896178617,
+   "ceiling_bits": 2.126895831833671,
+   "spearman": 0.07569487933111112,
+   "top1": true,
+   "isomers": 31,
+   "runs": 94.99999999999999
+  },
+  "3324": {
+   "gain_bits": 2.993173160781849,
+   "ceiling_bits": 4.4302727136700355,
+   "spearman": 0.464127586825451,
+   "top1": false,
+   "isomers": 82,
+   "runs": 100.0
+  },
+  "4600": {
+   "gain_bits": -0.782891394988636,
+   "ceiling_bits": 2.1160601578411993,
+   "spearman": -0.22722954016817234,
+   "top1": false,
+   "isomers": 17,
+   "runs": 72.0
+  },
+  "3548": {
+   "gain_bits": 0.6375631196615444,
+   "ceiling_bits": 3.349724142536178,
+   "spearman": 0.4222099109741129,
+   "top1": false,
+   "isomers": 32,
+   "runs": 72.99999999999999
+  },
+  "1016": {
+   "gain_bits": -1.4378787630162237,
+   "ceiling_bits": 3.1046041515376337,
+   "spearman": -0.08314162998916308,
+   "top1": false,
+   "isomers": 17,
+   "runs": 65.0
+  },
+  "1760": {
+   "gain_bits": -1.7133148268282625,
+   "ceiling_bits": 3.99976230746191,
+   "spearman": -0.27924790183814024,
+   "top1": false,
+   "isomers": 31,
+   "runs": 28.0
+  },
+  "1904": {
+   "gain_bits": -0.6238926224774933,
+   "ceiling_bits": 4.131668757442311,
+   "spearman": 0.29401489457366153,
+   "top1": false,
+   "isomers": 49,
+   "runs": 98.0
+  },
+  "3816": {
+   "gain_bits": 1.6407192172406588,
+   "ceiling_bits": 2.9841474465895934,
+   "spearman": 0.411939727941842,
+   "top1": true,
+   "isomers": 31,
+   "runs": 98.00000000000003
+  },
+  "36584": {
+   "gain_bits": 1.598281388040185,
+   "ceiling_bits": 3.060473785776631,
+   "spearman": 0.7467488277014881,
+   "top1": false,
+   "isomers": 36,
+   "runs": 100.0
+  },
+  "3000": {
+   "gain_bits": -1.3546276385684217,
+   "ceiling_bits": 4.392317422778761,
+   "spearman": -0.03692744729379982,
+   "top1": false,
+   "isomers": 21,
+   "runs": 23.0
+  },
+  "5500": {
+   "gain_bits": 0.09780301153584296,
+   "ceiling_bits": 2.505936616056292,
+   "spearman": 0.08106884697004269,
+   "top1": false,
+   "isomers": 17,
+   "runs": 61.0
+  },
+  "3936": {
+   "gain_bits": -1.783639338186271,
+   "ceiling_bits": 3.9960767975984717,
+   "spearman": -0.11886491777182745,
+   "top1": false,
+   "isomers": 28,
+   "runs": 12.0
+  },
+  "3944": {
+   "gain_bits": -1.5937606722647477,
+   "ceiling_bits": 2.321928094887362,
+   "spearman": -0.7071067811865475,
+   "top1": false,
+   "isomers": 5,
+   "runs": 21.0
+  },
+  "1916": {
+   "gain_bits": 0.28635570990702297,
+   "ceiling_bits": 3.3219280948873617,
+   "spearman": 0.2901294265928297,
+   "top1": false,
+   "isomers": 10,
+   "runs": 41.0
+  },
+  "2016": {
+   "gain_bits": -4.006852207058012,
+   "ceiling_bits": 4.063183446049391,
+   "spearman": -0.2173728958361025,
+   "top1": false,
+   "isomers": 45,
+   "runs": 92.0
+  },
+  "2024": {
+   "gain_bits": -2.7490677869460574,
+   "ceiling_bits": 3.087853004882532,
+   "spearman": -0.5557361583486164,
+   "top1": false,
+   "isomers": 17,
+   "runs": 86.0
+  },
+  "8040": {
+   "gain_bits": -0.9509013900121568,
+   "ceiling_bits": 2.584962500721156,
+   "spearman": -0.13093073414159545,
+   "top1": false,
+   "isomers": 6,
+   "runs": 34.0
+  },
+  "2032": {
+   "gain_bits": -1.0451430396294061,
+   "ceiling_bits": 3.7467769489882725,
+   "spearman": 0.1578057795821649,
+   "top1": false,
+   "isomers": 51,
+   "runs": 98.99999999999999
+  },
+  "3832": {
+   "gain_bits": 1.836764105430756,
+   "ceiling_bits": 3.928713334870051,
+   "spearman": 0.34205197654089103,
+   "top1": false,
+   "isomers": 32,
+   "runs": 99.0
+  },
+  "2040": {
+   "gain_bits": -3.991349606087528,
+   "ceiling_bits": 2.9070667130096455,
+   "spearman": -0.45879802399548036,
+   "top1": false,
+   "isomers": 15,
+   "runs": 64.0
+  },
+  "4080": {
+   "gain_bits": 0.9293281821578483,
+   "ceiling_bits": 5.686572663137557,
+   "spearman": 0.23429072332950826,
+   "top1": false,
+   "isomers": 103,
+   "runs": 100.0
+  },
+  "5736": {
+   "gain_bits": 0.8409918140845388,
+   "ceiling_bits": 4.523561956057013,
+   "spearman": 0.22498852128662877,
+   "top1": false,
+   "isomers": 23,
+   "runs": 84.0
+  },
+  "6008": {
+   "gain_bits": 0.06379311029393271,
+   "ceiling_bits": 3.321928094887362,
+   "spearman": 0.1740776559556978,
+   "top1": false,
+   "isomers": 10,
+   "runs": 38.0
+  },
+  "6012": {
+   "gain_bits": 1.5962812895927438,
+   "ceiling_bits": 3.4594316186372978,
+   "spearman": 0.4000000000000001,
+   "top1": false,
+   "isomers": 11,
+   "runs": 49.0
+  },
+  "11240": {
+   "gain_bits": -0.6242645050672356,
+   "ceiling_bits": 2.001999116127701,
+   "spearman": -0.34291382751370236,
+   "top1": false,
+   "isomers": 8,
+   "runs": 95.0
+  },
+  "6120": {
+   "gain_bits": -4.316736521761402,
+   "ceiling_bits": 3.392630530291918,
+   "spearman": -0.5096471914376255,
+   "top1": false,
+   "isomers": 21,
+   "runs": 96.0
+  },
+  "111": {
+   "gain_bits": 0.833808386721504,
+   "ceiling_bits": 3.971851793810679,
+   "spearman": 0.1974270699049209,
+   "top1": false,
+   "isomers": 141,
+   "runs": 26.0
+  },
+  "303": {
+   "gain_bits": 0.0586463122968489,
+   "ceiling_bits": 4.5109375724394996,
+   "spearman": 0.1912859178254031,
+   "top1": false,
+   "isomers": 150,
+   "runs": 79.0
+  },
+  "616": {
+   "gain_bits": -0.28935442227557795,
+   "ceiling_bits": 1.940399586221334,
+   "spearman": 0.2135802799752307,
+   "top1": false,
+   "isomers": 23,
+   "runs": 23.0
+  },
+  "480": {
+   "gain_bits": -1.6238154125052684,
+   "ceiling_bits": 4.005130203098617,
+   "spearman": -0.010145609473670495,
+   "top1": false,
+   "isomers": 32,
+   "runs": 36.0
+  },
+  "760": {
+   "gain_bits": 0.3150663088054138,
+   "ceiling_bits": 3.0807232125510606,
+   "spearman": 0.34631665087325036,
+   "top1": false,
+   "isomers": 20,
+   "runs": 46.0
+  },
+  "21884": {
+   "gain_bits": 0.07775532340650093,
+   "ceiling_bits": 2.985902344426084,
+   "spearman": -0.06471772720395295,
+   "top1": false,
+   "isomers": 16,
+   "runs": 16.0
+  },
+  "828": {
+   "gain_bits": 2.157324482794008,
+   "ceiling_bits": 4.523561956057013,
+   "spearman": 0.25712973861329,
+   "top1": false,
+   "isomers": 23,
+   "runs": 18.0
+  },
+  "2750": {
+   "gain_bits": 0.02754004633865285,
+   "ceiling_bits": 2.629598919410086,
+   "spearman": 0.37804435211605736,
+   "top1": false,
+   "isomers": 33,
+   "runs": 45.0
+  },
+  "9184": {
+   "gain_bits": -2.1035426521744016,
+   "ceiling_bits": 3.779477661980561,
+   "spearman": -0.11604280434480682,
+   "top1": false,
+   "isomers": 24,
+   "runs": 69.0
+  },
+  "1000": {
+   "gain_bits": -0.8928364198133651,
+   "ceiling_bits": 3.1208442087022363,
+   "spearman": 0.36757352205735255,
+   "top1": false,
+   "isomers": 17,
+   "runs": 84.0
+  },
+  "11000": {
+   "gain_bits": -0.7038862004149546,
+   "ceiling_bits": 2.640788660201213,
+   "spearman": -0.06305629522419404,
+   "top1": false,
+   "isomers": 23,
+   "runs": 80.0
+  },
+  "1532": {
+   "gain_bits": 1.677538441763947,
+   "ceiling_bits": 3.4229734201578714,
+   "spearman": 0.47014565686540816,
+   "top1": false,
+   "isomers": 22,
+   "runs": 69.99999999999999
+  },
+  "1640": {
+   "gain_bits": 0.14976861394209098,
+   "ceiling_bits": 2.9829694585138187,
+   "spearman": 0.22647095243310408,
+   "top1": false,
+   "isomers": 19,
+   "runs": 53.0
+  },
+  "4984": {
+   "gain_bits": -1.3551796982737119,
+   "ceiling_bits": 3.321928094887362,
+   "spearman": 0.058025885318565944,
+   "top1": false,
+   "isomers": 10,
+   "runs": 28.0
+  },
+  "3040": {
+   "gain_bits": -1.7915809221676544,
+   "ceiling_bits": 3.3262747853780876,
+   "spearman": -0.2772007000702329,
+   "top1": false,
+   "isomers": 28,
+   "runs": 78.0
+  },
+  "3048": {
+   "gain_bits": -0.9267036617381142,
+   "ceiling_bits": 2.9428118308002897,
+   "spearman": 0.08451542547285165,
+   "top1": false,
+   "isomers": 15,
+   "runs": 72.0
+  },
+  "5112": {
+   "gain_bits": -1.6831932183048366,
+   "ceiling_bits": 3.3246615519283673,
+   "spearman": -0.16019300836548966,
+   "top1": false,
+   "isomers": 20,
+   "runs": 65.0
+  },
+  "3064": {
+   "gain_bits": -1.8219232181878335,
+   "ceiling_bits": 3.996736559101031,
+   "spearman": -0.20470112342943406,
+   "top1": false,
+   "isomers": 30,
+   "runs": 63.0
+  },
+  "316": {
+   "gain_bits": 0.6610755772632767,
+   "ceiling_bits": 3.509642647300135,
+   "spearman": -0.0691073690718941,
+   "top1": false,
+   "isomers": 19,
+   "runs": 12.0
+  },
+  "366": {
+   "gain_bits": 1.8434555864180224,
+   "ceiling_bits": 2.6666666666666665,
+   "spearman": 0.7302967433402214,
+   "top1": true,
+   "isomers": 9,
+   "runs": 9.0
+  },
+  "367": {
+   "gain_bits": 0.7387561223294455,
+   "ceiling_bits": 2.807354922057604,
+   "spearman": 0.25318484177091666,
+   "top1": false,
+   "isomers": 14,
+   "runs": 16.0
+  },
+  "22396": {
+   "gain_bits": 0.18405623847806615,
+   "ceiling_bits": 3.0,
+   "spearman": 0.08247860988423225,
+   "top1": false,
+   "isomers": 8,
+   "runs": 43.0
+  },
+  "1020": {
+   "gain_bits": -1.7069749089698316,
+   "ceiling_bits": 3.404473009691079,
+   "spearman": 0.27011301146194155,
+   "top1": false,
+   "isomers": 21,
+   "runs": 54.0
+  },
+  "9208": {
+   "gain_bits": -2.1916936786624825,
+   "ceiling_bits": 2.4594316186372973,
+   "spearman": -0.07453559924999299,
+   "top1": false,
+   "isomers": 11,
+   "runs": 60.0
+  },
+  "5864": {
+   "gain_bits": -0.10550297574300593,
+   "ceiling_bits": 3.4594316186372973,
+   "spearman": 0.4000000000000001,
+   "top1": false,
+   "isomers": 11,
+   "runs": 57.0
+  },
+  "317": {
+   "gain_bits": 1.9366281646940922,
+   "ceiling_bits": 2.9517522833043386,
+   "spearman": 0.43078729925375264,
+   "top1": false,
+   "isomers": 28,
+   "runs": 29.0
+  },
+  "360": {
+   "gain_bits": 0.21781138486034468,
+   "ceiling_bits": 3.0,
+   "spearman": 0.41239304942116123,
+   "top1": false,
+   "isomers": 8,
+   "runs": 5.0
+  },
+  "384": {
+   "gain_bits": -1.419920532413228,
+   "ceiling_bits": 5.159059341097666,
+   "spearman": -0.18869120477317966,
+   "top1": false,
+   "isomers": 99,
+   "runs": 41.0
+  },
+  "608": {
+   "gain_bits": -1.5802323149407211,
+   "ceiling_bits": 2.7664851400929185,
+   "spearman": -0.5119569570556074,
+   "top1": false,
+   "isomers": 52,
+   "runs": 17.0
+  },
+  "1632": {
+   "gain_bits": -2.3467091867006724,
+   "ceiling_bits": 3.926292538701028,
+   "spearman": 0.1970676422031921,
+   "top1": false,
+   "isomers": 60,
+   "runs": 49.0
+  },
+  "1768": {
+   "gain_bits": -0.819722419993848,
+   "ceiling_bits": 2.4127544217690104,
+   "spearman": 0.19657189765809635,
+   "top1": false,
+   "isomers": 15,
+   "runs": 39.0
+  },
+  "7976": {
+   "gain_bits": -0.9294940435834655,
+   "ceiling_bits": 1.9370948114827353,
+   "spearman": -0.6243713415848884,
+   "top1": false,
+   "isomers": 11,
+   "runs": 20.0
+  },
+  "30": {
+   "gain_bits": -0.043347665340231524,
+   "ceiling_bits": 3.315243345161515,
+   "spearman": 0.2008913518461214,
+   "top1": false,
+   "isomers": 121,
+   "runs": 66.0
+  },
+  "504": {
+   "gain_bits": -1.527947134948364,
+   "ceiling_bits": 3.2761847167912066,
+   "spearman": -0.10502100630210073,
+   "top1": false,
+   "isomers": 17,
+   "runs": 14.0
+  },
+  "3006": {
+   "gain_bits": -0.24544046229599906,
+   "ceiling_bits": 2.321928094887362,
+   "spearman": 0.35355339059327373,
+   "top1": false,
+   "isomers": 5,
+   "runs": 4.0
+  },
+  "6014": {
+   "gain_bits": -0.011635413496426567,
+   "ceiling_bits": 2.321928094887362,
+   "spearman": -0.7071067811865475,
+   "top1": false,
+   "isomers": 5,
+   "runs": 49.0
+  },
+  "1912": {
+   "gain_bits": -1.7213693905868543,
+   "ceiling_bits": 2.321928094887362,
+   "spearman": -0.7071067811865475,
+   "top1": false,
+   "isomers": 5,
+   "runs": 24.0
+  },
+  "282": {
+   "gain_bits": 0.2954948186825404,
+   "ceiling_bits": 3.013651586737589,
+   "spearman": 0.24886076136084026,
+   "top1": false,
+   "isomers": 27,
+   "runs": 13.000000000000002
+  },
+  "1832": {
+   "gain_bits": -0.68761369724215,
+   "ceiling_bits": 1.9291195819453155,
+   "spearman": -0.4971845868175963,
+   "top1": false,
+   "isomers": 11,
+   "runs": 14.0
+  },
+  "4472": {
+   "gain_bits": -3.342551650613459,
+   "ceiling_bits": 3.321928094887362,
+   "spearman": -0.1740776559556978,
+   "top1": false,
+   "isomers": 10,
+   "runs": 12.0
+  },
+  "888": {
+   "gain_bits": -1.3089198619755358,
+   "ceiling_bits": 3.0,
+   "spearman": -0.41239304942116123,
+   "top1": false,
+   "isomers": 8,
+   "runs": 21.0
+  },
+  "508": {
+   "gain_bits": -0.5964139573702734,
+   "ceiling_bits": 2.3558289995763513,
+   "spearman": 0.17003479338700547,
+   "top1": false,
+   "isomers": 18,
+   "runs": 25.0
+  },
+  "958": {
+   "gain_bits": -0.2583388541194604,
+   "ceiling_bits": 2.584962500721156,
+   "spearman": 0.13093073414159545,
+   "top1": false,
+   "isomers": 6,
+   "runs": 8.0
+  },
+  "1896": {
+   "gain_bits": -0.5554150955049086,
+   "ceiling_bits": 3.0,
+   "spearman": 0.24743582965269675,
+   "top1": false,
+   "isomers": 8,
+   "runs": 28.0
+  },
+  "1918": {
+   "gain_bits": -0.10692402599030837,
+   "ceiling_bits": 3.4594316186372973,
+   "spearman": 0.10000000000000002,
+   "top1": false,
+   "isomers": 11,
+   "runs": 18.0
+  },
+  "829": {
+   "gain_bits": 2.4001535873243216,
+   "ceiling_bits": 3.4594316186372973,
+   "spearman": 0.5,
+   "top1": true,
+   "isomers": 11,
+   "runs": 10.0
+  },
+  "894": {
+   "gain_bits": -0.3342793911032881,
+   "ceiling_bits": 3.321928094887362,
+   "spearman": -0.058025885318565944,
+   "top1": false,
+   "isomers": 10,
+   "runs": 14.0
+  },
+  "302": {
+   "gain_bits": 0.9632274173009029,
+   "ceiling_bits": 3.716230514609464,
+   "spearman": 0.21004201260420147,
+   "top1": true,
+   "isomers": 17,
+   "runs": 7.0
+  },
+  "13176": {
+   "gain_bits": -2.1714415243471614,
+   "ceiling_bits": 3.4594316186372973,
+   "spearman": 0.0,
+   "top1": false,
+   "isomers": 11,
+   "runs": 8.0
+  },
+  "362": {
+   "gain_bits": -0.1823080049203934,
+   "ceiling_bits": 2.584962500721156,
+   "spearman": 0.13093073414159545,
+   "top1": false,
+   "isomers": 6,
+   "runs": 2.0
+  },
+  "14200": {
+   "gain_bits": -1.6749513214911969,
+   "ceiling_bits": 2.321928094887362,
+   "spearman": -0.7071067811865475,
+   "top1": false,
+   "isomers": 5,
+   "runs": 29.0
+  },
+  "278": {
+   "gain_bits": 1.3761209800056793,
+   "ceiling_bits": 3.0,
+   "spearman": 0.5773502691896257,
+   "top1": true,
+   "isomers": 8,
+   "runs": 1.0
+  },
+  "280": {
+   "gain_bits": -1.7390742797835261,
+   "ceiling_bits": 5.087462841250339,
+   "spearman": -0.2927700218845599,
+   "top1": false,
+   "isomers": 34,
+   "runs": 1.0
+  },
+  "510": {
+   "gain_bits": -1.1320594725828388,
+   "ceiling_bits": 2.9216624595742675,
+   "spearman": 0.49501892062670255,
+   "top1": false,
+   "isomers": 15,
+   "runs": 7.0
+  },
+  "4920": {
+   "gain_bits": -2.003974428345645,
+   "ceiling_bits": 3.807354922057604,
+   "spearman": -0.3096094122692017,
+   "top1": false,
+   "isomers": 14,
+   "runs": 8.0
+  },
+  "30584": {
+   "gain_bits": -3.3296357587693066,
+   "ceiling_bits": 3.321928094887362,
+   "spearman": 0.1740776559556978,
+   "top1": false,
+   "isomers": 10,
+   "runs": 6.0
+  },
+  "952": {
+   "gain_bits": -1.9865305160601159,
+   "ceiling_bits": 3.807354922057604,
+   "spearman": -0.10320313742306722,
+   "top1": false,
+   "isomers": 14,
+   "runs": 6.0
+  },
+  "318": {
+   "gain_bits": 0.14074348782536325,
+   "ceiling_bits": 3.0,
+   "spearman": 0.41239304942116123,
+   "top1": false,
+   "isomers": 8,
+   "runs": 1.0
+  },
+  "872": {
+   "gain_bits": -1.5161214308607878,
+   "ceiling_bits": 2.584962500721156,
+   "spearman": -0.6546536707079772,
+   "top1": false,
+   "isomers": 6,
+   "runs": 3.0
+  },
+  "11198": {
+   "gain_bits": 1.3853513192461484,
+   "ceiling_bits": 3.0,
+   "spearman": 0.5773502691896257,
+   "top1": true,
+   "isomers": 8,
+   "runs": 5.0
+  },
+  "382": {
+   "gain_bits": 1.0419417732883396,
+   "ceiling_bits": 2.321928094887362,
+   "spearman": 0.7071067811865475,
+   "top1": true,
+   "isomers": 5,
+   "runs": 3.0
+  },
+  "864": {
+   "gain_bits": -2.0693116471221047,
+   "ceiling_bits": 4.700439718141092,
+   "spearman": -0.14666666666666667,
+   "top1": false,
+   "isomers": 26,
+   "runs": 1.0
+  },
+  "286": {
+   "gain_bits": -0.0814310449106223,
+   "ceiling_bits": 2.584962500721156,
+   "spearman": 0.39279220242478635,
+   "top1": false,
+   "isomers": 6,
+   "runs": 2.0
+  }
+ },
+ "wall_seconds": 539.1
+}
