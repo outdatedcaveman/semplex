@@ -47,3 +47,16 @@ def test_minimal_pairs_reads_every_determining_pair():
     g = (v(0) & v(1)) | (v(2) & v(3))
     units = [v(0) & v(1), v(2) & v(3), 0xFFFF ^ (v(2) & v(3)), v(1)]
     assert len(mechvol.minimal_pairs(units, g)) == 1
+
+
+def test_r2_prefix_takes_the_units_that_carry_the_output():
+    from experiments.spike12 import credit, r2_prefix
+    g = (v(0) & v(1)) | (v(2) & v(3))
+    a, b = v(0) & v(1), v(2) & v(3)
+    units = np.array([v(0), a, 0xFFFF ^ b, v(3)])
+    w2 = np.array([0.01, 2.0, -1.5, 0.02])
+    pre = r2_prefix(units, w2, g)
+    assert sorted(pre) == sorted([a, 0xFFFF ^ b])
+    iso = [tuple(sorted(int(mechvol.canon(t)) for t in (a, b)))]
+    assert credit({int(x) for x in mechvol.canon(pre)}, iso) == {f"{iso[0][0]}-{iso[0][1]}": 1.0}
+    assert r2_prefix(np.array([v(0), v(1)]), np.array([1.0, 1.0]), g) is None
