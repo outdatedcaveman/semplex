@@ -34,7 +34,9 @@ We build toward it **agilely**. Each step is a thin end-to-end *spike* that test
 
 **Spike 09** trains about 27,000 small real-valued networks against the table: on underspecified tasks, gradient descent picks a table-cheapest function in 88–95% of runs, but different seeds find different circuits (`experiments/SPIKE_09_REPORT.md`).
 
-Citations are verified in `charter/BIBLIOGRAPHY.md`.
+**Spike 10b** treats learning rules as observers: systematic rule dictionaries by what a rule may see and by the layer's symmetry group, a Lean-proved task-blindness theorem, and evidence that the simplicity bias comes from weight space, not from the rule (`experiments/SPIKE_10b_REPORT.md`, `THEORY.md` §3.6).
+
+All sources, with how far each was verified: `charter/REFERENCES.md`.
 
 ## Run it
 

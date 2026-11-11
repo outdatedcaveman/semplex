@@ -1,6 +1,6 @@
 # Spike 10b: Learning rules and grokking, scored against exact ground truth
 
-**Date:** 2026-11-11 · **Status:** parts A, B, C complete; meta-learning of rules **did not work** (diagnosed, not solved) · **Follows:** Spike 09 · **Sources:** Nanda23, Perin26, VallePerez18 (levels in `charter/REFERENCES.md`)
+**Date:** 2026-11-11 · **Status:** parts A, B, C complete; meta-learning of rules **did not work** (unsolved, partly diagnosed) · **Follows:** Spike 09 · **Sources:** Nanda23, Perin26, VallePerez18 (levels in `charter/REFERENCES.md`)
 
 ## Questions
 
@@ -78,7 +78,7 @@ The solver found no single neuron fitting the training half in 16 of 16 splits c
 | H10.2 | The bias is the volume of weight space | **Mostly held**: random fitting networks give 90% and 89%; training matches the first and exceeds the second. It depends on initialization scale |
 | H10.3 | A rule that sees only its own layer cannot learn the task | **Held, proved** (`task_blind`, Lean) and observed |
 | H10.4 | The trace-monomial dictionary is comprehensive for a tanh layer | **Broke**: the working error-broadcast rule is not a trace monomial of any order (F3) |
-| H10.5 | Meta-learning finds good rules in each dictionary | **Failed**, including when started from a rule that works (F5) |
+| H10.5 | Meta-learning finds good rules in each dictionary | **Failed** in four attempts, including when started from a rule that works (F5) |
 | H10.6 | A grokked network ends on a cheapest completion | **Held** in this setup: 64 / 64 with weight decay, at the minimum effective width |
 
 ## Findings
@@ -97,7 +97,12 @@ The solver found no single neuron fitting the training half in 16 of 16 splits c
 - Power C contains backpropagation as one order-3 term (checked numerically to 10⁻⁵).
 - Power B with permutation symmetry already reaches 96%. Whether power B with only orthogonal or signed-permutation symmetry can do well is **open**: meta-learning found 12–16%, which is a floor, not a ceiling.
 
-**F5. Meta-learning rule coefficients failed, and the cause is identified.** Differentiating the final loss through training, with horizons growing from 10 to 200 steps, drove the backpropagation coefficient from 0.5 to about 6 when started from backpropagation itself. At a 10-step horizon the best rule takes very large steps (loss 0.13); at longer horizons those steps saturate the tanh units and the loss stays near 0.5. Perin26 report related fragility ("numerically delicate"; global rules did not recover backpropagation). This part of the experiment therefore says nothing about the dictionaries' ceilings.
+**F5. Meta-learning rule coefficients failed, and the cause is only partly understood.** Four attempts, all by differentiating the final loss through training:
+- With horizons growing from 10 to 200 steps, a run started from backpropagation drove its coefficient from 0.5 to about 6. At 10 steps the best rule takes very large steps (loss 0.13); at longer horizons the loss sat near 0.5.
+- With long horizons only (100 and 200 steps) and a smaller step size, the backpropagation coefficient stayed near 0.6, but other terms drifted to comparable size (for example −0.45 on E²·(V·Y)) and the rule still fit under 1% (`results/spike10b_rules_long_horizon.json`).
+- So short horizons are one problem, and drift of the other coefficients under noisy meta-gradients is another. We have not found a configuration that even *keeps* a working rule working.
+
+Perin26 report related fragility ("numerically delicate"; their global rules did not recover backpropagation). This part of the experiment therefore says nothing about the dictionaries' ceilings.
 
 **F6. Grokking, seen against ground truth.** With a large initialization and weight decay, the network fits its training half by step 200 and generalizes at a median step of 1,700, ending in every run on the planted function, which the solver confirms is a cheapest completion, using exactly the minimum two distinguishing units. Without weight decay it mostly stays in a memorizing solution that uses more than four. With a small initialization there is no delay. This matches the account in Nanda23 (read as a report, not the paper) at a scale where "the simple solution" is defined exactly rather than by inspection.
 
