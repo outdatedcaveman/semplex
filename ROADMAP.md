@@ -6,6 +6,7 @@ The charter (`charter/CHARTER_v0.1.md`) describes *what* the discipline should e
 
 Every spike is a small experiment on the charter itself:
 
+0. **Prior-art gate.** Before building: search for the result, record what was found and at what verification level in `charter/REFERENCES.md`, and state what would be new. (Added after the 2026-11-11 review found prior work for most of the theory core.)
 1. **Question.** Which charter assumption(s) are we testing?
 2. **Hypotheses with kill criteria.** What would count as the assumption *failing*? We write this down before building.
 3. **Smallest slice.** The minimum code that runs the whole loop (front end → semantics → verification → ledger) on the fragment. No layer gets built beyond what the slice needs.
@@ -43,7 +44,9 @@ Rules of thumb:
 | **08b** | Atlas hardening: certified lower bounds, skip/ReLU families, weight-space geometry, bit-flip theorem, n=5 hunt | See `experiments/SPIKE_08b_REPORT.md` | **done** (no depth-sensitive element among 100,000 five-input candidates) |
 | **09** | Train small real networks against the atlas | Do learned circuits land on table optima, and which isomer | **done**, see `experiments/SPIKE_09_REPORT.md` |
 | **10b** | Learning rules as observational powers; volume prior; grokking against ground truth | See `experiments/SPIKE_10b_REPORT.md`, `THEORY.md` §3.6 | **done**, except meta-learning of rules (failed four times; cause partly understood) |
-| 10c | Fix rule meta-learning; settle C7 | Fixed long horizon or adjoint method; then find the least observational power per element |
+| — | Literature review and novelty audit | `charter/LITERATURE_REVIEW.md` | **done (first pass)**; redo against the Codex dossier and Cammarata's essay once accessible |
+| 11+ | New hypotheses H-B (volume law for mechanisms), H-D (clean vs superposed), H-C, H-E, H-F | Chosen because no prior work was found; each still needs its own prior-art gate |
+| 10c | Fix rule meta-learning; settle C7 (= H-A) | Fixed long horizon or adjoint method; then find the least observational power per element |
 | (old 10b) | Grokking against ground truth | 5–6 inputs with a real held-out set: does the post-grokking function equal the table/solver optimum; score local learning rules (arXiv:2611.12248) the same way |
 | 08c | Periodic table, remaining parameters | In order: (1) certify lower bounds; (2) n=5 by class-level search, hunting the first depth-sensitive element; (3) skip connections and ReLU; (4) weight-space geometry (the manifold proper); (5) prove the one-bit-flip ≤ 2 conjecture |
 | 12 | Bridge: world-model ↔ executable artifact | CSIR has no link from a causal model to a circuit or program implementing its decision rule. This is the charter's §8 steps 9–10 (distill, then translate and verify) |

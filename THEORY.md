@@ -160,8 +160,23 @@ This suggests a division of labour, stated as conjecture C6 below: **observation
 - **C7, minimal observational power for learning.** For each element of the atlas there is a least observational power (and symmetry group) whose dictionary contains a rule that learns it. Power A is excluded by Theorem 12; whether broadcast error with only signed-permutation symmetry suffices is open.
 - **C5, trust-indexed escalation.** Given warrant costs per trust tier (Spike 06 F1), there is an optimal escalation policy: re-check at a higher tier exactly those claims whose `affected_by` set exceeds a threshold proportional to the cost ratio.
 
-## 6. What this does *not* claim
+## 6. What this does *not* claim, and what is already known
 
-- That the frame captures every epistemic situation. Probabilistic protocols, costs and partial observation of outcomes are only partly covered: C1 and C3 are open.
-- That the formalized theorems say anything about the *real* world beyond their hypotheses. The Lean proofs establish the logic; whether a given empirical setup *is* a protocol frame with exact observations is an empirical claim with its own warrant, which Spike 02 treats statistically.
-- Priority for ingredients with precedents: discernibility and reducts, testing equivalences, causal observational equivalence, Galois connections between attributes and objects, hitting-set hardness. The contribution claimed is the unification, the transport across domains, Theorems 6, 9, 10 and 11 in this generality, the warrant calculus with its optimality result, and the end-to-end machine-checked development tied to working spikes.
+A literature review (`charter/LITERATURE_REVIEW.md`, 2026-11-11) found prior work for most of the core. **The theory is a synthesis of known results in one machine-checked framework, not new mathematics.**
+
+| Part | Already known as |
+|---|---|
+| Thm 1–2 (Galois connection) | Formal Concept Analysis (Wille; Ganter & Wille) |
+| Thm 3 (duality) | Rough-set discernibility for features; separating systems for experiments (Hyttinen et al. 2013; Shanmugam et al. 2015); teaching sets for examples |
+| Thm 4 | Core and unique reduct in rough sets |
+| Thm 6–7 | Version spaces; causal identifiability |
+| Thm 8 | Assumption-based truth maintenance tracks the premises; the ordered warrant and its optimality were not found |
+| Thm 12 | Necessity of a backward channel (Baldi & Sadowski, as cited by Perin et al.) |
+| Atlas method | Minimal threshold networks by integer programming, including partially specified functions (Cameron 1964; Hopcroft & Mattson 1965) |
+| Spike 10b volume and grokking results | Volume hypothesis literature; Omnigrok |
+
+What remains ours: the integration, the Lean development, kernel-checked certificates on running code, and exact small-scale measurements. The open hypotheses most likely to be new are H-A to H-F in the review.
+
+Further limits:
+- The frame does not capture every epistemic situation. Probabilistic protocols, costs and partial observation are only partly covered: C1 and C3 are open.
+- The formalized theorems say nothing about the real world beyond their hypotheses. Whether an empirical setup is a protocol frame with exact observations is an empirical claim with its own warrant.
