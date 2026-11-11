@@ -60,3 +60,21 @@ def test_power_A_rules_are_task_blind():
     cb = jnp.asarray(rng.normal(0, 0.01, len(monos_b)).astype(np.float32))
     rb = trb["run"](40)
     assert not np.array_equal(np.asarray(rb(cb, st, X, T1, C)[0]), np.asarray(rb(cb, st, X, 1 - T1, C)[0]))
+
+
+def test_search_keeps_a_working_rule_working():
+    """Sanity gate from Spike 10c: started from backpropagation, the search must not destroy it."""
+    monos = L.enumerate_monomials("C", 3, "O")
+    labels = [m["label"] for m in monos]
+    tr = L.make_trainer(monos, 4)
+    rng = np.random.default_rng(1)
+    X = jnp.asarray(L.inputs_aug(4))
+    fs = [0x6666, 0x8888, 0x6996, 0x0FF0, 0x8000, 0x7888] * 4
+    T = np.array([[(f >> x) & 1 for x in range(16)] for f in fs], dtype=np.float32)
+    C = np.ones_like(T)
+    units = L.natural_units(monos, tr, X, 8, 4, rng)
+    warm = np.zeros(len(monos), dtype=np.float32)
+    warm[labels.index("Y[a]*E*V[a]")] = 1.0                      # backpropagation in natural units
+    a, hist = L.cem_search(tr, units, X, T, C, 8, 4, rng, gens=4, pop=8, elite=3, start=warm)
+    assert hist[-1][1] >= 0.9                                     # fit rate of the incumbent
+    assert a[labels.index("Y[a]*E*V[a]")] > 0.3
