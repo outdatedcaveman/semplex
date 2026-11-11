@@ -26,19 +26,26 @@ XS = 2 * X - 1                                                                  
 POW = (1 << np.arange(16)).astype(np.int64)
 
 
-def init(B, H, rng, scale=0.5):
-    return {"W1": rng.normal(0, scale, (B, H, N)), "b1": rng.normal(0, scale, (B, H)),
-            "W2": rng.normal(0, scale, (B, H)), "b2": np.zeros(B)}
+def init(B, H, rng, scale=0.5, out_scale=None, dtype=np.float64):
+    """out_scale defaults to scale (Spike 09). Spike 12 uses scale * sqrt(8 / H) so the
+    logit stays O(1) as width grows and width 8 reproduces Spike 09."""
+    out_scale = scale if out_scale is None else out_scale
+    p = {"W1": rng.normal(0, scale, (B, H, N)), "b1": rng.normal(0, scale, (B, H)),
+         "W2": rng.normal(0, out_scale, (B, H)), "b2": np.zeros(B)}
+    return {k: v.astype(dtype) for k, v in p.items()}
 
 
 def forward(p, hard=False):
-    pre = np.einsum("bhn,xn->bxh", p["W1"], XS) + p["b1"][:, None, :]                       # (B, 16, H)
+    pre = np.einsum("bhn,xn->bxh", p["W1"], XS.astype(p["W1"].dtype)) + p["b1"][:, None, :]                       # (B, 16, H)
     h = np.where(pre >= 0, 1.0, -1.0) if hard else np.tanh(pre)
     return pre, h, np.einsum("bxh,bh->bx", h, p["W2"]) + p["b2"][:, None]
 
 
-def train(p, targets, care, steps, lr=0.03, wd=0.0, state=None):
-    """targets, care: (B, 16) arrays of 0/1. Returns (params, adam state)."""
+def train(p, targets, care, steps, lr=0.03, wd=0.0, state=None, opt="adamw"):
+    """targets, care: (B, 16) arrays of 0/1. Returns (params, adam state).
+    opt="gd": plain full-batch gradient descent (no momentum), decoupled weight decay."""
+    dt = p["W1"].dtype
+    targets, care = targets.astype(dt), care.astype(dt)
     if state is None:
         state = {"t": 0, "m": {k: np.zeros_like(v) for k, v in p.items()},
                  "v": {k: np.zeros_like(v) for k, v in p.items()}}
@@ -48,10 +55,14 @@ def train(p, targets, care, steps, lr=0.03, wd=0.0, state=None):
         dz = (1 / (1 + np.exp(-z)) - targets) * care / ncare                                # (B, 16)
         g = {"W2": np.einsum("bx,bxh->bh", dz, h), "b2": dz.sum(1)}
         dh = dz[:, :, None] * p["W2"][:, None, :] * (1 - h * h)                             # (B, 16, H)
-        g["W1"] = np.einsum("bxh,xn->bhn", dh, XS)
+        g["W1"] = np.einsum("bxh,xn->bhn", dh, XS.astype(dt))
         g["b1"] = dh.sum(1)
         state["t"] += 1
         t = state["t"]
+        if opt == "gd":
+            for k in p:
+                p[k] = p[k] - lr * g[k] - lr * wd * p[k]
+            continue
         for k in p:
             state["m"][k] = 0.9 * state["m"][k] + 0.1 * g[k]
             state["v"][k] = 0.999 * state["v"][k] + 0.001 * g[k] ** 2
