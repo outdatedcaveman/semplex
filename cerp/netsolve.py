@@ -37,7 +37,8 @@ def chain(n, k, act="step"):
     return [(act if j < k - 1 else "step", list(range(n + j))) for j in range(k)]
 
 
-def solve(f, n, spec, W=3, B=None, time_limit=60.0, workers=4, relu_cap=None):
+def solve(f, n, spec, W=3, B=None, time_limit=60.0, workers=4, relu_cap=None, care=None):
+    """care: optional bitmask of the input points that must be matched (default: all)."""
     B = B if B is not None else W * (n + len(spec)) + 1
     m = cp_model.CpModel()
     pts = range(1 << n)
@@ -47,6 +48,8 @@ def solve(f, n, spec, W=3, B=None, time_limit=60.0, workers=4, relu_cap=None):
     cap = relu_cap or (W * (n + len(spec)) + B)
     last = len(spec) - 1
     for x in pts:
+        if care is not None and not (care >> x) & 1:
+            continue
         vals = [(x >> i) & 1 for i in range(n)]
         for j, (act, refs) in enumerate(spec):
             terms = []
