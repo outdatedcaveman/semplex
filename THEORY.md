@@ -1,6 +1,6 @@
 # Protocol-Frame Theory: a formal core for canonical epistemology
 
-**Status:** v0.1, 2026-11-06. Every theorem marked **[Lean]** is machine-checked in `proofs/lean/Theory.lean` (Lean 4.12.0, core library, no `sorry`). Its axiom audit is in `proofs/lean/THEORY_CHECK_LOG.txt`: at most propext, Quot.sound and Classical.choice. Theorems marked **[paper]** have informal proofs only.
+**Status:** v0.2, 2026-11-11. Every theorem marked **[Lean]** is machine-checked in `proofs/lean/Theory.lean` (Lean 4.12.0, core library, no `sorry`). Its axiom audit is in `proofs/lean/THEORY_CHECK_LOG.txt`: at most propext, Quot.sound and Classical.choice. Theorems marked **[paper]** have informal proofs only.
 
 ## 1. Thesis
 
@@ -119,6 +119,24 @@ This is a precise, checkable form of a structural-realist intuition: **the empir
 - *Reading:* no rule that avoids overstating can give a derived claim a stronger warrant. The ledger's rule is safe and also the most generous safe rule.
 - *Generalization:* the theorem is stated over arbitrary component preorders, so it also answers Spike 06 F3. Lean-kernel trust and Python-kernel trust can now be *ordered* by declaring a trust preorder; set inclusion is just the degenerate case.
 
+### 3.6 Learning rules as observational powers
+
+A learning rule is also an observer. For one layer, fix what its update may depend on (a set Ω of variables) and the symmetry group G the layer's units have. The **dictionary** D(Ω, G, K) is the set of G-invariant monomials of the variables in Ω up to order K; a rule is a weighted sum of them, followed by gradient. Spike 10b enumerates these dictionaries by code.
+
+**Theorem 12, task-blindness [Lean `task_blind`].** If a block of parameters is updated by a rule that observes only that block (and task-independent inputs), then after any number of steps the block is the same for every task.
+- *Reading:* a layer whose rule cannot observe the task carries no information about the task. Everything task-specific must be done downstream. This is the learning-rule analogue of Theorem 7: no procedure can depend on what it cannot observe.
+- *Instance:* power A = {own input, weights, output}. Confirmed numerically for the full order-4 dictionary.
+
+**Proposition 13, backpropagation is one monomial [numerical check to 10⁻⁵; exact by the chain rule].** With Ω = {X, W, Y, E, V} (own layer, broadcast error, downstream weights), the order-3 monomial E·(V·Y) has first-layer gradient E·V·(1−Y²)·Xᵀ, the backpropagated gradient. It is absent from every dictionary that omits V.
+
+**Proposition 14, the symmetry gap [paper proof].** Let the hidden index have signed-permutation symmetry (flip unit j: Y_j, row j of W and V_j change sign). Every monomial in which each hidden index occurs an even number of times is invariant under such a flip. The error-broadcast term E·Σ_j Y_j is not. Hence it lies outside the orthogonal (trace-monomial) and signed-permutation dictionaries at every order, and inside the permutation dictionary at order 2.
+- *Reading:* which rules are expressible depends on the symmetry group assumed, and trace monomials assume more symmetry than a network with an elementwise activation has. A comprehensive dictionary must be built from the layer's actual symmetry group.
+- *Evidence:* that single term fits 96% of the 4-input tasks (Spike 10b).
+
+**Empirical law (Spike 10b, not a theorem).** Among rules that fit, the function chosen on an underspecified task does not depend on the rule: backpropagation, feedback alignment and error broadcast pick a table-cheapest completion at the same rates, and random fitting networks do so at nearly the same rate.
+
+This suggests a division of labour, stated as conjecture C6 below: **observational power decides which tasks a rule can learn; the parameter-to-function map decides which function it learns.**
+
 ## 4. Map: charter ↔ theory ↔ evidence
 
 | Charter | Theory | Machine-checked | Empirical instance |
@@ -129,7 +147,8 @@ This is a precise, checkable form of a structural-realist intuition: **the empir
 | §3.4 ontology revision, identifiability | Thm 7 | yes | S02 F1, F4; S02b F2 |
 | §8.7 experiment selection | Thm 3, 5 | yes | S02 EIG chose do(A); S02b do(S2) |
 | §10 honest labels | Thm 6, 8 | yes | S02 zero confident errors; S04 warrants |
-| §7.5 small trusted checker | Cerp.lean `decideEquiv_correct`, `checkAll_sound` | yes | S03, S06 |
+| §7.5 small trusted checker | Cerp.lean `decideEquiv_correct`, `checkAll_sound`; Bounds.lean | yes | S03, S06, S08b |
+| Layer K (how methods improve) | Thm 12, Prop 13–14 | Thm 12 yes | S10b |
 
 ## 5. Conjectures and open problems (the bold part)
 
@@ -137,6 +156,8 @@ This is a precise, checkable form of a structural-realist intuition: **the empir
 - **C2, limit representations.** For tail queries (Thm 9), define ε-determining sets and show minimal ones exist for every ε > 0, with a well-behaved limit.
 - **C3, adaptivity gap.** Adaptive inquiry (choose the next protocol after seeing results) is a decision tree over the frame. *Conjecture:* the adaptivity gap between adaptive and non-adaptive determining sets is bounded by a function of the conflict hypergraph's rank. Spike 02's EIG agent is a greedy adaptive policy, and its performance relative to the optimum is unmeasured.
 - **C4, compositional frames.** For a product of independent frames, the decisive set of a composite query is the union of the component decisive sets whenever the query is "separable". This would give compositional canonicity, the charter's §14 open question.
+- **C6, reach vs choice.** For a fixed architecture and initialization, any two learning rules that both fit a task induce (approximately) the same distribution over completions, namely the weight-space volume conditioned on fitting. Evidence: Spike 10b F1–F2. Known to be scale-dependent; the exact statement needs the initialization as a parameter.
+- **C7, minimal observational power for learning.** For each element of the atlas there is a least observational power (and symmetry group) whose dictionary contains a rule that learns it. Power A is excluded by Theorem 12; whether broadcast error with only signed-permutation symmetry suffices is open.
 - **C5, trust-indexed escalation.** Given warrant costs per trust tier (Spike 06 F1), there is an optimal escalation policy: re-check at a higher tier exactly those claims whose `affected_by` set exceeds a threshold proportional to the cost ratio.
 
 ## 6. What this does *not* claim

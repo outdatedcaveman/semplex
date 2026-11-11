@@ -45,215 +45,286 @@
   }
  },
  "power A, hidden symmetry O (meta-learned)": {
-  "full_fit": 0.0378,
-  "full_fit_held_out_elements": 0.0432,
+  "full_fit": 0.1505,
+  "full_fit_held_out_elements": 0.1514,
   "full_fit_by_min_neurons": {
-   "1": 0.2,
-   "3": 0.025,
-   "4": 0.026,
-   "5": 0.2
+   "1": 0.413,
+   "3": 0.155,
+   "4": 0.087,
+   "5": 0.6
   },
-  "frac_minimal_width_when_fit": 0.19,
+  "frac_minimal_width_when_fit": 0.072,
   "partial_12": {
-   "fit": 0.1136,
-   "frac_cheapest_when_fit": 0.789,
-   "mean_neurons": 2.564
+   "fit": 0.3884,
+   "frac_cheapest_when_fit": 0.756,
+   "mean_neurons": 2.759
   },
   "partial_8": {
-   "fit": 0.1907,
-   "frac_cheapest_when_fit": 0.577,
-   "mean_neurons": 2.31
+   "fit": 0.7182,
+   "frac_cheapest_when_fit": 0.601,
+   "mean_neurons": 2.436
   },
   "dictionary_size": 11,
   "meta_loss_by_horizon": [
    [
     10,
-    0.4025
+    0.4028
    ],
    [
     25,
-    0.3514
+    0.315
    ],
    [
     50,
-    0.2839
+    0.2511
    ],
    [
     100,
-    0.3793
+    0.2446
    ],
    [
     200,
-    0.3943
+    0.2336
    ]
   ],
-  "meta_seconds": 88.3,
+  "meta_seconds": 102.6,
   "largest_terms_by_effective_coefficient": [
    [
-    "Y[a]*Y[a]",
-    -1.9877
+    "W[ba]*W[ba]",
+    -0.1278
    ],
    [
     "X[a]*W[ba]*Y[b]",
-    -1.8628
+    -0.1118
+   ],
+   [
+    "W[ba]*W[ca]*Y[b]*Y[c]",
+    0.0685
+   ],
+   [
+    "Y[a]*Y[a]",
+    -0.0649
    ],
    [
     "X[a]*X[b]*W[ca]*W[cb]",
-    -0.789
+    -0.0446
    ],
    [
-    "W[ba]*W[ba]",
-    -0.4204
-   ],
-   [
-    "X[a]*X[a]*Y[b]*Y[b]",
-    -0.3975
-   ],
-   [
-    "Y[a]*Y[a]*Y[b]*Y[b]",
-    -0.2923
+    "X[a]*X[a]*W[cb]*W[cb]",
+    -0.0256
    ]
   ]
  },
  "power B, hidden symmetry O (meta-learned)": {
-  "full_fit": 0.0297,
-  "full_fit_held_out_elements": 0.0234,
+  "full_fit": 0.1568,
+  "full_fit_held_out_elements": 0.1477,
   "full_fit_by_min_neurons": {
-   "1": 0.173,
-   "3": 0.022,
-   "4": 0.015,
+   "1": 0.933,
+   "3": 0.123,
+   "4": 0.064,
    "5": 0.0
   },
-  "frac_minimal_width_when_fit": 0.182,
+  "frac_minimal_width_when_fit": 0.063,
   "partial_12": {
-   "fit": 0.1071,
-   "frac_cheapest_when_fit": 0.776,
-   "mean_neurons": 2.425
+   "fit": 0.3944,
+   "frac_cheapest_when_fit": 0.892,
+   "mean_neurons": 2.26
   },
   "partial_8": {
-   "fit": 0.3388,
-   "frac_cheapest_when_fit": 0.62,
-   "mean_neurons": 2.245
+   "fit": 0.7908,
+   "frac_cheapest_when_fit": 0.828,
+   "mean_neurons": 1.872
   },
   "dictionary_size": 16,
   "meta_loss_by_horizon": [
    [
     10,
-    0.4155
+    0.4055
    ],
    [
     25,
-    0.4045
+    0.3222
    ],
    [
     50,
-    0.3589
+    0.2826
    ],
    [
     100,
-    0.3051
+    0.2222
    ],
    [
     200,
-    0.3581
+    0.2649
    ]
   ],
-  "meta_seconds": 97.8,
+  "meta_seconds": 111.7,
   "largest_terms_by_effective_coefficient": [
    [
     "Y[a]*Y[a]*E",
-    3.8216
-   ],
-   [
-    "X[a]*W[ba]*Y[b]*E",
-    2.0066
-   ],
-   [
-    "Y[a]*Y[a]",
-    1.1845
-   ],
-   [
-    "W[ba]*W[ba]*E",
-    -1.1735
+    -1.6744
    ],
    [
     "W[ba]*W[ba]*E*E",
-    -1.0608
+    -0.4525
    ],
    [
-    "W[ba]*W[ca]*Y[b]*Y[c]",
-    -0.4915
+    "W[ba]*W[ba]*E",
+    0.4162
+   ],
+   [
+    "Y[a]*Y[a]*E*E",
+    -0.4036
+   ],
+   [
+    "Y[a]*Y[a]",
+    -0.2474
+   ],
+   [
+    "X[a]*W[ba]*Y[b]*E",
+    -0.1563
+   ]
+  ]
+ },
+ "power B, hidden symmetry B (meta-learned)": {
+  "full_fit": 0.1153,
+  "full_fit_held_out_elements": 0.1153,
+  "full_fit_by_min_neurons": {
+   "1": 0.467,
+   "3": 0.108,
+   "4": 0.062,
+   "5": 0.0
+  },
+  "frac_minimal_width_when_fit": 0.125,
+  "partial_12": {
+   "fit": 0.3023,
+   "frac_cheapest_when_fit": 0.79,
+   "mean_neurons": 2.621
+  },
+  "partial_8": {
+   "fit": 0.6156,
+   "frac_cheapest_when_fit": 0.633,
+   "mean_neurons": 2.302
+  },
+  "dictionary_size": 19,
+  "meta_loss_by_horizon": [
+   [
+    10,
+    0.4016
+   ],
+   [
+    25,
+    0.3681
+   ],
+   [
+    50,
+    0.2662
+   ],
+   [
+    100,
+    0.25
+   ],
+   [
+    200,
+    0.2661
+   ]
+  ],
+  "meta_seconds": 129.3,
+  "largest_terms_by_effective_coefficient": [
+   [
+    "Y[a]*Y[a]*E",
+    -1.4972
+   ],
+   [
+    "X[a]*W[ba]*Y[b]*E",
+    -0.9437
+   ],
+   [
+    "W[ba]*W[ba]*E*E",
+    -0.4667
+   ],
+   [
+    "Y[a]*Y[a]*Y[a]*Y[a]",
+    0.2687
+   ],
+   [
+    "Y[a]*Y[a]",
+    0.1558
+   ],
+   [
+    "W[ba]*W[ba]",
+    -0.0863
    ]
   ]
  },
  "power B, hidden symmetry S (meta-learned)": {
-  "full_fit": 0.0063,
-  "full_fit_held_out_elements": 0.0126,
+  "full_fit": 0.0081,
+  "full_fit_held_out_elements": 0.0108,
   "full_fit_by_min_neurons": {
-   "1": 0.093,
-   "3": 0.0,
+   "1": 0.067,
+   "3": 0.006,
    "4": 0.0,
    "5": 0.0
   },
-  "frac_minimal_width_when_fit": 1.0,
+  "frac_minimal_width_when_fit": 0.667,
   "partial_12": {
-   "fit": 0.015,
-   "frac_cheapest_when_fit": 1.0,
-   "mean_neurons": 1.0
+   "fit": 0.0135,
+   "frac_cheapest_when_fit": 0.852,
+   "mean_neurons": 1.778
   },
   "partial_8": {
-   "fit": 0.0566,
-   "frac_cheapest_when_fit": 0.991,
-   "mean_neurons": 1.018
+   "fit": 0.0355,
+   "frac_cheapest_when_fit": 0.972,
+   "mean_neurons": 1.085
   },
   "dictionary_size": 75,
   "meta_loss_by_horizon": [
    [
     10,
-    0.5207
+    0.4245
    ],
    [
     25,
-    0.4571
+    0.3305
    ],
    [
     50,
-    0.5199
+    0.2939
    ],
    [
     100,
-    0.4849
+    0.1697
    ],
    [
     200,
-    0.4861
+    0.5338
    ]
   ],
-  "meta_seconds": 291.0,
+  "meta_seconds": 296.1,
   "largest_terms_by_effective_coefficient": [
    [
-    "Y[a]*E",
-    -24.8977
+    "Y[a]*Y[a]*E*E",
+    -1.8969
    ],
    [
     "Y[a]*E*E*E",
-    -19.8648
+    1.3265
    ],
    [
-    "X[a]*W[ba]*E",
-    -10.2151
+    "Y[a]*E",
+    1.1889
    ],
    [
-    "Y[a]*Y[a]*E*E",
-    8.8636
+    "Y[a]*Y[a]*E",
+    -1.0249
    ],
    [
-    "W[ba]*W[ba]*Y[b]*E",
-    -8.5905
+    "X[a]*W[ba]*Y[b]*E",
+    -0.8174
    ],
    [
     "W[ba]*W[ba]*E",
-    -4.9945
+    -0.7853
    ]
   ]
  },
@@ -289,134 +360,134 @@
   },
   "frac_minimal_width_when_fit": 1.0,
   "partial_12": {
-   "fit": 0.014,
-   "frac_cheapest_when_fit": 1.0,
-   "mean_neurons": 1.0
+   "fit": 0.0115,
+   "frac_cheapest_when_fit": 0.957,
+   "mean_neurons": 1.13
   },
   "partial_8": {
-   "fit": 0.0415,
-   "frac_cheapest_when_fit": 1.0,
-   "mean_neurons": 1.0
+   "fit": 0.044,
+   "frac_cheapest_when_fit": 0.977,
+   "mean_neurons": 1.045
   },
   "dictionary_size": 75,
   "meta_loss_by_horizon": [
    [
     10,
-    0.5574
+    0.5197
    ],
    [
     25,
-    0.5562
+    0.5412
    ],
    [
     50,
-    0.5445
+    0.5359
    ],
    [
     100,
-    0.5357
+    0.5802
    ],
    [
     200,
-    0.5504
+    0.5488
    ]
   ],
-  "meta_seconds": 245.6,
+  "meta_seconds": 300.2,
   "largest_terms_by_effective_coefficient": [
    [
-    "Y[a]*E*E",
-    -3.0848
+    "Y[a]*E",
+    1.1194
+   ],
+   [
+    "Y[a]*E*E*E",
+    0.4712
    ],
    [
     "Y[a]*Y[a]*E*E",
-    -3.0464
+    -0.2903
    ],
    [
-    "Y[a]*Y[a]*Y[a]*E",
-    -2.3328
+    "W[ba]*W[ba]*Y[b]*E",
+    0.2811
    ],
    [
-    "X[a]*W[ba]*E*E",
-    -2.0837
+    "Y[a]*Y[b]*Y[b]*E",
+    0.2037
    ],
    [
     "Y[a]*Y[a]*E",
-    1.7592
-   ],
-   [
-    "Y[a]*Y[a]*Y[a]",
-    -1.6652
+    -0.1461
    ]
   ]
  },
  "power C, hidden symmetry O (meta-learned)": {
-  "full_fit": 0.109,
-  "full_fit_held_out_elements": 0.1063,
+  "full_fit": 0.0063,
+  "full_fit_held_out_elements": 0.0126,
   "full_fit_by_min_neurons": {
-   "1": 0.507,
-   "3": 0.092,
-   "4": 0.062,
+   "1": 0.093,
+   "3": 0.0,
+   "4": 0.0,
    "5": 0.0
   },
-  "frac_minimal_width_when_fit": 0.091,
+  "frac_minimal_width_when_fit": 1.0,
   "partial_12": {
-   "fit": 0.2698,
-   "frac_cheapest_when_fit": 0.766,
-   "mean_neurons": 2.62
+   "fit": 0.016,
+   "frac_cheapest_when_fit": 0.969,
+   "mean_neurons": 1.062
   },
   "partial_8": {
-   "fit": 0.5425,
-   "frac_cheapest_when_fit": 0.641,
-   "mean_neurons": 2.293
+   "fit": 0.049,
+   "frac_cheapest_when_fit": 1.0,
+   "mean_neurons": 1.0
   },
   "dictionary_size": 30,
   "meta_loss_by_horizon": [
    [
     10,
-    0.3807
+    0.1314
    ],
    [
     25,
-    0.3553
+    0.4037
    ],
    [
     50,
-    0.3096
+    0.5058
    ],
    [
     100,
-    0.2297
+    0.5472
    ],
    [
     200,
-    0.2375
+    0.5314
    ]
   ],
-  "meta_seconds": 109.1,
+  "meta_seconds": 129.0,
   "largest_terms_by_effective_coefficient": [
    [
     "Y[a]*E*V[a]",
-    -35.909
-   ],
-   [
-    "Y[a]*E*E*V[a]",
-    19.3232
-   ],
-   [
-    "X[a]*W[ba]*E*V[b]",
-    -17.181
-   ],
-   [
-    "W[ba]*W[ba]*E",
-    -10.4425
+    5.8099
    ],
    [
     "Y[a]*Y[a]*E*E",
-    -10.1176
+    1.7714
+   ],
+   [
+    "Y[a]*Y[a]*E",
+    -0.928
+   ],
+   [
+    "X[a]*W[ba]*Y[b]*E",
+    -0.4304
+   ],
+   [
+    "Y[a]*E*E*V[a]",
+    -0.3822
    ],
    [
     "W[ba]*W[ba]*E*E",
-    -5.1192
+    -0.3098
    ]
   ]
  },
@@ -442,75 +513,75 @@
   }
  },
  "power C, hidden symmetry O, started from Y[a]*E*V[a] (meta-learned)": {
-  "full_fit": 0.1856,
-  "full_fit_held_out_elements": 0.191,
+  "full_fit": 0.0045,
+  "full_fit_held_out_elements": 0.009,
   "full_fit_by_min_neurons": {
-   "1": 0.547,
-   "3": 0.191,
-   "4": 0.105,
-   "5": 0.4
+   "1": 0.067,
+   "3": 0.0,
+   "4": 0.0,
+   "5": 0.0
   },
-  "frac_minimal_width_when_fit": 0.058,
+  "frac_minimal_width_when_fit": 1.0,
   "partial_12": {
-   "fit": 0.3779,
-   "frac_cheapest_when_fit": 0.754,
-   "mean_neurons": 2.799
+   "fit": 0.0105,
+   "frac_cheapest_when_fit": 1.0,
+   "mean_neurons": 1.0
   },
   "partial_8": {
-   "fit": 0.6266,
-   "frac_cheapest_when_fit": 0.546,
-   "mean_neurons": 2.565
+   "fit": 0.0315,
+   "frac_cheapest_when_fit": 1.0,
+   "mean_neurons": 1.0
   },
   "dictionary_size": 30,
   "meta_loss_by_horizon": [
    [
     10,
-    0.3791
+    0.1299
    ],
    [
     25,
-    0.3302
+    0.4222
    ],
    [
     50,
-    0.2735
+    0.5339
    ],
    [
     100,
-    0.1836
+    0.5543
    ],
    [
     200,
-    0.2046
+    0.5541
    ]
   ],
-  "meta_seconds": 107.6,
+  "meta_seconds": 128.1,
   "largest_terms_by_effective_coefficient": [
    [
+    "Y[a]*E*V[a]",
+    6.2316
+   ],
+   [
     "Y[a]*E*E*V[a]",
-    -12.125
+    -0.7593
+   ],
+   [
+    "Y[a]*Y[a]*E*E",
+    0.7278
    ],
    [
     "Y[a]*Y[a]*E",
-    -6.3607
+    0.4077
+   ],
+   [
+    "W[ba]*W[ba]*E*E",
+    -0.3069
    ],
    [
     "Y[a]*Y[a]",
-    -3.8828
-   ],
-   [
-    "Y[a]*E*V[a]",
-    3.507
-   ],
-   [
-    "Y[a]*V[a]",
-    2.3648
-   ],
-   [
-    "Y[a]*Y[a]*V[b]*V[b]",
-    -2.3318
+    -0.2881
    ]
   ]
  },
- "wall_seconds": 1086.2
+ "wall_seconds": 1331.0
 }
