@@ -63,6 +63,8 @@ One row per external source used anywhere in the project. Details and discussion
 | Volume-2506 | "Do Neural Networks Need Gradient Descent to Generalize? A Theoretical Study", arXiv:2506.03931 | INDEX | S10b F2 | Volume hypothesis |
 | Volume-2402 | "How Uniform Random Weights Induce Non-uniform Bias", arXiv:2402.06323 | INDEX | S10b F2 | Random interpolating networks |
 | Volume-2407 | "Bias of Stochastic Gradient Descent or the Architecture", arXiv:2407.03848 | INDEX | S10b F1 | Rule vs architecture |
+| Zhong23 | Z. Zhong, Z. Liu, M. Tegmark, J. Andreas, "The Clock and the Pizza: Two Stories in Mechanistic Explanation of Neural Networks", arXiv:2306.17844 | INDEX | S11 prior-art gate | Different algorithms for one task depending on hyperparameters; no volume prediction per mechanism |
+| ConvEvo26 | "Convergent Evolution in Algorithmic Space", arXiv:2608.05985 | INDEX | S11 prior-art gate | Whether training independently converges on the same algorithms; abstract only, not checked for a volume law |
 | Mingard21 | C. Mingard et al., "Is SGD a Bayesian sampler? Well, almost" | MEMORY | S10b F2 | Volume hypothesis |
 | Chiang23 | P. Chiang et al., "Loss landscapes are all you need" (guess and check) | MEMORY | S10b F2 | Random fitting networks generalize |
 | Nokland16 | A. Nøkland, direct feedback alignment | MEMORY | S10b | Error broadcast |
