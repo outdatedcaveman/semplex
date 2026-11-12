@@ -13,10 +13,9 @@ import sys
 from collections import defaultdict
 
 import numpy as np
-from scipy.optimize import minimize
 from scipy.stats import spearmanr
 
-from cerp import mechvol, train
+from cerp import loglin, mechvol, train
 from experiments import spike14 as S14
 from experiments.spike09 import tgt
 from experiments.spike21 import mutual_info
@@ -86,14 +85,8 @@ def fit_law(cnt, els, idx, lom, MI):
             if int(u) in idx:
                 C[e][idx[int(u)]] += n
 
-    def nll(pr):
-        tot = 0.0
-        for e in els:
-            s = pr[0] * lom + pr[1] * MI[e]; mx = s.max(); lZ = mx + math.log(np.exp(s - mx).sum())
-            tot -= float(C[e] @ (s - lZ))
-        return tot
-    r = minimize(nll, np.array([1.0, 0.0]), method="Nelder-Mead", options={"xatol": 1e-3, "fatol": 1e-2, "maxiter": 600})
-    return {"gamma": float(r.x[0]), "lambda_MI": float(r.x[1])}
+    th, f = loglin.fit([(C[e], np.stack([lom, MI[e]], 1)) for e in els], 2)
+    return {"gamma": float(th[0]), "lambda_MI": float(th[1]), "nll": float(f)}
 
 
 def analyse():

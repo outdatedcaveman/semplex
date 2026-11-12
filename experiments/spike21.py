@@ -15,7 +15,7 @@ from collections import defaultdict
 import numpy as np
 from scipy.optimize import minimize
 
-from cerp import mechvol, train
+from cerp import loglin, mechvol, train
 from experiments import spike14 as S14
 from experiments.spike09 import tgt
 
@@ -114,7 +114,9 @@ def analyse():
                     tot -= float(C[e] @ (s - lZ))
                 return tot
             r = minimize(nll, np.array([1.0, 0.0]), method="Nelder-Mead", options={"xatol": 1e-3, "fatol": 1e-2, "maxiter": 600})
-            row["by_step"][cp] = {"gamma": float(r.x[0]), "lambda_MI": float(r.x[1])}
+            th, f = loglin.fit([(C[e], np.stack([lom, MI[e]], 1)) for e in els], 2)
+            row["by_step"][cp] = {"gamma": float(th[0]), "lambda_MI": float(th[1]),
+                                  "nelder_mead_first_analysis": {"gamma": float(r.x[0]), "lambda_MI": float(r.x[1]), "nll": float(r.fun)}, "nll": float(f)}
         res[d["variant"]] = row
         print(d["variant"], row, flush=True)
     OUT.write_text(json.dumps(res, indent=1))
