@@ -72,17 +72,20 @@ def credit(unitset, isos):
     return {f"{q[0]}-{q[1]}": 1 / len(hit) for q in hit}
 
 
-def run_env(name):
-    cfg = ENVS[name]
+def run_env(name, envs=None, raw=None, seed_base=12_000):
+    envs = ENVS if envs is None else envs
+    raw = RAW if raw is None else raw
+    cfg = envs[name]
+    steps = cfg.get("steps", STEPS)
     tb, els, iso = elements()
     H = cfg["H"]
     fs = np.array([e for _ in range(SEEDS) for e in els])                         # seed-major: half = index // (len(els)*HALF)
-    rng = np.random.default_rng(12_000 + list(ENVS).index(name))
+    rng = np.random.default_rng(seed_base + list(envs).index(name))
     t0 = time.time()
     p = train.init(len(fs), H, rng, scale=cfg["scale"], out_scale=cfg["scale"] * math.sqrt(8 / H), dtype=np.float32)
-    p, _ = train.train(p, tgt(fs), np.ones((len(fs), 16)), STEPS, lr=cfg["lr"], wd=0.03, opt=cfg["opt"])
+    p, _ = train.train(p, tgt(fs), np.ones((len(fs), 16)), steps, lr=cfg["lr"], wd=cfg.get("wd", 0.03), opt=cfg["opt"])
     g, faithful, units = train.read_circuits(p)
-    out = {"env": name, **cfg, "steps": STEPS, "elements": els, "nets": len(fs), "train_seconds": round(time.time() - t0, 1)}
+    out = {"env": name, **cfg, "steps": steps, "elements": els, "nets": len(fs), "train_seconds": round(time.time() - t0, 1)}
     counts = {r: {str(e): [defaultdict(float), defaultdict(float)] for e in els} for r in ("R1", "R2")}
     fit = g == fs
     plen, nonmin = [], 0
@@ -102,8 +105,8 @@ def run_env(name):
     out.update({"fit": float(fit.mean()), "faithful_when_fit": float(faithful[fit].mean()),
                 "r2_mean_prefix_length": float(np.mean(plen)) if plen else None,
                 "r2_prefix_not_minimal": nonmin, "counts": counts})
-    RAW.mkdir(parents=True, exist_ok=True)
-    (RAW / f"{name}.json").write_text(json.dumps(out))
+    raw.mkdir(parents=True, exist_ok=True)
+    (raw / f"{name}.json").write_text(json.dumps(out))
     print(name, {k: v for k, v in out.items() if k not in ("counts", "elements")}, flush=True)
 
 
