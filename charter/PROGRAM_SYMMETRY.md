@@ -17,9 +17,9 @@ The proposal is that one structural principle organizes what these leave unexpla
 
 **T2. Equivariance (PROVED; THEORY Thm 15).** If initialization, architecture and update rule are invariant under a group G that preserves the task, the *law* of the learned mechanism is G-invariant. Every law of mechanism choice is therefore a law about G-orbits. (Confirmed numerically: Spike 14 H14.1.)
 
-**T3. The Curie bias (EMPIRICAL in one domain: Spike 14; under definitive test: Spike 15).** Individual runs do not merely have a symmetric law. They concentrate on mechanisms and functions with a *large stabilizer* in G. Orbit mass ∝ |orbit|^β with β ≈ −2 to −6, the reverse of an entropy or volume law (β ≥ 1). This held on fresh seeds and unseen elements, for circuits and for functions (77% of ties broken toward the more symmetric completion).
+**T3. The Curie bias (EMPIRICAL in Boolean circuits: Spike 14; transfer to modular addition FAILED its pre-registered test: Spike 15 H15.1).** Individual runs do not merely have a symmetric law. They concentrate on mechanisms and functions with a *large stabilizer* in G. Orbit mass ∝ |orbit|^β with β ≈ −2 to −6, the reverse of an entropy or volume law (β ≥ 1). This held on fresh seeds and unseen elements, for circuits and for functions (77% of ties broken toward the more symmetric completion).
 
-**T4. Generalization as symmetry inheritance (CONJECTURE; Spike 15 arm B tests it).** On an underspecified task, the completion chosen is a cheap one that keeps the stabilizer of the *observed data*. Hence:
+**T4. Generalization as symmetry inheritance (EMPIRICAL, pre-registered: Spike 15 H15.3–H15.4, six architecture cells, six groups; learned completions keep the data's symmetry 81–93% of the time vs 18% for equally cheap completions. The kernel-limit explanation is not yet excluded).** On an underspecified task, the completion chosen is a cheap one that keeps the stabilizer of the *observed data*. Hence:
 - **Prediction T4a:** generalization succeeds when the world's target shares the stabilizer of the training data, and fails in proportion to the target's *symmetry deficit* relative to that stabilizer.
 - **Prediction T4b:** a model's out-of-sample errors concentrate on inputs where the true target breaks a symmetry the training data happened to have.
 
