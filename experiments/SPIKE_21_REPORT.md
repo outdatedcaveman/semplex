@@ -1,6 +1,6 @@
 # Spike 21: Where does the information tilt come from? A ratchet test, after "Stuck in a Loop"
 
-**Date:** 2026-11-12 · **Status:** pre-registered (no run made) · **Follows:** Spike 20 (tilt constant across optimizer, weight decay and horizon; absent for ReLU and for selection-only training); C10
+**Date:** 2026-11-12 · **Status:** complete (pre-registered in b8d8bed; results below) · **Follows:** Spike 20 (tilt constant across optimizer, weight decay and horizon; absent for ReLU and for selection-only training); C10
 
 ## Inspiration
 
@@ -38,3 +38,40 @@ over all 940 non-constant threshold functions (up to complement), by maximum lik
 | H21.4 | ReLU never develops the tilt | λ(ReLU) < 2 at every checkpoint | > 4 at any checkpoint |
 
 Fit rate is reported for each variant. If democratized GD fits less than 90% of nets, H21.3 is reported as confounded.
+
+---
+
+## Results
+
+**Run.** All four variants, 5,120 nets each. Fit rates: tanh-AdamW 1.000, tanh-GD 1.000, tanh-GD-democratized 0.999, ReLU-AdamW 0.990. Raw counts are in `results/spike21_raw/`, fits in `results/spike21.json`.
+
+**A measurement error, found and fixed before any verdict.** The first analysis used Nelder-Mead, started at λ = 0. On 7 of the 28 checkpoints it stalled at a spurious point (λ = 0.075 or 0.002), with negative log-likelihood worse than the optimum by 167 to 40,237 nats. The law is log-linear, so its likelihood is convex. I replaced the fit with an exact Newton solver (`cerp/loglin.py`); both values are stored. The 21 checkpoints where Nelder-Mead had converged agree to three decimals. I also refitted every Spike 20 law fit with the Newton solver (`experiments/refit20_exact.py`, `results/spike20_refit_exact.json`). All 28 agree with the reported values to ±0.001, so Spike 20 stands as published.
+
+### λ (information tilt) and γ (volume exponent) over training
+
+| Step | tanh-AdamW | tanh-GD | tanh-GD-democratized | ReLU-AdamW |
+|---|---|---|---|---|
+| 0 | −0.08 (γ 1.01) | −0.08 (1.00) | −0.02 (1.00) | −0.06 (1.00) |
+| 10 | 4.42 | 2.27 | 3.97 | 0.73 |
+| 30 | 8.99 | 5.66 | 7.78 | 2.80 |
+| 100 | 10.68 | 8.34 | 9.74 | 1.65 |
+| 300 | 11.27 | 9.19 | 10.18 | 1.16 |
+| 1,000 | 11.53 | 9.91 | 10.42 | 0.99 |
+| 3,000 | 11.56 (γ 0.67) | 10.62 (0.83) | 10.61 (0.85) | 1.13 (0.53) |
+
+### Verdicts
+
+| # | Verdict |
+|---|---|
+| H21.1 | **Held.** At step 0, \|λ\| ≤ 0.08 and γ ∈ [0.998, 1.006] in every variant. Random initialization is exactly the volume measure. |
+| H21.2 | **Held.** λ₁₀₀ / λ₃₀₀₀ = 0.92 (AdamW) and 0.78 (GD). Most of the tilt forms in the first 100 steps. |
+| H21.3 | **Broken.** Democratized GD reaches λ₃₀₀₀ = 10.61 against 10.62 for plain GD (ratio 1.00). It is *faster* early (3.97 against 2.27 at step 10). Fit rate 99.9%, so not confounded. |
+| H21.4 | **Neither held nor broken.** ReLU's λ peaks at 2.80 at step 30 (above 2, below 4) and settles at 1.13. |
+
+## Findings
+
+**F1. Training starts from pure volume and adds the tilt fast.** At initialization the units follow Ω(t) exactly (γ = 1, λ = 0). That is the "selection" measure of Spike 20 made literal. The information tilt is then *built*: λ rises to 80–90% of its final value within 100 steps, while γ falls (volume matters less as training proceeds). The early lock-in matches the "Stuck in a Loop" picture.
+
+**F2. The early lock-in is not a credit ratchet.** Removing the output-weight factor from every unit's gradient leaves the final tilt unchanged and speeds its onset. So the tilt is not produced by units with large w₂ getting more gradient. The analogy with attention-credit ratcheting fails at this level. Whatever builds the tilt lives in the per-point error signal and the activation, not in the credit multiplier.
+
+**F3. ReLU has a weak, transient tilt.** At the level of all units (not just the determining core of Spike 20), ReLU shows λ ≈ 1–3, peaking early, against 10–12 for tanh. Its volume exponent also falls further (γ ≈ 0.53). Spike 20's "ReLU has no tilt" was measured on cores and holds there; at the unit level the honest statement is "an order of magnitude weaker".
