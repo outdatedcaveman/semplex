@@ -1,6 +1,6 @@
 # Abductive hypotheses: what rule decides which mechanism training builds?
 
-**Status:** working document, started 2026-11-12. Each candidate is an *inference to the best explanation* of the observations below. None is established. Each must make a prediction that the others do not, and is retired when that prediction fails.
+**Status:** working document, started 2026-11-12. **Scoreboard after Spike 13:** A1 survives (core contains t\* 1.8–3.8× chance in all 13 environments), but its small-initialization mechanism is refuted; A2 and A4 are demoted (weak, no optimizer flip); A3, A5 and A6 are untested. Each candidate is an *inference to the best explanation* of the observations below. None is established. Each must make a prediction that the others do not, and is retired when that prediction fails.
 
 ## 1. The observations to explain
 

@@ -90,7 +90,7 @@ Between thresholds, the verdict is "neither" and is reported as such.
 | # | Verdict |
 |---|---|
 | H12.1 | **Held.** Every adjacent width pair has an R2 ratio ≤ 1.23. End to end (8 → 1024, a 128× change) the ratio is 1.62, well under the kill line of 3. There is slow drift, not a jump. |
-| H12.2 | **Broken as registered (ratio 3.89), but confounded.** Plain GD at lr 1.0 fit only 37% of nets. Only 12 elements had runs in both halves, and the comparison conditions on a very selected subset. The learning rate was chosen from a smoke test on one easy function; that was a mistake. |
+| H12.2 | **Withdrawn (Spike 13): the GD arm was over-regularized** (decoupled weight decay at lr 1 shrank weights 33× faster per step than AdamW). Originally: broken as registered (ratio 3.89), but confounded. Plain GD at lr 1.0 fit only 37% of nets. Only 12 elements had runs in both halves, and the comparison conditions on a very selected subset. The learning rate was chosen from a smoke test on one easy function; that was a mistake. |
 | H12.3 | **Broken.** S_agree is not higher at small initialization (0.38 at s0.1 vs 0.40 at s2, R2; 0.40 vs 0.49, R1). The derivation's specific prediction failed, so the linear-regime argument is not, or not only, why S_agree works. |
 | H12.4 | **Mixed.** Under R1, S_imb = 0.31 ≥ 0.3 and is above S_vol: held. Under R2, 0.28: just under the bar, still above S_vol. The H-B′ direction replicates on fresh seeds; its strength is borderline. |
 | H12.5 | **Held.** S_agree ≥ S_imb at W8 under both readouts (0.36 vs 0.28; 0.48 vs 0.31). |
