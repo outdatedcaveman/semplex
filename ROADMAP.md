@@ -59,9 +59,12 @@ Rules of thumb:
 | **20** | Selection vs training; tilt as temperature; transfer across architectures; information vs agreement | See `experiments/SPIKE_20_REPORT.md` | **done**: λ constant across optimizer, weight decay, horizon and width; ReLU has no tilt; selection gives volume only; mutual information beats agreement (1.93 bits held out) |
 | **21** | The unit-level law over training; credit-ratchet ablation (after "Stuck in a Loop") | See `experiments/SPIKE_21_REPORT.md` | **done**: init is pure volume; tilt forms by step 100; not a w₂ credit ratchet; ReLU tilt weak and transient |
 | **22** | Leaky ReLU and unit movement (C10) | See `experiments/SPIKE_22_REPORT.md` | **done**: C10 refuted; leaky slopes lower the tilt; all activations move units |
-| **23** | Distance-matched choice test: does symmetry aim, beyond proximity? | See `experiments/SPIKE_23_REPORT.md` | running |
-| **24** | Oddness vs saturation as the source of the tilt (C11) | See `experiments/SPIKE_24_REPORT.md` | running |
-| **25** | Less strict CSP at low label counts (FDR; pseudo-label evidence) | See `experiments/SPIKE_25_REPORT.md` | pre-registered |
+| **23** | Distance-matched choice test: does symmetry aim, beyond proximity? | See `experiments/SPIKE_23_REPORT.md` | **done**: yes (β = 0.49); information steers more (μ = 3.9); volume does not act per step |
+| **24** | Oddness vs saturation as the source of the tilt (C11) | See `experiments/SPIKE_24_REPORT.md` | **done**: both broken; only the ReLU family lacks the tilt |
+| **25** | Less strict CSP at low label counts (FDR; pseudo-label evidence) | See `experiments/SPIKE_25_REPORT.md` | running |
+| **26** | Lawful (associative) completion of algebra; Curie transfer (after McDermott, Piróg & Uustalu) | See `experiments/SPIKE_26_REPORT.md` | running |
+| **27** | Positive homogeneity (C12) | See `experiments/SPIKE_27_REPORT.md` | **done**: C12 refuted |
+| **28** | Indicator alignment (C13), prospective test on 9 unseen activations | See `experiments/SPIKE_28_REPORT.md` | **done**: all three held; clip-height dose–response |
 | (old 10c) | Fix rule meta-learning; settle C7 (= H-A) | Fixed long horizon or adjoint method; then find the least observational power per element |
 | (old 10b) | Grokking against ground truth | 5–6 inputs with a real held-out set: does the post-grokking function equal the table/solver optimum; score local learning rules (arXiv:2611.12248) the same way |
 | 08c | Periodic table, remaining parameters | In order: (1) certify lower bounds; (2) n=5 by class-level search, hunting the first depth-sensitive element; (3) skip connections and ReLU; (4) weight-space geometry (the manifold proper); (5) prove the one-bit-flip ≤ 2 conjecture |
