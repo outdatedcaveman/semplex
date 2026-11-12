@@ -1,0 +1,8 @@
+{
+ "spike": 27,
+ "title": "Is positive homogeneity what removes the information tilt? (C12)",
+ "report": "experiments/SPIKE_27_REPORT.md",
+ "module": "spike27",
+ "steps": [["run", "abs"], ["run", "relu2"], ["run", "ssq"], ["run", "softplus"], ["run", "elu"], ["run", "relu-sphere"], ["analyse"]],
+ "result": "experiments/results/spike27.json"
+}

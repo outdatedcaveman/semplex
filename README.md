@@ -54,6 +54,10 @@ python -m experiments.spike05                         # LTS equivalence hierarch
 python -m experiments.spike08                         # periodic table of circuits + compiler v1 (~2 min, needs numpy)
 ```
 
+### With OpenResearch
+
+The repository can be imported into [OpenResearch](https://github.com/alphaXiv/OpenResearch) as it is. Set the project's fixed run command to `python -m experiments.orx_run`; each experiment node commits its own `experiments/orx_node.json`. Conventions are in `charter/OPENRESEARCH.md`, and the experiment tree is in `experiments/TREE.md`. Turn OpenResearch telemetry off first (`orx telemetry off`).
+
 ## Layout
 
 | Path | Contents |
