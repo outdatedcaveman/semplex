@@ -139,6 +139,18 @@ A learning rule is also an observer. For one layer, fix what its update may depe
 
 This suggests a division of labour, stated as conjecture C6 below: **observational power decides which tasks a rule can learn; the parameter-to-function map decides which function it learns.**
 
+### 3.7 Task symmetry and the choice of mechanism
+
+Let G_g be the group of input permutations and input negations σ with g∘σ ∈ {g, ¬g}.
+
+**Theorem 15, equivariance of mechanism choice [paper proof].** For the networks of Spikes 09–14 (inputs in {−1,+1}, i.i.d. symmetric Gaussian initialization of first-layer weights and biases, symmetric output weights, cross-entropy, full-batch GD or AdamW with decoupled weight decay), the probability that training on g yields a core whose minimal circuit is I equals the probability that it yields σ·I, for every σ ∈ G_g.
+- *Proof.* σ acts on parameters linearly: an input permutation permutes the columns of W1, an input negation flips the sign of one column, and output negation (when g∘σ = ¬g) flips W2 and b2. (i) The initialization law is invariant under this action. (ii) The loss on g at θ equals the loss on g at σθ. (iii) GD, AdamW's moment estimates, the elementwise normalization and weight decay all commute with coordinate permutations and sign flips. So the trajectory from σθ₀ is σ applied to the trajectory from θ₀. (iv) The readout (threshold functions up to complement, units ordered by |output weight|) is equivariant. ∎
+- *Reading:* every law of mechanism selection is a law about G_g-orbits. Spike 14 H14.1 confirms it numerically: within-orbit variance equals a multinomial null.
+
+**Empirical law: the Curie bias (Spikes 12–14; pre-registered and replicated in Spike 14 on fresh seeds and unseen elements).** Orbit mass ∝ |orbit|^β with β between −2.3 and −5.7, under both optimizers and at widths 8 and 128. Training concentrates on mechanisms that keep a large subgroup of the task's symmetry. The bias is not explained by agreement with the target, and a parameter-free predictor based on it gains 1.25–1.67 bits per run. It also holds one level up: among the cheapest completions of a partial task, training picks a more symmetric function in 77% of cases.
+
+This is the opposite of what an entropy or volume argument predicts (β ≥ 1). The ensemble is exactly symmetric (Theorem 15), and each run breaks the symmetry as little as it can.
+
 ## 4. Map: charter ↔ theory ↔ evidence
 
 | Charter | Theory | Machine-checked | Empirical instance |
@@ -160,6 +172,7 @@ This suggests a division of labour, stated as conjecture C6 below: **observation
 - **C4, compositional frames.** For a product of independent frames, the decisive set of a composite query is the union of the component decisive sets whenever the query is "separable". This would give compositional canonicity, the charter's §14 open question.
 - **C6, reach vs choice (withdrawn in its strong form, Spike 10c F3).** The conjecture was that any two rules that fit a task choose the same completions. Hand-written error-driven rules do (Spike 10b), but meta-learned rules with terms acting directly on the weights fit equally well and choose a cheapest completion far less often (72–84% against 96%). Revised form: the completion distribution is fixed by the architecture and initialization only for rules whose first-layer update is driven by the error alone.
 - **C7, minimal observational power for learning.** For each element of the atlas there is a least observational power (and symmetry group) whose dictionary contains a rule that learns it. Power A is excluded by Theorem 12. Spike 10c: a broadcast error with permutation symmetry suffices for all 222 four-input elements (order 2, 7 terms). Whether the orthogonal or signed-permutation dictionaries suffice is open; search found 41 and 24 elements, which are lower bounds.
+- **C8, Curie principle for learning.** For any architecture and training rule that are equivariant under a task's symmetry group G, the mass that training assigns to an orbit O of minimal mechanisms decreases with |O|. Equivalently, it increases with the size of the subgroup of G that fixes the mechanism. Open: (a) a mechanism (candidate: symmetric configurations are attracting under the averaged dynamics, cf. arXiv:2309.16932); (b) whether β is universal or depends on architecture; (c) transfer to non-Boolean domains, such as group-operation tasks, where G is large and known.
 - **C5, trust-indexed escalation.** Given warrant costs per trust tier (Spike 06 F1), there is an optimal escalation policy: re-check at a higher tier exactly those claims whose `affected_by` set exceeds a threshold proportional to the cost ratio.
 
 ## 6. What this does *not* claim, and what is already known

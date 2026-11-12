@@ -302,9 +302,11 @@ def partial_test(tb):
         m = stab[cheapest].astype(float).mean()
         s = stab[h]
         up += s > m; dn += s < m; eq += s == m
+    from fractions import Fraction
     from math import comb
+    up, dn, eq = int(up), int(dn), int(eq)
     n = up + dn
-    p = sum(comb(n, k) for k in range(up, n + 1)) / 2 ** n if n else None
+    p = float(Fraction(sum(comb(n, k) for k in range(up, n + 1)), 2 ** n)) if n else None
     return {"learned_more_symmetric_than_mean_cheapest": up, "less": dn, "equal": eq, "skipped": skipped,
             "share_up": up / n if n else None, "one_sided_sign_test_p": p}
 
