@@ -112,7 +112,7 @@ def runA(name):
             st = unit_stabilizer(int(units[b, j]), Gfull[e])
             if not st:
                 continue
-            defects.append([t, len(st) + 1, [defect(s[b, j], int(units[b, j]), st) for s in snaps]])
+            defects.append([t, len(st) + 1, [defect(s[b, j], int(units[b, j]), st) for s in snaps], e])
     out = {"env": name, **cfg, "checks": list(checks), "fit": float((g == fs).mean()), "counts": counts, "defects": defects}
     RAW.mkdir(parents=True, exist_ok=True)
     (RAW / f"A_{name}.json").write_text(json.dumps(out))
@@ -130,6 +130,7 @@ def null_defect(t, G, rng, n=200, max_draws=2_000_000):
             vals.append(defect(th[i], t, st))
         for i in np.nonzero(bits == (FULL ^ t))[0][: n - len(vals)]:
             vals.append(defect(-th[i], t, st))
+    vals = [v for v in vals if v is not None]
     return float(np.median(vals)) if vals else None
 
 
@@ -178,11 +179,10 @@ def analyseA():
             fin = np.array([x[2][-1] for x in d["defects"]])
             first = np.array([x[2][0] for x in d["defects"]])
             nulls = []
-            for t, _, _ in d["defects"]:
-                if t not in null_cache:
-                    e0 = next(e for e in els if t in uorb[e])
-                    null_cache[t] = null_defect(t, Gfull[e0], rng)
-                nulls.append(null_cache[t])
+            for t, _, _, e0 in d["defects"]:
+                if (t, e0) not in null_cache:
+                    null_cache[(t, e0)] = null_defect(t, Gfull[e0], rng)
+                nulls.append(null_cache[(t, e0)])
             nulls = np.array([np.nan if v is None else v for v in nulls])
             row["defect"] = {"units": len(fin), "median_final": float(np.median(fin)), "median_at_100": float(np.median(first)),
                              "median_null": float(np.nanmedian(nulls)),
