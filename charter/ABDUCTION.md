@@ -74,3 +74,25 @@ No candidate meets these yet. The ceiling observed so far is ρ ≈ 0.4.
 | O6 under GD | Without Adam, S_agree depends on initialization scale | difference ≥ 0.1 | reversed |
 
 A3 and A6 need measurements over time and of distance moved; they are deferred to Spike 14.
+
+## 5. Bolder candidates (round 2, 2026-11-12)
+
+The first round mostly imported known theory (volume, margins, incremental learning). This round tries principles whose *form* is new, accepting a higher risk of being wrong.
+
+### B0. Equivariance theorem (not a hypothesis: a proof obligation)
+Let G_g be the group of input permutations and negations σ with g∘σ ∈ {g, ¬g}. The initialization distribution is invariant under G_g, as is the loss (output negation flips the sign of the last layer, which is also symmetric at initialization). The training map is equivariant. Hence **the probability of learning a circuit I equals that of σ·I for every σ ∈ G_g**: the distribution is constant on G_g-orbits. Any principle only has to explain the distribution *over orbits*. Exploratory check: 3–5% of count variance is within orbits, consistent with zero plus noise.
+
+### B1. A Curie principle for learning (lead candidate)
+*Learned mechanisms keep as much of the task's symmetry as they can.* Among the minimal circuits of g, training favours those invariant under a large subgroup of G_g (small orbits), far beyond their share of circuits. Pierre Curie's principle in physics says effects keep the symmetry of their causes unless something breaks it. The claim is that gradient training realizes an *approximate* Curie principle at the level of mechanisms: the ensemble is exactly symmetric (B0), and each individual run breaks the symmetry as little as possible.
+- **Exploratory evidence (already-seen data):** orbit mass ∝ |orbit|^β with β ≈ −1.8 to −2.9 in all 13 environments, under both optimizers, at widths 8–1024. β = 1 would mean every circuit equally likely (entropy, volume); β = 0 would mean every symmetry type equally likely.
+- **Why it would matter:** it is a *structural* law, stated in terms of the task's symmetry group alone. It uses no geometry of weight space, so it could transfer across architectures and domains. It turns "which mechanism?" into group theory.
+- **Distinct predictions:** (i) β < 0 on fresh seeds and on elements never examined; (ii) the effect survives within groups of circuits that agree equally with g, so it is not agreement in disguise; (iii) **at the level of functions**, among the cheapest completions of a partial task, training picks the most symmetric one.
+
+### B2. Option value ("keep the most futures open")
+*A unit is chosen in proportion to the number of minimal completions it leaves open*: its degree in the isomer graph. This is a combinatorial analogue of maximum-future-freedom principles (causal entropic forces). If t\* is a hub, it would explain A1. Exploratory: ρ ≈ 0.3–0.4, similar to agreement.
+
+### B3. Fossil principle
+*The final circuit is the fossil record of the function trajectory.* Before fitting g, the network passes through simpler functions, and the units that implemented an earlier function are kept. Run-level prediction: the last single-threshold function the network computes before fitting g is in the final core far more often than the global t\*. This makes A1 run-specific and scale-free: it needs no small initialization, only an ordered trajectory.
+
+### B4. Independent parts
+*Mechanisms are assembled from parts that were each reachable alone.* P(I) ∝ U(t1)·U(t2), where U(t) is the distribution of threshold functions a single-unit network converges to on g. U is measured in a separate experiment, so the circuit data are not used. If cooperation between units matters (residual fitting), the product fails, and how it fails measures the cooperation.
