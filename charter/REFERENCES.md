@@ -67,6 +67,10 @@ One row per external source used anywhere in the project. Details and discussion
 | ConvEvo26 | "Convergent Evolution in Algorithmic Space", arXiv:2608.05985 | INDEX | S11 prior-art gate | Whether training independently converges on the same algorithms; abstract only, not checked for a volume law |
 | Ziyin24 | L. Ziyin et al., "Symmetry Induces Structure and Constraint of Learning", arXiv:2309.16932 | INDEX | S14 prior-art gate | Loss (mirror) symmetries make symmetric solutions attractive; parameter-space, not task-orbit counting |
 | SymCap26 | "Symmetry Breaking Is the Price of Finite Capacity", arXiv:2610.36138 | INDEX | S14 prior-art gate | Limited capacity forces predictable symmetry breaking; the opposing pull to B1 |
+| Baril26 | A. Baril, M. Couceiro, V. Lagerkvist, "New Perspectives on Semiring Applications to Dynamic Programming", Discrete Applied Mathematics 383 (2026) 243–279; arXiv:2512.03916 | READ IN FULL (arXiv v1) | S19, THEORY | Join/union expressions, semiring measures, ∆-product (count or weigh minimum-cost solutions) |
+| EiterKiesel23 | T. Eiter, R. Kiesel, "Semiring reasoning frameworks in AI and their computational complexity", JAIR 77 (2023) | META (cited in Baril26) | S19 | NP(R) for semiring R |
+| HermannPichler09 | M. Hermann, R. Pichler, "Complexity of counting the optimal solutions", TCS 410 (2009) | META (cited in Baril26) | S19 | #·OptP: counting optimal solutions |
+| Bistarelli97 | S. Bistarelli, U. Montanari, F. Rossi, "Semiring-based constraint satisfaction and optimization", JACM 44 (1997) | META (cited in Baril26) | S19 | Soft CSP over c-semirings |
 | Mingard21 | C. Mingard et al., "Is SGD a Bayesian sampler? Well, almost" | MEMORY | S10b F2 | Volume hypothesis |
 | Chiang23 | P. Chiang et al., "Loss landscapes are all you need" (guess and check) | MEMORY | S10b F2 | Random fitting networks generalize |
 | Nokland16 | A. Nøkland, direct feedback alignment | MEMORY | S10b | Error broadcast |
