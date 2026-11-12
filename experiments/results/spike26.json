@@ -1,0 +1,34 @@
+{
+ "n_tasks": 414,
+ "n_semigroups": 113,
+ "uniform_lawful_rate": 0.06998628257887518,
+ "full": {
+  "fit_rate": 1.0,
+  "lawful_rate": 0.6685,
+  "lawful_rate_all_tasks": 0.7144927536231884,
+  "source_rate": 0.28811697092630156,
+  "source_chance": 0.25140469748828326,
+  "tasks_with_symmetry": 125,
+  "ratio_to_uniform": 9.551871814974518,
+  "beta": -1.8528598860933423,
+  "beta_95": [
+   -2.7178368396625836,
+   -1.0810438239154831
+  ]
+ },
+ "selection": {
+  "fit_rate": 1.0,
+  "lawful_rate": 0.612,
+  "lawful_rate_all_tasks": 0.6708333333333333,
+  "source_rate": 0.28913493563777115,
+  "source_chance": 0.2483868192398777,
+  "tasks_with_symmetry": 125,
+  "ratio_to_uniform": 8.744570756566052,
+  "beta": -1.2883278017982998,
+  "beta_95": [
+   -2.2025335703801483,
+   -0.5741054590011051
+  ]
+ },
+ "full_over_selection_lawful": 1.0923202614379084
+}

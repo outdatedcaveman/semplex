@@ -19,8 +19,8 @@ Each node is a spike. A child builds on what its parent established; siblings ar
               │       └ 27  positive homogeneity (C12)               frozen: C12 refuted
               │         └ 28  indicator alignment (C13), prospective  frozen: all three held
               ├ 23  distance-matched choice test (from 19 arm 1)     frozen: symmetry and information both steer single steps
-              ├ 25  less strict CSP at low labels (from 19 arm 2)    running
-              └ 26  lawful completion of algebra; Curie transfer (C8(c), from 14 and 20)   running
+              ├ 25  less strict CSP at low labels (from 19 arm 2)    frozen: certificates fail at power; anisotropic smoothness
+              └ 26  lawful completion of algebra; Curie transfer (C8(c), from 14 and 20)   frozen: Curie transfers (β = −1.85); lawful 9.6× chance
 ```
 
 Spike 26 builds on two parents: the Curie estimator of 14 and the selection/building contrast of 20. It hangs under 19 because 19 is their nearest common resolved node.
