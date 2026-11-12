@@ -1,5 +1,7 @@
 # Program: learning as minimal symmetry breaking under determination
 
+> **Update after Spike 17.** (1) The circuit-level Curie bias is a *single-unit* law; pairing is independent; the Chow-pull explanation is killed. (2) Symmetries that are approximate and global, rather than exact stabilizers, do transfer labels. Certified symmetry propagation (CSP) takes cyclic targets from chance to 0.98, matches an oracle, and does nothing on random targets. (3) Finite networks depart from the kernel in about 40% of runs, toward cheaper and symmetric completions: the non-kernel part of the function-level bias.
+>
 > **Revision after Spike 16 (2026-11-12).** T4 is mostly explained by the kernel limit: the NTK interpolant is symmetric on symmetric data, and it matches about two thirds of the networks' symmetric completions. The stabilizer-consistency method (§3) is **refuted**, by an elementary no-transfer lemma (exact data stabilizers never link unlabelled inputs to labelled ones) and by the data (gains within ±0.003). What survives as original: Theorem 15, and the mechanism-level Curie bias in Boolean circuits, which kernels cannot express and which did not transfer to modular addition. The text below is kept as written, with these corrections.
 
 **Status:** research program, 2026-11-12. Every numbered claim carries its warrant: PROVED, EMPIRICAL (with spike), or CONJECTURE (with the test that would decide it). Nothing here is established beyond what its warrant says.
