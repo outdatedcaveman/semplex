@@ -96,3 +96,6 @@ Let G_g be the group of input permutations and negations σ with g∘σ ∈ {g, 
 
 ### B4. Independent parts
 *Mechanisms are assembled from parts that were each reachable alone.* P(I) ∝ U(t1)·U(t2), where U(t) is the distribution of threshold functions a single-unit network converges to on g. U is measured in a separate experiment, so the circuit data are not used. If cooperation between units matters (residual fitting), the product fails, and how it fails measures the cooperation.
+
+### Killed in the screen
+- **Frustration corollary of B1**: "if no symmetric minimal circuit exists, training fails to commit and builds a non-minimal core." Reversed sign in all 13 environments. In its place: **O11, abundance**: the more minimal circuits an element has, the more reliably training reaches one (ρ ≈ −0.5). Pre-registered as H14.9.

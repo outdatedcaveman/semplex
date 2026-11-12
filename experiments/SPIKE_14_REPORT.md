@@ -36,8 +36,11 @@ Each is checked on all 128 elements; "unseen" means the 80 new elements only.
 | H14.6 | B3 | The run's last single-threshold function is in the core much more than chance and more than the global t\* | ratio to its isomer baseline ≥ 2 **and** share > share containing t\* | ratio ≤ 1 |
 | H14.7 | B4 | Independent parts: the U-product predictor's Spearman is ≥ agreement's | in A8 and G8 | below agreement − 0.1 in both |
 | H14.8 | B2 | Option value replicates: median Spearman of hub degree ≥ 0.3 | in every run | < 0.15 in any |
+| H14.9 | (added before any Spike 14 analysis; screen on Spikes 12–13) | Minimality is reached when minimal options are abundant: across elements, the share of nets with a non-minimal core falls with log(number of isomers) | Spearman ≤ −0.3 on the 80 unseen elements, in every run | ≥ 0 in any |
 
 Between thresholds, the verdict is "neither".
+
+**Killed in the screen (recorded, not tested):** a "frustration" corollary of B1 predicted more non-minimal cores when every minimal circuit of g has a large orbit. On Spikes 12–13 data the sign was reversed in all 13 environments (ρ ≈ −0.17 to −0.35).
 
 ## Prior-art gate (abstract or index level)
 

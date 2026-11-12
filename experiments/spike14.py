@@ -269,6 +269,12 @@ def score_env(d, sel, pre):
     out["median_spearman"] = {s: float(np.nanmedian(v)) for s, v in rhos.items()}
     out["gain_bits_per_run"] = {s: sum(g for g, _ in v) / sum(n for _, n in v) for s, v in gains.items()}
     n = fos["runs"]; nf = fos["with_fossil"]
+    nonmin, niso = [], []
+    for e in sel:
+        c = d["counts"][str(e)]
+        nonmin.append(1 - (sum(c[0].values()) + sum(c[1].values())) / SEEDS)
+        niso.append(math.log(len(pre[e][2])))
+    out["H14.9_spearman_nonminimal_vs_log_isomers"] = mechvol._spearman(np.array(nonmin), np.array(niso))
     out["B3_fossil"] = {"credited_runs": n, "runs_with_fossil": nf,
                         "share_core_has_fossil": fos["core_has_fossil"] / nf if nf else None,
                         "fossil_isomer_baseline": fos["fossil_baseline"] / nf if nf else None,
