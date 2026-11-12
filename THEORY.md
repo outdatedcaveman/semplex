@@ -151,6 +151,18 @@ Let G_g be the group of input permutations and input negations σ with g∘σ �
 
 This is the opposite of what an entropy or volume argument predicts (β ≥ 1). The ensemble is exactly symmetric (Theorem 15), and each run breaks the symmetry as little as it can.
 
+### 3.8 The selection law as a semiring measure (empirical; after Baril, Couceiro & Lagerkvist 2026)
+
+Baril et al. (arXiv:2512.03916) give a calculus for solution sets: join/union expressions, measures μ_M(F) = Σ_{f∈F} Π_s M[s, f(s)], and the ∆-product D∆A, which evaluates an A-measure on the *minimum-cost* solutions of a cost dioid D. In this language the empirical mechanism-selection law of Spikes 09–19 reads:
+
+> **P(circuit I | task g) = normalized (R_min ∆ R≥0)-measure over the task's solution set,** with unit matrix M[u, t] = Ω(t)^γ · exp(λ·agree(t, g)).
+
+- The *cost* coordinate (R_min) is the atlas's neuron count; training first selects minimum cost.
+- The *weight* coordinate is a product over units; pairing is independent (Spike 17).
+- The two parameters are *universal* across tasks: fitted on 64 elements, the law gains 1.6–1.7 bits/run on 64 unseen ones (Spike 19).
+
+Status: EMPIRICAL (pre-registered transfer test H19.7 held; the two-parameter form is post hoc). The Curie bias (§3.7) is a consequence, since Ω and agreement are larger for symmetric units. The law reaches about 60% of the per-element ceiling.
+
 ## 4. Map: charter ↔ theory ↔ evidence
 
 | Charter | Theory | Machine-checked | Empirical instance |
@@ -173,6 +185,7 @@ This is the opposite of what an entropy or volume argument predicts (β ≥ 1). 
 - **C6, reach vs choice (withdrawn in its strong form, Spike 10c F3).** The conjecture was that any two rules that fit a task choose the same completions. Hand-written error-driven rules do (Spike 10b), but meta-learned rules with terms acting directly on the weights fit equally well and choose a cheapest completion far less often (72–84% against 96%). Revised form: the completion distribution is fixed by the architecture and initialization only for rules whose first-layer update is driven by the error alone.
 - **C7, minimal observational power for learning.** For each element of the atlas there is a least observational power (and symmetry group) whose dictionary contains a rule that learns it. Power A is excluded by Theorem 12. Spike 10c: a broadcast error with permutation symmetry suffices for all 222 four-input elements (order 2, 7 terms). Whether the orthogonal or signed-permutation dictionaries suffice is open; search found 41 and 24 elements, which are lower bounds.
 - **C8, Curie principle for learning.** For any architecture and training rule that are equivariant under a task's symmetry group G, the mass that training assigns to an orbit O of minimal mechanisms decreases with |O|. Equivalently, it increases with the size of the subgroup of G that fixes the mechanism. Open: (a) a mechanism (candidate: symmetric configurations are attracting under the averaged dynamics, cf. arXiv:2309.16932); (b) whether β is universal or depends on architecture; (c) transfer to non-Boolean domains, such as group-operation tasks, where G is large and known.
+- **C9, tilted-volume law.** The unit weight is a Gibbs tilt of prior volume, w(t | g) ∝ Ω(t)·exp(−β·#errors(t, g)), with β set by the optimizer and training horizon. Predictions: β grows with training time and with weight decay; the law transfers to 5-input tasks with the same β; for 3-unit minimal circuits the same product measure holds.
 - **C5, trust-indexed escalation.** Given warrant costs per trust tier (Spike 06 F1), there is an optimal escalation policy: re-check at a higher tier exactly those claims whose `affected_by` set exceeds a threshold proportional to the cost ratio.
 
 ## 6. What this does *not* claim, and what is already known
