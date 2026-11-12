@@ -31,22 +31,33 @@ def assoc(t):
 SEMI = [t for t in itertools.product(range(3), repeat=9) if assoc(t)]
 
 
-def tasks(n=300, n_sym=150):
-    """n general tasks (seed 2600), then n_sym further tasks with a nontrivial symmetry group (seed 2603)."""
+def tasks(n=300):
+    """n general tasks (rng seed 2600), then EVERY task with a nontrivial symmetry group, enumerated
+    exhaustively (114 distinct revealed tables; amendment before any run, see SPIKE_26_REPORT.md)."""
     out, seen = [], set()
-    for seed, want, need_sym in ((2600, n, False), (2603, n + n_sym, True)):
-        rng = np.random.default_rng(seed)
-        while len(out) < want:
-            S = SEMI[rng.integers(len(SEMI))]
-            k = int(rng.integers(4, 7))
-            R = tuple(sorted(rng.choice(9, size=k, replace=False).tolist()))
-            key = (R, tuple(S[i] for i in R))
-            if key in seen:
-                continue
-            comps = [t for t in SEMI if all(t[i] == S[i] for i in R)]
-            task = {"S": list(S), "R": list(R), "assoc_completions": [list(c) for c in comps], "pool": "symmetric" if need_sym else "general"}
-            if len(comps) >= 2 and (not need_sym or len(group(task)) > 1):
-                seen.add(key); out.append(task)
+    rng = np.random.default_rng(2600)
+    while len(out) < n:
+        S = SEMI[rng.integers(len(SEMI))]
+        k = int(rng.integers(4, 7))
+        R = tuple(sorted(rng.choice(9, size=k, replace=False).tolist()))
+        key = (R, tuple(S[i] for i in R))
+        if key in seen:
+            continue
+        comps = [t for t in SEMI if all(t[i] == S[i] for i in R)]
+        if len(comps) >= 2:
+            seen.add(key); out.append({"S": list(S), "R": list(R), "assoc_completions": [list(c) for c in comps], "pool": "general"})
+    sym_seen = set()
+    for S in SEMI:
+        for k in (4, 5, 6):
+            for R in itertools.combinations(range(9), k):
+                key = (R, tuple(S[i] for i in R))
+                if key in sym_seen:
+                    continue
+                sym_seen.add(key)
+                comps = [t for t in SEMI if all(t[i] == S[i] for i in R)]
+                task = {"S": list(S), "R": list(R), "assoc_completions": [list(c) for c in comps], "pool": "symmetric"}
+                if len(comps) >= 2 and len(group(task)) > 1:
+                    out.append(task)
     return out
 
 

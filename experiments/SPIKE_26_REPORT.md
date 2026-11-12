@@ -1,6 +1,6 @@
 # Spike 26: Do trained networks complete algebra lawfully? Associativity and the Curie bias on a 3-element carrier
 
-**Date:** 2026-11-12 · **Status:** pre-registered (no run made) · **Inspired by:** McDermott, Piróg & Uustalu, "Counting Monads on Lists" (CLA 2023). That paper counts the lawful structures on a fixed carrier and asks how one structure is singled out from a finite seed (closure under associativity). Here we ask which lawful structure *training* singles out. **Follows:** C8(c) (does the Curie bias transfer to non-Boolean domains?), Spike 20 (selection versus building)
+**Date:** 2026-11-12 · **Status:** pre-registered (no run made; amended once before any run, see below) · **Inspired by:** McDermott, Piróg & Uustalu, "Counting Monads on Lists" (CLA 2023). That paper counts the lawful structures on a fixed carrier and asks how one structure is singled out from a finite seed (closure under associativity). Here we ask which lawful structure *training* singles out. **Follows:** C8(c) (does the Curie bias transfer to non-Boolean domains?), Spike 20 (selection versus building)
 
 ## Setting
 
@@ -28,3 +28,7 @@
 | H26.3 | **The Curie bias transfers (C8(c)).** β < 0 for full training | 95% interval below 0 | point estimate ≥ 0 |
 
 Reported as well: whether the completion training picks is the source semigroup S, as a rate against 1 / (number of associative completions).
+
+## Amendment before any run (2026-11-12)
+
+The generator ran for 30 minutes without filling the symmetric pool. Exhaustive count: only **114** distinct revealed tables have ≥ 2 associative completions and a nontrivial G. By k: 48 at 4 cells, 45 at 5, 21 at 6. The target of 150 was therefore unreachable. Amendment: the symmetric pool is *all 114*, enumerated exhaustively and deterministically. A symmetric task that is also drawn into the general pool appears in both pools. Hypotheses, criteria, training and estimators are unchanged. No network had been trained when this was changed.
