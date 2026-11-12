@@ -163,6 +163,13 @@ Baril et al. (arXiv:2512.03916) give a calculus for solution sets: join/union ex
 
 Status: EMPIRICAL (pre-registered transfer test H19.7 held; the two-parameter form is post hoc). The Curie bias (§3.7) is a consequence, since Ω and agreement are larger for symmetric units. The law reaches about 60% of the per-element ceiling.
 
+**Refinement (Spike 20, pre-registered).**
+1. The tilt variable is better stated as *mutual information* I(t; g) than agreement: 1.93 bits/run held out, about 70% of the ceiling.
+2. λ is a constant (≈ 10.5 in agreement units) across optimizer, weight decay, horizon and width for tanh networks; C9's "temperature" reading is refuted.
+3. ReLU networks and selection-only training have no tilt; their choice follows prior volume (γ ≈ 1).
+
+So: **volume decides what is available; tanh gradient training adds an information tilt.**
+
 ## 4. Map: charter ↔ theory ↔ evidence
 
 | Charter | Theory | Machine-checked | Empirical instance |
@@ -185,7 +192,8 @@ Status: EMPIRICAL (pre-registered transfer test H19.7 held; the two-parameter fo
 - **C6, reach vs choice (withdrawn in its strong form, Spike 10c F3).** The conjecture was that any two rules that fit a task choose the same completions. Hand-written error-driven rules do (Spike 10b), but meta-learned rules with terms acting directly on the weights fit equally well and choose a cheapest completion far less often (72–84% against 96%). Revised form: the completion distribution is fixed by the architecture and initialization only for rules whose first-layer update is driven by the error alone.
 - **C7, minimal observational power for learning.** For each element of the atlas there is a least observational power (and symmetry group) whose dictionary contains a rule that learns it. Power A is excluded by Theorem 12. Spike 10c: a broadcast error with permutation symmetry suffices for all 222 four-input elements (order 2, 7 terms). Whether the orthogonal or signed-permutation dictionaries suffice is open; search found 41 and 24 elements, which are lower bounds.
 - **C8, Curie principle for learning.** For any architecture and training rule that are equivariant under a task's symmetry group G, the mass that training assigns to an orbit O of minimal mechanisms decreases with |O|. Equivalently, it increases with the size of the subgroup of G that fixes the mechanism. Open: (a) a mechanism (candidate: symmetric configurations are attracting under the averaged dynamics, cf. arXiv:2309.16932); (b) whether β is universal or depends on architecture; (c) transfer to non-Boolean domains, such as group-operation tasks, where G is large and known.
-- **C9, tilted-volume law.** The unit weight is a Gibbs tilt of prior volume, w(t | g) ∝ Ω(t)·exp(−β·#errors(t, g)), with β set by the optimizer and training horizon. Predictions: β grows with training time and with weight decay; the law transfers to 5-input tasks with the same β; for 3-unit minimal circuits the same product measure holds.
+- **C9, tilted-volume law (temperature form REFUTED by Spike 20).** λ does not depend on optimizer, weight decay or horizon. It does depend on the activation: ReLU gives no tilt.
+- **C10, origin of the tilt.** The information tilt arises because gradient flow *moves* units: a saturating activation's derivative lets a unit's hyperplane rotate toward informative directions, which ReLU's dead regions and frozen (selection-only) units do not. Prediction: tilt strength tracks how much units' threshold functions change during training; it is restored in ReLU nets with leaky slopes.
 - **C5, trust-indexed escalation.** Given warrant costs per trust tier (Spike 06 F1), there is an optimal escalation policy: re-check at a higher tier exactly those claims whose `affected_by` set exceeds a threshold proportional to the cost ratio.
 
 ## 6. What this does *not* claim, and what is already known
