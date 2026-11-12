@@ -38,3 +38,9 @@ Each is checked on all 128 elements; "unseen" means the 80 new elements only.
 | H14.8 | B2 | Option value replicates: median Spearman of hub degree ≥ 0.3 | in every run | < 0.15 in any |
 
 Between thresholds, the verdict is "neither".
+
+## Prior-art gate (abstract or index level)
+
+- arXiv:2309.16932 (Ziyin et al.): mirror symmetries of the *loss in parameter space* make symmetric solutions attractive under gradient noise. This is a possible mechanism for B1, but it concerns parameter symmetries, not orbits of a task's discrete minimal mechanisms.
+- arXiv:2610.36138: limited capacity forces a predictable amount of symmetry breaking. This is the opposing pull. B1 says that, among the solutions capacity allows, training breaks as little as it can.
+- No source found that states a power law of mechanism mass in orbit size under the task's symmetry group, or that tests one against an exact list of circuits.
