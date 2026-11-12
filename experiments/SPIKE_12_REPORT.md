@@ -105,7 +105,7 @@ Between thresholds, the verdict is "neither" and is reported as such.
 
 **F4. Wider networks build redundant cores.** The output-carrying prefix grows from 3.2 units at width 8 to 6.6 at width 1024, while the minimal circuit inside it stays the same (F1). Training duplicates the circuit rather than changing it.
 
-**F5. About half of the fitted nets compute g with a three-unit core that contains no minimal pair.** This holds at every width (50–67%). These nets are excluded from the isomer statistics, so all R2 numbers describe the other half.
+**F5. About half of the fitted nets compute g with an output-carrying core that contains no minimal pair (it needs three or more of its units).** This holds at every width (50–67%). These nets are excluded from the isomer statistics, so all R2 numbers describe the other half.
 
 ## What this says about "deterministic or inductive"
 
