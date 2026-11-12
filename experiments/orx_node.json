@@ -1,8 +1,108 @@
 {
- "spike": 27,
- "title": "Is positive homogeneity what removes the information tilt? (C12)",
- "report": "experiments/SPIKE_27_REPORT.md",
- "module": "spike27",
- "steps": [["run", "abs"], ["run", "relu2"], ["run", "ssq"], ["run", "softplus"], ["run", "elu"], ["run", "relu-sphere"], ["analyse"]],
- "result": "experiments/results/spike27.json"
+ "spike": 29,
+ "title": "Indicator alignment at the trained scale; does the tilt help generalization?",
+ "report": "experiments/SPIKE_29_REPORT.md",
+ "module": "spike29",
+ "steps": [
+  [
+   "run",
+   "abs"
+  ],
+  [
+   "run",
+   "arcsinh"
+  ],
+  [
+   "run",
+   "bentid"
+  ],
+  [
+   "run",
+   "clip2"
+  ],
+  [
+   "run",
+   "clip4"
+  ],
+  [
+   "run",
+   "cliprelu"
+  ],
+  [
+   "run",
+   "elu"
+  ],
+  [
+   "run",
+   "erf"
+  ],
+  [
+   "run",
+   "gelu"
+  ],
+  [
+   "run",
+   "hardtanh"
+  ],
+  [
+   "run",
+   "leaky0.01"
+  ],
+  [
+   "run",
+   "leaky0.1"
+  ],
+  [
+   "run",
+   "leaky0.3"
+  ],
+  [
+   "run",
+   "relu"
+  ],
+  [
+   "run",
+   "relu2"
+  ],
+  [
+   "run",
+   "sigmoid"
+  ],
+  [
+   "run",
+   "signsqrt"
+  ],
+  [
+   "run",
+   "silu"
+  ],
+  [
+   "run",
+   "softplus"
+  ],
+  [
+   "run",
+   "softsign"
+  ],
+  [
+   "run",
+   "ssq"
+  ],
+  [
+   "run",
+   "tanh"
+  ],
+  [
+   "run",
+   "tanh02"
+  ],
+  [
+   "run",
+   "tanh05"
+  ],
+  [
+   "analyse"
+  ]
+ ],
+ "result": "experiments/results/spike29.json"
 }

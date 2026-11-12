@@ -39,4 +39,7 @@ Inside OpenResearch these are `orx discover keyword|embedding|openalex|biorxiv|p
 
 ## 5. Privacy
 
+> **Telemetry: opted out (2026-11-12).** The cloud environment sets `ORX_TELEMETRY_ENV=off` (OpenResearch), `DISABLE_TELEMETRY=1` and `DISABLE_ERROR_REPORTING=1` (Claude Code), and `DO_NOT_TRACK=1`. On a local machine, run `orx telemetry off` once after installing, and put `export ORX_TELEMETRY_ENV=off DO_NOT_TRACK=1` in your shell profile. With either setting, `orx` never sends analytics or agent feedback reports.
+
+
 OpenResearch sends coarse, opt-out usage analytics and agent feedback reports. Before using it on this project, turn them off with `orx telemetry off` (or `ORX_TELEMETRY_ENV=off`). Publish a project (`orx project share --publish`) only on explicit request.
