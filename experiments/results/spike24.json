@@ -1,0 +1,72 @@
+{
+ "tanh": {
+  "odd": true,
+  "saturating": true,
+  "fit": 0.99921875,
+  "step3000": {
+   "gamma": 0.655214803208408,
+   "lambda_MI": 11.584781157188143,
+   "nll": 219668.54287775612
+  }
+ },
+ "hardtanh": {
+  "odd": true,
+  "saturating": true,
+  "fit": 0.9966796875,
+  "step3000": {
+   "gamma": 0.9223719137030123,
+   "lambda_MI": 10.706074645535217,
+   "nll": 221161.9196171116
+  }
+ },
+ "softsign": {
+  "odd": true,
+  "saturating": true,
+  "fit": 1.0,
+  "step3000": {
+   "gamma": 0.5141589632351391,
+   "lambda_MI": 12.104730462198969,
+   "nll": 215357.22498732194
+  }
+ },
+ "arcsinh": {
+  "odd": true,
+  "saturating": false,
+  "fit": 1.0,
+  "step3000": {
+   "gamma": 0.7018977351829776,
+   "lambda_MI": 9.092303530454855,
+   "nll": 243586.142385771
+  }
+ },
+ "sigmoid": {
+  "odd": false,
+  "saturating": true,
+  "fit": 0.976171875,
+  "step3000": {
+   "gamma": 0.6767160865776005,
+   "lambda_MI": 12.75655685103734,
+   "nll": 205186.53629183097
+  }
+ },
+ "cliprelu": {
+  "odd": false,
+  "saturating": true,
+  "fit": 0.9400390625,
+  "step3000": {
+   "gamma": 0.6700100342027534,
+   "lambda_MI": 10.47146985914664,
+   "nll": 220558.78537708163
+  }
+ },
+ "relu": {
+  "odd": false,
+  "saturating": false,
+  "fit": 0.991015625,
+  "step3000": {
+   "gamma": 0.525901917781141,
+   "lambda_MI": 1.1900500576112338,
+   "nll": 260840.64283843638
+  }
+ }
+}

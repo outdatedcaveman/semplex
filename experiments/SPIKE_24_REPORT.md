@@ -1,6 +1,6 @@
 # Spike 24: What about tanh makes the information tilt? Oddness versus saturation
 
-**Date:** 2026-11-12 · **Status:** pre-registered (no run made) · **Follows:** Spike 22 (leaky ReLU does not restore the tilt; C10 refuted)
+**Date:** 2026-11-12 · **Status:** complete (pre-registered in 22e7329; results below) · **Follows:** Spike 22 (leaky ReLU does not restore the tilt; C10 refuted)
 
 ## Question
 
@@ -32,3 +32,39 @@ Note: sigmoid(x) = (1 + tanh(x/2))/2, so a sigmoid net computes the same functio
 | H24.1 (C11a) | **Oddness makes the tilt** | every odd activation has λ ≥ 5 and every non-odd one λ ≤ 3 | any odd activation has λ < 3, or any non-odd one λ > 5 |
 | H24.2 (C11b) | **Saturation makes the tilt** | every saturating activation has λ ≥ 5 and every non-saturating one λ ≤ 3 | any saturating activation has λ < 3, or any non-saturating one λ > 5 |
 | H24.3 | Sigmoid behaves like tanh (the tilt is a property of the function class) | λ(sigmoid) ≥ 0.7 × λ(tanh) | λ(sigmoid) ≤ 0.3 × λ(tanh) |
+
+---
+
+## Results
+
+Exact fits (`cerp/loglin.py`); raw data in `results/spike24_raw/`, fits in `results/spike24.json`. ReLU is the Spike 22 run.
+
+| Activation | Odd | Saturating | Fit rate | γ₃₀₀₀ | λ₃₀₀₀ |
+|---|---|---|---|---|---|
+| tanh | yes | yes | 0.999 | 0.66 | 11.59 |
+| hardtanh | yes | yes | 0.997 | 0.92 | 10.71 |
+| softsign | yes | yes | 1.000 | 0.51 | 12.11 |
+| arcsinh | yes | no | 1.000 | 0.70 | 9.09 |
+| sigmoid | no | yes | 0.976 | 0.68 | 12.76 |
+| clipped ReLU | no | yes | 0.940 | 0.67 | 10.47 |
+| ReLU | no | no | 0.991 | 0.53 | 1.19 |
+
+All fit rates are above the 90% flag.
+
+### Verdicts
+
+| # | Verdict |
+|---|---|
+| H24.1 (oddness) | **Broken.** Sigmoid (12.76) and clipped ReLU (10.47) are not odd and have λ > 5. |
+| H24.2 (saturation) | **Broken.** Arcsinh does not saturate and has λ = 9.09 > 5. |
+| H24.3 (sigmoid like tanh) | **Held.** λ(sigmoid) = 1.10 × λ(tanh). |
+
+## Findings
+
+**F1. The tilt is generic; ReLU is the exception.** Six activations of very different shapes give λ between 9 and 13. Only the ReLU family is near zero: ReLU 1.2, and leaky ReLU 0.3–1.1 (Spike 22). Neither oddness nor saturation is needed.
+
+**F2. Clipping ReLU restores the tilt.** Clipped ReLU equals ReLU on [0, 1] and is constant above 1. Bounding the active side moves λ from 1.2 to 10.5. Arcsinh is unbounded but grows logarithmically, and it also has the tilt.
+
+**F3. What the ReLU family uniquely shares is positive homogeneity.** φ(cx) = c·φ(x) for c > 0 holds for ReLU and every leaky ReLU, and for none of the six tilted activations. Homogeneity gives each unit a continuous rescaling symmetry, (w₁, b₁, w₂) → (c·w₁, c·b₁, w₂/c). Under gradient flow this conserves w₂² − ‖(w₁, b₁)‖² (balancedness), so a unit's hyperplane can no longer be sharpened independently of its readout. This is post hoc. It is stated as conjecture C12 and tested in Spike 27.
+
+**F4. The function class does not decide; the parametrization does.** Sigmoid and tanh nets compute the same functions and both have the tilt. ReLU and clipped ReLU nets differ only above 1, and only one has it. So the tilt belongs to the training dynamics.
