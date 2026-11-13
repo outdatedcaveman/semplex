@@ -320,4 +320,69 @@ theorem depth2_or_flip_adds_one (n : Nat) (ns : List ((Nat → Int) × Int)) (x�
       · exfalso; exact hmatch (heq.mpr (hp.mp h))
     simp [flipped, evalOr, hmatchf, hpx]
 
+private def pt4 (a b c d : Int) : Nat → Int
+  | 0 => a
+  | 1 => b
+  | 2 => c
+  | 3 => d
+  | _ => 0
+
+private def bad4 : List (List (Nat → Int) × List (Nat → Int)) :=
+  [ ([pt4 1 0 0 0, pt4 0 1 0 0], [pt4 0 0 0 0, pt4 1 1 0 0])
+  , ([pt4 1 0 0 0, pt4 0 0 1 0], [pt4 0 0 0 0, pt4 1 0 1 0])
+  , ([pt4 1 1 1 0, pt4 1 0 0 0], [pt4 1 1 0 0, pt4 1 0 1 0])
+  ]
+
+/-- 4-bit parity cannot be separated by two halfspaces (P040/P048):
+    three distance-2 even points form a triangle whose pairs each match
+    an odd-parity pair with equal coordinate sums. -/
+theorem parity4_not_two_halfspaces :
+    ¬ ∃ (w₁ w₂ : Nat → Int) (t₁ t₂ : Int),
+      (∀ b, b ∈ bad4 → (∀ p, p ∈ b.1 → t₁ ≤ dot 4 w₁ p) ∧ (∀ p, p ∈ b.1 → t₂ ≤ dot 4 w₂ p)) ∧
+      (∀ b, b ∈ bad4 → ∀ q, q ∈ b.2 → dot 4 w₁ q < t₁ ∨ dot 4 w₂ q < t₂) := by
+  apply not_two_halfspaces_cert_sound 4 bad4
+  · intro b hb
+    simp only [bad4, List.mem_cons, List.not_mem_nil, or_false] at hb
+    rcases hb with rfl | rfl | rfl <;> refine ⟨rfl, by decide, fun j hj => ?_⟩ <;>
+      match j, hj with
+      | 0, _ => rfl
+      | 1, _ => rfl
+      | 2, _ => rfl
+      | 3, _ => rfl
+  · intro col
+    cases h0 : col (pt4 0 0 0 0) <;> cases h1 : col (pt4 1 1 0 0) <;> cases h2 : col (pt4 1 0 1 0)
+    · exact ⟨_, List.mem_cons_self _ _, Or.inr (fun q hq => by simp only [List.mem_cons, List.not_mem_nil, or_false] at hq; rcases hq with hq | hq <;> rw [hq] <;> assumption)⟩
+    · exact ⟨_, List.mem_cons_self _ _, Or.inr (fun q hq => by simp only [List.mem_cons, List.not_mem_nil, or_false] at hq; rcases hq with hq | hq <;> rw [hq] <;> assumption)⟩
+    · exact ⟨_, List.mem_cons_of_mem _ (List.mem_cons_self _ _), Or.inr (fun q hq => by simp only [List.mem_cons, List.not_mem_nil, or_false] at hq; rcases hq with hq | hq <;> rw [hq] <;> assumption)⟩
+    · exact ⟨_, List.mem_cons_of_mem _ (List.mem_cons_of_mem _ (List.mem_cons_self _ _)), Or.inl (fun q hq => by simp only [List.mem_cons, List.not_mem_nil, or_false] at hq; rcases hq with hq | hq <;> rw [hq] <;> assumption)⟩
+    · exact ⟨_, List.mem_cons_of_mem _ (List.mem_cons_of_mem _ (List.mem_cons_self _ _)), Or.inr (fun q hq => by simp only [List.mem_cons, List.not_mem_nil, or_false] at hq; rcases hq with hq | hq <;> rw [hq] <;> assumption)⟩
+    · exact ⟨_, List.mem_cons_of_mem _ (List.mem_cons_self _ _), Or.inl (fun q hq => by simp only [List.mem_cons, List.not_mem_nil, or_false] at hq; rcases hq with hq | hq <;> rw [hq] <;> assumption)⟩
+    · exact ⟨_, List.mem_cons_self _ _, Or.inl (fun q hq => by simp only [List.mem_cons, List.not_mem_nil, or_false] at hq; rcases hq with hq | hq <;> rw [hq] <;> assumption)⟩
+    · exact ⟨_, List.mem_cons_self _ _, Or.inl (fun q hq => by simp only [List.mem_cons, List.not_mem_nil, or_false] at hq; rcases hq with hq | hq <;> rw [hq] <;> assumption)⟩
+
+/-- Flipping a true point `x₀` to false in `evalOr` is realized by conjoining
+    with the negated point-selector neuron `!(ptWeight x₀ · x ≥ ptThresh x₀ n)`. -/
+theorem depth2_or_flip_true_to_false (n : Nat) (ns : List ((Nat → Int) × Int)) (x₀ x : Nat → Int)
+    (hx0 : ∀ j, j < n → x₀ j = 0 ∨ x₀ j = 1)
+    (hx : ∀ j, j < n → x j = 0 ∨ x j = 1)
+    (ht0 : evalOr n x₀ ns = true) :
+    let flipped := if eqPrefix x x₀ n then !(evalOr n x ns) else evalOr n x ns
+    flipped = (evalOr n x ns && !(decide (ptThresh x₀ n ≤ dot n (ptWeight x₀) x))) := by
+  intro flipped
+  have hp : decide (ptThresh x₀ n ≤ dot n (ptWeight x₀) x) = true ↔ ∀ j, j < n → x j = x₀ j := by
+    simp only [decide_eq_true_eq]
+    exact ptDot_ge_iff x₀ x n hx0 hx
+  have heq : eqPrefix x x₀ n = true ↔ ∀ j, j < n → x j = x₀ j := eqPrefix_true_iff x x₀ n
+  by_cases hmatch : eqPrefix x x₀ n = true
+  · have hall := heq.mp hmatch
+    have hfx : evalOr n x ns = true := by rw [evalOr_congr n x x₀ hall ns, ht0]
+    have hpx : decide (ptThresh x₀ n ≤ dot n (ptWeight x₀) x) = true := hp.mpr hall
+    simp [flipped, hmatch, hfx, hpx]
+  · have hmatchf : eqPrefix x x₀ n = false := by cases h : eqPrefix x x₀ n <;> simp_all
+    have hpx : decide (ptThresh x₀ n ≤ dot n (ptWeight x₀) x) = false := by
+      cases h : decide (ptThresh x₀ n ≤ dot n (ptWeight x₀) x)
+      · rfl
+      · exfalso; exact hmatch (heq.mpr (hp.mp h))
+    simp [flipped, hmatchf, hpx]
+
 end CerpBounds

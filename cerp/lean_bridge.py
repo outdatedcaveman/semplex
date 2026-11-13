@@ -205,3 +205,27 @@ def verify_expr_equiv_tseitin(left, right, vars_, lemmas, name="tseitin_equiv", 
     printed = [json.loads(line) for line in log.splitlines() if line.startswith("[")]
     ok = ok and printed == expected
     return LeanCheck(ok, name, stmt, ax or (), version(), sha, log, _TOKEN), text
+
+
+def verify_expr_equiv_lrat(left, right, vars_, lrat_steps, name="lrat_equiv", native=False):
+    """Prove ∀σ, eval σ L = eval σ R in Lean via linear-time hint-indexed LRAT checker."""
+    n = len(vars_)
+    fmt_step = lambda c, hs: f"([" + ", ".join(str(l) for l in c) + "], [" + ", ".join(str(h) for h in hs) + "])"
+    Ls = "[" + ", ".join(fmt_step(c, hs) for c, hs in lrat_steps) + "]"
+    defs = [
+        f"def eL : Expr := {expr_to_lean(left['body'], vars_)}",
+        f"def eR : Expr := {expr_to_lean(right['body'], vars_)}",
+        f"def Ls : List (Clause × List Nat) := {Ls}",
+    ]
+    stmt = "∀ σ, eval σ eL = eval σ eR"
+    dec = "native_decide" if native else "decide"
+    proof = f"tseitinMiter_lrat_unsat_implies_equiv {n} eL eR Ls (by decide) (by decide) (by {dec}) (by {dec})"
+    body = "\n".join(defs) + f"\n\ntheorem {name} : {stmt} :=\n  {proof}\n"
+    ok, ax, log, sha, text = _check(
+        body, name, stmt, renders=("eL", "eR"),
+        allowed=NATIVE_AXIOMS if native else ALLOWED_AXIOMS,
+    )
+    expected = [render_indexed(a["body"], vars_) for a in (left, right)]
+    printed = [json.loads(line) for line in log.splitlines() if line.startswith("[")]
+    ok = ok and printed == expected
+    return LeanCheck(ok, name, stmt, ax or (), version(), sha, log, _TOKEN), text

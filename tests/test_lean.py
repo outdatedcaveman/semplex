@@ -91,3 +91,24 @@ def test_tseitin_miter_equiv_proved_by_lean_kernel():
     _, lemmas, _ = prove_equivalence({"vars": vs, "left": e1, "right": e2})
     r, _ = lean_bridge.verify_expr_equiv_tseitin(e1, e2, vs, lemmas, name="t_tseitin_demorgan")
     assert r.ok and set(r.axioms) <= {"propext", "Quot.sound", "Classical.choice"}
+
+
+def test_lrat_miter_equiv_and_ur_compiler_certify_lean():
+    from cerp import sat, ur_compiler
+    vs = ["a", "b", "c"]
+    e1 = {"kind": "expr", "body": ["xor", ["var", "a"], ["xor", ["var", "b"], ["var", "c"]]]}
+    e2 = {"kind": "expr", "body": ["xor", ["xor", ["var", "a"], ["var", "b"]], ["var", "c"]]}
+    status, lrat_steps, _ = sat.prove_equivalence_lrat({"vars": vs, "left": e1, "right": e2})
+    assert status == "unsat"
+    r, _ = lean_bridge.verify_expr_equiv_lrat(e1, e2, vs, lrat_steps, name="t_lrat_xor")
+    assert r.ok and set(r.axioms) <= {"propext", "Quot.sound", "Classical.choice"}
+
+    out = ur_compiler.compile_unified({
+        "kind": "f0",
+        "vars": vs,
+        "fn": lambda env: env["a"] ^ env["b"] ^ env["c"],
+        "name": "xor3_cert",
+        "certify_lean": True,
+    })
+    assert out["validation_errors"] == []
+    assert out["lean_cert"] is not None and out["lean_cert"]["ok"] is True

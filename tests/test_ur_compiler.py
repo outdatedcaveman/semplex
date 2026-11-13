@@ -1,5 +1,6 @@
 """Tests for cerp.ur_compiler (compositional C4 profile-factorization + unified F0/LTS/Causal)."""
 
+import math
 import random
 
 from cerp import kernel, ur_compiler
@@ -15,16 +16,20 @@ def test_compositional_parity_n8():
     assert res["profile_rank"] == 1
     assert res["atlas_min_neurons"] is not None
     assert res["circuit"] is not None
+    assert res["threshold_net"] is not None
+    assert len(res["threshold_net"]["nodes"]) <= res["atlas_min_neurons"]
     assert "gates" in res["circuit_cost"] and "depth" in res["circuit_cost"]
-    # Verify exact extensional agreement on all 256 inputs for both expr and DAG circuit
+    # Verify exact extensional agreement on all 256 inputs for expr, DAG circuit, and threshold_net
     body = res["expr"]["body"]
     circ = res["circuit"]["body"]
+    tnet = res["threshold_net"]
     for m in range(256):
         env = {vars8[j]: (m >> j) & 1 for j in range(8)}
         benv = {k: bool(v) for k, v in env.items()}
         expected = parity(env)
         assert int(bool(kernel._eval_expr(body, benv))) == expected
         assert evaluate_circuit(circ, env) == expected
+        assert ur_compiler.eval_threshold_net(tnet, env) == expected
 
 
 def test_compositional_hierarchical_threshold_n8():
@@ -92,9 +97,11 @@ def test_unified_stochastic_lts_compilation():
         "states": states,
         "actions": actions,
         "transitions": transitions,
+        "horizon": 3,
     })
     assert out["validation_errors"] == []
     assert abs(out["eps_bound"] - 0.2) < 1e-9
+    assert abs(out["horizon_eps_bound"] - 0.6) < 1e-9
     benv_01 = {"s0": False, "a0": True}
     assert int(bool(kernel._eval_expr(out["compiled_outputs"]["next_s0"]["expr"]["body"], benv_01))) == 1
     assert int(bool(kernel._eval_expr(out["compiled_outputs"]["out"]["expr"]["body"], benv_01))) == 1
@@ -121,3 +128,20 @@ def test_unified_continuous_compilation():
     ones = {v: 1 for v in comp["vars"]}
     assert evaluate_circuit(comp["circuit"]["body"], zeros) == 0
     assert evaluate_circuit(comp["circuit"]["body"], ones) == 1
+
+    # Adaptive Lipschitz subdivision should agree with uniform and use fewer than 64 fn evals
+    out_ad = ur_compiler.compile_unified({
+        "kind": "continuous",
+        "dim": 2,
+        "bits_per_coord": 3,
+        "fn": lambda xs: xs[0] + xs[1],
+        "threshold": 1.0,
+        "lipschitz": math.sqrt(2.0),
+        "adaptive": True,
+        "name": "halfspace_2d_ad",
+    })
+    assert out_ad["validation_errors"] == []
+    assert out_ad["adaptive"] is True
+    assert out_ad["fn_evals"] < 64
+    assert evaluate_circuit(out_ad["compiled"]["circuit"]["body"], zeros) == 0
+    assert evaluate_circuit(out_ad["compiled"]["circuit"]["body"], ones) == 1

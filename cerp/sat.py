@@ -200,3 +200,97 @@ def prove_equivalence(claim, time_limit=60.0):
         return "unsat", s.proof, s
     m = s.model()
     return "sat", {name: m[i + 1] for i, name in enumerate(claim["vars"])}, s
+
+
+def rup_to_lrat(clauses, lemmas):
+    """Convert a RUP proof (list of clauses) into hint-indexed LRAT steps [(clause, [cid, ...]), ...]."""
+    db = [list(c) for c in clauses]
+    lrat = []
+    for C in lemmas:
+        # `false_lits` are literals falsified by the current trail.
+        # Initial trail is [-l for l in C], which falsifies every l in C.
+        false_lits = set(C)
+        hints = []
+        while True:
+            conflict_cid = None
+            unit_cid = None
+            unit_lit = None
+            for cid, cl in enumerate(db):
+                rem = [l for l in cl if l not in false_lits]
+                if not rem:
+                    conflict_cid = cid
+                    break
+                if len(rem) == 1 and unit_cid is None:
+                    u = rem[0]
+                    # Only propagate if -u is not already falsified (i.e. u not already true)
+                    if (-u) not in false_lits:
+                        unit_cid = cid
+                        unit_lit = u
+            if conflict_cid is not None:
+                hints.append(conflict_cid)
+                break
+            if unit_cid is None:
+                raise ValueError(f"RUP lemma {C} failed unit propagation during LRAT conversion")
+            hints.append(unit_cid)
+            false_lits.add(-unit_lit)
+        lrat.append((list(C), hints))
+        db.append(list(C))
+        if not C:
+            break
+    return lrat
+
+
+def _lean_tseitin_encode(body, var_idx, nxt):
+    op = body[0]
+    if op == "const":
+        return nxt, [[nxt if int(body[1]) else -nxt]], nxt + 1
+    if op == "var":
+        return var_idx[body[1]] + 1, [], nxt
+    if op == "not":
+        oa, ca, n1 = _lean_tseitin_encode(body[1], var_idx, nxt)
+        out = n1
+        return out, ca + [[out, oa], [-out, -oa]], n1 + 1
+    if op == "and":
+        oa, ca, n1 = _lean_tseitin_encode(body[1], var_idx, nxt)
+        ob, cb, n2 = _lean_tseitin_encode(body[2], var_idx, n1)
+        out = n2
+        return out, ca + cb + [[-out, oa], [-out, ob], [out, -oa, -ob]], n2 + 1
+    if op == "or":
+        oa, ca, n1 = _lean_tseitin_encode(body[1], var_idx, nxt)
+        ob, cb, n2 = _lean_tseitin_encode(body[2], var_idx, n1)
+        out = n2
+        return out, ca + cb + [[out, -oa], [out, -ob], [-out, oa, ob]], n2 + 1
+    if op == "xor":
+        oa, ca, n1 = _lean_tseitin_encode(body[1], var_idx, nxt)
+        ob, cb, n2 = _lean_tseitin_encode(body[2], var_idx, n1)
+        out = n2
+        return out, ca + cb + [[-out, -oa, -ob], [-out, oa, ob], [out, -oa, ob], [out, oa, -ob]], n2 + 1
+    if op == "ite":
+        oc, cc, n1 = _lean_tseitin_encode(body[1], var_idx, nxt)
+        ot, ct, n2 = _lean_tseitin_encode(body[2], var_idx, n1)
+        oe, ce, n3 = _lean_tseitin_encode(body[3], var_idx, n2)
+        out = n3
+        return out, cc + ct + ce + [[-oc, -out, ot], [-oc, out, -ot], [oc, -out, oe], [oc, out, -oe]], n3 + 1
+    raise ValueError(f"Unsupported op for Lean Tseitin miter: {op!r}")
+
+
+def _lean_tseitin_miter(vars_list, left_body, right_body):
+    var_idx = {v: i for i, v in enumerate(vars_list)}
+    n = len(vars_list)
+    o1, c1, n1 = _lean_tseitin_encode(left_body, var_idx, n + 1)
+    o2, c2, n2 = _lean_tseitin_encode(right_body, var_idx, n1)
+    clauses = c1 + c2 + [[-n2, -o1, -o2], [-n2, o1, o2], [n2, -o1, o2], [n2, o1, -o2], [n2]]
+    return n2, clauses
+
+
+def prove_equivalence_lrat(claim, time_limit=60.0):
+    """Untrusted search returning hint-indexed LRAT proof matching Cerp.tseitinMiter."""
+    n, clauses = _lean_tseitin_miter(claim["vars"], claim["left"]["body"], claim["right"]["body"])
+    s = Solver(n, clauses)
+    r = s.solve(time_limit)
+    if r is None:
+        return "timeout", None, s
+    if r is False:
+        return "unsat", rup_to_lrat(clauses, s.proof), s
+    m = s.model()
+    return "sat", {name: m[i + 1] for i, name in enumerate(claim["vars"])}, s

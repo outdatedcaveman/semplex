@@ -1148,4 +1148,204 @@ theorem tseitinMiter_unsat_implies_equiv (n : Nat) (e₁ e₂ : Expr) (Ls : List
     rw [hfalse] at hsat_miter
     exact Bool.false_ne_true hsat_miter
 
+-- ============================================================
+-- Linear-time hint-indexed LRAT checker (Q-C1 / Spike 09)
+-- ============================================================
+
+def DbValid (db : Array Clause) : Prop :=
+  ∀ (c : Clause), c ∈ db.data → ∀ l, l ∈ c → l ≠ 0
+
+def DbSat (σ : Nat → Bool) (db : Array Clause) : Prop :=
+  ∀ (c : Clause), c ∈ db.data → clauseSat σ c = true
+
+theorem list_mem_of_getElem? {α : Type} : ∀ (l : List α) (i : Nat) (x : α), l[i]? = some x → x ∈ l
+  | [], _, _, h => by simp at h
+  | _ :: _, 0, x, h => by simp at h; subst h; exact List.mem_cons_self _ _
+  | _ :: l, i + 1, x, h => List.mem_cons_of_mem _ (list_mem_of_getElem? l i x (by simpa using h))
+
+theorem array_mem_of_getElem? {α : Type} {a : Array α} {i : Nat} {x : α} (h : a[i]? = some x) :
+    x ∈ a.data := by
+  rcases a with ⟨l⟩
+  exact list_mem_of_getElem? l i x h
+
+theorem dbValid_of_wellFormed (F : CNF) (hw : wellFormed F = true) : DbValid F.toArray := by
+  intro c hc l hl
+  have hmem : c ∈ F := by simpa using hc
+  exact clause_nonzero hw hmem l hl
+
+theorem dbSat_of_cnfSat (σ : Nat → Bool) (F : CNF) (hsat : cnfSat σ F = true) : DbSat σ F.toArray := by
+  intro c hc
+  have hmem : c ∈ F := by simpa using hc
+  exact List.all_eq_true.mp hsat c hmem
+
+theorem dbValid_push (db : Array Clause) (C : Clause)
+    (hv : DbValid db) (hC : ∀ l, l ∈ C → l ≠ 0) : DbValid (db.push C) := by
+  intro c hc l hl
+  rcases db with ⟨d⟩
+  simp only [Array.push, List.concat_eq_append, List.mem_append, List.mem_singleton] at hc
+  rcases hc with h1 | h2
+  · exact hv c h1 l hl
+  · subst h2; exact hC l hl
+
+theorem dbSat_push (σ : Nat → Bool) (db : Array Clause) (C : Clause)
+    (hs : DbSat σ db) (hCsat : clauseSat σ C = true) : DbSat σ (db.push C) := by
+  intro c hc
+  rcases db with ⟨d⟩
+  simp only [Array.push, List.concat_eq_append, List.mem_append, List.mem_singleton] at hc
+  rcases hc with h1 | h2
+  · exact hs c h1
+  · subst h2; exact hCsat
+
+def lratHints (db : Array Clause) (trail : List Int) : List Nat → Bool
+  | [] => false
+  | cid :: rest =>
+      match db[cid]? with
+      | none => false
+      | some c =>
+          match c.filter (notFalse trail) with
+          | [] => true
+          | [u] => lratHints db (u :: trail) rest
+          | _ => false
+
+theorem lratHints_sound (σ : Nat → Bool) (db : Array Clause)
+    (hv : DbValid db) (hs : DbSat σ db) :
+    ∀ hints trail, Consistent σ trail → lratHints db trail hints = true → False := by
+  intro hints
+  induction hints with
+  | nil => intro trail _ h; simp [lratHints] at h
+  | cons cid rest ih =>
+      intro trail hc h
+      unfold lratHints at h
+      cases hdb : db[cid]? with
+      | none => simp [hdb] at h
+      | some c =>
+          simp only [hdb] at h
+          have hcmem : c ∈ db.data := array_mem_of_getElem? hdb
+          have hsatc : clauseSat σ c = true := hs c hcmem
+          cases hfil : c.filter (notFalse trail) with
+          | nil =>
+              obtain ⟨l, hl, hlt⟩ := List.any_eq_true.mp hsatc
+              have := false_of_notFalse_false hc (hv c hcmem l hl) (filter_nil_all hfil l hl)
+              rw [this] at hlt; exact Bool.false_ne_true hlt
+          | cons u us =>
+              cases us with
+              | nil =>
+                  simp only [hfil] at h
+                  obtain ⟨l, hl, hlt⟩ := List.any_eq_true.mp hsatc
+                  have hu_true : litTrue σ u = true := by
+                    by_cases hnf : notFalse trail l = true
+                    · have hmem : l ∈ c.filter (notFalse trail) := mem_filter_of hl hnf
+                      rw [hfil] at hmem
+                      simp at hmem; rw [← hmem]; exact hlt
+                    · have hnf' : notFalse trail l = false := by simpa using hnf
+                      have := false_of_notFalse_false hc (hv c hcmem l hl) hnf'
+                      rw [this] at hlt; exact absurd hlt Bool.false_ne_true
+                  apply ih (u :: trail) _ h
+                  intro l' hl'
+                  cases List.mem_cons.mp hl' with
+                  | inl e => rw [e]; exact hu_true
+                  | inr m => exact hc l' m
+              | cons _ _ => simp [hfil] at h
+
+def rupLrat (db : Array Clause) (C : Clause) (hints : List Nat) : Bool :=
+  lratHints db (C.map (fun l => -l)) hints
+
+theorem rupLrat_sound (σ : Nat → Bool) (db : Array Clause) (C : Clause) (hints : List Nat)
+    (hv : DbValid db) (hC : ∀ l, l ∈ C → l ≠ 0) (hs : DbSat σ db) (hr : rupLrat db C hints = true) :
+    clauseSat σ C = true := by
+  cases hcs : clauseSat σ C
+  · exfalso
+    apply lratHints_sound σ db hv hs hints (C.map (fun l => -l)) _ hr
+    intro l hl
+    obtain ⟨k, hk, hkl⟩ := List.mem_map.mp hl
+    rw [← hkl, litTrue_neg σ k (hC k hk)]
+    have : litTrue σ k = false := by
+      cases hv' : litTrue σ k
+      · rfl
+      · have : clauseSat σ C = true := List.any_eq_true.mpr ⟨k, hk, hv'⟩
+        rw [hcs] at this; exact absurd this Bool.false_ne_true
+    simp [this]
+  · rfl
+
+def checkLrat (db : Array Clause) : List (Clause × List Nat) → Bool
+  | [] => false
+  | (C, hints) :: Ls =>
+      C.all (fun l => l != 0) && rupLrat db C hints && (C.isEmpty || checkLrat (db.push C) Ls)
+
+theorem checkLrat_sound : ∀ (Ls : List (Clause × List Nat)) (db : Array Clause),
+    DbValid db → checkLrat db Ls = true → ∀ σ, ¬ DbSat σ db := by
+  intro Ls
+  induction Ls with
+  | nil => intro db _ h; simp [checkLrat] at h
+  | cons p Ls ih =>
+      intro db hv h σ hs
+      rcases p with ⟨C, hints⟩
+      simp only [checkLrat, Bool.and_eq_true, Bool.or_eq_true] at h
+      obtain ⟨⟨hnz, hr⟩, hrest⟩ := h
+      have hC : ∀ l, l ∈ C → l ≠ 0 := by
+        intro l hl; have := List.all_eq_true.mp hnz l hl; simpa using this
+      have hCsat := rupLrat_sound σ db C hints hv hC hs hr
+      cases hrest with
+      | inl hempty =>
+          have : C = [] := by simpa using hempty
+          subst this; simp [clauseSat] at hCsat
+      | inr hnext =>
+          exact ih (db.push C) (dbValid_push db C hv hC) hnext σ (dbSat_push σ db C hs hCsat)
+
+theorem tseitinMiter_lrat_unsat_implies_equiv (n : Nat) (e₁ e₂ : Expr)
+    (Ls : List (Clause × List Nat))
+    (hs₁ : Scoped n e₁ = true) (hs₂ : Scoped n e₂ = true)
+    (hw : wellFormed (tseitinMiter n e₁ e₂) = true)
+    (hchk : checkLrat (tseitinMiter n e₁ e₂).toArray Ls = true) :
+    ∀ σ, eval σ e₁ = eval σ e₂ := by
+  intro σ
+  by_cases hne : eval σ e₁ = eval σ e₂
+  · exact hne
+  · exfalso
+    let σ₀ : Nat → Bool := fun i => match i with | 0 => false | k + 1 => σ k
+    have h1 : 1 ≤ n + 1 := by omega
+    obtain ⟨τ₁, hagree₁, hsat₁, hval₁⟩ := tseitinEncode_complete e₁ n (n + 1) σ₀ h1 (Nat.le_refl _) hs₁
+    obtain ⟨ho₁_lt, hc₁⟩ := tseitinEncode_below e₁ n (n + 1) h1 (Nat.le_refl _) hs₁
+    obtain ⟨ho₁_pos, hn₁⟩ := tseitinEncode_out_pos e₁ (n + 1) h1
+    let n₁ := (tseitinEncode e₁ (n + 1)).2.2
+    have hn₁_ge : 1 ≤ n₁ := Nat.le_trans h1 hn₁
+    have hn₁_n : n + 1 ≤ n₁ := hn₁
+    obtain ⟨τ₂, hagree₂, hsat₂, hval₂⟩ := tseitinEncode_complete e₂ n n₁ τ₁ hn₁_ge hn₁_n hs₂
+    obtain ⟨ho₂_lt, hc₂⟩ := tseitinEncode_below e₂ n n₁ hn₁_ge hn₁_n hs₂
+    obtain ⟨ho₂_pos, hn₂⟩ := tseitinEncode_out_pos e₂ n₁ hn₁_ge
+    let n₂ := (tseitinEncode e₂ n₁).2.2
+    let τ := upd τ₂ n₂ true
+    have hsat_miter : cnfSat τ (tseitinMiter n e₁ e₂) = true := by
+      simp only [tseitinMiter, cnfSat_append, Bool.and_eq_true]
+      have hsat_c₁ : cnfSat τ (tseitinEncode e₁ (n + 1)).2.1 = true := by
+        rw [cnfSat_congr_below τ₂ τ n₁ (fun i hi => by simp [τ, upd, Nat.ne_of_lt (Nat.lt_of_lt_of_le hi hn₂)]) _ hc₁]
+        rw [cnfSat_congr_below τ₁ τ₂ n₁ hagree₂ _ hc₁]
+        exact hsat₁
+      have hsat_c₂ : cnfSat τ (tseitinEncode e₂ n₁).2.1 = true := by
+        rw [cnfSat_congr_below τ₂ τ n₂ (fun i hi => by simp [τ, upd, Nat.ne_of_lt hi]) _ hc₂]
+        exact hsat₂
+      have ho₁ : litTrue τ (tseitinEncode e₁ (n + 1)).1 = eval σ e₁ := by
+        rw [litTrue_upd_ne τ₂ n₂ true _ (by omega)]
+        have : litTrue τ₂ (tseitinEncode e₁ (n + 1)).1 = litTrue τ₁ (tseitinEncode e₁ (n + 1)).1 := by
+          have := cnfSat_congr_below τ₁ τ₂ n₁ hagree₂ [[(tseitinEncode e₁ (n + 1)).1]]
+            (fun c hc l hl => by simp at hc; subst hc; simp at hl; subst hl; exact ⟨by omega, ho₁_lt⟩)
+          simp [cnfSat, clauseSat] at this; exact this
+        rw [this, hval₁]
+      have ho₂ : litTrue τ (tseitinEncode e₂ n₁).1 = eval σ e₂ := by
+        rw [litTrue_upd_ne τ₂ n₂ true _ (by omega), hval₂]
+        exact eval_congr n (fun i => τ₁ (i + 1)) σ (fun i hi => hagree₁ (i + 1) (by omega)) e₂ hs₂
+      have hn₂_lit : litTrue τ (n₂ : Int) = true := by
+        have hpos : (0 : Int) < (n₂ : Int) := by omega
+        simp [litTrue, hpos, τ, upd]
+      have hxor : cnfSat τ (gateXor (n₂ : Int) (tseitinEncode e₁ (n + 1)).1 (tseitinEncode e₂ n₁).1) = true := by
+        simp [gateXor, cnfSat, clauseSat, litTrue_neg τ (n₂ : Int) (by omega),
+          litTrue_neg τ (tseitinEncode e₁ (n + 1)).1 (Int.ne_of_gt ho₁_pos),
+          litTrue_neg τ (tseitinEncode e₂ n₁).1 (Int.ne_of_gt ho₂_pos), ho₁, ho₂, hn₂_lit]
+        cases h1v : eval σ e₁ <;> cases h2v : eval σ e₂ <;> simp_all
+      have hunit : cnfSat τ [[(n₂ : Int)]] = true := by
+        simp [cnfSat, clauseSat, hn₂_lit]
+      exact ⟨⟨⟨hsat_c₁, hsat_c₂⟩, hxor⟩, hunit⟩
+    exact checkLrat_sound Ls (tseitinMiter n e₁ e₂).toArray
+      (dbValid_of_wellFormed _ hw) hchk τ (dbSat_of_cnfSat τ _ hsat_miter)
+
 end Cerp

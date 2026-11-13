@@ -117,16 +117,87 @@ def _get_atlas_tables(m_max: int = 4):
     return _ATLAS_CACHE[m_max]
 
 
-def _atlas_min_for_table(n: int, table_arr: np.ndarray, atlas_tables=None) -> int | None:
-    if n > 4:
-        return None
+def _atlas_min_for_table(n: int, table_arr: np.ndarray, atlas_tables=None) -> tuple[int | None, int | None]:
+    if n > 4 or n < 1:
+        return None, None
     tb = (atlas_tables or _get_atlas_tables(4))[n]
     # Atlas indexes assignments with var[0] as LSB (Fortran order), TruthTable uses MSB-first (C order)
     arr_f = table_arr.reshape((2,) * n).ravel(order="F")
     bits = 0
     for i in np.flatnonzero(arr_f):
         bits |= 1 << int(i)
-    return int(tb.hi[bits])
+    return int(tb.hi[bits]), bits
+
+
+def _leaf_threshold_net(vars_list: list[str], bits: int | None, atlas_tables=None) -> dict[str, Any] | None:
+    n = len(vars_list)
+    if bits is None or n < 1 or n > 4:
+        return None
+    tables = atlas_tables or _get_atlas_tables(4)
+    layers = atlas.net_layers(tables, n, bits)
+    if layers is None:
+        return None
+    nodes = []
+    cur_inputs = list(vars_list)
+    for li, layer in enumerate(layers):
+        next_inputs = []
+        for ni, neu in enumerate(layer):
+            nid = f"n_{li}_{ni}"
+            nodes.append({"id": nid, "in": list(cur_inputs), "w": [int(w) for w in neu["w"]], "t": int(neu["t"])})
+            next_inputs.append(nid)
+        cur_inputs = next_inputs
+    return {"inputs": list(vars_list), "nodes": nodes, "output": cur_inputs[0]}
+
+
+def _compose_threshold_nets(
+    vars_list: list[str],
+    enc_vars: list[str],
+    enc_nets: list[dict[str, Any] | None],
+    dec_net: dict[str, Any] | None,
+) -> dict[str, Any] | None:
+    if dec_net is None or any(e is None for e in enc_nets):
+        return None
+    nodes = []
+    wire_map: dict[str, str] = {}
+    for k, (ev, enet) in enumerate(zip(enc_vars, enc_nets)):
+        prefix = f"e{k}_"
+        local_map: dict[str, str] = {}
+        for nd in enet["nodes"]:
+            new_id = prefix + nd["id"]
+            local_map[nd["id"]] = new_id
+            nodes.append({
+                "id": new_id,
+                "in": [local_map.get(src, src) for src in nd["in"]],
+                "w": list(nd["w"]),
+                "t": int(nd["t"]),
+            })
+        wire_map[ev] = local_map.get(enet["output"], enet["output"])
+
+    d_prefix = "d_"
+    d_map: dict[str, str] = dict(wire_map)
+    for nd in dec_net["nodes"]:
+        new_id = d_prefix + nd["id"]
+        d_map[nd["id"]] = new_id
+        nodes.append({
+            "id": new_id,
+            "in": [d_map.get(src, src) for src in nd["in"]],
+            "w": list(nd["w"]),
+            "t": int(nd["t"]),
+        })
+    return {
+        "inputs": list(vars_list),
+        "nodes": nodes,
+        "output": d_map.get(dec_net["output"], dec_net["output"]),
+    }
+
+
+def eval_threshold_net(net: dict[str, Any], env: dict[str, int]) -> int:
+    """Evaluate a DAG threshold-neuron network emitted by the Ur-Compiler."""
+    vals = {v: int(env[v]) for v in net["inputs"]}
+    for nd in net["nodes"]:
+        s = sum(int(w) * vals[src] for w, src in zip(nd["w"], nd["in"]))
+        vals[nd["id"]] = 1 if s >= int(nd["t"]) else 0
+    return vals[net["output"]]
 
 
 def _leaf_compile_table(vars_list: list[str], table_arr: np.ndarray, atlas_tables=None) -> dict[str, Any]:
@@ -134,11 +205,13 @@ def _leaf_compile_table(vars_list: list[str], table_arr: np.ndarray, atlas_table
     bdd_art = truthtable_to_bdd(tt)
     expr_art = bdd_to_expr(bdd_art)
     circ_art = bdd_to_circuit(bdd_art, vars_list)
-    atlas_neurons = _atlas_min_for_table(len(vars_list), table_arr, atlas_tables=atlas_tables)
+    atlas_neurons, bits = _atlas_min_for_table(len(vars_list), table_arr, atlas_tables=atlas_tables)
+    tnet = _leaf_threshold_net(vars_list, bits, atlas_tables=atlas_tables)
     return {
         "vars": list(vars_list),
         "expr": expr_art,
         "circuit": circ_art,
+        "threshold_net": tnet,
         "circuit_cost": circuit_cost(circ_art),
         "atlas_min_neurons": atlas_neurons,
         "decomposed": False,
@@ -356,11 +429,15 @@ def _compile_table_factored(
     neuron_ub = None
     if dec_res["atlas_min_neurons"] is not None and all(e["atlas_min_neurons"] is not None for e in encoders):
         neuron_ub = dec_res["atlas_min_neurons"] + sum(e["atlas_min_neurons"] for e in encoders)
+    tnet = _compose_threshold_nets(
+        vars_list, enc_vars, [e.get("threshold_net") for e in encoders], dec_res.get("threshold_net")
+    )
 
     return {
         "vars": list(vars_list),
         "expr": composed_expr,
         "circuit": circ_art,
+        "threshold_net": tnet,
         "circuit_cost": circuit_cost(circ_art),
         "atlas_min_neurons": neuron_ub,
         "decomposed": True,
@@ -432,11 +509,15 @@ def compile_profile_factored(
     neuron_ub = None
     if dec_res["atlas_min_neurons"] is not None and all(e["atlas_min_neurons"] is not None for e in encoders):
         neuron_ub = dec_res["atlas_min_neurons"] + sum(e["atlas_min_neurons"] for e in encoders)
+    tnet = _compose_threshold_nets(
+        vars_list, enc_vars, [e.get("threshold_net") for e in encoders], dec_res.get("threshold_net")
+    )
 
     return {
         "vars": list(vars_list),
         "expr": composed_expr,
         "circuit": circ_art,
+        "threshold_net": tnet,
         "circuit_cost": circuit_cost(circ_art),
         "atlas_min_neurons": neuron_ub,
         "decomposed": True,
@@ -444,6 +525,20 @@ def compile_profile_factored(
         "split": {"s1": s1, "s2": s2},
         "children": encoders + [dec_res],
     }
+
+
+def _lean_certify_equiv(vars_list: list[str], expr_art: dict[str, Any], ref_expr: dict[str, Any] | None = None, name: str = "ur_cert") -> dict[str, Any]:
+    """Certify `expr_art ≡ ref_expr` (or vs BDD canonical form) via LRAT + Lean 4.12."""
+    from . import lean_bridge, sat
+
+    if ref_expr is None:
+        tt = TruthTable.from_function(vars_list, _fn_from_expr(vars_list, expr_art))
+        ref_expr = bdd_to_expr(truthtable_to_bdd(tt))
+    status, lrat_steps, _ = sat.prove_equivalence_lrat({"vars": vars_list, "left": expr_art, "right": ref_expr})
+    if status != "unsat":
+        return {"ok": False, "status": status, "axioms": (), "theorem": name}
+    chk, _ = lean_bridge.verify_expr_equiv_lrat(expr_art, ref_expr, vars_list, lrat_steps, name=name)
+    return {"ok": chk.ok, "status": "unsat", "axioms": list(chk.axioms), "theorem": chk.theorem, "source_sha256": chk.source_sha256}
 
 
 def compile_unified(spec: dict[str, Any]) -> dict[str, Any]:
@@ -470,19 +565,26 @@ def compile_unified(spec: dict[str, Any]) -> dict[str, Any]:
         fn = spec["fn"]
         res = compile_profile_factored(vars_list, fn)
         n_id = spec.get("name", "f0_compiled")
+        lean_cert = None
+        if spec.get("certify_lean"):
+            lean_cert = _lean_certify_equiv(vars_list, res["expr"], spec.get("reference_expr"), name=f"{n_id}_lean")
+        prov = {"produced_by": "ur_compiler.compile_profile_factored",
+                "decomposed": res["decomposed"], "profile_rank": res["profile_rank"]}
+        if lean_cert is not None:
+            prov["lean_cert"] = lean_cert
         expr_node = csir.node(
             n_id,
             res["expr"],
             {"vars": vars_list},
             resources={"cost": res["circuit_cost"], "atlas_neuron_ub": res["atlas_min_neurons"],
                        "cost_model": "F0/compositional"},
-            provenance={"produced_by": "ur_compiler.compile_profile_factored",
-                        "decomposed": res["decomposed"], "profile_rank": res["profile_rank"]},
+            provenance=prov,
         )
         b = csir.bundle([expr_node], [])
         return {
             "kind": "f0",
             "compiled": res,
+            "lean_cert": lean_cert,
             "csir": b,
             "validation_errors": csir.validate(b),
         }
@@ -573,12 +675,18 @@ def compile_unified(spec: dict[str, Any]) -> dict[str, Any]:
                 det_trans[(s, a)] = (best_pair[0], int(bool(best_pair[1])))
                 eps_bound = max(eps_bound, max(0.0, 1.0 - float(best_p)))
 
+        horizon = max(1, int(spec.get("horizon", 1)))
+        horizon_eps_bound = min(1.0, horizon * eps_bound)
+
         nodes = [
             csir.node(
                 "stochastic_lts_spec",
-                {"kind": "lts", "body": {"states": states, "actions": actions, "stochastic": True, "eps_bound": eps_bound}},
+                {"kind": "lts", "body": {"states": states, "actions": actions, "stochastic": True,
+                                         "eps_bound": eps_bound, "horizon": horizon,
+                                         "horizon_eps_bound": horizon_eps_bound}},
                 {"actions": actions},
-                resources={"eps_bound": eps_bound, "cost_model": "1-step-TV"},
+                resources={"eps_bound": eps_bound, "horizon": horizon,
+                           "horizon_eps_bound": horizon_eps_bound, "cost_model": "T-step-TV"},
                 provenance={"produced_by": "stochastic_lts_spec"},
             )
         ]
@@ -625,6 +733,8 @@ def compile_unified(spec: dict[str, Any]) -> dict[str, Any]:
         return {
             "kind": "stochastic_lts",
             "eps_bound": eps_bound,
+            "horizon": horizon,
+            "horizon_eps_bound": horizon_eps_bound,
             "compiled_outputs": compiled_outputs,
             "csir": b,
             "validation_errors": csir.validate(b),
@@ -637,33 +747,83 @@ def compile_unified(spec: dict[str, Any]) -> dict[str, Any]:
         fn_cont = spec["fn"]  # Callable[[list[float]], int|bool|float]
         threshold = float(spec.get("threshold", 0.5))
         lipschitz = spec.get("lipschitz")
+        adaptive = bool(spec.get("adaptive", False)) and (lipschitz is not None)
         coord_eps = 2.0 ** (-bits)
         eps_bound = float(lipschitz) * math.sqrt(dim) * coord_eps if lipschitz is not None else coord_eps
 
         vars_list = [f"x{d}_b{b}" for d in range(dim) for b in range(bits)]
         denom = float((1 << bits) - 1) if bits > 0 else 1.0
 
-        def _quantized_fn(env: dict[str, int]) -> int:
-            xs = []
-            for d in range(dim):
-                q = sum((int(env[f"x{d}_b{b}"]) << b) for b in range(bits))
-                xs.append(q / denom if denom > 0 else 0.0)
-            val = fn_cont(xs)
-            if isinstance(val, bool):
-                return int(val)
-            return 1 if float(val) >= threshold else 0
+        eval_count = 0
+        if adaptive:
+            # Lipschitz-certified adaptive dyadic box subdivision over [0, 1]^d grid
+            grid_n = 1 << bits
+            table_grid = np.zeros((grid_n,) * dim, dtype=np.uint8)
+            L_val = float(lipschitz)
+
+            def _subdivide(bounds: list[tuple[int, int]]) -> None:
+                nonlocal eval_count
+                if all(hi - lo == 1 for lo, hi in bounds):
+                    idx = tuple(lo for lo, _ in bounds)
+                    xs = [i / denom if denom > 0 else 0.0 for i in idx]
+                    val = fn_cont(xs)
+                    eval_count += 1
+                    table_grid[idx] = int(val) if isinstance(val, bool) else (1 if float(val) >= threshold else 0)
+                    return
+                center_idx = [((lo + hi - 1) / 2.0) for lo, hi in bounds]
+                xs_c = [c / denom if denom > 0 else 0.0 for c in center_idx]
+                f_c = float(fn_cont(xs_c))
+                eval_count += 1
+                rad = math.sqrt(sum((((hi - lo - 1) / 2.0) / denom) ** 2 for lo, hi in bounds)) if denom > 0 else 0.0
+                if abs(f_c - threshold) > L_val * rad:
+                    sl = tuple(slice(lo, hi) for lo, hi in bounds)
+                    table_grid[sl] = 1 if f_c >= threshold else 0
+                    return
+                # Split along widest coordinate
+                split_d = max(range(dim), key=lambda d: bounds[d][1] - bounds[d][0])
+                lo, hi = bounds[split_d]
+                mid = (lo + hi) // 2
+                left_b = list(bounds)
+                left_b[split_d] = (lo, mid)
+                right_b = list(bounds)
+                right_b[split_d] = (mid, hi)
+                _subdivide(left_b)
+                _subdivide(right_b)
+
+            _subdivide([(0, grid_n)] * dim)
+
+            def _quantized_fn(env: dict[str, int]) -> int:
+                idx = tuple(sum((int(env[f"x{d}_b{b}"]) << b) for b in range(bits)) for d in range(dim))
+                return int(table_grid[idx])
+        else:
+            def _quantized_fn(env: dict[str, int]) -> int:
+                nonlocal eval_count
+                xs = []
+                for d in range(dim):
+                    q = sum((int(env[f"x{d}_b{b}"]) << b) for b in range(bits))
+                    xs.append(q / denom if denom > 0 else 0.0)
+                val = fn_cont(xs)
+                eval_count += 1
+                if isinstance(val, bool):
+                    return int(val)
+                return 1 if float(val) >= threshold else 0
 
         comp = compile_profile_factored(vars_list, _quantized_fn)
         n_id = spec.get("name", "continuous_compiled")
         c_id = f"{n_id}_circuit"
+        lean_cert = None
+        if spec.get("certify_lean"):
+            lean_cert = _lean_certify_equiv(vars_list, comp["expr"], name=f"{n_id}_lean")
         expr_node = csir.node(
             n_id,
             comp["expr"],
             {"vars": vars_list},
             resources={"cost": comp["circuit_cost"], "atlas_neuron_ub": comp["atlas_min_neurons"],
-                       "coord_eps": coord_eps, "eps_bound": eps_bound, "cost_model": "F0/quantized"},
+                       "coord_eps": coord_eps, "eps_bound": eps_bound, "fn_evals": eval_count,
+                       "cost_model": "F0/quantized"},
             provenance={"produced_by": "ur_compiler.continuous_quantized",
                         "dim": dim, "bits_per_coord": bits, "eps_bound": eps_bound,
+                        "adaptive": adaptive, "fn_evals": eval_count,
                         "decomposed": comp["decomposed"], "profile_rank": comp["profile_rank"]},
         )
         circ_node = csir.node(
@@ -674,18 +834,24 @@ def compile_unified(spec: dict[str, Any]) -> dict[str, Any]:
                        "cost_model": "circuit/DAG"},
             provenance={"produced_by": "ur_compiler.continuous_quantized", "parents": [n_id]},
         )
+        warrant = {"basis": ["structural-sharing"], "trusted_base": ["cerp/ur_compiler.py"],
+                   "conditions": [f"quantization resolution <= {coord_eps:.6g}"]}
+        if lean_cert is not None:
+            warrant["lean_cert"] = lean_cert
         link = csir.link(
             n_id, c_id, "extensional",
             {"vars": vars_list},
             certificate={"method": "hash-consed-dag-translation"},
-            warrant={"basis": ["structural-sharing"], "trusted_base": ["cerp/ur_compiler.py"],
-                     "conditions": [f"quantization resolution <= {coord_eps:.6g}"]},
+            warrant=warrant,
         )
         b = csir.bundle([expr_node, circ_node], [link])
         return {
             "kind": "continuous",
             "eps_bound": eps_bound,
             "coord_eps": coord_eps,
+            "adaptive": adaptive,
+            "fn_evals": eval_count,
+            "lean_cert": lean_cert,
             "compiled": comp,
             "csir": b,
             "validation_errors": csir.validate(b),
