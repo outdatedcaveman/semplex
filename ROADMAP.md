@@ -67,6 +67,7 @@ Rules of thumb:
 | **28** | Indicator alignment (C13), prospective test on 9 unseen activations | See `experiments/SPIKE_28_REPORT.md` | **done**: all three held; clip-height dose–response |
 | **29** | C13 at the trained scale; does the tilt help generalization? | See `experiments/SPIKE_29_REPORT.md` | **done**: middle zone resolved; the tilt *hurts* held-out accuracy (ρ = −0.69) |
 | **30** | Why does it generalize? The initial-kernel account (C15) | See `experiments/SPIKE_30_REPORT.md` | **done**: the kernel is the prior (ρ = 0.81, 76% agreement); learning adds +2.4 pts; Spike 29's tilt cost is a kernel confound |
+| **31** | Why graded activations have better priors: Walsh-degree spectral bias (C16) | See `experiments/SPIKE_31_REPORT.md` | **done**: C16 refuted (targets are degree-2); spectrum matching wins (known theory); label-imbalance caveat, Spike 30 survives on balanced accuracy |
 | (old 10c) | Fix rule meta-learning; settle C7 (= H-A) | Fixed long horizon or adjoint method; then find the least observational power per element |
 | (old 10b) | Grokking against ground truth | 5–6 inputs with a real held-out set: does the post-grokking function equal the table/solver optimum; score local learning rules (arXiv:2611.12248) the same way |
 | 08c | Periodic table, remaining parameters | In order: (1) certify lower bounds; (2) n=5 by class-level search, hunting the first depth-sensitive element; (3) skip connections and ReLU; (4) weight-space geometry (the manifold proper); (5) prove the one-bit-flip ≤ 2 conjecture |

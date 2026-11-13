@@ -81,3 +81,7 @@ The net beats its kernel in 23 of 24 activations, by a mean of +0.024 (range −
 - **The update** is feature learning. It moves away from the prior, toward crisp, information-tilted threshold mechanisms, and gains a consistent few points.
 
 Open: *why* graded activations give better kernels here. A candidate, untested: their kernels decay more gradually with Hamming distance, so nearby inputs share labels more strongly. A direct test is the kernel's correlation with Hamming distance against its held-out accuracy.
+
+## Addendum (2026-11-13, post hoc, from Spike 31 F3; verdicts above unchanged)
+
+Held-out targets are 39.6% ones, so predicting 0 everywhere scores 0.604. That is higher than every net's held-out accuracy reported here. On balanced accuracy the nets are above chance but weak (0.519–0.561). The Spike 30 conclusions all survive on the balanced measure; see `SPIKE_31_REPORT.md` F3 and `results/spike31_exploratory.json`. Future spikes report balanced accuracy alongside raw accuracy.

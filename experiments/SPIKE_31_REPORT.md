@@ -1,6 +1,6 @@
 # Spike 31: Why do graded activations have better priors? Spectral bias over Walsh degrees (C16)
 
-**Date:** 2026-11-13 · **Status:** pre-registered (no run made) · **Follows:** Spike 30 F3 (the initial kernel is the generalization prior; graded activations have better kernels here, for an unexplained reason)
+**Date:** 2026-11-13 · **Status:** complete (pre-registered in 5cb7ea6; results below) · **Follows:** Spike 30 F3 (the initial kernel is the generalization prior; graded activations have better kernels here, for an unexplained reason)
 
 ## Conjecture C16
 
@@ -33,3 +33,57 @@ This is the "decays more gradually with Hamming distance" candidate of Spike 30 
 | H31.4 | Graded activations put more mass on degree 1 | mean F1 of untilted activations (λ ≤ 3) > mean F1 of tilted ones (λ ≥ 7) | < |
 | H31.5 | Intervention: accuracy follows degree-1 weight | in arm B, accuracy decreases monotonically in r over r ≥ 0.3, with at most one inversion | accuracy is higher at r = 1.0 than at r = 0.3 |
 | H31.6 | Matching the target spectrum gives the best prior | matched-kernel accuracy ≥ the best activation kernel's | < the best activation kernel's − 0.01 |
+
+---
+
+## Results
+
+`results/spike31.json` (pre-registered analysis) and `results/spike31_exploratory.json` (balanced-accuracy re-analysis, post hoc).
+
+**The premise of C16(a) is false.** The atlas targets' non-constant Walsh energy by degree, averaged over the 128 elements:
+
+| Degree 1 | Degree 2 | Degree 3 | Degree 4 |
+|---|---|---|---|
+| 0.283 | **0.438** | 0.200 | 0.079 |
+
+Most target energy is at degree 2, not degree 1.
+
+**Activations, degree-1 share (F1) against accuracy.** Over the 24 activations, ρ(F1, kernel accuracy) = −0.46 and ρ(F1, net accuracy) = −0.38. The untilted activations have *less* degree-1 share than the tilted ones (difference −0.087). |x| has the lowest F1 (0.36) and the best nets.
+
+**Synthetic kernels K_r** (μ_k = r^k):
+
+| r | 0.05 | 0.1 | 0.2 | 0.3 | 0.5 | 0.7 | 1.0 | 1.5 | 2.0 |
+|---|---|---|---|---|---|---|---|---|---|
+| Accuracy (pre-registered) | 0.544 | 0.537 | 0.534 | 0.537 | 0.539 | 0.542 | 0.604* | 0.451 | 0.452 |
+| Balanced accuracy (post hoc) | 0.536 | 0.527 | 0.522 | 0.523 | 0.518 | 0.520 | 0.500 | 0.486 | 0.488 |
+
+\* r = 1 makes K the identity. Its held-out prediction is then 0 everywhere, so 0.604 is just the share of 0s among held-out targets (see the caveat below).
+
+**Matched kernel** (spectrum equal to the targets'): accuracy 0.563 against 0.551 for the best activation kernel; balanced 0.557 against at most 0.541.
+
+### Verdicts
+
+| # | Verdict |
+|---|---|
+| H31.1 | **Held.** Maximum off-diagonal energy share in the Walsh basis is 0.00013: the NTKs are distance-only. |
+| H31.2 | **Broken, opposite sign.** ρ = −0.46. |
+| H31.3 | **Broken.** ρ = −0.38. |
+| H31.4 | **Broken.** Graded activations have *less* degree-1 share. |
+| H31.5 | **Broken as stated**, but for an artifact: the r = 1 "memorizing" kernel scores 0.604 because it always predicts 0. On balanced accuracy (post hoc), accuracy falls with r from 0.536 to 0.488, with two small inversions. |
+| H31.6 | **Held.** The matched kernel beats every activation kernel (+0.012 accuracy, +0.016 balanced). |
+
+## Findings
+
+**F1. C16 is refuted.** "Graded activations are better because they weight degree 1" is wrong twice over. The targets are mostly degree-2. Among activations, more degree-1 weight goes with *worse* priors.
+
+**F2. Spectrum matching is what works.** A kernel whose degree spectrum equals the targets' beats all 24 activation kernels. This is the *spectral bias / task–model alignment* account of kernel generalization (Bordelon, Canatar & Pehlevan 2020; Canatar et al. 2021, *Nat. Commun.*). It is **prior art**, not new: our atlas confirms it exactly. Over the activations, cosine alignment to the target spectrum is only weakly predictive (ρ = 0.28 with kernel balanced accuracy, 0.37 with net), so degree-level spectra do not explain the activation ranking. The rest must lie in what the degree spectrum ignores, chiefly μ₀, the constant mode that sets how strongly predictions lean toward the seen majority.
+
+**F3. Caveat found in this spike, affecting Spikes 29–30: label imbalance.** Only 39.6% of target outputs are 1, so predicting 0 everywhere scores 0.604, *above every net* (0.535–0.580). On balanced accuracy (0.5 = chance):
+- saturating-activation kernels are at chance (0.497–0.513);
+- graded kernels reach 0.53–0.54;
+- nets reach 0.519–0.561 (mean 0.546).
+
+Generalization on this atlas is therefore real but weak. Re-run on the balanced measure (`spike31_exploratory.json`), every Spike 30 conclusion survives:
+- the kernel ranks the nets (ρ = 0.79);
+- the tilt's apparent cost is inherited from the kernel (residual ρ = 0.09);
+- learning improves on the kernel in **24 of 24** activations, by +2.6 balanced points, and *more* for tilted activations (ρ = +0.55).
