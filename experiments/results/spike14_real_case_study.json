@@ -1,0 +1,21 @@
+{
+  "dataset": "Quinlan 1986 PlayTennis (14 rows, 4 binary features)",
+  "loglik": -42.2141,
+  "csir_validation_errors": [],
+  "csir_recheck": [
+    [
+      0,
+      "not kernel-checkable: empirical"
+    ],
+    [
+      1,
+      "verified"
+    ]
+  ],
+  "distilled_circuit_cost": {
+    "gates": 8,
+    "depth": 5
+  },
+  "atlas_min_threshold_neurons": 1,
+  "truth_table_bits": 32607
+}

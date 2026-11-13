@@ -540,3 +540,167 @@ theorem multi_unit_symmetry_gap (f : (Nat → Int) → Int) (E : Int) (d : Nat)
   omega
 
 end PFT
+
+/-! ## §11 Compositional frames (C4) -/
+
+namespace PFT
+
+section Compositional
+universe u1 u2 v1 v2 w1 w2
+
+def prodObs (obs₁ : P₁ → H₁ → O₁) (obs₂ : P₂ → H₂ → O₂) :
+    Sum P₁ P₂ → (H₁ × H₂) → Sum O₁ O₂
+  | Sum.inl p₁, (h₁, _) => Sum.inl (obs₁ p₁ h₁)
+  | Sum.inr p₂, (_, h₂) => Sum.inr (obs₂ p₂ h₂)
+
+def prodPow (Ω₁ : P₁ → Prop) (Ω₂ : P₂ → Prop) : Sum P₁ P₂ → Prop
+  | Sum.inl p₁ => Ω₁ p₁
+  | Sum.inr p₂ => Ω₂ p₂
+
+theorem prod_indist (obs₁ : P₁ → H₁ → O₁) (obs₂ : P₂ → H₂ → O₂)
+    (Ω₁ : P₁ → Prop) (Ω₂ : P₂ → Prop) (h₁ h₁' : H₁) (h₂ h₂' : H₂) :
+    Indist (prodObs obs₁ obs₂) (prodPow Ω₁ Ω₂) (h₁, h₂) (h₁', h₂') ↔
+      Indist obs₁ Ω₁ h₁ h₁' ∧ Indist obs₂ Ω₂ h₂ h₂' := by
+  constructor
+  · intro h
+    refine ⟨fun p₁ hp₁ => ?_, fun p₂ hp₂ => ?_⟩
+    · have := h (Sum.inl p₁) hp₁
+      exact Sum.inl.inj this
+    · have := h (Sum.inr p₂) hp₂
+      exact Sum.inr.inj this
+  · intro ⟨h1, h2⟩ p hp
+    cases p with
+    | inl p₁ => exact congrArg Sum.inl (h1 p₁ hp)
+    | inr p₂ => exact congrArg Sum.inr (h2 p₂ hp)
+
+theorem prod_determines (obs₁ : P₁ → H₁ → O₁) (obs₂ : P₂ → H₂ → O₂)
+    (Ω₁ : P₁ → Prop) (Ω₂ : P₂ → Prop) (S₁ : H₁ → Prop) (S₂ : H₂ → Prop)
+    (q₁ : H₁ → A₁) (q₂ : H₂ → A₂)
+    (hd₁ : Determines obs₁ Ω₁ S₁ q₁) (hd₂ : Determines obs₂ Ω₂ S₂ q₂) :
+    Determines (prodObs obs₁ obs₂) (prodPow Ω₁ Ω₂)
+      (fun h => S₁ h.1 ∧ S₂ h.2) (fun h => (q₁ h.1, q₂ h.2)) := by
+  intro ⟨h₁, h₂⟩ ⟨h₁', h₂'⟩ ⟨hs₁, hs₂⟩ ⟨hs₁', hs₂'⟩ hi
+  obtain ⟨hi₁, hi₂⟩ := (prod_indist obs₁ obs₂ Ω₁ Ω₂ h₁ h₁' h₂ h₂').mp hi
+  exact Prod.ext (hd₁ h₁ h₁' hs₁ hs₁' hi₁) (hd₂ h₂ h₂' hs₂ hs₂' hi₂)
+
+theorem prod_decisive_left (obs₁ : P₁ → H₁ → O₁) (obs₂ : P₂ → H₂ → O₂)
+    (S₁ : H₁ → Prop) (S₂ : H₂ → Prop) (q₁ : H₁ → A₁) (q₂ : H₂ → A₂)
+    {p₁ : P₁} (hdec : Decisive obs₁ S₁ q₁ p₁) {h₂₀ : H₂} (hs₂ : S₂ h₂₀) :
+    Decisive (prodObs obs₁ obs₂) (fun h => S₁ h.1 ∧ S₂ h.2) (fun h => (q₁ h.1, q₂ h.2)) (Sum.inl p₁) := by
+  obtain ⟨h₁, h₁', hs₁, hs₁', hq, hdiff, honly⟩ := hdec
+  refine ⟨(h₁, h₂₀), (h₁', h₂₀), ⟨hs₁, hs₂⟩, ⟨hs₁', hs₂⟩, ?_, ?_, ?_⟩
+  · intro heq
+    exact hq (congrArg Prod.fst heq)
+  · intro heq
+    exact hdiff (Sum.inl.inj heq)
+  · intro p' hp'
+    cases p' with
+    | inl p₁' =>
+        have : obs₁ p₁' h₁ ≠ obs₁ p₁' h₁' := fun heq => hp' (congrArg Sum.inl heq)
+        exact congrArg Sum.inl (honly p₁' this)
+    | inr p₂' =>
+        exact False.elim (hp' rfl)
+
+end Compositional
+
+end PFT
+
+/-! ## §12 Limit representations and ε-determinacy (C2 / H-F) -/
+
+namespace PFT
+
+def EpsDetermines (obs : P → H → O) (Ω : P → Prop) (S : H → Prop) (q : H → A)
+    (err : H → H → Nat) (tol : Nat) : Prop :=
+  ∀ h₁ h₂, S h₁ → S h₂ → Indist obs Ω h₁ h₂ → q h₁ ≠ q h₂ → err h₁ h₂ ≤ tol
+
+theorem eps_determines_mono (obs : P → H → O) {Ω Ω' : P → Prop}
+    (hsub : ∀ p, Ω p → Ω' p) (S : H → Prop) (q : H → A) (err : H → H → Nat) (tol : Nat)
+    (hd : EpsDetermines obs Ω S q err tol) :
+    EpsDetermines obs Ω' S q err tol :=
+  fun h₁ h₂ hs₁ hs₂ hi hq => hd h₁ h₂ hs₁ hs₂ (indist_antitone obs hsub hi) hq
+
+def Stabilizes (N : Nat) (x : Nat → Bool) : Prop :=
+  (∀ i, N ≤ i → x i = true) ∨ (∀ i, N ≤ i → x i = false)
+
+theorem eventuallyOn_stabilized (N : Nat) (x : Nat → Bool) (hs : Stabilizes N x) :
+    EventuallyOn x ↔ x N = true := by
+  cases hs with
+  | inl ht =>
+      have hev : EventuallyOn x := ⟨N, fun k hk => ht k hk⟩
+      have hxN : x N = true := ht N (Nat.le_refl N)
+      exact ⟨fun _ => hxN, fun _ => hev⟩
+  | inr hf =>
+      have hnev : ¬ EventuallyOn x := by
+        rintro ⟨M, hM⟩
+        have h1 := hM (max N M) (Nat.le_max_right N M)
+        have h2 := hf (max N M) (Nat.le_max_left N M)
+        rw [h1] at h2
+        cases h2
+      have hxN : x N = false := hf N (Nat.le_refl N)
+      exact ⟨fun hev => absurd hev hnev, fun h => by rw [hxN] at h; cases h⟩
+
+theorem prefix_determines_stabilized (N : Nat) :
+    Determines (fun p x => x p) (fun k => k < N + 1) (Stabilizes N) EventuallyOn := by
+  intro x y hx hy hi
+  apply propext
+  have hxy : x N = y N := hi N (Nat.lt_succ_self N)
+  rw [eventuallyOn_stabilized N x hx, eventuallyOn_stabilized N y hy, hxy]
+
+end PFT
+
+/-! ## §13 Adaptive inquiry trees and hitting-set lower bound (C3) -/
+
+namespace PFT
+
+section Adaptive
+universe u1 u2 u3 u4
+
+inductive QueryTree (P : Type u1) (O : Type u2) (A : Type u3) : Type (max u1 u2 u3) where
+  | leaf : A → QueryTree P O A
+  | ask : P → (O → QueryTree P O A) → QueryTree P O A
+
+def evalTree {P : Type u1} {O : Type u2} {A : Type u3} {H : Type u4}
+    (obs : P → H → O) : QueryTree P O A → H → A
+  | QueryTree.leaf a, _ => a
+  | QueryTree.ask p k, h => evalTree obs (k (obs p h)) h
+
+def UsesOnly {P : Type u1} {O : Type u2} {A : Type u3}
+    (Ω : P → Prop) : QueryTree P O A → Prop
+  | QueryTree.leaf _ => True
+  | QueryTree.ask p k => Ω p ∧ ∀ o, UsesOnly Ω (k o)
+
+theorem evalTree_indist {P : Type u1} {O : Type u2} {A : Type u3} {H : Type u4}
+    (obs : P → H → O) (Ω : P → Prop) :
+    ∀ (t : QueryTree P O A), UsesOnly Ω t →
+      ∀ h₁ h₂, Indist obs Ω h₁ h₂ → evalTree obs t h₁ = evalTree obs t h₂
+  | QueryTree.leaf _, _, _, _, _ => rfl
+  | QueryTree.ask p k, ⟨hp, hk⟩, h₁, h₂, hi => by
+      simp only [evalTree]
+      have hobs : obs p h₁ = obs p h₂ := hi p hp
+      rw [hobs]
+      exact evalTree_indist obs Ω (k (obs p h₂)) (hk (obs p h₂)) h₁ h₂ hi
+
+theorem adaptive_uses_determining {P : Type u1} {O : Type u2} {A : Type u3} {H : Type u4}
+    (obs : P → H → O) (Ω : P → Prop) (S : H → Prop)
+    (q : H → A) (t : QueryTree P O A) (hu : UsesOnly Ω t)
+    (hacc : ∀ h, S h → evalTree obs t h = q h) :
+    Determines obs Ω S q := by
+  intro h₁ h₂ hs₁ hs₂ hi
+  rw [← hacc h₁ hs₁, ← hacc h₂ hs₂]
+  exact evalTree_indist obs Ω t hu h₁ h₂ hi
+
+end Adaptive
+
+end PFT
+
+/-! ## §14 Statistical gated soundness skeleton (C1) -/
+
+namespace PFT
+
+theorem statistical_gated_sound (EmpSurvivors : H → Prop) (q : H → A) (hstar : H) (a : A)
+    (hkeep : EmpSurvivors hstar)
+    (hagree : ∀ h, EmpSurvivors h → q h = a) :
+    q hstar = a :=
+  hagree hstar hkeep
+
+end PFT

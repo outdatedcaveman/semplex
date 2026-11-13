@@ -1,0 +1,91 @@
+{
+  "elapsed_s": 2409.4,
+  "c1_lift": [
+    {
+      "n_per": 200,
+      "alpha": 0.005,
+      "runs": 8,
+      "truth_rejected": 0,
+      "truth_rejection_rate": 0.0,
+      "empirical_answers": 24
+    },
+    {
+      "n_per": 200,
+      "alpha": 0.05,
+      "runs": 8,
+      "truth_rejected": 0,
+      "truth_rejection_rate": 0.0,
+      "empirical_answers": 24
+    },
+    {
+      "n_per": 600,
+      "alpha": 0.005,
+      "runs": 8,
+      "truth_rejected": 0,
+      "truth_rejection_rate": 0.0,
+      "empirical_answers": 24
+    },
+    {
+      "n_per": 600,
+      "alpha": 0.05,
+      "runs": 8,
+      "truth_rejected": 0,
+      "truth_rejection_rate": 0.0,
+      "empirical_answers": 24
+    },
+    {
+      "n_per": 1200,
+      "alpha": 0.005,
+      "runs": 8,
+      "truth_rejected": 0,
+      "truth_rejection_rate": 0.0,
+      "empirical_answers": 24
+    },
+    {
+      "n_per": 1200,
+      "alpha": 0.05,
+      "runs": 8,
+      "truth_rejected": 0,
+      "truth_rejection_rate": 0.0,
+      "empirical_answers": 24
+    }
+  ],
+  "hc_grokking": [
+    {
+      "scale": 0.5,
+      "n_fit": 8,
+      "n_grokked": 0,
+      "mean_t_fit": 37.5,
+      "mean_t_gen": null,
+      "mean_delay": null
+    },
+    {
+      "scale": 1.0,
+      "n_fit": 8,
+      "n_grokked": 0,
+      "mean_t_fit": 47.5,
+      "mean_t_gen": null,
+      "mean_delay": null
+    },
+    {
+      "scale": 1.5,
+      "n_fit": 8,
+      "n_grokked": 0,
+      "mean_t_fit": 60.0,
+      "mean_t_gen": null,
+      "mean_delay": null
+    },
+    {
+      "scale": 2.0,
+      "n_fit": 8,
+      "n_grokked": 0,
+      "mean_t_fit": 85.0,
+      "mean_t_gen": null,
+      "mean_delay": null
+    }
+  ],
+  "he_depth5": {
+    "distinct_candidates": 289,
+    "certified_not_two_halfspaces_k2": 92
+  }
+}

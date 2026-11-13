@@ -21,3 +21,11 @@ open PFT
 #print axioms task_blind
 #print axioms even_span_excludes_odd
 #print axioms multi_unit_symmetry_gap
+#print axioms prod_indist
+#print axioms prod_determines
+#print axioms prod_decisive_left
+#print axioms eps_determines_mono
+#print axioms eventuallyOn_stabilized
+#print axioms prefix_determines_stabilized
+#print axioms adaptive_uses_determining
+#print axioms statistical_gated_sound
