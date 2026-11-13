@@ -1348,4 +1348,390 @@ theorem tseitinMiter_lrat_unsat_implies_equiv (n : Nat) (e₁ e₂ : Expr)
     exact checkLrat_sound Ls (tseitinMiter n e₁ e₂).toArray
       (dbValid_of_wellFormed _ hw) hchk τ (dbSat_of_cnfSat τ _ hsat_miter)
 
+/-! ## Part D: Verified integer-weight Threshold Networks (`TNode` / `ThresholdNet`) -/
+
+/-- A DAG linear-threshold neuron: `sum_k w_k * val(i_k) ≥ t`. -/
+structure TNode where
+  ins : List Nat
+  ws  : List Int
+  t   : Int
+  deriving Repr, DecidableEq
+
+def tnodeSum (env : Nat → Bool) : List Nat → List Int → Int
+  | [], _ => 0
+  | _, [] => 0
+  | i :: is, w :: ws => (if env i then w else 0) + tnodeSum env is ws
+
+def tnodeEval (env : Nat → Bool) (nd : TNode) : Bool :=
+  decide (nd.t ≤ tnodeSum env nd.ins nd.ws)
+
+def evalTNetFrom (env : Nat → Bool) (next : Nat) (lastOut : Bool) : List TNode → Bool
+  | [] => lastOut
+  | nd :: ns =>
+      let out := tnodeEval env nd
+      evalTNetFrom (upd env next out) (next + 1) out ns
+
+def evalTNet (n : Nat) (ns : List TNode) (σ : Nat → Bool) : Bool :=
+  evalTNetFrom σ n false ns
+
+def tnetScoped (n : Nat) : List TNode → Bool
+  | [] => true
+  | nd :: ns => nd.ins.all (fun i => decide (i < n)) && tnetScoped (n + 1) ns
+
+theorem tnodeSum_congr (n : Nat) (σ τ : Nat → Bool) (h : ∀ i, i < n → σ i = τ i) :
+    ∀ is ws, is.all (fun i => decide (i < n)) = true →
+      tnodeSum σ is ws = tnodeSum τ is ws := by
+  intro is
+  induction is with
+  | nil => intro ws _; cases ws <;> rfl
+  | cons i is ih =>
+      intro ws his
+      cases ws with
+      | nil => rfl
+      | cons w ws =>
+          simp only [List.all_cons, Bool.and_eq_true, decide_eq_true_eq] at his
+          simp only [tnodeSum, h i his.1, ih ws his.2]
+
+theorem evalTNetFrom_congr :
+    ∀ (ns : List TNode) (n : Nat) (σ τ : Nat → Bool) (lastOut : Bool),
+      (∀ i, i < n → σ i = τ i) → tnetScoped n ns = true →
+      evalTNetFrom σ n lastOut ns = evalTNetFrom τ n lastOut ns
+  | [], _, _, _, _, _, _ => rfl
+  | nd :: ns, n, σ, τ, _, hagree, hsc => by
+      simp only [tnetScoped, Bool.and_eq_true] at hsc
+      have hsum : tnodeSum σ nd.ins nd.ws = tnodeSum τ nd.ins nd.ws :=
+        tnodeSum_congr n σ τ hagree nd.ins nd.ws hsc.1
+      have hout : tnodeEval σ nd = tnodeEval τ nd := by
+        simp only [tnodeEval, hsum]
+      simp only [evalTNetFrom, hout]
+      apply evalTNetFrom_congr ns (n + 1) _ _ _ _ hsc.2
+      intro i hi
+      by_cases hin : i = n
+      · subst hin; simp [upd]
+      · simp [upd, hin, hagree i (by omega)]
+
+def decideTNetEquivExpr (n : Nat) (ns : List TNode) (e : Expr) : Bool :=
+  (allEnvs n).all (fun ρ => evalTNet n ns ρ == eval ρ e)
+
+/-- Exhaustive kernel-checked equivalence between an integer-weight `ThresholdNet`
+    and an `F0` expression `Expr` (`n ≤ 10`). -/
+theorem decideTNetEquivExpr_correct (n : Nat) (ns : List TNode) (e : Expr)
+    (ht : tnetScoped n ns = true) (he : Scoped n e = true) :
+    decideTNetEquivExpr n ns e = true ↔ ∀ σ, evalTNet n ns σ = eval σ e := by
+  constructor
+  · intro hd σ
+    obtain ⟨ρ, hmem, hagree⟩ := allEnvs_complete σ n
+    have hρ := List.all_eq_true.mp hd ρ hmem
+    simp at hρ
+    have h1 := evalTNetFrom_congr ns n σ ρ false (fun i hi => (hagree i hi).symm) ht
+    have h2 := eval_congr n σ ρ (fun i hi => (hagree i hi).symm) e he
+    change evalTNet n ns σ = evalTNet n ns ρ at h1
+    rw [h1, h2]
+    exact hρ
+  · intro hall
+    apply List.all_eq_true.mpr
+    intro ρ _
+    simp [hall ρ]
+
+/-- Exact pseudo-Boolean Shannon expansion of a single threshold neuron into `Expr`. -/
+def pbToExpr : List Nat → List Int → Int → Expr
+  | [], _, t => Expr.const (decide (t ≤ 0))
+  | _, [], t => Expr.const (decide (t ≤ 0))
+  | i :: is, w :: ws, t =>
+      Expr.ite (Expr.var i) (pbToExpr is ws (t - w)) (pbToExpr is ws t)
+
+theorem eval_pbToExpr (env : Nat → Bool) :
+    ∀ (is : List Nat) (ws : List Int) (t : Int),
+      eval env (pbToExpr is ws t) = decide (t ≤ tnodeSum env is ws)
+  | [], _, t => by simp [pbToExpr, eval, tnodeSum]
+  | _ :: _, [], t => by simp [pbToExpr, eval, tnodeSum]
+  | i :: is, w :: ws, t => by
+      simp only [pbToExpr, eval, tnodeSum]
+      have ih1 := eval_pbToExpr env is ws (t - w)
+      have ih2 := eval_pbToExpr env is ws t
+      by_cases hi : env i = true
+      · simp only [hi, ↓reduceIte, ih1]
+        have hiff : (t - w ≤ tnodeSum env is ws) ↔ (t ≤ w + tnodeSum env is ws) := by omega
+        simp [hiff]
+      · have hif : env i = false := Bool.eq_false_iff.mpr hi
+        simp [hif, ih2]
+
+theorem scoped_pbToExpr (n : Nat) :
+    ∀ (is : List Nat) (ws : List Int) (_ : Int),
+      is.all (fun i => decide (i < n)) = true → Scoped n (pbToExpr is ws t) = true
+  | [], _, _ => fun _ => by simp [pbToExpr, Scoped]
+  | _ :: _, [], _ => fun _ => by simp [pbToExpr, Scoped]
+  | i :: is, w :: ws, t => fun his => by
+      simp only [List.all_cons, Bool.and_eq_true, decide_eq_true_eq] at his
+      simp only [pbToExpr, Scoped, decide_eq_true_eq, Bool.and_eq_true]
+      exact ⟨⟨his.1, scoped_pbToExpr n is ws (t - w) his.2⟩,
+             scoped_pbToExpr n is ws t his.2⟩
+
+/-- Node equivalence clauses forcing CNF variable `(wire : Nat)` to equal literal `o`. -/
+def wireEq (wire : Nat) (o : Int) : CNF :=
+  [[-(wire : Int), o], [(wire : Int), -o]]
+
+/-- Fold over `List TNode`, building Tseitin CNF encoding all nodes where node `k`
+    is bound to CNF variable `nodeVar + 1` (while `nxt` is strictly above all
+    allocated input and node wires). -/
+def tseitinTNetGo : Nat → Nat → List TNode → Int → CNF → Nat → (Int × CNF × Nat)
+  | _, _, [], lastLit, acc, nxt => (lastLit, acc, nxt)
+  | n, k, nd :: ns, _, acc, nxt =>
+      let e := pbToExpr nd.ins nd.ws nd.t
+      let (o, c, nxt') := tseitinEncode e nxt
+      let w := n + k + 1
+      tseitinTNetGo n (k + 1) ns (w : Int) (acc ++ c ++ wireEq w o) nxt'
+
+/-- SAT miter verifying an arbitrary-depth integer-weight `ThresholdNet` against an
+    `Expr` specification over `n` inputs, checkable in linear time by LRAT. -/
+def tseitinTNetMiter (n : Nat) (ns : List TNode) (e : Expr) : CNF :=
+  let m := ns.length
+  let nxt0 := n + m + 1
+  let (oNet, cNet, nxt1) := tseitinTNetGo n 0 ns 0 [] nxt0
+  let (oSpec, cSpec, nxt2) := tseitinEncode e nxt1
+  cNet ++ cSpec ++ gateXor (nxt2 : Int) oNet oSpec ++ [[(nxt2 : Int)]]
+
+/-- Compute the extended trace environment `env` mapping `i < n => σ i` and
+    node wires `n + k => output of node k`. -/
+def evalTNetEnv (env : Nat → Bool) (next : Nat) : List TNode → (Nat → Bool)
+  | [] => env
+  | nd :: ns =>
+      let out := tnodeEval env nd
+      evalTNetEnv (upd env next out) (next + 1) ns
+
+theorem evalTNetEnv_below (env : Nat → Bool) (next : Nat) :
+    ∀ ns i, i < next → evalTNetEnv env next ns i = env i
+  | [], _, _ => rfl
+  | nd :: ns, i, hi => by
+      simp only [evalTNetEnv]
+      rw [evalTNetEnv_below _ (next + 1) ns i (by omega)]
+      simp [upd, Nat.ne_of_lt hi]
+
+theorem evalTNetFrom_eq_envLast (env : Nat → Bool) (next : Nat) (lastOut : Bool) :
+    ∀ ns, 1 ≤ ns.length →
+      evalTNetFrom env next lastOut ns =
+      evalTNetEnv env next ns (next + ns.length - 1)
+  | [], hlen => absurd hlen (by simp)
+  | [nd], _ => by
+      simp [evalTNetFrom, evalTNetEnv, upd]
+  | nd :: nd' :: ns, _ => by
+      rw [evalTNetFrom, evalTNetEnv]
+      have ih := evalTNetFrom_eq_envLast (upd env next (tnodeEval env nd)) (next + 1)
+        (tnodeEval env nd) (nd' :: ns) (by simp)
+      rw [ih]
+      simp only [evalTNetEnv, List.length_cons]
+      congr 1
+      omega
+
+theorem wireEq_sat (τ : Nat → Bool) (w : Nat) (o : Int) (hw : 0 < w) (ho : o ≠ 0)
+    (h : τ w = litTrue τ o) : cnfSat τ (wireEq w o) = true := by
+  have hwne : (w : Int) ≠ 0 := by omega
+  have hpos : (0 : Int) < (w : Int) := by omega
+  have hlit : litTrue τ (w : Int) = τ w := by simp [litTrue, hpos]
+  simp only [wireEq, cnfSat, List.all_cons, List.all_nil, Bool.and_true, Bool.and_eq_true,
+    clauseSat, List.any_cons, List.any_nil, Bool.or_false]
+  rw [litTrue_neg τ (w : Int) hwne, hlit, h, litTrue_neg τ o ho]
+  cases litTrue τ o <;> simp
+
+theorem tseitinTNetGo_complete :
+    ∀ (ns : List TNode) (n k nxt : Nat) (lastLit : Int) (acc : CNF)
+      (baseEnv : Nat → Bool) (σ : Nat → Bool),
+      1 ≤ nxt → n + k + ns.length < nxt →
+      tnetScoped (n + k) ns = true →
+      CNFBelow nxt acc →
+      (∀ i, i < n + k + ns.length →
+        σ (i + 1) = evalTNetEnv baseEnv (n + k) ns i) →
+      cnfSat σ acc = true →
+      (ns ≠ [] ∨ (lastLit ≠ 0 ∧ lastLit.natAbs < nxt ∧ litTrue σ lastLit = baseEnv (n + k - 1))) →
+      let res := tseitinTNetGo n k ns lastLit acc nxt
+      nxt ≤ res.2.2 ∧
+      res.1 ≠ 0 ∧
+      res.1.natAbs < res.2.2 ∧
+      CNFBelow res.2.2 res.2.1 ∧
+      ∃ τ, (∀ i, i < nxt → τ i = σ i) ∧
+        cnfSat τ res.2.1 = true ∧
+        litTrue τ res.1 =
+          (match ns with | [] => litTrue σ lastLit | _ :: _ => evalTNetEnv baseEnv (n + k) ns (n + k + ns.length - 1))
+  | [], n, k, nxt, lastLit, acc, _, σ, _, _, _, hbelow, _, hsat, hnonempty => by
+      rcases hnonempty with hne | ⟨hl0, hllt, _⟩
+      · exact absurd rfl hne
+      · refine ⟨Nat.le_refl nxt, hl0, hllt, hbelow, σ, fun _ _ => rfl, hsat, rfl⟩
+  | nd :: ns, n, k, nxt, lastLit, acc, baseEnv, σ, hnxt, hbound, hsc, hbelow, hσ, hsat, _ => by
+      simp only [tnetScoped, Bool.and_eq_true] at hsc
+      simp only [tseitinTNetGo]
+      let e := pbToExpr nd.ins nd.ws nd.t
+      have hsce : Scoped (n + k) e = true := scoped_pbToExpr (n + k) nd.ins nd.ws nd.t hsc.1
+      have hnk_nxt : (n + k) + 1 ≤ nxt := by simp [List.length] at hbound; omega
+      obtain ⟨τ₁, hagree₁, hsat_e, hval_e⟩ := tseitinEncode_complete e (n + k) nxt σ hnxt hnk_nxt hsce
+      obtain ⟨ho_lt, hc_below⟩ := tseitinEncode_below e (n + k) nxt hnxt hnk_nxt hsce
+      obtain ⟨ho_pos, hnxt'⟩ := tseitinEncode_out_pos e nxt hnxt
+      let o := (tseitinEncode e nxt).1
+      let c := (tseitinEncode e nxt).2.1
+      let nxt' := (tseitinEncode e nxt).2.2
+      have hnxt'_ge : 1 ≤ nxt' := Nat.le_trans hnxt hnxt'
+      have hbound' : n + (k + 1) + ns.length < nxt' := by simp [List.length] at hbound; omega
+      have hsc' : tnetScoped (n + (k + 1)) ns = true := by simpa [Nat.add_assoc] using hsc.2
+      have hw_gt0 : 0 < n + k + 1 := by omega
+      have hw_lt : n + k + 1 < nxt' := by simp [List.length] at hbound; omega
+      have hacc_below' : CNFBelow nxt' (acc ++ c ++ wireEq (n + k + 1) o) := by
+        refine cnfBelow_append.mpr ⟨cnfBelow_append.mpr ⟨cnfBelow_mono hnxt' hbelow, hc_below⟩, ?_⟩
+        intro cl hcl l hl
+        simp [wireEq] at hcl
+        rcases hcl with rfl | rfl <;> simp at hl <;> rcases hl with rfl | rfl
+        · rw [Int.natAbs_neg]; exact ⟨by omega, by omega⟩
+        · exact ⟨by omega, ho_lt⟩
+        · exact ⟨by omega, by omega⟩
+        · rw [Int.natAbs_neg]; exact ⟨by omega, ho_lt⟩
+      let nextEnv := upd baseEnv (n + k) (tnodeEval baseEnv nd)
+      have hσ' : ∀ i, i < n + (k + 1) + ns.length →
+          τ₁ (i + 1) = evalTNetEnv nextEnv (n + (k + 1)) ns i := by
+        intro i hi
+        have hi_lt : i < n + k + (nd :: ns).length := by simp [List.length] at hi ⊢; omega
+        have hi_nxt : i + 1 < nxt := by simp [List.length] at hbound; omega
+        rw [hagree₁ (i + 1) hi_nxt, hσ i hi_lt]
+        simp [evalTNetEnv, nextEnv, Nat.add_assoc]
+      have hsat_acc' : cnfSat τ₁ (acc ++ c ++ wireEq (n + k + 1) o) = true := by
+        rw [cnfSat_append, cnfSat_append, Bool.and_eq_true, Bool.and_eq_true]
+        have hacc1 : cnfSat τ₁ acc = true := by
+          rw [cnfSat_congr_below σ τ₁ nxt hagree₁ acc hbelow]; exact hsat
+        have hwire_val : τ₁ (n + k + 1) = litTrue τ₁ o := by
+          have hw_nxt : n + k + 1 < nxt := by simp [List.length] at hbound; omega
+          rw [hagree₁ (n + k + 1) hw_nxt]
+          have hσ_nk := hσ (n + k) (by simp [List.length])
+          rw [evalTNetEnv, evalTNetEnv_below _ (n + k + 1) ns (n + k) (by omega)] at hσ_nk
+          simp only [upd, if_true] at hσ_nk
+          rw [hσ_nk, hval_e]
+          have hcongr_e : eval (fun i => σ (i + 1)) e = eval baseEnv e := by
+            apply eval_congr (n + k) (fun i => σ (i + 1)) baseEnv _ e hsce
+            intro i hi
+            dsimp only
+            rw [hσ i (by simp [List.length]; omega)]
+            rw [evalTNetEnv, evalTNetEnv_below _ (n + k + 1) ns i (by omega)]
+            simp [upd, Nat.ne_of_lt hi]
+          rw [hcongr_e]
+          exact (eval_pbToExpr baseEnv nd.ins nd.ws nd.t).symm
+        exact ⟨⟨hacc1, hsat_e⟩, wireEq_sat τ₁ (n + k + 1) o hw_gt0 (Int.ne_of_gt ho_pos) hwire_val⟩
+      have hna : ((n + k + 1 : Nat) : Int).natAbs = n + k + 1 := by omega
+      have hlast : ns ≠ [] ∨ (((n + k + 1 : Nat) : Int) ≠ 0 ∧ ((n + k + 1 : Nat) : Int).natAbs < nxt' ∧
+          litTrue τ₁ ((n + k + 1 : Nat) : Int) = nextEnv (n + (k + 1) - 1)) := by
+        cases ns with
+        | nil =>
+            refine Or.inr ⟨by omega, by omega, ?_⟩
+            have hpos_int : (0 : Int) < ((n + k + 1 : Nat) : Int) := by omega
+            simp only [litTrue, hpos_int, if_true, hna]
+            have hw_nxt : n + k + 1 < nxt := by simp [List.length] at hbound; omega
+            rw [hagree₁ (n + k + 1) hw_nxt]
+            have hσ_nk := hσ (n + k) (by simp [List.length])
+            simpa [evalTNetEnv, nextEnv] using hσ_nk
+        | cons _ _ => exact Or.inl (by simp)
+      obtain ⟨hnxt_rec, ho_rec, holt_rec, hbelow_rec, τ₂, hagree₂, hsat_rec, hval_rec⟩ :=
+        tseitinTNetGo_complete ns n (k + 1) nxt' ((n + k + 1 : Nat) : Int)
+          (acc ++ c ++ wireEq (n + k + 1) o) nextEnv τ₁ hnxt'_ge hbound' hsc' hacc_below' hσ' hsat_acc' hlast
+      refine ⟨Nat.le_trans hnxt' hnxt_rec, ho_rec, holt_rec, hbelow_rec, τ₂, ?_, hsat_rec, ?_⟩
+      · intro i hi
+        exact (hagree₂ i (Nat.lt_of_lt_of_le hi hnxt')).trans (hagree₁ i hi)
+      · cases hns : ns with
+        | nil =>
+            subst hns
+            have hw_nxt : n + k + 1 < nxt := by simp [List.length] at hbound; omega
+            rw [hval_rec]
+            simp only [litTrue, show (0 : Int) < ((n + k + 1 : Nat) : Int) from by omega, if_true, hna]
+            rw [hagree₁ (n + k + 1) hw_nxt]
+            simpa [List.length] using hσ (n + k) (by simp [List.length])
+        | cons nd' ns' =>
+            subst hns
+            have hval_rec' : litTrue τ₂ (tseitinTNetGo n (k + 1) (nd' :: ns') ((n + k + 1 : Nat) : Int)
+                (acc ++ c ++ wireEq (n + k + 1) o) nxt').1 =
+                evalTNetEnv nextEnv (n + (k + 1)) (nd' :: ns') (n + (k + 1) + (nd' :: ns').length - 1) := hval_rec
+            have hlen : (nd :: nd' :: ns').length = (nd' :: ns').length + 1 := rfl
+            have hidx : n + (k + 1) + (nd' :: ns').length - 1 = n + k + (nd :: nd' :: ns').length - 1 := by
+              rw [hlen]; omega
+            rw [hval_rec', hidx]
+            rfl
+
+/-- Linear-time LRAT verification theorem for arbitrary-depth integer-weight
+    `ThresholdNet`s against `Expr` specs. Eliminates Python-side evaluation/translation trust. -/
+theorem tseitinTNetMiter_lrat_unsat_implies_equiv (n : Nat) (ns : List TNode) (e : Expr)
+    (Ls : List (Clause × List Nat))
+    (hne : 1 ≤ ns.length)
+    (ht : tnetScoped n ns = true) (hs : Scoped n e = true)
+    (hw : wellFormed (tseitinTNetMiter n ns e) = true)
+    (hchk : checkLrat (tseitinTNetMiter n ns e).toArray Ls = true) :
+    ∀ σ, evalTNet n ns σ = eval σ e := by
+  intro σ
+  by_cases heq : evalTNet n ns σ = eval σ e
+  · exact heq
+  · exfalso
+    let m := ns.length
+    let nxt0 := n + m + 1
+    let fullEnv := evalTNetEnv σ n ns
+    let σ₀ : Nat → Bool := fun i => match i with | 0 => false | j + 1 => fullEnv j
+    have hnxt0 : 1 ≤ nxt0 := by omega
+    have hbound0 : n + 0 + m < nxt0 := by omega
+    have hσ0 : ∀ i, i < n + 0 + m → σ₀ (i + 1) = evalTNetEnv σ (n + 0) ns i := by
+      intro i _; simp [σ₀, fullEnv]
+    obtain ⟨hnxt1, ho1_ne, ho1_lt, hc1_below, τ₁, hagree₁, hsat₁, hval₁⟩ :=
+      tseitinTNetGo_complete ns n 0 nxt0 0 [] σ σ₀ hnxt0 hbound0 ht (fun _ hc => by simp at hc) hσ0 (by simp [cnfSat]) (Or.inl (by cases ns with | nil => simp at hne | cons _ _ => simp))
+    let nxt1 := (tseitinTNetGo n 0 ns 0 [] nxt0).2.2
+    have hn1_ge : 1 ≤ nxt1 := Nat.le_trans hnxt0 hnxt1
+    have hn1_n : n + 1 ≤ nxt1 := by omega
+    obtain ⟨τ₂, hagree₂, hsat₂, hval₂⟩ := tseitinEncode_complete e n nxt1 τ₁ hn1_ge hn1_n hs
+    obtain ⟨ho2_lt, hc2_below⟩ := tseitinEncode_below e n nxt1 hn1_ge hn1_n hs
+    obtain ⟨ho2_pos, hn2⟩ := tseitinEncode_out_pos e nxt1 hn1_ge
+    let oNet := (tseitinTNetGo n 0 ns 0 [] nxt0).1
+    let cNet := (tseitinTNetGo n 0 ns 0 [] nxt0).2.1
+    let oSpec := (tseitinEncode e nxt1).1
+    let cSpec := (tseitinEncode e nxt1).2.1
+    let nxt2 := (tseitinEncode e nxt1).2.2
+    let τ := upd τ₂ nxt2 true
+    have ho1_val : litTrue τ oNet = evalTNet n ns σ := by
+      rw [litTrue_upd_ne τ₂ nxt2 true oNet (by omega)]
+      have hτ₂₁ : litTrue τ₂ oNet = litTrue τ₁ oNet := by
+        have := cnfSat_congr_below τ₁ τ₂ nxt1 hagree₂ [[oNet]]
+          (fun cl hcl l hl => by simp at hcl; subst hcl; simp at hl; subst hl; exact ⟨by omega, ho1_lt⟩)
+        simp [cnfSat, clauseSat] at this; exact this
+      rw [hτ₂₁]
+      cases hns : ns with
+      | nil => simp [hns] at hne
+      | cons nd ns' =>
+          subst hns
+          have hval1' := hval₁
+          dsimp only at hval1'
+          rw [hval1']
+          have hlast := evalTNetFrom_eq_envLast σ n false (nd :: ns') (by simp)
+          change evalTNetEnv σ n (nd :: ns') (n + (nd :: ns').length - 1) = evalTNet n (nd :: ns') σ
+          simpa [evalTNet, Nat.add_assoc] using hlast.symm
+    have ho2_val : litTrue τ oSpec = eval σ e := by
+      rw [litTrue_upd_ne τ₂ nxt2 true oSpec (by omega), hval₂]
+      apply eval_congr n (fun i => τ₁ (i + 1)) σ _ e hs
+      intro i hi
+      dsimp only
+      rw [hagree₁ (i + 1) (by omega)]
+      simp only [σ₀, fullEnv]
+      exact evalTNetEnv_below σ n ns i hi
+    have hn2_lit : litTrue τ (nxt2 : Int) = true := by
+      have hpos : (0 : Int) < (nxt2 : Int) := by omega
+      simp [litTrue, hpos, τ, upd]
+    have hsat_cNet : cnfSat τ cNet = true := by
+      rw [cnfSat_congr_below τ₂ τ nxt1 (fun i hi => by simp [τ, upd, Nat.ne_of_lt (Nat.lt_of_lt_of_le hi hn2)]) cNet hc1_below]
+      rw [cnfSat_congr_below τ₁ τ₂ nxt1 hagree₂ cNet hc1_below]
+      exact hsat₁
+    have hsat_cSpec : cnfSat τ cSpec = true := by
+      rw [cnfSat_congr_below τ₂ τ nxt2 (fun i hi => by simp [τ, upd, Nat.ne_of_lt hi]) cSpec hc2_below]
+      exact hsat₂
+    have ho1_pos_or_neg : oNet ≠ 0 := ho1_ne
+    have ho2_ne : oSpec ≠ 0 := Int.ne_of_gt ho2_pos
+    have hxor : cnfSat τ (gateXor (nxt2 : Int) oNet oSpec) = true := by
+      simp [gateXor, cnfSat, clauseSat, litTrue_neg τ (nxt2 : Int) (by omega),
+        litTrue_neg τ oNet ho1_pos_or_neg, litTrue_neg τ oSpec ho2_ne,
+        ho1_val, ho2_val, hn2_lit]
+      cases h1v : evalTNet n ns σ <;> cases h2v : eval σ e <;> simp_all
+    have hunit : cnfSat τ [[(nxt2 : Int)]] = true := by
+      simp [cnfSat, clauseSat, hn2_lit]
+    have hsat_miter : cnfSat τ (tseitinTNetMiter n ns e) = true := by
+      simp only [tseitinTNetMiter, cnfSat_append, Bool.and_eq_true]
+      exact ⟨⟨⟨hsat_cNet, hsat_cSpec⟩, hxor⟩, hunit⟩
+    exact checkLrat_sound Ls (tseitinTNetMiter n ns e).toArray
+      (dbValid_of_wellFormed _ hw) hchk τ (dbSat_of_cnfSat τ _ hsat_miter)
+
 end Cerp

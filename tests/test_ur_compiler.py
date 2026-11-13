@@ -145,3 +145,74 @@ def test_unified_continuous_compilation():
     assert out_ad["fn_evals"] < 64
     assert evaluate_circuit(out_ad["compiled"]["circuit"]["body"], zeros) == 0
     assert evaluate_circuit(out_ad["compiled"]["circuit"]["body"], ones) == 1
+
+
+def test_large_n16_factored_with_cegar_and_soundness():
+    vs = [f"x{i}" for i in range(16)]
+    # Depends on all variables with low split rank (rank = 1 between x0..x7 and x8..x15):
+    # left block = parity(x0..x3) & (x4 | x5 | x6 | x7), right block = parity(x8..x11) ^ (x12 & x13 & x14 & x15)
+    def left_expr():
+        p = ["xor", ["xor", ["var", "x0"], ["var", "x1"]], ["xor", ["var", "x2"], ["var", "x3"]]]
+        o = ["or", ["or", ["var", "x4"], ["var", "x5"]], ["or", ["var", "x6"], ["var", "x7"]]]
+        return ["and", p, o]
+
+    def right_expr():
+        p = ["xor", ["xor", ["var", "x8"], ["var", "x9"]], ["xor", ["var", "x10"], ["var", "x11"]]]
+        a = ["and", ["and", ["var", "x12"], ["var", "x13"]], ["and", ["var", "x14"], ["var", "x15"]]]
+        return ["xor", p, a]
+
+    expr_ast = {"kind": "expr", "body": ["and", left_expr(), right_expr()]}
+
+    def fn(env):
+        lp = (env["x0"] ^ env["x1"] ^ env["x2"] ^ env["x3"]) & (env["x4"] | env["x5"] | env["x6"] | env["x7"])
+        rp = (env["x8"] ^ env["x9"] ^ env["x10"] ^ env["x11"]) ^ (env["x12"] & env["x13"] & env["x14"] & env["x15"])
+        return int(lp & rp)
+
+    comp = ur_compiler.compile_profile_factored(vs, fn, expr_ast=expr_ast)
+    assert comp["decomposed"] is True
+    assert comp["profile_rank"] == 1
+    assert comp["soundness"] == "cegar-sat"
+    # Verify exact match on tricky low/high bit combinations that defeated old strided sampling
+    for vec in [
+        [0] * 16,
+        [1] + [0] * 15,
+        [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+        [1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1],
+    ]:
+        env = {vs[i]: vec[i] for i in range(16)}
+        assert evaluate_circuit(comp["circuit"]["body"], env) == fn(env)
+
+
+def test_multi_output_shared_encoder_and_lts():
+    vs = ["x0", "x1", "x2", "x3", "x4", "x5"]
+    fns = {
+        "f0": lambda e: ((e["x0"] ^ e["x1"] ^ e["x2"]) & (e["x3"] ^ e["x4"])) ^ e["x5"],
+        "f1": lambda e: (e["x0"] ^ e["x1"] ^ e["x2"]) | (e["x3"] & e["x4"] & e["x5"]),
+    }
+    multi = ur_compiler.compile_multi_profile_factored(vs, fns)
+    assert multi["shared_encoder"] is True
+    assert multi["profile_rank"] == 1
+    for i in range(1 << 6):
+        env = {vs[j]: (i >> j) & 1 for j in range(6)}
+        for nm, fn in fns.items():
+            res = multi["outputs"][nm]
+            assert evaluate_circuit(res["circuit"]["body"], env) == fn(env)
+            assert ur_compiler.eval_threshold_net(res["threshold_net"], env) == fn(env)
+
+    # LTS with 8 states and 4 actions whose transition depends only on parity(state) and action[0]^action[1]
+    states = [f"q{s}" for s in range(8)]
+    actions = [f"a{a}" for a in range(4)]
+    trans = {}
+    for si, s in enumerate(states):
+        sp = (si & 1) ^ ((si >> 1) & 1) ^ ((si >> 2) & 1)
+        for ai, a in enumerate(actions):
+            ap = (ai & 1) ^ ((ai >> 1) & 1)
+            ns = states[(sp << 2) | (ap << 1) | (sp ^ ap)]
+            ob = sp & ap
+            trans[(s, a)] = (ns, ob)
+    out = ur_compiler.compile_unified({"kind": "lts", "states": states, "actions": actions, "transitions": trans})
+    assert out["validation_errors"] == []
+    assert out["shared_encoder"] is True
+    assert out["profile_rank"] == 1
+    assert ur_compiler.eval_threshold_net(out["compiled_outputs"]["out"]["threshold_net"],
+                                         {"s0": 1, "s1": 0, "s2": 0, "a0": 1, "a1": 0}) == 1

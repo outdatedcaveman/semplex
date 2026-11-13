@@ -930,3 +930,653 @@ theorem uniform_budget_bound (err : H → Nat) (totalBudget : Nat) (hs : List H)
       exact Nat.le_of_mul_le_mul_left (by simpa [Nat.mul_comm] using hmul) (Nat.succ_pos m)
 
 end PFT
+
+/-! ## §17 Quantitative Protocol-Frame Morphisms, Composition & Lossy Obstruction (P071) -/
+
+namespace PFT
+
+section Morphisms
+universe u1 u2 u3 u4 u5 u6 u7 u8 u9
+
+/-- Functorial protocol-frame morphism (generalizing trace-relating translations
+    from Abate et al. to protocol frames): maps source hypotheses `fH : H₁ → H₂`
+    and back-translates target protocols `fP : P₂ → P₁` with observation map `fO`. -/
+structure FrameHom (H₁ : Type u1) (P₁ : Type u2) (O₁ : Type u3)
+    (H₂ : Type u4) (P₂ : Type u5) (O₂ : Type u6)
+    (obs₁ : P₁ → H₁ → O₁) (obs₂ : P₂ → H₂ → O₂)
+    (Ω₁ : P₁ → Prop) (Ω₂ : P₂ → Prop) where
+  fH : H₁ → H₂
+  fP : P₂ → P₁
+  fO : O₁ → O₂
+  power_compat : ∀ p₂, Ω₂ p₂ → Ω₁ (fP p₂)
+  comm : ∀ p₂ h₁, obs₂ p₂ (fH h₁) = fO (obs₁ (fP p₂) h₁)
+
+def FrameHom.id (obs : P → H → O) (Ω : P → Prop) :
+    FrameHom H P O H P O obs obs Ω Ω where
+  fH := _root_.id
+  fP := _root_.id
+  fO := _root_.id
+  power_compat := fun _ hp => hp
+  comm := fun _ _ => rfl
+
+def FrameHom.comp
+    {H₁ : Type u1} {P₁ : Type u2} {O₁ : Type u3}
+    {H₂ : Type u4} {P₂ : Type u5} {O₂ : Type u6}
+    {H₃ : Type u7} {P₃ : Type u8} {O₃ : Type u9}
+    {obs₁ : P₁ → H₁ → O₁} {obs₂ : P₂ → H₂ → O₂} {obs₃ : P₃ → H₃ → O₃}
+    {Ω₁ : P₁ → Prop} {Ω₂ : P₂ → Prop} {Ω₃ : P₃ → Prop}
+    (g : FrameHom H₂ P₂ O₂ H₃ P₃ O₃ obs₂ obs₃ Ω₂ Ω₃)
+    (f : FrameHom H₁ P₁ O₁ H₂ P₂ O₂ obs₁ obs₂ Ω₁ Ω₂) :
+    FrameHom H₁ P₁ O₁ H₃ P₃ O₃ obs₁ obs₃ Ω₁ Ω₃ where
+  fH := g.fH ∘ f.fH
+  fP := f.fP ∘ g.fP
+  fO := g.fO ∘ f.fO
+  power_compat := fun p₃ hp₃ => f.power_compat _ (g.power_compat p₃ hp₃)
+  comm := fun p₃ h₁ => by
+    change obs₃ p₃ (g.fH (f.fH h₁)) = g.fO (f.fO (obs₁ (f.fP (g.fP p₃)) h₁))
+    rw [g.comm p₃ (f.fH h₁), f.comm (g.fP p₃) h₁]
+
+theorem frameHom_indist
+    {obs₁ : P₁ → H₁ → O₁} {obs₂ : P₂ → H₂ → O₂} {Ω₁ : P₁ → Prop} {Ω₂ : P₂ → Prop}
+    (φ : FrameHom H₁ P₁ O₁ H₂ P₂ O₂ obs₁ obs₂ Ω₁ Ω₂)
+    {h₁ h₁' : H₁} (hi : Indist obs₁ Ω₁ h₁ h₁') :
+    Indist obs₂ Ω₂ (φ.fH h₁) (φ.fH h₁') := by
+  intro p₂ hp₂
+  rw [φ.comm p₂ h₁, φ.comm p₂ h₁']
+  exact congrArg φ.fO (hi (φ.fP p₂) (φ.power_compat p₂ hp₂))
+
+theorem frameHom_determines_pullback
+    {obs₁ : P₁ → H₁ → O₁} {obs₂ : P₂ → H₂ → O₂} {Ω₁ : P₁ → Prop} {Ω₂ : P₂ → Prop}
+    (φ : FrameHom H₁ P₁ O₁ H₂ P₂ O₂ obs₁ obs₂ Ω₁ Ω₂)
+    (S₁ : H₁ → Prop) (S₂ : H₂ → Prop) (q₁ : H₁ → A₁) (q₂ : H₂ → A₁)
+    (hmap : ∀ h₁, S₁ h₁ → S₂ (φ.fH h₁))
+    (hagree : ∀ h₁, S₁ h₁ → q₂ (φ.fH h₁) = q₁ h₁)
+    (hd : Determines obs₂ Ω₂ S₂ q₂) :
+    Determines obs₁ Ω₁ S₁ q₁ := by
+  intro h₁ h₁' hs₁ hs₁' hi
+  rw [← hagree h₁ hs₁, ← hagree h₁' hs₁']
+  exact hd (φ.fH h₁) (φ.fH h₁') (hmap h₁ hs₁) (hmap h₁' hs₁') (frameHom_indist φ hi)
+
+/-- Quantitative warrant loss bound across translated queries. -/
+def QueryApprox {A : Type u1} (dA : A → A → Nat) (S₁ : H₁ → Prop)
+    (q₁ : H₁ → A) (fH : H₁ → H₂) (q₂ : H₂ → A) (eps : Nat) : Prop :=
+  ∀ h₁, S₁ h₁ → dA (q₁ h₁) (q₂ (fH h₁)) ≤ eps
+
+/-- Warrant distortion composes additively across frames when `dA` satisfies
+    the triangle inequality. -/
+theorem queryApprox_comp {A : Type u1} (dA : A → A → Nat)
+    (htri : ∀ a b c, dA a c ≤ dA a b + dA b c)
+    (S₁ : H₁ → Prop) (S₂ : H₂ → Prop) (q₁ : H₁ → A) (q₂ : H₂ → A) (q₃ : H₃ → A)
+    (f₁ : H₁ → H₂) (f₂ : H₂ → H₃) (eps₁ eps₂ : Nat)
+    (hmap : ∀ h₁, S₁ h₁ → S₂ (f₁ h₁))
+    (ha₁ : QueryApprox dA S₁ q₁ f₁ q₂ eps₁)
+    (ha₂ : QueryApprox dA S₂ q₂ f₂ q₃ eps₂) :
+    QueryApprox dA S₁ q₁ (f₂ ∘ f₁) q₃ (eps₁ + eps₂) := by
+  intro h₁ hs₁
+  have h1 := ha₁ h₁ hs₁
+  have h2 := ha₂ (f₁ h₁) (hmap h₁ hs₁)
+  have ht := htri (q₁ h₁) (q₂ (f₁ h₁)) (q₃ (f₂ (f₁ h₁)))
+  exact Nat.le_trans ht (Nat.add_le_add h1 h2)
+
+/-- End-to-end quantitative determinacy pullback: combining a `FrameHom` whose
+    target frame `EpsDetermines` `q₂` with slack `tol` and an `eps`-approximate
+    query correspondence `q₁ ≈ q₂ ∘ φ.fH` transfers determinacy back to `q₁`
+    with explicit additive loss `2 * eps + tol`. -/
+theorem frameHom_eps_determines_pullback
+    {obs₁ : P₁ → H₁ → O₁} {obs₂ : P₂ → H₂ → O₂} {Ω₁ : P₁ → Prop} {Ω₂ : P₂ → Prop}
+    (φ : FrameHom H₁ P₁ O₁ H₂ P₂ O₂ obs₁ obs₂ Ω₁ Ω₂)
+    (dA : A → A → Nat)
+    (htri : ∀ a b c, dA a c ≤ dA a b + dA b c)
+    (hsym : ∀ a b, dA a b = dA b a)
+    (S₁ : H₁ → Prop) (S₂ : H₂ → Prop) (q₁ : H₁ → A) (q₂ : H₂ → A)
+    (eps tol : Nat)
+    (hmap : ∀ h₁, S₁ h₁ → S₂ (φ.fH h₁))
+    (ha : QueryApprox dA S₁ q₁ φ.fH q₂ eps)
+    (hd : EpsDetermines obs₂ Ω₂ S₂ q₂ (fun x y => dA (q₂ x) (q₂ y)) tol)
+    (hne_tol : ∀ h₁ h₁', q₁ h₁ ≠ q₁ h₁' → dA (q₂ (φ.fH h₁)) (q₂ (φ.fH h₁')) ≤ tol →
+      dA (q₁ h₁) (q₁ h₁') ≤ 2 * eps + tol) :
+    EpsDetermines obs₁ Ω₁ S₁ q₁ (fun x y => dA (q₁ x) (q₁ y)) (2 * eps + tol) := by
+  intro h₁ h₁' hs₁ hs₁' hi hq
+  dsimp only
+  have hi₂ := frameHom_indist φ hi
+  by_cases hq₂ : q₂ (φ.fH h₁) = q₂ (φ.fH h₁')
+  · have h1 := ha h₁ hs₁
+    have h2 := ha h₁' hs₁'
+    rw [← hq₂] at h2
+    have hsym2 : dA (q₂ (φ.fH h₁)) (q₁ h₁') ≤ eps := by rw [hsym]; exact h2
+    have ht := htri (q₁ h₁) (q₂ (φ.fH h₁)) (q₁ h₁')
+    omega
+  · have htol := hd (φ.fH h₁) (φ.fH h₁') (hmap h₁ hs₁) (hmap h₁' hs₁') hi₂ hq₂
+    exact hne_tol h₁ h₁' hq htol
+
+/-- Metric triangle form of `frameHom_eps_determines_pullback` (no extra side
+    condition needed when `dA` is a pseudometric). -/
+theorem frameHom_eps_metric_pullback
+    {obs₁ : P₁ → H₁ → O₁} {obs₂ : P₂ → H₂ → O₂} {Ω₁ : P₁ → Prop} {Ω₂ : P₂ → Prop}
+    (φ : FrameHom H₁ P₁ O₁ H₂ P₂ O₂ obs₁ obs₂ Ω₁ Ω₂)
+    (dA : A → A → Nat)
+    (htri : ∀ a b c, dA a c ≤ dA a b + dA b c)
+    (hsym : ∀ a b, dA a b = dA b a)
+    (hrefl : ∀ a, dA a a = 0)
+    (S₁ : H₁ → Prop) (S₂ : H₂ → Prop) (q₁ : H₁ → A) (q₂ : H₂ → A)
+    (eps tol : Nat)
+    (hmap : ∀ h₁, S₁ h₁ → S₂ (φ.fH h₁))
+    (ha : QueryApprox dA S₁ q₁ φ.fH q₂ eps)
+    (hd : EpsDetermines obs₂ Ω₂ S₂ q₂ (fun x y => dA (q₂ x) (q₂ y)) tol) :
+    EpsDetermines obs₁ Ω₁ S₁ q₁ (fun x y => dA (q₁ x) (q₁ y)) (2 * eps + tol) := by
+  intro h₁ h₁' hs₁ hs₁' hi _hq
+  dsimp only
+  have hi₂ := frameHom_indist φ hi
+  have h1 := ha h₁ hs₁
+  have h2 : dA (q₂ (φ.fH h₁')) (q₁ h₁') ≤ eps := by rw [hsym]; exact ha h₁' hs₁'
+  have hmid : dA (q₂ (φ.fH h₁)) (q₂ (φ.fH h₁')) ≤ tol := by
+    by_cases hq₂ : q₂ (φ.fH h₁) = q₂ (φ.fH h₁')
+    · rw [hq₂, hrefl]; omega
+    · exact hd (φ.fH h₁) (φ.fH h₁') (hmap h₁ hs₁) (hmap h₁' hs₁') hi₂ hq₂
+  have t1 := htri (q₁ h₁) (q₂ (φ.fH h₁)) (q₁ h₁')
+  have t2 := htri (q₂ (φ.fH h₁)) (q₂ (φ.fH h₁')) (q₁ h₁')
+  omega
+
+/-- Lossy Composition Obstruction Theorem:
+    When an approximate relation drops exact naturality (`comm`) for pointwise
+    1-step tolerance (`|obs_{k} - obs_{k+1}| ≤ 1`) across two consecutive lossy
+    abstraction hops (`obs₀ → obs₁ → obs₂`), each individual hop strictly respects
+    error ≤ 1, yet the composite observer `obs₂` violates `EpsDetermines ... tol = 1`.
+    This proves why multi-hop lossy semantic abstraction strictly accumulates error
+    across non-Lipschitz boundaries unless tolerance budgets add (`1 + 1 = 2`). -/
+theorem lossy_composition_obstruction :
+    let obs₀ : Unit → Fin 3 → Nat := fun _ x => x.val
+    let obs₁ : Unit → Fin 3 → Nat := fun _ x => if x.val = 0 then 1 else x.val
+    let obs₂ : Unit → Fin 3 → Nat := fun _ x => if x.val = 2 then 1 else (if x.val = 0 then 1 else x.val)
+    let q : Fin 3 → Nat := fun x => x.val
+    (∀ x : Fin 3, (obs₀ () x - obs₁ () x ≤ 1) ∧ (obs₁ () x - obs₀ () x ≤ 1)) ∧
+    (∀ x : Fin 3, (obs₁ () x - obs₂ () x ≤ 1) ∧ (obs₂ () x - obs₁ () x ≤ 1)) ∧
+    (¬ EpsDetermines obs₂ (fun _ => True) (fun _ => True) q
+        (fun a b => if a.val ≤ b.val then b.val - a.val else a.val - b.val) 1) := by
+  refine ⟨?_, ?_, ?_⟩
+  · intro ⟨v, hv⟩
+    dsimp only; split <;> omega
+  · intro ⟨v, hv⟩
+    dsimp only; split <;> split <;> omega
+  · intro hd
+    have h := hd ⟨0, by decide⟩ ⟨2, by decide⟩ trivial trivial
+      (fun _ _ => by dsimp only; rfl) (by decide)
+    revert h; decide
+
+end Morphisms
+
+end PFT
+
+/-! ## §18 Discrete Markov Kernels & Data-Processing / TV Contraction (P072, Q-W1) -/
+
+namespace PFT
+
+section Markov
+
+/-- Discrete unnormalized mass distribution over `A` (weights in `Nat`). -/
+abbrev Dist (A : Type u) := List (A × Nat)
+
+def Dist.mass {A : Type u} : Dist A → Nat
+  | [] => 0
+  | (_, w) :: xs => w + Dist.mass xs
+
+def Dist.probOf {A : Type u} (E : A → Bool) : Dist A → Nat
+  | [] => 0
+  | (a, w) :: xs => (if E a then w else 0) + Dist.probOf E xs
+
+def Dist.scale {A : Type u} (c : Nat) : Dist A → Dist A
+  | [] => []
+  | (a, w) :: xs => (a, c * w) :: Dist.scale c xs
+
+def Dist.map {A : Type u} {B : Type v} (f : A → B) : Dist A → Dist B
+  | [] => []
+  | (a, w) :: xs => (f a, w) :: Dist.map f xs
+
+def Dist.bind {A : Type u} {B : Type v} (K : A → Dist B) : Dist A → Dist B
+  | [] => []
+  | (a, w) :: xs => Dist.scale w (K a) ++ Dist.bind K xs
+
+def natAbsDiff (a b : Nat) : Nat :=
+  if a ≤ b then b - a else a - b
+
+theorem natAbsDiff_triangle (a b c : Nat) :
+    natAbsDiff a c ≤ natAbsDiff a b + natAbsDiff b c := by
+  simp only [natAbsDiff]
+  split <;> split <;> split <;> omega
+
+theorem dist_probOf_append {A : Type u} (E : A → Bool) (μ ν : Dist A) :
+    Dist.probOf E (μ ++ ν) = Dist.probOf E μ + Dist.probOf E ν := by
+  induction μ with
+  | nil => simp [Dist.probOf]
+  | cons x xs ih =>
+      rcases x with ⟨a, w⟩
+      change Dist.probOf E ((a, w) :: (xs ++ ν)) = Dist.probOf E ((a, w) :: xs) + Dist.probOf E ν
+      simp only [Dist.probOf, ih]
+      omega
+
+theorem dist_probOf_scale {A : Type u} (E : A → Bool) (c : Nat) (μ : Dist A) :
+    Dist.probOf E (Dist.scale c μ) = c * Dist.probOf E μ := by
+  induction μ with
+  | nil => simp [Dist.scale, Dist.probOf]
+  | cons x xs ih =>
+      rcases x with ⟨a, w⟩
+      simp only [Dist.scale, Dist.probOf, ih]
+      by_cases h : E a <;> simp [h, Nat.mul_add]
+
+/-- Deterministic post-processing pushes `probOf` straight into preimage events. -/
+theorem dist_probOf_map {A : Type u} {B : Type v}
+    (f : A → B) (E : B → Bool) (μ : Dist A) :
+    Dist.probOf E (Dist.map f μ) = Dist.probOf (fun a => E (f a)) μ := by
+  induction μ with
+  | nil => simp [Dist.map, Dist.probOf]
+  | cons x xs ih =>
+      rcases x with ⟨a, w⟩
+      simp [Dist.map, Dist.probOf, ih]
+
+/-- Deterministic Data-Processing Inequality for event total variation:
+    pushing forward by any `f : A → B` never increases worst-case event
+    distinguishability `|μ(E) - ν(E)|`. -/
+theorem tv_deterministic_dpi {A : Type u} {B : Type v}
+    (f : A → B) (μ ν : Dist A) (Δ : Nat)
+    (hTV : ∀ P : A → Bool, natAbsDiff (Dist.probOf P μ) (Dist.probOf P ν) ≤ Δ) :
+    ∀ E : B → Bool,
+      natAbsDiff (Dist.probOf E (Dist.map f μ)) (Dist.probOf E (Dist.map f ν)) ≤ Δ := by
+  intro E
+  rw [dist_probOf_map, dist_probOf_map]
+  exact hTV (fun a => E (f a))
+
+def weightedExpect {A : Type u} (g : A → Nat) : Dist A → Nat
+  | [] => 0
+  | (a, w) :: xs => w * g a + weightedExpect g xs
+
+theorem dist_probOf_bind {A : Type u} {B : Type v}
+    (K : A → Dist B) (E : B → Bool) (μ : Dist A) :
+    Dist.probOf E (Dist.bind K μ) = weightedExpect (fun a => Dist.probOf E (K a)) μ := by
+  induction μ with
+  | nil => simp [Dist.bind, Dist.probOf, weightedExpect]
+  | cons x xs ih =>
+      rcases x with ⟨a, w⟩
+      simp only [Dist.bind, dist_probOf_append, dist_probOf_scale, ih, weightedExpect]
+
+def levelSum {A : Type u} (g : A → Nat) (μ : Dist A) : Nat → Nat
+  | 0 => 0
+  | m + 1 => levelSum g μ m + Dist.probOf (fun a => decide (m < g a)) μ
+
+theorem levelSum_unit (k w M : Nat) :
+    levelSum (fun _ : Unit => k) [((), w)] M = w * min k M := by
+  induction M with
+  | zero => simp [levelSum]
+  | succ m ih =>
+      by_cases h : m < k
+      · have hmin : min k (m + 1) = m + 1 := Nat.min_eq_right (by omega)
+        have hmin' : min k m = m := Nat.min_eq_right (by omega)
+        simp only [levelSum, Dist.probOf, decide_eq_true_eq, h, if_true, ih, hmin, hmin', Nat.mul_succ]
+        omega
+      · have hmin : min k (m + 1) = k := Nat.min_eq_left (by omega)
+        have hmin' : min k m = k := Nat.min_eq_left (by omega)
+        simp only [levelSum, Dist.probOf, decide_eq_true_eq, h, if_false, ih, hmin, hmin']
+        omega
+
+theorem levelSum_single (k w : Nat) : ∀ M : Nat, k ≤ M →
+    levelSum (fun _ : Unit => k) [((), w)] M = w * k := by
+  intro M hk
+  rw [levelSum_unit, Nat.min_eq_left hk]
+
+theorem levelSum_cons {A : Type u} (g : A → Nat) (a : A) (w : Nat) (xs : Dist A) (M : Nat) :
+    levelSum g ((a, w) :: xs) M =
+      levelSum (fun _ : Unit => g a) [((), w)] M + levelSum g xs M := by
+  induction M with
+  | zero => simp [levelSum]
+  | succ m ih =>
+      simp only [levelSum, Dist.probOf, ih]
+      by_cases hm : m < g a <;> simp [hm] <;> omega
+
+/-- Layer-cake / Fubini identity: weighted expectation bounded by `M` decomposes
+    into the sum of `M` tail-event probabilities. -/
+theorem weightedExpect_eq_levelSum {A : Type u} (g : A → Nat) (M : Nat)
+    (hbound : ∀ a, g a ≤ M) (μ : Dist A) :
+    weightedExpect g μ = levelSum g μ M := by
+  induction μ with
+  | nil =>
+      clear hbound
+      induction M with
+      | zero => simp [weightedExpect, levelSum]
+      | succ m ih => simp [levelSum, Dist.probOf, ih]
+  | cons x xs ih =>
+      rcases x with ⟨a, w⟩
+      rw [weightedExpect, ih, levelSum_cons, levelSum_single (g a) w M (hbound a)]
+
+theorem levelSum_absDiff_le {A : Type u} (g : A → Nat) (μ ν : Dist A) (Δ : Nat)
+    (hTV : ∀ P : A → Bool, natAbsDiff (Dist.probOf P μ) (Dist.probOf P ν) ≤ Δ) :
+    ∀ M : Nat, natAbsDiff (levelSum g μ M) (levelSum g ν M) ≤ M * Δ := by
+  intro M
+  induction M with
+  | zero => simp [levelSum, natAbsDiff]
+  | succ m ih =>
+      simp only [levelSum]
+      have hlayer := hTV (fun a => decide (m < g a))
+      have hadd : ∀ a₁ a₂ b₁ b₂ : Nat,
+          natAbsDiff (a₁ + b₁) (a₂ + b₂) ≤ natAbsDiff a₁ a₂ + natAbsDiff b₁ b₂ := by
+        intro a₁ a₂ b₁ b₂
+        simp only [natAbsDiff]
+        split <;> split <;> split <;> omega
+      have hstep := hadd (levelSum g μ m) (levelSum g ν m)
+        (Dist.probOf (fun a => decide (m < g a)) μ)
+        (Dist.probOf (fun a => decide (m < g a)) ν)
+      simp only [Nat.succ_mul]
+      omega
+
+theorem dist_probOf_le_mass {A : Type u} (E : A → Bool) (μ : Dist A) :
+    Dist.probOf E μ ≤ Dist.mass μ := by
+  induction μ with
+  | nil => simp [Dist.probOf, Dist.mass]
+  | cons x xs ih =>
+      rcases x with ⟨a, w⟩
+      simp only [Dist.probOf, Dist.mass]
+      by_cases h : E a <;> simp [h] <;> omega
+
+/-- Stochastic Markov Kernel Data-Processing Inequality (Fritz 2020 / Q-W1):
+    For any Markov kernel `K : A → Dist B` whose outputs each have total mass ≤ `M`,
+    if input distributions `μ, ν` satisfy event-TV distance `≤ Δ`, then pushed
+    forward distributions `K_* μ, K_* ν` satisfy event-TV distance `≤ M * Δ`
+    (equivalently TV does not expand when dividing by normalized mass `W * M`). -/
+theorem markov_kernel_dpi {A : Type u} {B : Type v}
+    (K : A → Dist B) (M : Nat) (hK : ∀ a, Dist.mass (K a) ≤ M)
+    (μ ν : Dist A) (Δ : Nat)
+    (hTV : ∀ P : A → Bool, natAbsDiff (Dist.probOf P μ) (Dist.probOf P ν) ≤ Δ) :
+    ∀ E : B → Bool,
+      natAbsDiff (Dist.probOf E (Dist.bind K μ)) (Dist.probOf E (Dist.bind K ν)) ≤ M * Δ := by
+  intro E
+  rw [dist_probOf_bind, dist_probOf_bind]
+  have hle : ∀ a, Dist.probOf E (K a) ≤ M := fun a =>
+    Nat.le_trans (dist_probOf_le_mass E (K a)) (hK a)
+  rw [weightedExpect_eq_levelSum _ M hle μ, weightedExpect_eq_levelSum _ M hle ν]
+  exact levelSum_absDiff_le _ μ ν Δ hTV M
+
+/-- Compositional channel contraction across two Markov kernels `K₁` (`≤ M₁`) and
+    `K₂` (`≤ M₂`): the combined TV loss scales at most by `M₁ * M₂ * Δ` (exact
+    normalized non-expansion when dividing by `M₁ * M₂`). -/
+theorem markov_kernel_dpi_comp {A : Type u} {B : Type v} {C : Type w}
+    (K₁ : A → Dist B) (K₂ : B → Dist C) (M₁ M₂ : Nat)
+    (hK₁ : ∀ a, Dist.mass (K₁ a) ≤ M₁) (hK₂ : ∀ b, Dist.mass (K₂ b) ≤ M₂)
+    (μ ν : Dist A) (Δ : Nat)
+    (hTV : ∀ P : A → Bool, natAbsDiff (Dist.probOf P μ) (Dist.probOf P ν) ≤ Δ) :
+    ∀ E : C → Bool,
+      natAbsDiff (Dist.probOf E (Dist.bind K₂ (Dist.bind K₁ μ)))
+                 (Dist.probOf E (Dist.bind K₂ (Dist.bind K₁ ν))) ≤ M₂ * (M₁ * Δ) := by
+  intro E
+  apply markov_kernel_dpi K₂ M₂ hK₂ (Dist.bind K₁ μ) (Dist.bind K₁ ν) (M₁ * Δ)
+  exact markov_kernel_dpi K₁ M₁ hK₁ μ ν Δ hTV
+
+end Markov
+
+end PFT
+
+/-! ## §19 Peircean Triadic Semiosis & Anytime-Valid E-Process Ville Bound (P073) -/
+
+namespace PFT
+
+section SemiosisAndVille
+universe u1 u2 u3 u4
+
+/-- Peircean Triadic Semiosis:
+    An Object `h : H`, under Representamen/sign-rendering protocol `rep : P → H → S`,
+    induces a Pragmatic Equivalence via an Interpretant `interp : P → S → Act`. -/
+def PragEquiv {H : Type u1} {P : Type u2} {S : Type u3} {Act : Type u4}
+    (rep : P → H → S) (interp : P → S → Act) (Ω : P → Prop) (h₁ h₂ : H) : Prop :=
+  Indist (fun p h => interp p (rep p h)) Ω h₁ h₂
+
+/-- Coarsening law: object indistinguishability under signs always implies
+    pragmatic equivalence under any Interpretant (lossy meaning coarsening). -/
+theorem indist_implies_pragEquiv {H : Type u1} {P : Type u2} {S : Type u3} {Act : Type u4}
+    (rep : P → H → S) (interp : P → S → Act) (Ω : P → Prop) {h₁ h₂ : H}
+    (hi : Indist rep Ω h₁ h₂) : PragEquiv rep interp Ω h₁ h₂ :=
+  fun p hp => congrArg (interp p) (hi p hp)
+
+/-- Peirce's Pragmatic Maxim in PFT:
+    An action/task query `q : H → Act` is determined by the sign-interpretant
+    pipeline iff it conflicts nowhere within `PragEquiv` classes; and when `interp`
+    is faithful on `Ω`, pragmatic determination coincides with representamen determination. -/
+theorem peirce_pragmatic_maxim {H : Type u1} {P : Type u2} {S : Type u3} {Act : Type u4}
+    (rep : P → H → S) (interp : P → S → Act) (Ω : P → Prop)
+    (Dom : H → Prop) (q : H → Act) :
+    (Determines (fun p h => interp p (rep p h)) Ω Dom q ↔
+     HitsConflicts (fun p h => interp p (rep p h)) Ω Dom q) ∧
+    (Determines (fun p h => interp p (rep p h)) Ω Dom q → Determines rep Ω Dom q) := by
+  refine ⟨duality _ Ω Dom q, ?_⟩
+  intro hd h₁ h₂ hs₁ hs₂ hi
+  exact hd h₁ h₂ hs₁ hs₂ (indist_implies_pragEquiv rep interp Ω hi)
+
+/-- Finite-horizon discrete stochastic filtration tree storing nonnegative
+    wealth (e-value numerator) `w : Nat` at each node and branching transitions
+    `(weight, child)` normalized to branching factor `M`. -/
+inductive ProbTree : Type where
+  | leaf (w : Nat) : ProbTree
+  | step (w : Nat) (cs : List (Nat × ProbTree)) : ProbTree
+
+def ProbTree.wealth : ProbTree → Nat
+  | ProbTree.leaf w => w
+  | ProbTree.step w _ => w
+
+def branchSum : List (Nat × ProbTree) → Nat
+  | [] => 0
+  | (p, _) :: xs => p + branchSum xs
+
+def branchWeightedWealth : List (Nat × ProbTree) → Nat
+  | [] => 0
+  | (p, c) :: xs => p * c.wealth + branchWeightedWealth xs
+
+-- A valid discrete null-hypothesis supermartingale (test martingale) with
+-- branching denominator `M`: branch weights sum to `M` and expected next wealth
+-- never exceeds `M * current_wealth` (i.e. `E[E_{t+1} | F_t] ≤ E_t`).
+mutual
+  def IsSupermartingale (M : Nat) : ProbTree → Prop
+    | ProbTree.leaf _ => True
+    | ProbTree.step w cs =>
+        branchSum cs = M ∧
+        branchWeightedWealth cs ≤ M * w ∧
+        IsSupermartingaleList M cs
+
+  def IsSupermartingaleList (M : Nat) : List (Nat × ProbTree) → Prop
+    | [] => True
+    | (_, c) :: xs => IsSupermartingale M c ∧ IsSupermartingaleList M xs
+end
+
+/-- Adaptive stopping policy tree: at any `step` node, `stop` halts inquiry
+    immediately (realizing current wealth); `cont f` continues with child-specific policies. -/
+inductive StopPolicy : Type where
+  | stop : StopPolicy
+  | cont : (Nat → StopPolicy) → StopPolicy
+
+mutual
+  def applyStopList (next : Nat → StopPolicy) (k : Nat) :
+      List (Nat × ProbTree) → List (Nat × ProbTree)
+    | [] => []
+    | (p, c) :: xs => (p, applyStop c (next k)) :: applyStopList next (k + 1) xs
+
+  def applyStop : ProbTree → StopPolicy → ProbTree
+    | ProbTree.leaf w, _ => ProbTree.leaf w
+    | ProbTree.step w _, StopPolicy.stop => ProbTree.leaf w
+    | ProbTree.step w cs, StopPolicy.cont next => ProbTree.step w (applyStopList next 0 cs)
+end
+
+theorem applyStop_wealth (t : ProbTree) (s : StopPolicy) :
+    (applyStop t s).wealth = t.wealth := by
+  cases t with
+  | leaf w => cases s <;> rfl
+  | step w cs => cases s <;> rfl
+
+theorem applyStopList_branchSum (next : Nat → StopPolicy) :
+    ∀ (k : Nat) (cs : List (Nat × ProbTree)),
+      branchSum (applyStopList next k cs) = branchSum cs := by
+  intro k cs
+  induction cs generalizing k with
+  | nil => simp [applyStopList, branchSum]
+  | cons x xs ih =>
+      rcases x with ⟨p, c⟩
+      simp only [applyStopList, branchSum, ih (k + 1)]
+
+theorem applyStopList_branchWeightedWealth (next : Nat → StopPolicy) :
+    ∀ (k : Nat) (cs : List (Nat × ProbTree)),
+      branchWeightedWealth (applyStopList next k cs) = branchWeightedWealth cs := by
+  intro k cs
+  induction cs generalizing k with
+  | nil => simp [applyStopList, branchWeightedWealth]
+  | cons x xs ih =>
+      rcases x with ⟨p, c⟩
+      simp only [applyStopList, branchWeightedWealth, applyStop_wealth, ih (k + 1)]
+
+mutual
+  theorem applyStopList_preserves_supermartingale (M : Nat) (next : Nat → StopPolicy) (k : Nat)
+      (cs : List (Nat × ProbTree))
+      (hsm : IsSupermartingaleList M cs) :
+      IsSupermartingaleList M (applyStopList next k cs) := by
+    cases cs with
+    | nil => simp [applyStopList, IsSupermartingaleList]
+    | cons x xs =>
+        rcases x with ⟨q, d⟩
+        rcases hsm with ⟨hd, hxs⟩
+        exact ⟨applyStop_preserves_supermartingale M d (next k) hd,
+               applyStopList_preserves_supermartingale M next (k + 1) xs hxs⟩
+
+  /-- Optional Stopping preserves the supermartingale property for EVERY adaptive
+      stopping policy `s`. -/
+  theorem applyStop_preserves_supermartingale (M : Nat) (t : ProbTree) (s : StopPolicy)
+      (hsm : IsSupermartingale M t) : IsSupermartingale M (applyStop t s) := by
+    cases t with
+    | leaf w =>
+        cases s <;> simp [applyStop, IsSupermartingale]
+    | step w cs =>
+        cases s with
+        | stop => simp [applyStop, IsSupermartingale]
+        | cont next =>
+            simp only [IsSupermartingale] at hsm
+            rcases hsm with ⟨hsum, hmean, hchildren⟩
+            refine ⟨?_, ?_, ?_⟩
+            · simpa [applyStop] using (applyStopList_branchSum next 0 cs).trans hsum
+            · simp only [applyStop, applyStopList_branchWeightedWealth]; exact hmean
+            · exact applyStopList_preserves_supermartingale M next 0 cs hchildren
+end
+
+def normExpect (M : Nat) : Nat → ProbTree → Nat
+  | d, ProbTree.leaf w => w * M ^ d
+  | 0, ProbTree.step w _ => w
+  | d + 1, ProbTree.step _ cs =>
+      let rec go : List (Nat × ProbTree) → Nat
+        | [] => 0
+        | (p, c) :: xs => p * normExpect M d c + go xs
+      go cs
+
+def normHitMass (K M : Nat) : Nat → ProbTree → Nat
+  | d, ProbTree.leaf w => if K ≤ w then M ^ d else 0
+  | 0, ProbTree.step w _ => if K ≤ w then 1 else 0
+  | d + 1, ProbTree.step _ cs =>
+      let rec go : List (Nat × ProbTree) → Nat
+        | [] => 0
+        | (p, c) :: xs => p * normHitMass K M d c + go xs
+      go cs
+
+theorem normExpect_le_branch_list {M d : Nat}
+    (ih : ∀ t : ProbTree, IsSupermartingale M t → normExpect M d t ≤ t.wealth * M ^ d) :
+    ∀ (cs : List (Nat × ProbTree)), IsSupermartingaleList M cs →
+      normExpect.go M d cs ≤ branchWeightedWealth cs * M ^ d := by
+  intro cs hcs
+  induction cs with
+  | nil => simp [normExpect.go, branchWeightedWealth]
+  | cons x xs ihxs =>
+      rcases x with ⟨p, c⟩
+      rcases hcs with ⟨hc_sm, hxs_sm⟩
+      have hc := ih c hc_sm
+      have hxs := ihxs hxs_sm
+      simp only [normExpect.go, branchWeightedWealth, Nat.add_mul]
+      have hmul : p * normExpect M d c ≤ p * (c.wealth * M ^ d) :=
+        Nat.mul_le_mul_left p hc
+      have hassoc : p * (c.wealth * M ^ d) = p * c.wealth * M ^ d :=
+        (Nat.mul_assoc p c.wealth (M ^ d)).symm
+      omega
+
+theorem supermartingale_normExpect_le (M : Nat) :
+    ∀ (d : Nat) (t : ProbTree), IsSupermartingale M t → normExpect M d t ≤ t.wealth * M ^ d := by
+  intro d
+  induction d with
+  | zero =>
+      intro t _
+      cases t <;> simp [normExpect, ProbTree.wealth]
+  | succ d ih =>
+      intro t hsm
+      cases t with
+      | leaf w => simp [normExpect, ProbTree.wealth, Nat.pow_succ]
+      | step w cs =>
+          simp only [IsSupermartingale] at hsm
+          rcases hsm with ⟨_, hmean, hchildren⟩
+          simp only [normExpect, ProbTree.wealth]
+          have hbranch := normExpect_le_branch_list ih cs hchildren
+          have hscale : branchWeightedWealth cs * M ^ d ≤ (M * w) * M ^ d :=
+            Nat.mul_le_mul_right (M ^ d) hmean
+          have hpow : (M * w) * M ^ d = w * M ^ (d + 1) := by
+            rw [Nat.pow_succ]; ac_rfl
+          omega
+
+/-- Optional Stopping Theorem (finite-horizon test supermartingales):
+    For any adaptive stopping policy `s` on any supermartingale `t`,
+    the stopped expected e-value at depth `d` never exceeds `t.wealth * M ^ d`. -/
+theorem optional_stopping_supermartingale (M d : Nat) (t : ProbTree) (s : StopPolicy)
+    (hsm : IsSupermartingale M t) :
+    normExpect M d (applyStop t s) ≤ t.wealth * M ^ d := by
+  have h1 := supermartingale_normExpect_le M d (applyStop t s)
+    (applyStop_preserves_supermartingale M t s hsm)
+  simpa [applyStop_wealth] using h1
+
+theorem normHitMass_mul_le_normExpect (K M : Nat) :
+    ∀ (d : Nat) (t : ProbTree), K * normHitMass K M d t ≤ normExpect M d t := by
+  intro d
+  induction d with
+  | zero =>
+      intro t
+      cases t with
+      | leaf w =>
+          simp only [normHitMass, normExpect]
+          by_cases h : K ≤ w <;> simp [h]
+      | step w cs =>
+          simp only [normHitMass, normExpect]
+          by_cases h : K ≤ w <;> simp [h]
+  | succ d ih =>
+      intro t
+      cases t with
+      | leaf w =>
+          simp only [normHitMass, normExpect]
+          by_cases h : K ≤ w
+          · simp only [h, if_true]
+            have h1 : K * M ^ (d + 1) ≤ w * M ^ (d + 1) := Nat.mul_le_mul_right (M ^ (d + 1)) h
+            exact h1
+          · simp [h]
+      | step w cs =>
+          simp only [normHitMass, normExpect]
+          induction cs with
+          | nil => simp [normHitMass.go, normExpect.go]
+          | cons x xs ihxs =>
+              rcases x with ⟨p, c⟩
+              have hc := ih c
+              simp only [normHitMass.go, normExpect.go, Nat.mul_add]
+              have hpm : K * (p * normHitMass K M d c) ≤ p * normExpect M d c := by
+                have hk : K * (p * normHitMass K M d c) = p * (K * normHitMass K M d c) := by ac_rfl
+                rw [hk]
+                exact Nat.mul_le_mul_left p hc
+              omega
+
+/-- Safe Anytime-Valid Ville Maximal Inequality (Ramdas/Shafer E-processes):
+    At ANY horizon `d`, under ANY adaptive optional-stopping / peeking rule `s`,
+    for any test supermartingale `t` (starting wealth `t.wealth`), the mass of
+    stopping trajectories reaching e-value `≥ K` satisfies:
+      `K * normHitMass K M d (applyStop t s) ≤ t.wealth * M ^ d`.
+    In particular, for an initial e-value `t.wealth = 1`, Type I rejection probability
+    (`normHitMass / M^d`) is unconditionally `≤ 1 / K` regardless of data peeking. -/
+theorem ville_anytime_valid_bound (K M d : Nat) (t : ProbTree) (s : StopPolicy)
+    (hsm : IsSupermartingale M t) :
+    K * normHitMass K M d (applyStop t s) ≤ t.wealth * M ^ d := by
+  exact Nat.le_trans (normHitMass_mul_le_normExpect K M d (applyStop t s))
+    (optional_stopping_supermartingale M d t s hsm)
+
+end SemiosisAndVille
+
+end PFT

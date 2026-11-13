@@ -245,7 +245,8 @@ def _lean_tseitin_encode(body, var_idx, nxt):
     if op == "const":
         return nxt, [[nxt if int(body[1]) else -nxt]], nxt + 1
     if op == "var":
-        return var_idx[body[1]] + 1, [], nxt
+        idx = body[1] if var_idx is None else var_idx[body[1]]
+        return idx + 1, [], nxt
     if op == "not":
         oa, ca, n1 = _lean_tseitin_encode(body[1], var_idx, nxt)
         out = n1
@@ -294,3 +295,70 @@ def prove_equivalence_lrat(claim, time_limit=60.0):
         return "unsat", rup_to_lrat(clauses, s.proof), s
     m = s.model()
     return "sat", {name: m[i + 1] for i, name in enumerate(claim["vars"])}, s
+
+
+def _tnet_to_indexed_nodes(net, vars_list):
+    """Normalize a ThresholdNet dict to Lean-indexed `TNode`s whose last node is `net['output']`."""
+    wire_idx = {v: i for i, v in enumerate(vars_list)}
+    tns = []
+    for nd in net["nodes"]:
+        ins = [wire_idx[src] for src in nd["in"]]
+        ws = [int(w) for w in nd["w"]]
+        t = int(nd["t"])
+        wire_idx[nd["id"]] = len(vars_list) + len(tns)
+        tns.append({"ins": ins, "ws": ws, "t": t})
+    out_idx = wire_idx[net["output"]]
+    if not tns or out_idx != len(vars_list) + len(tns) - 1:
+        tns.append({"ins": [out_idx], "ws": [1], "t": 1})
+    return tns
+
+
+def _pb_to_expr_indexed(ins, ws, t):
+    """Mirror Lean `Cerp.pbToExpr` pseudo-Boolean Shannon expansion over wire indices."""
+    if not ins or not ws:
+        return ("const", 1 if t <= 0 else 0)
+    return (
+        "ite",
+        ("var", ins[0]),
+        _pb_to_expr_indexed(ins[1:], ws[1:], t - ws[0]),
+        _pb_to_expr_indexed(ins[1:], ws[1:], t),
+    )
+
+
+def _lean_tnet_miter(vars_list, tns, ref_body):
+    """Produce the exact CNF emitted by Lean's `Cerp.tseitinTNetMiter`."""
+    n = len(vars_list)
+    m = len(tns)
+    nxt = n + m + 1
+    c_net = []
+    o_net = 0
+    for k, nd in enumerate(tns):
+        pb_e = _pb_to_expr_indexed(nd["ins"], nd["ws"], nd["t"])
+        o, c, nxt = _lean_tseitin_encode(pb_e, None, nxt)
+        w = n + k + 1
+        c_net.extend(c)
+        c_net.append([-w, o])
+        c_net.append([w, -o])
+        o_net = w
+    var_idx = {v: i for i, v in enumerate(vars_list)}
+    o_spec, c_spec, nxt2 = _lean_tseitin_encode(ref_body, var_idx, nxt)
+    clauses = (
+        c_net
+        + c_spec
+        + [[-nxt2, -o_net, -o_spec], [-nxt2, o_net, o_spec], [nxt2, -o_net, o_spec], [nxt2, o_net, -o_spec], [nxt2]]
+    )
+    return nxt2, clauses
+
+
+def prove_tnet_equivalence_lrat(net, ref_expr, vars_list, time_limit=60.0):
+    """Untrusted SAT search returning hint-indexed LRAT proof matching `Cerp.tseitinTNetMiter`."""
+    tns = _tnet_to_indexed_nodes(net, vars_list)
+    n_vars, clauses = _lean_tnet_miter(vars_list, tns, ref_expr["body"])
+    s = Solver(n_vars, clauses)
+    r = s.solve(time_limit)
+    if r is None:
+        return "timeout", None, s
+    if r is False:
+        return "unsat", rup_to_lrat(clauses, s.proof), s
+    m = s.model()
+    return "sat", {name: m[i + 1] for i, name in enumerate(vars_list)}, s

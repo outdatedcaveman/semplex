@@ -1,0 +1,230 @@
+{
+  "part_a_hd_n8": {
+    "ur_compiler": {
+      "decomposed": true,
+      "profile_rank": 1,
+      "circuit_cost": {
+        "gates": 36,
+        "depth": 10
+      },
+      "atlas_min_neurons": 9,
+      "tnet_nodes": 9,
+      "time_s": 0.0524
+    },
+    "mlp_widths": {
+      "4": {
+        "acc_mean": 0.82890625,
+        "acc_min": 0.6875,
+        "acc_max": 0.9453125,
+        "max_unit_corr_mean": 0.1972352143386783,
+        "subspace_probe_r2_mean": 0.28045032518692187
+      },
+      "8": {
+        "acc_mean": 0.99453125,
+        "acc_min": 0.98828125,
+        "acc_max": 1.0,
+        "max_unit_corr_mean": 0.37132867579300655,
+        "subspace_probe_r2_mean": 0.6911757710100114
+      },
+      "16": {
+        "acc_mean": 1.0,
+        "acc_min": 1.0,
+        "acc_max": 1.0,
+        "max_unit_corr_mean": 0.34625832291662645,
+        "subspace_probe_r2_mean": 0.9033604602134695
+      },
+      "32": {
+        "acc_mean": 1.0,
+        "acc_min": 1.0,
+        "acc_max": 1.0,
+        "max_unit_corr_mean": 0.3061563346352393,
+        "subspace_probe_r2_mean": 0.9849620742400884
+      }
+    }
+  },
+  "part_b_hc_xor6": {
+    "n32_wd0.0": {
+      "train_acc_mean": 1.0,
+      "test_acc_mean": 0.5833333333333334,
+      "test_acc_max": 0.65625,
+      "grok_steps": [
+        null,
+        null,
+        null
+      ]
+    },
+    "n32_wd0.01": {
+      "train_acc_mean": 1.0,
+      "test_acc_mean": 0.4479166666666667,
+      "test_acc_max": 0.53125,
+      "grok_steps": [
+        null,
+        null,
+        null
+      ]
+    },
+    "n32_wd0.05": {
+      "train_acc_mean": 0.7083333333333334,
+      "test_acc_mean": 0.2916666666666667,
+      "test_acc_max": 0.3125,
+      "grok_steps": [
+        null,
+        null,
+        null
+      ]
+    },
+    "n48_wd0.0": {
+      "train_acc_mean": 1.0,
+      "test_acc_mean": 0.9375,
+      "test_acc_max": 1.0,
+      "grok_steps": [
+        null,
+        null,
+        250
+      ]
+    },
+    "n48_wd0.01": {
+      "train_acc_mean": 1.0,
+      "test_acc_mean": 0.22916666666666666,
+      "test_acc_max": 0.3125,
+      "grok_steps": [
+        null,
+        null,
+        null
+      ]
+    },
+    "n48_wd0.05": {
+      "train_acc_mean": 0.5763889153798422,
+      "test_acc_mean": 0.2708333333333333,
+      "test_acc_max": 0.3125,
+      "grok_steps": [
+        null,
+        null,
+        null
+      ]
+    }
+  },
+  "part_c_he_and_bounds": {
+    "parity4_depth2_3_1_W4": {
+      "status": "unsat",
+      "dt_s": 13.985
+    },
+    "parity5_chain3_W4": {
+      "status": "sat",
+      "dt_s": 0.596,
+      "witness": {
+        "kind": "dnet",
+        "body": {
+          "inputs": [
+            "x0",
+            "x1",
+            "x2",
+            "x3",
+            "x4"
+          ],
+          "neurons": [
+            {
+              "in": [
+                0,
+                1,
+                2,
+                3,
+                4
+              ],
+              "w": [
+                -1,
+                -2,
+                -1,
+                1,
+                -1
+              ],
+              "b": 1,
+              "act": "step"
+            },
+            {
+              "in": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "w": [
+                -1,
+                -2,
+                -2,
+                2,
+                -2,
+                -4
+              ],
+              "b": 4,
+              "act": "step"
+            },
+            {
+              "in": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+              ],
+              "w": [
+                -2,
+                -2,
+                -2,
+                2,
+                -2,
+                -4,
+                -4
+              ],
+              "b": 7,
+              "act": "step"
+            }
+          ]
+        }
+      }
+    },
+    "parity5_depth3_2_2_1_skip_W4": {
+      "status": "sat",
+      "dt_s": 0.766
+    },
+    "parity5_depth2_3_1_W4": {
+      "status": "unsat",
+      "dt_s": 17.539
+    },
+    "parity5_depth2_4_1_W4": {
+      "status": "unknown",
+      "dt_s": 25.038
+    }
+  },
+  "part_d_ur_benchmark": {
+    "n10_multi_output": {
+      "indep_dt_s": 0.027,
+      "indep_total_circuit_gates": 118,
+      "indep_max_depth": 13,
+      "indep_total_tnet_nodes": 37,
+      "shared_encoder": true,
+      "shared_rank": 1,
+      "shared_dt_s": 0.031,
+      "shared_total_circuit_gates": 118,
+      "shared_max_depth": 13,
+      "shared_encoder_neurons": 5,
+      "shared_decoder_neurons": 22,
+      "shared_dedup_neurons": 27
+    },
+    "n16_cegar": {
+      "decomposed": true,
+      "profile_rank": 1,
+      "soundness": "cegar-sat",
+      "circuit_cost": {
+        "gates": 53,
+        "depth": 9
+      },
+      "atlas_min_neurons": 17,
+      "dt_s": 0.132
+    }
+  }
+}

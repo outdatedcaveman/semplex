@@ -229,3 +229,44 @@ def verify_expr_equiv_lrat(left, right, vars_, lrat_steps, name="lrat_equiv", na
     printed = [json.loads(line) for line in log.splitlines() if line.startswith("[")]
     ok = ok and printed == expected
     return LeanCheck(ok, name, stmt, ax or (), version(), sha, log, _TOKEN), text
+
+
+def tnet_to_lean(net, vars_):
+    """Render a normalized ThresholdNet dict as a Lean `List TNode` term."""
+    from .sat import _tnet_to_indexed_nodes
+
+    tns = _tnet_to_indexed_nodes(net, vars_)
+    fmt_int = lambda x: f"({int(x)})" if int(x) < 0 else str(int(x))
+    items = []
+    for nd in tns:
+        ins_s = "[" + ", ".join(str(int(i)) for i in nd["ins"]) + "]"
+        ws_s = "[" + ", ".join(fmt_int(w) for w in nd["ws"]) + "]"
+        items.append(f"{{ ins := {ins_s}, ws := {ws_s}, t := {fmt_int(nd['t'])} }}")
+    return "[" + ", ".join(items) + "]"
+
+
+def verify_threshold_net_equiv(net, ref_expr, vars_, lrat_steps=None, name="tnet_equiv", native=False):
+    """Prove `∀ σ, evalTNet n tns σ = eval σ eSpec` in Lean (exhaustive or LRAT)."""
+    n = len(vars_)
+    defs = [
+        f"def tns : List TNode := {tnet_to_lean(net, vars_)}",
+        f"def eSpec : Expr := {expr_to_lean(ref_expr['body'], vars_)}",
+    ]
+    stmt = f"∀ σ, evalTNet {n} tns σ = eval σ eSpec"
+    dec = "native_decide" if native else "decide"
+    if lrat_steps is None:
+        proof = f"(decideTNetEquivExpr_correct {n} tns eSpec (by decide) (by decide)).mp (by {dec})"
+    else:
+        fmt_step = lambda c, hs: f"([" + ", ".join(str(l) for l in c) + "], [" + ", ".join(str(h) for h in hs) + "])"
+        Ls = "[" + ", ".join(fmt_step(c, hs) for c, hs in lrat_steps) + "]"
+        defs.append(f"def Ls : List (Clause × List Nat) := {Ls}")
+        proof = f"tseitinTNetMiter_lrat_unsat_implies_equiv {n} tns eSpec Ls (by decide) (by decide) (by decide) (by {dec}) (by {dec})"
+    body = "\n".join(defs) + f"\n\ntheorem {name} : {stmt} :=\n  {proof}\n"
+    ok, ax, log, sha, text = _check(
+        body, name, stmt, renders=("eSpec",),
+        allowed=NATIVE_AXIOMS if native else ALLOWED_AXIOMS,
+    )
+    expected = [render_indexed(ref_expr["body"], vars_)]
+    printed = [json.loads(line) for line in log.splitlines() if line.startswith("[")]
+    ok = ok and printed == expected
+    return LeanCheck(ok, name, stmt, ax or (), version(), sha, log, _TOKEN), text

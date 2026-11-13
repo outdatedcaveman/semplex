@@ -47,6 +47,7 @@ Rules of thumb:
 | — | Literature review and novelty audit | `charter/LITERATURE_REVIEW.md` | **done (first pass)**; redo against the Codex dossier and Cammarata's essay once accessible |
 | 11+ | New hypotheses H-B (volume law for mechanisms), H-D (clean vs superposed), H-C, H-E, H-F | Chosen because no prior work was found; each still needs its own prior-art gate |
 | **10c** | Rule search fixed; learnability per rule dictionary (H-A) | See `experiments/SPIKE_10c_REPORT.md` | **done**; results are lower bounds |
+| **16** | Prior-art closure (`charter/LITERATURE_REVIEW.md` §3c), Lean §§17–19 (`FrameHom`/DPI/Peirce/Ville), `ThresholdNet` LRAT bridge (`Cerp.lean` Part D), $n=16$ SAT-CEGAR + shared-encoder `ur_compiler`, `H-A`/`H-D`/`H-C`/`H-E` scaling | See `experiments/SPIKE_16_REPORT.md`, `HANDOFF_CLAUDE.md`, `proofs/lean/Theory.lean`, `proofs/lean/Cerp.lean` | **done** (empirics falsified wide `H-A` in favor of subspace `H-D`, found `wd=0.01` XOR6 collapse, isolated `O(2^d)` `pbToExpr` Lean kernel wall) |
 | (old 10c) | Fix rule meta-learning; settle C7 (= H-A) | Fixed long horizon or adjoint method; then find the least observational power per element |
 | (old 10b) | Grokking against ground truth | 5–6 inputs with a real held-out set: does the post-grokking function equal the table/solver optimum; score local learning rules (arXiv:2611.12248) the same way |
 | 08c | Periodic table, remaining parameters | In order: (1) certify lower bounds; (2) n=5 by class-level search, hunting the first depth-sensitive element; (3) skip connections and ReLU; (4) weight-space geometry (the manifold proper); (5) prove the one-bit-flip ≤ 2 conjecture |
@@ -67,3 +68,7 @@ Rules of thumb:
 - **Q-B1** (S02 F4): identity criteria for latent entities across rival ontologies (currently by name).
 - **Q-E1** (S02 F7): task-relative stopping. When does an agent need absence claims at all?
 - **Q-A1** (S02 F2): a general recipe for calibrating adequacy tests of fitted predictors (bootstrap, e-values, or held-out refits).
+- **Q-LRAT-PB** (Spike 16): replace `O(2^d)` `Cerp.pbToExpr` Shannon trees with linear `O(d * w)` binary-adder PB->CNF in Lean so pure-kernel `by decide` LRAT scales past fan-in 4 (`xor4` >900s).
+- **Q-Bounds-Sym** (Spike 16): break the $\binom{1882}{3} \approx 1.1\times 10^9$ `parity4 >= 5` enumeration barrier in `Bounds.lean` via $B_4$ signed-permutation symmetry reduction or an algebraic hyperplane-slicing theorem.
+- **Q-OptStop-Connect** (Spike 16): instantiate `Theory.ville_anytime_valid_bound` directly on concrete sequential `QueryTree` / `cerp/epistemics.py` e-value processes and lift finite Markov-kernel DPI (`Fin n`) toward continuous state spaces.
+- **Q-HD-Theory** (Spike 16): formalize why width coarsening shifts canonical profile representations from isolated units (`max_unit_corr`) to distributed linear subspaces (`R^2 = 0.9850`), and test SAT-CEGAR compiler scaling on ASTs beyond `n = 16` without dense tables.

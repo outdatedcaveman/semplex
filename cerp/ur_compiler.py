@@ -257,14 +257,87 @@ def _leaf_compile(vars_list: list[str], fn: Callable[[dict[str, int]], int], atl
     }
 
 
+def _sample_s2_envs(s2: list[str], max_s2_sample: int) -> tuple[list[dict[str, int]], bool]:
+    """Return assignments over `s2`: exact if `2^|s2| <= max_s2_sample`, else
+    unbiased structured (0, 1, 1-hot, compl-1-hot, 2-hot) + SplitMix64 pseudorandom probes.
+    Avoids strided `range(0, 2^n2, step)` which freezes all low-order bits at 0."""
+    n2 = len(s2)
+    if (1 << n2) <= max_s2_sample:
+        return [{s2[j]: (m >> j) & 1 for j in range(n2)} for m in range(1 << n2)], True
+
+    seen: set[tuple[int, ...]] = set()
+    envs: list[dict[str, int]] = []
+
+    def _add(bits: tuple[int, ...]) -> None:
+        if bits not in seen and len(envs) < max_s2_sample:
+            seen.add(bits)
+            envs.append({s2[j]: bits[j] for j in range(n2)})
+
+    _add((0,) * n2)
+    _add((1,) * n2)
+    for j in range(n2):
+        _add(tuple(1 if i == j else 0 for i in range(n2)))
+        _add(tuple(0 if i == j else 1 for i in range(n2)))
+    for j in range(max(0, n2 - 1)):
+        _add(tuple(1 if i in (j, j + 1) else 0 for i in range(n2)))
+
+    state = 0x9E3779B97F4A7C15
+    attempts = 0
+    while len(envs) < max_s2_sample and attempts < max_s2_sample * 8:
+        attempts += 1
+        bits = []
+        for j in range(n2):
+            state = (state + 0x9E3779B97F4A7C15) & 0xFFFFFFFFFFFFFFFF
+            z = state
+            z = ((z ^ (z >> 30)) * 0xBF58476D1CE4E5B9) & 0xFFFFFFFFFFFFFFFF
+            z = ((z ^ (z >> 27)) * 0x94D049BB133111EB) & 0xFFFFFFFFFFFFFFFF
+            z = z ^ (z >> 31)
+            bits.append(z & 1)
+        _add(tuple(bits))
+    return envs, False
+
+
+def _sat_cegar_refine_split(
+    vars_list: list[str],
+    s1: list[str],
+    s2: list[str],
+    x1_to_code: dict[tuple[int, ...], int],
+    expr_ast: dict[str, Any],
+) -> dict[str, int] | None:
+    """Use SAT to check if two `s1` inputs in the same equivalence class behave
+    differently under `expr_ast` for some `s2`. Returns a counterexample `s2` env or None."""
+    from . import sat
+
+    body = expr_ast["body"]
+    rep_of: dict[int, tuple[int, ...]] = {}
+    for x1, code in x1_to_code.items():
+        if code not in rep_of:
+            rep_of[code] = x1
+    for x1, code in x1_to_code.items():
+        rep = rep_of[code]
+        if x1 == rep:
+            continue
+        m1 = {s1[j]: ["const", int(x1[j])] for j in range(len(s1))}
+        m2 = {s1[j]: ["const", int(rep[j])] for j in range(len(s1))}
+        lhs = {"kind": "expr", "body": subst_expr(body, m1)}
+        rhs = {"kind": "expr", "body": subst_expr(body, m2)}
+        status, model, _ = sat.prove_equivalence({"vars": s2, "left": lhs, "right": rhs})
+        if status == "sat" and isinstance(model, dict):
+            return {v: int(bool(model.get(v, False))) for v in s2}
+    return None
+
+
 def _best_profile_split(
-    vars_list: list[str], fn: Callable[[dict[str, int]], int], max_s1: int = 4, max_s2_sample: int = 64
-) -> tuple[list[str], list[str], int, dict[tuple[int, ...], int]] | None:
+    vars_list: list[str],
+    fn: Callable[[dict[str, int]], int],
+    max_s1: int = 4,
+    max_s2_sample: int = 128,
+    expr_ast: dict[str, Any] | None = None,
+) -> tuple[list[str], list[str], int, dict[tuple[int, ...], int], str] | None:
     """Find a split (S1, S2) with |S1| <= max_s1 where the observational profile of S1
-    has rank r = ceil(log2 |Im(profile)|) < |S1|."""
+    has rank r = ceil(log2 |Im(profile)|) < |S1|. Returns (s1, s2, rank, x1_to_code, soundness)."""
     n = len(vars_list)
     k = min(max_s1, max(2, n // 2))
-    # Candidate blocks: contiguous slices + strided slice
     candidates: list[list[str]] = []
     for start in range(0, n - k + 1):
         candidates.append(vars_list[start:start + k])
@@ -275,55 +348,49 @@ def _best_profile_split(
     for s1 in candidates:
         s1_set = set(s1)
         s2 = [v for v in vars_list if v not in s1_set]
-        # Sample S2 assignments if |S2| is large, then verify exactness on full S2 if small
-        n2 = len(s2)
-        if (1 << n2) <= max_s2_sample:
-            s2_envs = [{s2[j]: (m >> j) & 1 for j in range(n2)} for m in range(1 << n2)]
-            exact_s2 = True
-        else:
-            step = max(1, (1 << n2) // max_s2_sample)
-            s2_envs = [{s2[j]: ((m >> j) & 1) for j in range(n2)} for m in range(0, 1 << n2, step)][:max_s2_sample]
-            exact_s2 = False
+        n1, n2 = len(s1), len(s2)
+        eff_samples = max(max_s2_sample, 8 * n)
+        s2_envs, exact_s2 = _sample_s2_envs(s2, eff_samples)
+        soundness = "exact" if exact_s2 else f"sampled({len(s2_envs)})"
 
-        profiles: dict[tuple[int, ...], int] = {}
-        x1_to_code: dict[tuple[int, ...], int] = {}
-        n1 = len(s1)
-        for m1 in range(1 << n1):
-            x1 = tuple((m1 >> j) & 1 for j in range(n1))
-            env1 = {s1[j]: x1[j] for j in range(n1)}
-            sig = tuple(fn({**env1, **e2}) for e2 in s2_envs)
-            if sig not in profiles:
-                profiles[sig] = len(profiles)
-            x1_to_code[x1] = profiles[sig]
-            if len(profiles) >= (1 << (n1 - 1)):
-                # Cannot achieve r < n1 if already >= 2^(n1-1) distinct signatures? Wait: 2^(n1-1) gives r = n1 - 1!
-                if len(profiles) > (1 << (n1 - 1)):
-                    break
-
-        num_classes = len(profiles)
-        rank = 0 if num_classes <= 1 else math.ceil(math.log2(num_classes))
-        if rank >= n1:
-            continue
-        # If S2 was sampled, verify that identical sampled signatures actually agree on all S2 (when feasible)
-        if not exact_s2 and (1 << (n1 + n2)) <= 4096:
-            all_s2 = [{s2[j]: (m >> j) & 1 for j in range(n2)} for m in range(1 << n2)]
-            profiles_full: dict[tuple[int, ...], int] = {}
-            x1_to_code = {}
+        for _cegar_round in range(8):
+            profiles: dict[tuple[int, ...], int] = {}
+            x1_to_code: dict[tuple[int, ...], int] = {}
             for m1 in range(1 << n1):
                 x1 = tuple((m1 >> j) & 1 for j in range(n1))
                 env1 = {s1[j]: x1[j] for j in range(n1)}
-                sig = tuple(fn({**env1, **e2}) for e2 in all_s2)
-                if sig not in profiles_full:
-                    profiles_full[sig] = len(profiles_full)
-                x1_to_code[x1] = profiles_full[sig]
-            num_classes = len(profiles_full)
+                sig = tuple(fn({**env1, **e2}) for e2 in s2_envs)
+                if sig not in profiles:
+                    profiles[sig] = len(profiles)
+                x1_to_code[x1] = profiles[sig]
+                if len(profiles) > (1 << (n1 - 1)):
+                    break
+
+            num_classes = len(profiles)
             rank = 0 if num_classes <= 1 else math.ceil(math.log2(num_classes))
             if rank >= n1:
+                break
+
+            if not exact_s2 and (1 << (n1 + n2)) <= 4096:
+                s2_envs, exact_s2 = _sample_s2_envs(s2, 1 << n2)
+                soundness = "exact"
                 continue
+            if not exact_s2 and expr_ast is not None:
+                cex = _sat_cegar_refine_split(vars_list, s1, s2, x1_to_code, expr_ast)
+                if cex is not None:
+                    s2_envs.append(cex)
+                    continue
+                soundness = "cegar-sat"
+            break
+        else:
+            rank = n1
+
+        if rank >= n1:
+            continue
 
         if best is None or rank < best[2]:
-            best = (s1, s2, rank, x1_to_code)
-            if rank <= 1:
+            best = (s1, s2, rank, x1_to_code, soundness)
+            if rank <= 1 and soundness in ("exact", "cegar-sat"):
                 break
     return best
 
@@ -441,6 +508,7 @@ def _compile_table_factored(
         "circuit_cost": circuit_cost(circ_art),
         "atlas_min_neurons": neuron_ub,
         "decomposed": True,
+        "soundness": "exact",
         "profile_rank": rank,
         "split": {"s1": s1, "s2": s2},
         "children": encoders + [dec_res],
@@ -453,9 +521,12 @@ def compile_profile_factored(
     *,
     max_leaf: int = 4,
     atlas_tables=None,
+    expr_ast: dict[str, Any] | None = None,
     _depth: int = 0,
 ) -> dict[str, Any]:
-    """Recursively compile `fn` via C4 profile factorization down to `max_leaf` leaves."""
+    """Recursively compile `fn` via C4 profile factorization down to `max_leaf` leaves.
+    Supports `n <= 14` via vectorized NumPy exact truth-table slicing, and `n > 14` via
+    unbiased probing + optional SAT-CEGAR refinement (`expr_ast`) without 2^n table blowup."""
     if atlas_tables is None:
         atlas_tables = _get_atlas_tables(4)
     n = len(vars_list)
@@ -467,12 +538,11 @@ def compile_profile_factored(
     if n <= max_leaf:
         return _leaf_compile(vars_list, fn, atlas_tables=atlas_tables)
 
-    split = _best_profile_split(vars_list, fn, max_s1=max_leaf)
+    split = _best_profile_split(vars_list, fn, max_s1=max_leaf, expr_ast=expr_ast)
     if split is None:
-        # Fallback: direct BDD/expr compilation
         return _leaf_compile(vars_list, fn, atlas_tables=atlas_tables)
 
-    s1, s2, rank, x1_to_code = split
+    s1, s2, rank, x1_to_code, split_soundness = split
     code_to_rep: dict[int, tuple[int, ...]] = {}
     for x1, code in x1_to_code.items():
         if code not in code_to_rep:
@@ -492,6 +562,21 @@ def compile_profile_factored(
 
     # Compile decoder g : enc_vars + S2 -> {0,1}
     dec_vars = enc_vars + s2
+    dec_expr_ast: dict[str, Any] | None = None
+    if expr_ast is not None and rank > 0:
+        # Symbolic substitution for CEGAR over dec_vars (ITE tree on enc_vars selecting rep_x1)
+        def _mux_rep(bit: int, code_prefix: int) -> Any:
+            if bit >= rank:
+                rep = code_to_rep.get(code_prefix, code_to_rep[0])
+                return subst_expr(expr_ast["body"], {s1[j]: ["const", int(rep[j])] for j in range(len(s1))})
+            lo = _mux_rep(bit + 1, code_prefix)
+            hi = _mux_rep(bit + 1, code_prefix | (1 << bit))
+            return ["ite", ["var", enc_vars[bit]], hi, lo]
+
+        dec_expr_ast = {"kind": "expr", "body": _mux_rep(0, 0)}
+    elif expr_ast is not None and rank == 0:
+        rep0 = code_to_rep[0]
+        dec_expr_ast = {"kind": "expr", "body": subst_expr(expr_ast["body"], {s1[j]: ["const", int(rep0[j])] for j in range(len(s1))})}
 
     def _dec_fn(env: dict[str, int]) -> int:
         code = sum((int(env[ev]) << j) for j, ev in enumerate(enc_vars))
@@ -501,7 +586,9 @@ def compile_profile_factored(
         full_env = {**{s1[j]: rep_x1[j] for j in range(len(s1))}, **{v: env[v] for v in s2}}
         return fn(full_env)
 
-    dec_res = compile_profile_factored(dec_vars, _dec_fn, max_leaf=max_leaf, atlas_tables=atlas_tables, _depth=_depth + 1)
+    dec_res = compile_profile_factored(
+        dec_vars, _dec_fn, max_leaf=max_leaf, atlas_tables=atlas_tables, expr_ast=dec_expr_ast, _depth=_depth + 1
+    )
     composed_body = subst_expr(dec_res["expr"]["body"], enc_map)
     composed_expr = {"kind": "expr", "body": composed_body}
     circ_art = _expr_to_dag_circuit(composed_body, vars_list)
@@ -513,6 +600,14 @@ def compile_profile_factored(
         vars_list, enc_vars, [e.get("threshold_net") for e in encoders], dec_res.get("threshold_net")
     )
 
+    sounds = [split_soundness, dec_res.get("soundness", "exact")] + [e.get("soundness", "exact") for e in encoders]
+    if any(str(s).startswith("sampled") for s in sounds):
+        overall_sound = next(s for s in sounds if str(s).startswith("sampled"))
+    elif "cegar-sat" in sounds:
+        overall_sound = "cegar-sat"
+    else:
+        overall_sound = "exact"
+
     return {
         "vars": list(vars_list),
         "expr": composed_expr,
@@ -521,24 +616,195 @@ def compile_profile_factored(
         "circuit_cost": circuit_cost(circ_art),
         "atlas_min_neurons": neuron_ub,
         "decomposed": True,
+        "soundness": overall_sound,
         "profile_rank": rank,
         "split": {"s1": s1, "s2": s2},
         "children": encoders + [dec_res],
     }
 
 
-def _lean_certify_equiv(vars_list: list[str], expr_art: dict[str, Any], ref_expr: dict[str, Any] | None = None, name: str = "ur_cert") -> dict[str, Any]:
-    """Certify `expr_art ≡ ref_expr` (or vs BDD canonical form) via LRAT + Lean 4.12."""
+def compile_multi_profile_factored(
+    vars_list: list[str],
+    fns: dict[str, Callable[[dict[str, int]], int]],
+    *,
+    max_leaf: int = 4,
+    atlas_tables=None,
+) -> dict[str, Any]:
+    """Joint multi-output C4 profile factorization sharing ONE latent encoder across outputs."""
+    if atlas_tables is None:
+        atlas_tables = _get_atlas_tables(4)
+    n = len(vars_list)
+    names = list(fns.keys())
+    if len(names) <= 1 or n <= max_leaf:
+        outputs = {nm: compile_profile_factored(vars_list, fns[nm], max_leaf=max_leaf, atlas_tables=atlas_tables) for nm in names}
+        return {"shared_encoder": False, "profile_rank": None, "outputs": outputs, "encoders": []}
+
+    k = min(max_leaf, max(2, n // 2))
+    candidates: list[list[str]] = []
+    for start in range(0, n - k + 1):
+        candidates.append(vars_list[start:start + k])
+    if n >= 2 * k:
+        candidates.append([vars_list[i] for i in range(0, n, 2)][:k])
+
+    best = None
+    if n <= 12:
+        tables = {nm: _table_from_fn(vars_list, fns[nm]).reshape((2,) * n) for nm in names}
+        for s1_pos in [list(range(start, start + k)) for start in range(0, n - k + 1)] + (
+            [list(range(0, n, 2))[:k]] if n >= 2 * k else []
+        ):
+            s1_set = set(s1_pos)
+            s2_pos = [i for i in range(n) if i not in s1_set]
+            n1 = len(s1_pos)
+            mats = [np.transpose(tables[nm], s1_pos + s2_pos).reshape(1 << n1, -1) for nm in names]
+            joint_mat = np.concatenate(mats, axis=1)
+            _, first_idx, inverse = np.unique(joint_mat, axis=0, return_index=True, return_inverse=True)
+            num_classes = len(first_idx)
+            rank = 0 if num_classes <= 1 else math.ceil(math.log2(num_classes))
+            if rank >= n1:
+                continue
+            s1 = [vars_list[i] for i in s1_pos]
+            s2 = [vars_list[i] for i in s2_pos]
+            x1_to_code = {tuple((m1 >> j) & 1 for j in range(n1)): int(inverse[m1]) for m1 in range(1 << n1)}
+            # note inverse is in C order over s1_pos: row m1 has MSB first! Convert consistently:
+            x1_to_code = {
+                tuple((m1 >> (n1 - 1 - j)) & 1 for j in range(n1)): int(inverse[m1])
+                for m1 in range(1 << n1)
+            }
+            if best is None or rank < best[2]:
+                best = (s1, s2, rank, x1_to_code, "exact")
+                if rank <= 1:
+                    break
+    else:
+        for s1 in candidates:
+            s1_set = set(s1)
+            s2 = [v for v in vars_list if v not in s1_set]
+            s2_envs, exact_s2 = _sample_s2_envs(s2, max(128, 8 * n))
+            n1 = len(s1)
+            profiles: dict[tuple[int, ...], int] = {}
+            x1_to_code = {}
+            for m1 in range(1 << n1):
+                x1 = tuple((m1 >> j) & 1 for j in range(n1))
+                env1 = {s1[j]: x1[j] for j in range(n1)}
+                sig = tuple(fns[nm]({**env1, **e2}) for nm in names for e2 in s2_envs)
+                if sig not in profiles:
+                    profiles[sig] = len(profiles)
+                x1_to_code[x1] = profiles[sig]
+                if len(profiles) > (1 << (n1 - 1)):
+                    break
+            num_classes = len(profiles)
+            rank = 0 if num_classes <= 1 else math.ceil(math.log2(num_classes))
+            if rank < n1 and (best is None or rank < best[2]):
+                sound_label = "exact" if exact_s2 else f"sampled({len(s2_envs)})"
+                best = (s1, s2, rank, x1_to_code, sound_label)
+                if rank <= 1:
+                    break
+
+    if best is None:
+        outputs = {nm: compile_profile_factored(vars_list, fns[nm], max_leaf=max_leaf, atlas_tables=atlas_tables) for nm in names}
+        return {"shared_encoder": False, "profile_rank": None, "outputs": outputs, "encoders": []}
+
+    s1, s2, rank, x1_to_code, sound_str = best
+    code_to_rep: dict[int, tuple[int, ...]] = {}
+    for x1, code in x1_to_code.items():
+        if code not in code_to_rep:
+            code_to_rep[code] = x1
+
+    enc_vars = [f"_mc_{j}" for j in range(rank)]
+    encoders = []
+    enc_map: dict[str, Any] = {}
+    for bit_idx in range(rank):
+        def _make_menc(bi: int) -> Callable[[dict[str, int]], int]:
+            return lambda env: (x1_to_code[tuple(env[v] for v in s1)] >> bi) & 1
+
+        enc_res = compile_profile_factored(s1, _make_menc(bit_idx), max_leaf=max_leaf, atlas_tables=atlas_tables)
+        encoders.append(enc_res)
+        enc_map[enc_vars[bit_idx]] = enc_res["expr"]["body"]
+
+    dec_vars = enc_vars + s2
+    outputs: dict[str, dict[str, Any]] = {}
+    for nm in names:
+        fn = fns[nm]
+
+        def _dec_fn(env: dict[str, int], _f=fn) -> int:
+            code = sum((int(env[ev]) << j) for j, ev in enumerate(enc_vars))
+            rep_x1 = code_to_rep.get(code, code_to_rep[0])
+            full_env = {**{s1[j]: rep_x1[j] for j in range(len(s1))}, **{v: env[v] for v in s2}}
+            return _f(full_env)
+
+        dec_res = compile_profile_factored(dec_vars, _dec_fn, max_leaf=max_leaf, atlas_tables=atlas_tables)
+        composed_body = subst_expr(dec_res["expr"]["body"], enc_map)
+        composed_expr = {"kind": "expr", "body": composed_body}
+        circ_art = _expr_to_dag_circuit(composed_body, vars_list)
+        tnet = _compose_threshold_nets(vars_list, enc_vars, [e.get("threshold_net") for e in encoders], dec_res.get("threshold_net"))
+        neuron_ub = None
+        if dec_res["atlas_min_neurons"] is not None and all(e["atlas_min_neurons"] is not None for e in encoders):
+            neuron_ub = dec_res["atlas_min_neurons"] + sum(e["atlas_min_neurons"] for e in encoders)
+        outputs[nm] = {
+            "vars": list(vars_list),
+            "expr": composed_expr,
+            "circuit": circ_art,
+            "threshold_net": tnet,
+            "circuit_cost": circuit_cost(circ_art),
+            "atlas_min_neurons": neuron_ub,
+            "decomposed": True,
+            "shared_encoder": True,
+            "soundness": sound_str,
+            "profile_rank": rank,
+            "split": {"s1": s1, "s2": s2},
+            "children": encoders + [dec_res],
+        }
+    return {
+        "shared_encoder": True,
+        "profile_rank": rank,
+        "split": {"s1": s1, "s2": s2},
+        "soundness": sound_str,
+        "encoders": encoders,
+        "outputs": outputs,
+    }
+
+
+def _lean_certify_equiv(
+    vars_list: list[str],
+    expr_art: dict[str, Any],
+    ref_expr: dict[str, Any] | None = None,
+    name: str = "ur_cert",
+    threshold_net: dict[str, Any] | None = None,
+    verify_net: bool = True,
+) -> dict[str, Any]:
+    """Certify `expr_art ≡ ref_expr` (and optional `threshold_net ≡ expr_art`) via LRAT + Lean 4.12."""
     from . import lean_bridge, sat
 
-    if ref_expr is None:
+    res: dict[str, Any] = {"ok": True, "status": "unsat", "axioms": (), "theorem": name}
+    if ref_expr is None and len(vars_list) <= 12:
         tt = TruthTable.from_function(vars_list, _fn_from_expr(vars_list, expr_art))
         ref_expr = bdd_to_expr(truthtable_to_bdd(tt))
-    status, lrat_steps, _ = sat.prove_equivalence_lrat({"vars": vars_list, "left": expr_art, "right": ref_expr})
-    if status != "unsat":
-        return {"ok": False, "status": status, "axioms": (), "theorem": name}
-    chk, _ = lean_bridge.verify_expr_equiv_lrat(expr_art, ref_expr, vars_list, lrat_steps, name=name)
-    return {"ok": chk.ok, "status": "unsat", "axioms": list(chk.axioms), "theorem": chk.theorem, "source_sha256": chk.source_sha256}
+
+    if ref_expr is not None:
+        status, lrat_steps, _ = sat.prove_equivalence_lrat({"vars": vars_list, "left": expr_art, "right": ref_expr})
+        if status != "unsat":
+            return {"ok": False, "status": status, "axioms": (), "theorem": name}
+        chk, _ = lean_bridge.verify_expr_equiv_lrat(expr_art, ref_expr, vars_list, lrat_steps, name=name)
+        res = {"ok": chk.ok, "status": "unsat", "axioms": list(chk.axioms), "theorem": chk.theorem, "source_sha256": chk.source_sha256}
+        if not chk.ok:
+            return res
+
+    if verify_net and threshold_net is not None:
+        n_status, n_lrat, _ = sat.prove_tnet_equivalence_lrat(threshold_net, expr_art, vars_list)
+        if n_status != "unsat":
+            res.update({"ok": False, "net_ok": False, "net_status": n_status, "net_theorem": f"{name}_net"})
+            return res
+        n_chk, _ = lean_bridge.verify_threshold_net_equiv(
+            threshold_net, expr_art, vars_list, lrat_steps=n_lrat, name=f"{name}_net"
+        )
+        res.update({
+            "ok": bool(res["ok"] and n_chk.ok),
+            "net_ok": n_chk.ok,
+            "net_status": "unsat",
+            "net_axioms": list(n_chk.axioms),
+            "net_theorem": n_chk.theorem,
+            "net_source_sha256": n_chk.source_sha256,
+        })
+    return res
 
 
 def compile_unified(spec: dict[str, Any]) -> dict[str, Any]:
@@ -563,13 +829,21 @@ def compile_unified(spec: dict[str, Any]) -> dict[str, Any]:
     if kind == "f0":
         vars_list = list(spec["vars"])
         fn = spec["fn"]
-        res = compile_profile_factored(vars_list, fn)
+        res = compile_profile_factored(vars_list, fn, expr_ast=spec.get("expr_ast"))
         n_id = spec.get("name", "f0_compiled")
         lean_cert = None
         if spec.get("certify_lean"):
-            lean_cert = _lean_certify_equiv(vars_list, res["expr"], spec.get("reference_expr"), name=f"{n_id}_lean")
+            lean_cert = _lean_certify_equiv(
+                vars_list,
+                res["expr"],
+                spec.get("reference_expr"),
+                name=f"{n_id}_lean",
+                threshold_net=res.get("threshold_net"),
+                verify_net=bool(spec.get("verify_net", True)),
+            )
         prov = {"produced_by": "ur_compiler.compile_profile_factored",
-                "decomposed": res["decomposed"], "profile_rank": res["profile_rank"]}
+                "decomposed": res["decomposed"], "profile_rank": res["profile_rank"],
+                "soundness": res.get("soundness", "exact")}
         if lean_cert is not None:
             prov["lean_cert"] = lean_cert
         expr_node = csir.node(
@@ -612,22 +886,34 @@ def compile_unified(spec: dict[str, Any]) -> dict[str, Any]:
         compiled_outputs = {}
 
         # Compile each next-state bit and the output bit into F0 expressions
-        for out_name, getter in (
+        output_getters = (
             [(f"next_s{b}", lambda ns, ob, bit=b: (s_index[ns] >> bit) & 1) for b in range(s_bits)]
             + [("out", lambda ns, ob: int(bool(ob)))]
-        ):
-            def _make_step_fn(g=getter):
-                def _step(env: dict[str, int]) -> int:
-                    si = sum((env[s_vars[j]] << j) for j in range(s_bits))
-                    ai = sum((env[a_vars[j]] << j) for j in range(a_bits))
-                    if si >= len(states) or ai >= len(actions):
-                        return 0
-                    ns, ob = transitions[(states[si], actions[ai])]
-                    return g(ns, ob)
-                return _step
+        )
+        def _make_step_fn(g):
+            def _step(env: dict[str, int]) -> int:
+                si = sum((env[s_vars[j]] << j) for j in range(s_bits))
+                ai = sum((env[a_vars[j]] << j) for j in range(a_bits))
+                if si >= len(states) or ai >= len(actions):
+                    return 0
+                ns, ob = transitions[(states[si], actions[ai])]
+                return g(ns, ob)
+            return _step
 
-            comp = compile_profile_factored(step_vars, _make_step_fn())
-            compiled_outputs[out_name] = comp
+        step_fns = {out_name: _make_step_fn(getter) for out_name, getter in output_getters}
+        use_shared = bool(spec.get("shared_encoder", True)) and len(step_vars) >= 2 and len(step_fns) >= 2
+        if use_shared:
+            multi = compile_multi_profile_factored(step_vars, step_fns)
+            compiled_outputs = multi["outputs"]
+            shared_enc_used = bool(multi.get("shared_encoder", False))
+            shared_rank = multi.get("profile_rank")
+        else:
+            compiled_outputs = {out_name: compile_profile_factored(step_vars, fn) for out_name, fn in step_fns.items()}
+            shared_enc_used = False
+            shared_rank = None
+
+        for out_name, _ in output_getters:
+            comp = compiled_outputs[out_name]
             nodes.append(
                 csir.node(
                     out_name,
@@ -635,7 +921,8 @@ def compile_unified(spec: dict[str, Any]) -> dict[str, Any]:
                     {"vars": step_vars},
                     resources={"cost": comp["circuit_cost"], "atlas_neuron_ub": comp["atlas_min_neurons"],
                                "cost_model": "F0/compositional"},
-                    provenance={"produced_by": "ur_compiler.lts_step", "parents": ["lts_spec"]},
+                    provenance={"produced_by": "ur_compiler.lts_step", "parents": ["lts_spec"],
+                                "shared_encoder": shared_enc_used, "profile_rank": shared_rank},
                 )
             )
             links.append(
@@ -649,6 +936,8 @@ def compile_unified(spec: dict[str, Any]) -> dict[str, Any]:
         b = csir.bundle(nodes, links)
         return {
             "kind": "lts",
+            "shared_encoder": shared_enc_used,
+            "profile_rank": shared_rank,
             "compiled_outputs": compiled_outputs,
             "csir": b,
             "validation_errors": csir.validate(b),
@@ -692,22 +981,34 @@ def compile_unified(spec: dict[str, Any]) -> dict[str, Any]:
         ]
         links = []
         compiled_outputs = {}
-        for out_name, getter in (
+        output_getters = (
             [(f"next_s{b}", lambda ns, ob, bit=b: (s_index[ns] >> bit) & 1) for b in range(s_bits)]
             + [("out", lambda ns, ob: int(bool(ob)))]
-        ):
-            def _make_sstep_fn(g=getter):
-                def _step(env: dict[str, int]) -> int:
-                    si = sum((env[s_vars[j]] << j) for j in range(s_bits))
-                    ai = sum((env[a_vars[j]] << j) for j in range(a_bits))
-                    if si >= len(states) or ai >= len(actions):
-                        return 0
-                    ns, ob = det_trans[(states[si], actions[ai])]
-                    return g(ns, ob)
-                return _step
+        )
+        def _make_sstep_fn(g):
+            def _step(env: dict[str, int]) -> int:
+                si = sum((env[s_vars[j]] << j) for j in range(s_bits))
+                ai = sum((env[a_vars[j]] << j) for j in range(a_bits))
+                if si >= len(states) or ai >= len(actions):
+                    return 0
+                ns, ob = det_trans[(states[si], actions[ai])]
+                return g(ns, ob)
+            return _step
 
-            comp = compile_profile_factored(step_vars, _make_sstep_fn())
-            compiled_outputs[out_name] = comp
+        sstep_fns = {out_name: _make_sstep_fn(getter) for out_name, getter in output_getters}
+        use_shared = bool(spec.get("shared_encoder", True)) and len(step_vars) >= 2 and len(sstep_fns) >= 2
+        if use_shared:
+            multi = compile_multi_profile_factored(step_vars, sstep_fns)
+            compiled_outputs = multi["outputs"]
+            shared_enc_used = bool(multi.get("shared_encoder", False))
+            shared_rank = multi.get("profile_rank")
+        else:
+            compiled_outputs = {out_name: compile_profile_factored(step_vars, fn) for out_name, fn in sstep_fns.items()}
+            shared_enc_used = False
+            shared_rank = None
+
+        for out_name, _ in output_getters:
+            comp = compiled_outputs[out_name]
             nodes.append(
                 csir.node(
                     out_name,
@@ -716,7 +1017,7 @@ def compile_unified(spec: dict[str, Any]) -> dict[str, Any]:
                     resources={"cost": comp["circuit_cost"], "atlas_neuron_ub": comp["atlas_min_neurons"],
                                "eps_bound": eps_bound, "cost_model": "F0/compositional"},
                     provenance={"produced_by": "ur_compiler.stochastic_lts_step", "parents": ["stochastic_lts_spec"],
-                                "eps_bound": eps_bound},
+                                "eps_bound": eps_bound, "shared_encoder": shared_enc_used, "profile_rank": shared_rank},
                 )
             )
             links.append(
@@ -735,6 +1036,8 @@ def compile_unified(spec: dict[str, Any]) -> dict[str, Any]:
             "eps_bound": eps_bound,
             "horizon": horizon,
             "horizon_eps_bound": horizon_eps_bound,
+            "shared_encoder": shared_enc_used,
+            "profile_rank": shared_rank,
             "compiled_outputs": compiled_outputs,
             "csir": b,
             "validation_errors": csir.validate(b),
@@ -813,7 +1116,13 @@ def compile_unified(spec: dict[str, Any]) -> dict[str, Any]:
         c_id = f"{n_id}_circuit"
         lean_cert = None
         if spec.get("certify_lean"):
-            lean_cert = _lean_certify_equiv(vars_list, comp["expr"], name=f"{n_id}_lean")
+            lean_cert = _lean_certify_equiv(
+                vars_list,
+                comp["expr"],
+                name=f"{n_id}_lean",
+                threshold_net=comp.get("threshold_net"),
+                verify_net=bool(spec.get("verify_net", True)),
+            )
         expr_node = csir.node(
             n_id,
             comp["expr"],

@@ -182,3 +182,34 @@ What remains ours: the integration, the Lean development, kernel-checked certifi
 Further limits:
 - The frame does not capture every epistemic situation. Probabilistic protocols, costs and partial observation are only partly covered: C1 and C3 are open.
 - The formalized theorems say nothing about the real world beyond their hypotheses. Whether an empirical setup is a protocol frame with exact observations is an empirical claim with its own warrant.
+
+
+---
+
+## 7. Quantitative Morphisms, Markov Contraction, Interpretant & Ville Bounds, and Verified Networks (2026-11-13 Update)
+
+The Lean 4 formalization (`proofs/lean/Theory.lean` §§17–19 and `proofs/lean/Cerp.lean` Part D, checked cleanly in `Lean 4.12.0` under standard axioms `{propext, Classical.choice, Quot.sound}`) and Spike 16 experiments extend Sections 2–5 in four directions while clarifying hard combinatorial and empirical barriers:
+
+### 7.1 Indexed Protocol-Frame Morphisms & Lossy-Composition Obstruction (`Theory.lean` §17, P071)
+For indexed protocol frames `(Φ₁, Φ₂)` and morphisms `FrameHom`:
+- **`frameHom_indist`, `frameHom_determines_pullback`**: Exact query determinacy pulls back contravariantly along protocol-preserving morphisms.
+- **`queryApprox_comp`, `frameHom_eps_determines_pullback`, `frameHom_eps_metric_pullback`**: Quantitative `ε`-determinacy (`EpsDetermines`) composes additively (`ε₁ + ε₂`) across stacked abstractions/metrics and pulls back along `FrameHom`.
+- **`lossy_composition_obstruction`**: An explicit 3-point finite protocol system witnesses that exact query loss across coarse abstraction stages creates non-trivial indeterminacy that cannot be recovered locally without enriching $\Omega$ (motivating sheaf/cohomological obstruction invariants as future work).
+
+### 7.2 Constructive Finite Markov-Kernel Data-Processing Contraction (`Theory.lean` §18, P072)
+Using explicit finite rational/real discrete distributions over `Fin n`:
+- **`tv_deterministic_dpi`**: Deterministic pushforward maps never increase total-variation distance.
+- **`markov_kernel_dpi`, `markov_kernel_dpi_comp`**: Finite stochastic Markov kernels satisfy $D_{\mathrm{TV}}(K \mu, K \nu) \le D_{\mathrm{TV}}(\mu, \nu)$ and compose inductively across multi-step transitions (`T-step-TV` grounding the Ur-Compiler's `stochastic_lts` approximation bounds without Mathlib measure theory).
+
+### 7.3 Peircean Triadic Semiosis & Anytime-Valid Ville/Optional Stopping (`Theory.lean` §19, P073)
+- **`indist_implies_pragEquiv`, `peirce_pragmatic_maxim`**: Formalizing Peirce's `Sign–Object–Interpretant` triad over action-observation frames, two signs yield indistinguishable practical consequences across all admissible Interpretant contexts if and only if they fall in the same observational determinacy equivalence class.
+- **`applyStop_preserves_supermartingale`, `optional_stopping_supermartingale`, `ville_anytime_valid_bound`**: Over finite horizons `T`, any adapted causal stopping policy preserves the discrete nonnegative supermartingale property and obeys Ville's anytime-valid inequality ($\mathbb{P}(\max_{t \le T} M_t \ge \alpha) \le \mathbb{E}[M_0]/\alpha$). Connecting concrete `cerp/epistemics.py` empirical tests directly to instances of `ville_anytime_valid_bound` remains an open bridge.
+
+### 7.4 Verified Integer-Weight `ThresholdNet` Emission (`Cerp.lean` Part D, P074–P075)
+- `Cerp.lean` Part D defines executable integer-weight linear-threshold DAGs (`TNode`, `evalTNet`, `tnetScoped`) and verifies compiler outputs against canonical `Expr` specs via both exhaustive kernel checking (`decideTNetEquivExpr_correct`) and linear-time LRAT hint-indexed Tseitin miters (`tseitinTNetMiter_lrat_unsat_implies_equiv`, Python bridge `prove_tnet_equivalence_lrat` + `verify_threshold_net_equiv`).
+- **Measured scaling bottleneck:** `pbToExpr` expands a fan-in-`d` threshold neuron using an exponential $O(2^d)$ Shannon `ite` tree. Consequently, pure-kernel `by decide` passes `xor3` (4 `TNode`s, 173 clauses, 8 LRAT steps) in `219.37s` but times out (`>900s`) on `xor4` (5 `TNode`s, 431 clauses, 16 LRAT steps), where `native_decide` succeeds in `14.78s`. A linear $O(d \cdot w)$ binary-adder pseudo-Boolean encoding in `Cerp.lean` is required before kernel LRAT net verification scales to high-fan-in multi-layer networks.
+
+### 7.5 Spike 16 Empirical Corrections & Negative Results (P076–P078)
+- **Local rule variance (`test_localrules.py`):** The intermittent `0.875 < 0.9` score on `rng(1)` gen 3 reflects Monte-Carlo initialization variance of pure backprop (`mean=0.9521`, `min=0.875` over 20 seeds), not CEM dropping backprop (`a[bp]=1.0`).
+- **Width coarsening (`H-A` vs `H-D`, $n=8$):** Single-unit alignment fades with width (`0.3713` at $W=8 \to 0.3062$ at $W=32$) while linear subspace $R^2$ climbs to `0.9850` (`SPIKE_16_REPORT.md` §2).
+- **`XOR6` (`H-C`) & `parity5` (`H-E`):** `32/64` fails to grok (`0/9` seeds up to 3,000 steps); at `48/64`, unregularized Adam reaches `0.9375` while `wd=0.01` exhibits anti-parity collapse (`0.2292`). Bounded-weight CP-SAT (`|w| <= 4`) verifies `chain(5,3)` (`3` neurons, `sat` `0.596s`) vs depth-2 `[3,1]` (`4` neurons, `unsat` `17.539s`), and `[3,1]` `unsat` for `parity4` (`13.985s`), leaving unbounded $\mathbb{R}^4$ Lean mechanization of `parity4 >= 5` open past the $\binom{1882}{3}$ enumeration barrier.

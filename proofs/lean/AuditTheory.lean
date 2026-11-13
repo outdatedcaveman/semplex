@@ -40,3 +40,17 @@ open PFT
 #print axioms adaptive_trace_discriminates
 #print axioms adaptive_local_hitting_lb
 #print axioms uniform_budget_bound
+#print axioms frameHom_indist
+#print axioms frameHom_determines_pullback
+#print axioms queryApprox_comp
+#print axioms frameHom_eps_determines_pullback
+#print axioms frameHom_eps_metric_pullback
+#print axioms lossy_composition_obstruction
+#print axioms tv_deterministic_dpi
+#print axioms markov_kernel_dpi
+#print axioms markov_kernel_dpi_comp
+#print axioms indist_implies_pragEquiv
+#print axioms peirce_pragmatic_maxim
+#print axioms applyStop_preserves_supermartingale
+#print axioms optional_stopping_supermartingale
+#print axioms ville_anytime_valid_bound

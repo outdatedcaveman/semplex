@@ -112,3 +112,27 @@ def test_lrat_miter_equiv_and_ur_compiler_certify_lean():
     })
     assert out["validation_errors"] == []
     assert out["lean_cert"] is not None and out["lean_cert"]["ok"] is True
+    assert out["lean_cert"].get("net_ok") is True
+
+
+def test_tnet_lean_exhaustive_and_lrat_equiv():
+    from cerp import sat, ur_compiler
+    vs = ["x0", "x1", "x2", "x3"]
+    comp = ur_compiler.compile_profile_factored(vs, lambda e: e["x0"] ^ e["x1"] ^ e["x2"] ^ e["x3"])
+    net = comp["threshold_net"]
+    assert net is not None
+
+    r_ex, _ = lean_bridge.verify_threshold_net_equiv(net, comp["expr"], vs, name="t_tnet_xor4_ex")
+    assert r_ex.ok and set(r_ex.axioms) <= {"propext", "Quot.sound", "Classical.choice"}
+
+    status, lrat_steps, _ = sat.prove_tnet_equivalence_lrat(net, comp["expr"], vs)
+    assert status == "unsat"
+    # Kernel `by decide` on XOR3 `tnet` is verified in `test_lrat_miter_equiv_and_ur_compiler_certify_lean`;
+    # 5-node XOR4 CNF (431 clauses via O(2^d) pbToExpr) uses `native=True` to avoid >900s WHNF replay.
+    r_lrat, _ = lean_bridge.verify_threshold_net_equiv(net, comp["expr"], vs, lrat_steps=lrat_steps, name="t_tnet_xor4_lrat", native=True)
+    assert r_lrat.ok and set(r_lrat.axioms) <= lean_bridge.NATIVE_AXIOMS
+
+    bad_net = {"inputs": list(net["inputs"]), "nodes": [dict(nd) for nd in net["nodes"]], "output": net["output"]}
+    bad_net["nodes"][-1]["t"] = int(bad_net["nodes"][-1]["t"]) + 10
+    bad_status, bad_ce, _ = sat.prove_tnet_equivalence_lrat(bad_net, comp["expr"], vs)
+    assert bad_status == "sat" and isinstance(bad_ce, dict)

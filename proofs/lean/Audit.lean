@@ -11,3 +11,7 @@ open Cerp
 #print axioms unsat_of_certificate
 #print axioms checkLrat_sound
 #print axioms tseitinMiter_lrat_unsat_implies_equiv
+#print axioms evalTNetFrom_congr
+#print axioms decideTNetEquivExpr_correct
+#print axioms eval_pbToExpr
+#print axioms tseitinTNetMiter_lrat_unsat_implies_equiv
