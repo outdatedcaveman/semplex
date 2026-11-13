@@ -2,6 +2,8 @@
 
 These are claims *about the research program and its artifacts*, held to the same discipline the system applies to its own outputs (charter §13.20). Per-run, machine-generated ledgers come from `cerp.ledger.Ledger` (see `python -m cerp.demo`).
 
+**This register is itself loaded into the ledger** (`python -m cerp.register check`, which writes `claims/LEDGER_CHECK.md`; tested in `tests/test_register.py`). The check validates every dependency and projects each claim's *effective* status by the weakest-link rule. It also lists, for every correction, the other claims built on what it corrected. Run it after every edit; `python -m cerp.register affected P110` lists everything a claim reaches.
+
 | ID | Statement | Status | Scope / assumptions | Evidence | Depends on | Counterarguments / caveats | Next action |
 |---|---|---|---|---|---|---|---|
 | P001 | ROBDD under a fixed order is a normal form for F0 (idempotent; equal iff extensionally equivalent) | PROVED (literature) | Fixed variable order | Bryant 1986 (*to verify*) | | Our *implementation* is only tested (P002) | Verify citation |

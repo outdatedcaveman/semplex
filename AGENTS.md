@@ -8,7 +8,8 @@ semplex studies why learning works and which mechanisms training builds, on an e
 2. **Freeze answered spikes.** After verdicts, never edit a spike's code or criteria. A follow-up is a new spike that names its parent ("Follows:"). Fixing a measurement bug before any verdict is allowed; record the bug and keep both values.
 3. **Report every verdict as it came out:** held, broken, or neither. A refuted conjecture is stated as refuted in `THEORY.md`, and gets a claim row in `claims/REGISTER.md`.
 4. **Grow the tree downward.** Fan out over the options of one decision, then descend onto what that round established (`experiments/TREE.md`).
-5. **Read before you cite.** Literature goes into `charter/LITERATURE_REVIEW.md` §5 with what was read and what it changes here.
+5. **Keep the register on the ledger.** After editing `claims/REGISTER.md`, run `python -m cerp.register check`. It must report 0 problems. Re-read every claim it lists under a correction.
+6. **Read before you cite.** Literature goes into `charter/LITERATURE_REVIEW.md` §5 with what was read and what it changes here.
 
 ## Running
 
