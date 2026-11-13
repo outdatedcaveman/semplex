@@ -52,8 +52,8 @@ Upgrading these (e.g. mechanizing a paper proof in Lean) lifts every note that r
 - P069 (20 note(s)): PROVED (paper proof) + EMPIRICALLY-CONFIRMED (H14.1) | Theorem 15: under task-symmetric initialization and equivariant training, circuit probability is constant on task-symmet
 - P077 (6 note(s)): PROVED (elementary) + EMPIRICAL (gains within ±0.003) | No-transfer lemma: symmetrizing over the exact stabilizer of the labelled data cannot change expected accuracy on unlabe
 - P127 (2 note(s)): EXPLORATORY (post hoc) | Feature learning moves nets from the NTK toward the Occam completion: 91% agreement with Occam vs 81–83% with the NTK; w
-- P133 (2 note(s)): EXPLORATORY (demonstrated, tested) | A causal Bayes net's Bayes-optimal decision rule can be distilled to a canonical F0 expr + circuit in CSIR with a kernel
 - P141 (2 note(s)): EXPLORATORY + PARTLY MECHANIZED | Profile-factor compilation (`profile_factor_compile` in Lean; `cerp/ur_compiler.py`, H-G) factors low-rank partitions `f
+- P133 (2 note(s)): EXPLORATORY (demonstrated, tested) | A causal Bayes net's Bayes-optimal decision rule can be distilled to a canonical F0 expr + circuit in CSIR with a kernel
 - P001 (1 note(s)): PROVED (literature) | ROBDD under a fixed order is a normal form for F0 (idempotent; equal iff extensionally equivalent)
 - P003 (1 note(s)): PROVED (informal sketch) | With full care, the minimal sufficient variable set is unique and equals support(f)
 

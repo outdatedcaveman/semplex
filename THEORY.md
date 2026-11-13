@@ -264,5 +264,5 @@ Using explicit finite rational/real discrete distributions over `Fin n`:
 
 ### 7.5 Spike 42 Empirical Corrections & Negative Results (P149–P151)
 - **Local rule variance (`test_localrules.py`):** The intermittent `0.875 < 0.9` score on `rng(1)` gen 3 reflects Monte-Carlo initialization variance of pure backprop (`mean=0.9521`, `min=0.875` over 20 seeds), not CEM dropping backprop (`a[bp]=1.0`).
-- **Width coarsening (`H-A` vs `H-D`, $n=8$):** Single-unit alignment fades with width (`0.3713` at $W=8 \to 0.3062$ at $W=32$) while linear subspace $R^2$ climbs to `0.9850` (`SPIKE_16_REPORT.md` §2).
+- **Width coarsening (`H-A` vs `H-D`, $n=8$):** Single-unit alignment fades with width (`0.3713` at $W=8 \to 0.3062$ at $W=32$) while linear subspace $R^2$ climbs to `0.9850` (`SPIKE_42_REPORT.md` §2).
 - **`XOR6` (`H-C`) & `parity5` (`H-E`):** `32/64` fails to grok (`0/9` seeds up to 3,000 steps); at `48/64`, unregularized Adam reaches `0.9375` while `wd=0.01` exhibits anti-parity collapse (`0.2292`). Bounded-weight CP-SAT (`|w| <= 4`) verifies `chain(5,3)` (`3` neurons, `sat` `0.596s`) vs depth-2 `[3,1]` (`4` neurons, `unsat` `17.539s`), and `[3,1]` `unsat` for `parity4` (`13.985s`), leaving unbounded $\mathbb{R}^4$ Lean mechanization of `parity4 >= 5` open past the $\binom{1882}{3}$ enumeration barrier.
