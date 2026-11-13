@@ -182,3 +182,26 @@ def prove_cnf_unsat(clauses, lemmas, name="miter_unsat", native=False):
             f"(by {'native_decide' if native else 'decide'})\n")
     ok, ax, log, sha, text = _check(body, name, stmt, allowed=NATIVE_AXIOMS if native else ALLOWED_AXIOMS)
     return LeanCheck(ok, name, stmt, ax or (), version(), sha, log, _TOKEN), text
+
+
+def verify_expr_equiv_tseitin(left, right, vars_, lemmas, name="tseitin_equiv", native=False):
+    """Prove ∀σ, eval σ L = eval σ R in Lean via Tseitin miter + RUP certificate."""
+    n = len(vars_)
+    Ls = "[" + ", ".join("[" + ", ".join(str(l) for l in c) + "]" for c in lemmas) + "]"
+    defs = [
+        f"def eL : Expr := {expr_to_lean(left['body'], vars_)}",
+        f"def eR : Expr := {expr_to_lean(right['body'], vars_)}",
+        f"def Ls : List Clause := {Ls}",
+    ]
+    stmt = "∀ σ, eval σ eL = eval σ eR"
+    dec = "native_decide" if native else "decide"
+    proof = f"tseitinMiter_unsat_implies_equiv {n} eL eR Ls (by decide) (by decide) (by {dec}) (by {dec})"
+    body = "\n".join(defs) + f"\n\ntheorem {name} : {stmt} :=\n  {proof}\n"
+    ok, ax, log, sha, text = _check(
+        body, name, stmt, renders=("eL", "eR"),
+        allowed=NATIVE_AXIOMS if native else ALLOWED_AXIOMS,
+    )
+    expected = [render_indexed(a["body"], vars_) for a in (left, right)]
+    printed = [json.loads(line) for line in log.splitlines() if line.startswith("[")]
+    ok = ok and printed == expected
+    return LeanCheck(ok, name, stmt, ax or (), version(), sha, log, _TOKEN), text

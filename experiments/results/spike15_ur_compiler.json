@@ -1,0 +1,52 @@
+{
+  "benchmarks": [
+    {
+      "name": "parity_6",
+      "n_vars": 6,
+      "decomposed": true,
+      "profile_rank": 1,
+      "compositional_gates": 31,
+      "flat_bdd_gates": 47,
+      "gate_ratio_comp_over_flat": 0.66,
+      "atlas_neuron_ub": 9,
+      "comp_time_s": 289.6189,
+      "flat_time_s": 0.001
+    },
+    {
+      "name": "parity_8",
+      "n_vars": 8,
+      "decomposed": true,
+      "profile_rank": 1,
+      "compositional_gates": 43,
+      "flat_bdd_gates": 191,
+      "gate_ratio_comp_over_flat": 0.225,
+      "atlas_neuron_ub": 13,
+      "comp_time_s": 0.012,
+      "flat_time_s": 0.0056
+    },
+    {
+      "name": "hier_thresh_8",
+      "n_vars": 8,
+      "decomposed": true,
+      "profile_rank": 1,
+      "compositional_gates": 49,
+      "flat_bdd_gates": 93,
+      "gate_ratio_comp_over_flat": 0.527,
+      "atlas_neuron_ub": null,
+      "comp_time_s": 0.0103,
+      "flat_time_s": 0.0051
+    },
+    {
+      "name": "block_maj_10",
+      "n_vars": 10,
+      "decomposed": true,
+      "profile_rank": 1,
+      "compositional_gates": 61,
+      "flat_bdd_gates": 147,
+      "gate_ratio_comp_over_flat": 0.415,
+      "atlas_neuron_ub": null,
+      "comp_time_s": 0.0461,
+      "flat_time_s": 0.021
+    }
+  ]
+}

@@ -29,3 +29,14 @@ open PFT
 #print axioms prefix_determines_stabilized
 #print axioms adaptive_uses_determining
 #print axioms statistical_gated_sound
+#print axioms union_bound_sum
+#print axioms err_le_sumBudget
+#print axioms metric_eps_limit
+#print axioms metric_eps_limit_determines
+#print axioms adaptive_min_protocols_lb
+#print axioms threshold_escalation_optimal
+#print axioms threshold_escalation_unique_strict
+#print axioms profile_factor_compile
+#print axioms adaptive_trace_discriminates
+#print axioms adaptive_local_hitting_lb
+#print axioms uniform_budget_bound

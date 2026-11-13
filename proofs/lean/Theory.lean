@@ -703,4 +703,230 @@ theorem statistical_gated_sound (EmpSurvivors : H → Prop) (q : H → A) (hstar
     q hstar = a :=
   hagree hstar hkeep
 
+def sumBudget (err : H → Nat) : List H → Nat
+  | [] => 0
+  | h :: hs => err h + sumBudget err hs
+
+theorem union_bound_sum (err : H → Nat) (perCand : Nat) :
+    ∀ hs : List H, (∀ h, h ∈ hs → err h ≤ perCand) → sumBudget err hs ≤ hs.length * perCand
+  | [], _ => by simp [sumBudget]
+  | h :: hs, hle => by
+      have h1 : err h ≤ perCand := hle h (List.mem_cons_self h hs)
+      have h2 : sumBudget err hs ≤ hs.length * perCand :=
+        union_bound_sum err perCand hs (fun x hx => hle x (List.mem_cons_of_mem h hx))
+      simp only [sumBudget, List.length_cons, Nat.succ_mul]
+      omega
+
+theorem err_le_sumBudget (err : H → Nat) (hstar : H) :
+    ∀ hs : List H, hstar ∈ hs → err hstar ≤ sumBudget err hs
+  | [], hmem => by simp at hmem
+  | h :: hs, hmem => by
+      simp only [List.mem_cons] at hmem
+      cases hmem with
+      | inl heq => subst heq; simp [sumBudget]
+      | inr htail =>
+          have ih := err_le_sumBudget err hstar hs htail
+          simp only [sumBudget]
+          omega
+
+end PFT
+
+/-! ## §12b General metric ε-limit representation (C2) -/
+
+namespace PFT
+
+def EpsDeterminesAns (obs : P → H → O) (Ω : P → Prop) (S : H → Prop)
+    (q : H → A) (dist : A → A → Nat) (tol : Nat) : Prop :=
+  ∀ h₁ h₂, S h₁ → S h₂ → Indist obs Ω h₁ h₂ → dist (q h₁) (q h₂) ≤ tol
+
+theorem metric_eps_limit (obs : P → H → O) (Ω_seq : Nat → P → Prop)
+    (S : H → Prop) (q : H → A) (dist : A → A → Nat)
+    (hlim : ∀ tol, ∃ k, EpsDeterminesAns obs (Ω_seq k) S q dist tol) :
+    ∀ h₁ h₂, S h₁ → S h₂ → Indist obs (fun p => ∃ k, Ω_seq k p) h₁ h₂ →
+      dist (q h₁) (q h₂) = 0 := by
+  intro h₁ h₂ hs₁ hs₂ hi
+  obtain ⟨k, hk⟩ := hlim 0
+  have hik : Indist obs (Ω_seq k) h₁ h₂ := fun p hp => hi p ⟨k, hp⟩
+  exact Nat.eq_zero_of_le_zero (hk h₁ h₂ hs₁ hs₂ hik)
+
+theorem metric_eps_limit_determines (obs : P → H → O) (Ω_seq : Nat → P → Prop)
+    (S : H → Prop) (q : H → A) (dist : A → A → Nat)
+    (hsep : ∀ a b, dist a b = 0 → a = b)
+    (hlim : ∀ tol, ∃ k, EpsDeterminesAns obs (Ω_seq k) S q dist tol) :
+    Determines obs (fun p => ∃ k, Ω_seq k p) S q :=
+  fun h₁ h₂ hs₁ hs₂ hi => hsep (q h₁) (q h₂) (metric_eps_limit obs Ω_seq S q dist hlim h₁ h₂ hs₁ hs₂ hi)
+
+end PFT
+
+/-! ## §13b Quantitative adaptive protocol lower bound (C3) -/
+
+namespace PFT
+
+theorem adaptive_min_protocols_lb {P : Type u1} {O : Type u2} {A : Type u3} {H : Type u4}
+    (obs : P → H → O) (used : List P) (S : H → Prop)
+    (q : H → A) (t : QueryTree P O A) (hu : UsesOnly (fun p => p ∈ used) t)
+    (hacc : ∀ h, S h → evalTree obs t h = q h)
+    (k : Nat) (hlb : ∀ L : List P, Determines obs (fun p => p ∈ L) S q → k ≤ L.length) :
+    k ≤ used.length :=
+  hlb used (adaptive_uses_determining obs (fun p => p ∈ used) S q t hu hacc)
+
+end PFT
+
+/-! ## §15 Trust-indexed escalation optimality (C5) -/
+
+namespace PFT
+
+def claimGain (ratio : Int) (cost impact : C → Nat) (c : C) : Int :=
+  (impact c : Int) - ratio * (cost c : Int)
+
+def optPol (ratio : Int) (cost impact : C → Nat) (c : C) : Bool :=
+  decide (0 < claimGain ratio cost impact c)
+
+def totalGain (ratio : Int) (cost impact : C → Nat) (pol : C → Bool) : List C → Int
+  | [] => 0
+  | c :: cs => (if pol c then claimGain ratio cost impact c else 0) + totalGain ratio cost impact pol cs
+
+theorem term_le_opt (ratio : Int) (cost impact : C → Nat) (pol : C → Bool) (c : C) :
+    (if pol c then claimGain ratio cost impact c else 0) ≤
+      (if optPol ratio cost impact c then claimGain ratio cost impact c else 0) := by
+  unfold optPol
+  by_cases hpos : 0 < claimGain ratio cost impact c
+  · simp [hpos]
+    cases pol c <;> simp <;> omega
+  · simp [hpos]
+    cases pol c <;> simp <;> omega
+
+theorem threshold_escalation_optimal (ratio : Int) (cost impact : C → Nat)
+    (pol : C → Bool) :
+    ∀ cs : List C, totalGain ratio cost impact pol cs ≤ totalGain ratio cost impact (optPol ratio cost impact) cs
+  | [] => by simp [totalGain]
+  | c :: cs => by
+      simp only [totalGain]
+      have h1 := term_le_opt ratio cost impact pol c
+      have h2 := threshold_escalation_optimal ratio cost impact pol cs
+      omega
+
+theorem threshold_escalation_unique_strict (ratio : Int) (cost impact : C → Nat)
+    (pol : C → Bool) :
+    ∀ cs : List C,
+      totalGain ratio cost impact pol cs = totalGain ratio cost impact (optPol ratio cost impact) cs →
+      ∀ c, c ∈ cs → claimGain ratio cost impact c ≠ 0 → pol c = optPol ratio cost impact c := by
+  intro cs heq c hmem hnz
+  induction cs with
+  | nil => simp at hmem
+  | cons x xs ih =>
+      simp only [totalGain] at heq
+      have h1 := term_le_opt ratio cost impact pol x
+      have h2 := threshold_escalation_optimal ratio cost impact pol xs
+      have hx_eq : (if pol x then claimGain ratio cost impact x else 0) =
+          (if optPol ratio cost impact x then claimGain ratio cost impact x else 0) := by omega
+      have hxs_eq : totalGain ratio cost impact pol xs =
+          totalGain ratio cost impact (optPol ratio cost impact) xs := by omega
+      simp only [List.mem_cons] at hmem
+      cases hmem with
+      | inl hcx =>
+          subst hcx
+          unfold optPol at hx_eq ⊢
+          by_cases hpos : 0 < claimGain ratio cost impact c
+          · simp [hpos] at hx_eq ⊢
+            cases hpc : pol c
+            · simp [hpc] at hx_eq; omega
+            · rfl
+          · simp [hpos] at hx_eq ⊢
+            cases hpc : pol c
+            · rfl
+            · simp [hpc] at hx_eq; omega
+      | inr htail =>
+          exact ih hxs_eq htail
+
+end PFT
+
+/-! ## §16 Compositional profile-factor compilation (Gap 1 / H-G) -/
+
+namespace PFT
+
+section ProfileFactor
+universe u1 u2 u3 u4
+
+theorem profile_factor_compile {H₁ : Type u1} {H₂ : Type u2} {K : Type u3} {A : Type u4}
+    (f : H₁ → H₂ → A) (π : H₁ → K) (pick : K → H₁)
+    (hsec : ∀ h₁, π (pick (π h₁)) = π h₁)
+    (hsep : ∀ h₁ h₁', π h₁ = π h₁' → ∀ h₂, f h₁ h₂ = f h₁' h₂) :
+    let decode : K → H₂ → A := fun k h₂ => f (pick k) h₂
+    ∀ h₁ h₂, decode (π h₁) h₂ = f h₁ h₂ := by
+  intro decode h₁ h₂
+  exact hsep (pick (π h₁)) h₁ (hsec h₁) h₂
+
+end ProfileFactor
+
+end PFT
+
+/-! ## §13c Adaptive local hitting-set lower bound (Gap 4 / C3 / H-I) -/
+
+namespace PFT
+
+section AdaptiveTrace
+universe u1 u2 u3 u4
+
+def traceProtocols {P : Type u1} {O : Type u2} {A : Type u3} {H : Type u4}
+    (obs : P → H → O) : QueryTree P O A → H → List P
+  | QueryTree.leaf _, _ => []
+  | QueryTree.ask p k, h => p :: traceProtocols obs (k (obs p h)) h
+
+theorem adaptive_trace_discriminates {P : Type u1} {O : Type u2} {A : Type u3} {H : Type u4}
+    (obs : P → H → O) :
+    ∀ (t : QueryTree P O A) (h₁ h₂ : H),
+      evalTree obs t h₁ ≠ evalTree obs t h₂ →
+      ∃ p, p ∈ traceProtocols obs t h₁ ∧ obs p h₁ ≠ obs p h₂
+  | QueryTree.leaf _, _, _, hne => absurd rfl hne
+  | QueryTree.ask p k, h₁, h₂, hne => by
+      by_cases hobs : obs p h₁ = obs p h₂
+      · simp only [evalTree] at hne
+        rw [hobs] at hne
+        obtain ⟨p', hp', hdiff⟩ := adaptive_trace_discriminates obs (k (obs p h₂)) h₁ h₂ hne
+        refine ⟨p', List.mem_cons_of_mem p ?_, hdiff⟩
+        simpa [traceProtocols, hobs] using hp'
+      · exact ⟨p, List.mem_cons_self p _, hobs⟩
+
+theorem adaptive_local_hitting_lb {P : Type u1} {O : Type u2} {A : Type u3} {H : Type u4}
+    (obs : P → H → O) (S : H → Prop) (q : H → A) (t : QueryTree P O A)
+    (hacc : ∀ h, S h → evalTree obs t h = q h)
+    {h₁ h₂ : H} (hs₁ : S h₁) (hs₂ : S h₂) (hq : q h₁ ≠ q h₂) :
+    ∃ p, p ∈ traceProtocols obs t h₁ ∧ obs p h₁ ≠ obs p h₂ := by
+  apply adaptive_trace_discriminates obs t h₁ h₂
+  rw [hacc h₁ hs₁, hacc h₂ hs₂]
+  exact hq
+
+end AdaptiveTrace
+
+end PFT
+
+/-! ## §14b Cross-multiplied union-bound budget (Gap 4 / C1) -/
+
+namespace PFT
+
+theorem uniform_budget_bound (err : H → Nat) (totalBudget : Nat) (hs : List H)
+    (hle : ∀ h, h ∈ hs → err h * hs.length ≤ totalBudget) :
+    sumBudget err hs ≤ totalBudget := by
+  have hmul : sumBudget err hs * hs.length ≤ hs.length * totalBudget := by
+    have : ∀ l : List H, (∀ h, h ∈ l → err h * hs.length ≤ totalBudget) →
+        sumBudget err l * hs.length ≤ l.length * totalBudget := by
+      intro l hl
+      induction l with
+      | nil => simp [sumBudget]
+      | cons x xs ih =>
+          have hx := hl x (List.mem_cons_self x xs)
+          have hxs := ih (fun y hy => hl y (List.mem_cons_of_mem x hy))
+          simp only [sumBudget, Nat.add_mul, List.length_cons, Nat.succ_mul]
+          omega
+    exact this hs hle
+  cases hlen : hs.length with
+  | zero =>
+      have : hs = [] := List.length_eq_zero.mp hlen
+      subst this
+      simp [sumBudget]
+  | succ m =>
+      rw [hlen] at hmul
+      exact Nat.le_of_mul_le_mul_left (by simpa [Nat.mul_comm] using hmul) (Nat.succ_pos m)
+
 end PFT

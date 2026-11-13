@@ -82,3 +82,12 @@ def test_proof_files_compile_and_use_only_standard_axioms(tmp_path):
         for m in re.finditer(r"depends on axioms: \[([^\]]*)\]", r.stdout):
             assert set(a.strip() for a in m.group(1).split(",")) <= {"propext", "Quot.sound", "Classical.choice"}
         assert "sorryAx" not in r.stdout
+
+
+def test_tseitin_miter_equiv_proved_by_lean_kernel():
+    vs = ["a", "b"]
+    e1 = {"kind": "expr", "body": ["and", ["var", "a"], ["var", "b"]]}
+    e2 = {"kind": "expr", "body": ["not", ["or", ["not", ["var", "a"]], ["not", ["var", "b"]]]]}
+    _, lemmas, _ = prove_equivalence({"vars": vs, "left": e1, "right": e2})
+    r, _ = lean_bridge.verify_expr_equiv_tseitin(e1, e2, vs, lemmas, name="t_tseitin_demorgan")
+    assert r.ok and set(r.axioms) <= {"propext", "Quot.sound", "Classical.choice"}

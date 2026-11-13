@@ -18,9 +18,11 @@ from __future__ import annotations
 import math
 from typing import Any, Callable
 
+import numpy as np
+
 from . import atlas, csir, kernel
 from .semantics import TruthTable
-from .substrates import cost as circuit_cost
+from .substrates import CircuitBuilder, cost as circuit_cost
 from .translate import bdd_to_circuit, bdd_to_expr, truthtable_to_bdd
 
 
@@ -46,6 +48,103 @@ def expr_gate_count(body: Any) -> int:
     if not isinstance(body, (list, tuple)) or not body or body[0] in ("const", "var"):
         return 0
     return 1 + sum(expr_gate_count(x) for x in body[1:])
+
+
+def _expr_key(body: Any) -> Any:
+    if isinstance(body, list):
+        return tuple(_expr_key(x) for x in body)
+    return body
+
+
+def _expr_to_dag_circuit(body: Any, inputs: list[str]) -> dict[str, Any]:
+    """Compile an F0 expr AST into a hash-consed DAG Circuit artifact."""
+    cb = CircuitBuilder(inputs)
+    memo: dict[Any, str] = {}
+
+    def _emit(node: Any) -> str:
+        k = _expr_key(node)
+        if k in memo:
+            return memo[k]
+        op = node[0]
+        if op == "const":
+            res = cb.gate("const1" if int(node[1]) else "const0")
+        elif op == "var":
+            res = str(node[1])
+        elif op == "not":
+            res = cb.gate("not", _emit(node[1]))
+        elif op in ("and", "or", "xor"):
+            res = cb.gate(op, _emit(node[1]), _emit(node[2]))
+        elif op == "ite":
+            cv = _emit(node[1])
+            tv = _emit(node[2])
+            ev = _emit(node[3])
+            res = cb.gate("or", cb.gate("and", cv, tv), cb.gate("and", cb.gate("not", cv), ev))
+        else:
+            raise ValueError(f"Unsupported expr op for DAG circuit: {op!r}")
+        memo[k] = res
+        return res
+
+    out = _emit(body)
+    return cb.build(out)
+
+
+def _table_from_fn(vars_list: list[str], fn: Callable[[dict[str, int]], int]) -> np.ndarray:
+    """Evaluate `fn` into a flat uint8 array of length 2^n in TruthTable (MSB-first) order."""
+    n = len(vars_list)
+    size = 1 << n
+    out = np.empty(size, dtype=np.uint8)
+    env: dict[str, int] = {}
+    for i in range(size):
+        for j in range(n):
+            env[vars_list[j]] = (i >> (n - 1 - j)) & 1
+        out[i] = 1 if fn(env) else 0
+    return out
+
+
+def _truthtable_from_array(vars_list: list[str], table_arr: np.ndarray) -> TruthTable:
+    bits = 0
+    for i in np.flatnonzero(table_arr):
+        bits |= 1 << int(i)
+    return TruthTable(tuple(vars_list), bits)
+
+
+_ATLAS_CACHE: dict[int, Any] = {}
+
+
+def _get_atlas_tables(m_max: int = 4):
+    if m_max not in _ATLAS_CACHE:
+        _ATLAS_CACHE[m_max] = atlas.build_all(m_max)
+    return _ATLAS_CACHE[m_max]
+
+
+def _atlas_min_for_table(n: int, table_arr: np.ndarray, atlas_tables=None) -> int | None:
+    if n > 4:
+        return None
+    tb = (atlas_tables or _get_atlas_tables(4))[n]
+    # Atlas indexes assignments with var[0] as LSB (Fortran order), TruthTable uses MSB-first (C order)
+    arr_f = table_arr.reshape((2,) * n).ravel(order="F")
+    bits = 0
+    for i in np.flatnonzero(arr_f):
+        bits |= 1 << int(i)
+    return int(tb.hi[bits])
+
+
+def _leaf_compile_table(vars_list: list[str], table_arr: np.ndarray, atlas_tables=None) -> dict[str, Any]:
+    tt = _truthtable_from_array(vars_list, table_arr)
+    bdd_art = truthtable_to_bdd(tt)
+    expr_art = bdd_to_expr(bdd_art)
+    circ_art = bdd_to_circuit(bdd_art, vars_list)
+    atlas_neurons = _atlas_min_for_table(len(vars_list), table_arr, atlas_tables=atlas_tables)
+    return {
+        "vars": list(vars_list),
+        "expr": expr_art,
+        "circuit": circ_art,
+        "circuit_cost": circuit_cost(circ_art),
+        "atlas_min_neurons": atlas_neurons,
+        "decomposed": False,
+        "profile_rank": None,
+        "children": [],
+    }
 
 
 def _fn_from_expr(vars_list: list[str], expr_art: dict[str, Any]) -> Callable[[dict[str, int]], int]:
@@ -156,6 +255,121 @@ def _best_profile_split(
     return best
 
 
+def _best_profile_split_table(
+    vars_list: list[str], table_arr: np.ndarray, max_s1: int = 4, max_s2_sample: int = 64
+) -> tuple[list[str], list[str], int, np.ndarray, np.ndarray] | None:
+    """NumPy-vectorized C4 profile rank search over truth-table array."""
+    n = len(vars_list)
+    k = min(max_s1, max(2, n // 2))
+    candidates: list[list[int]] = []
+    for start in range(0, n - k + 1):
+        candidates.append(list(range(start, start + k)))
+    if n >= 2 * k:
+        candidates.append(list(range(0, n, 2))[:k])
+
+    arr_nd = table_arr.reshape((2,) * n)
+    best = None
+    for s1_pos in candidates:
+        s1_set = set(s1_pos)
+        s2_pos = [i for i in range(n) if i not in s1_set]
+        n1, n2 = len(s1_pos), len(s2_pos)
+        mat = np.transpose(arr_nd, s1_pos + s2_pos).reshape(1 << n1, 1 << n2)
+
+        # Fast pre-filter on sampled S2 columns if S2 is large
+        if (1 << n2) > max_s2_sample:
+            cols = np.linspace(0, (1 << n2) - 1, max_s2_sample, dtype=int)
+            uniq_sample = np.unique(mat[:, cols], axis=0)
+            sample_rank = 0 if len(uniq_sample) <= 1 else math.ceil(math.log2(len(uniq_sample)))
+            if sample_rank >= n1:
+                continue
+
+        # Exact profile equivalence classes across all S2
+        _, first_idx, inverse = np.unique(mat, axis=0, return_index=True, return_inverse=True)
+        num_classes = len(first_idx)
+        rank = 0 if num_classes <= 1 else math.ceil(math.log2(num_classes))
+        if rank >= n1:
+            continue
+
+        s1 = [vars_list[i] for i in s1_pos]
+        s2 = [vars_list[i] for i in s2_pos]
+        # rep_rows[c] = mat[first_idx[c], :] gives the exact decoder slice for code c
+        rep_rows = mat[first_idx, :]
+        if best is None or rank < best[2]:
+            best = (s1, s2, rank, inverse, rep_rows)
+            if rank <= 1:
+                break
+    return best
+
+
+def _compile_table_factored(
+    vars_list: list[str],
+    table_arr: np.ndarray,
+    *,
+    max_leaf: int = 4,
+    atlas_tables=None,
+    _depth: int = 0,
+) -> dict[str, Any]:
+    if atlas_tables is None:
+        atlas_tables = _get_atlas_tables(4)
+    n = len(vars_list)
+    if n <= max_leaf:
+        return _leaf_compile_table(vars_list, table_arr, atlas_tables=atlas_tables)
+
+    split = _best_profile_split_table(vars_list, table_arr, max_s1=max_leaf)
+    if split is None:
+        return _leaf_compile_table(vars_list, table_arr, atlas_tables=atlas_tables)
+
+    s1, s2, rank, row_to_code, rep_rows = split
+    enc_vars = [f"_c_{_depth}_{j}" for j in range(rank)]
+    encoders = []
+    enc_map: dict[str, Any] = {}
+    for bit_idx in range(rank):
+        enc_table = ((row_to_code >> bit_idx) & 1).astype(np.uint8)
+        enc_res = _compile_table_factored(
+            s1, enc_table, max_leaf=max_leaf, atlas_tables=atlas_tables, _depth=_depth + 1
+        )
+        encoders.append(enc_res)
+        enc_map[enc_vars[bit_idx]] = enc_res["expr"]["body"]
+
+    # Build decoder table over enc_vars + s2 (MSB-first: enc_vars then s2)
+    n2 = len(s2)
+    num_codes = rep_rows.shape[0]
+    dec_table = np.zeros((1 << rank, 1 << n2), dtype=np.uint8)
+    for c in range(num_codes):
+        # enc_vars[j] is bit (rank - 1 - j) of row index in dec_table, while row_to_code uses bit j = enc_vars[j]
+        rev_c = sum((((c >> j) & 1) << (rank - 1 - j)) for j in range(rank))
+        dec_table[rev_c, :] = rep_rows[c, :]
+    # Unreachable codes fallback to rep_rows[0]
+    used_rev = {sum((((c >> j) & 1) << (rank - 1 - j)) for j in range(rank)) for c in range(num_codes)}
+    for r in range(1 << rank):
+        if r not in used_rev:
+            dec_table[r, :] = rep_rows[0, :]
+
+    dec_vars = enc_vars + s2
+    dec_res = _compile_table_factored(
+        dec_vars, dec_table.ravel(), max_leaf=max_leaf, atlas_tables=atlas_tables, _depth=_depth + 1
+    )
+    composed_body = subst_expr(dec_res["expr"]["body"], enc_map)
+    composed_expr = {"kind": "expr", "body": composed_body}
+    circ_art = _expr_to_dag_circuit(composed_body, vars_list)
+
+    neuron_ub = None
+    if dec_res["atlas_min_neurons"] is not None and all(e["atlas_min_neurons"] is not None for e in encoders):
+        neuron_ub = dec_res["atlas_min_neurons"] + sum(e["atlas_min_neurons"] for e in encoders)
+
+    return {
+        "vars": list(vars_list),
+        "expr": composed_expr,
+        "circuit": circ_art,
+        "circuit_cost": circuit_cost(circ_art),
+        "atlas_min_neurons": neuron_ub,
+        "decomposed": True,
+        "profile_rank": rank,
+        "split": {"s1": s1, "s2": s2},
+        "children": encoders + [dec_res],
+    }
+
+
 def compile_profile_factored(
     vars_list: list[str],
     fn: Callable[[dict[str, int]], int],
@@ -166,8 +380,13 @@ def compile_profile_factored(
 ) -> dict[str, Any]:
     """Recursively compile `fn` via C4 profile factorization down to `max_leaf` leaves."""
     if atlas_tables is None:
-        atlas_tables = atlas.build_all(4)
+        atlas_tables = _get_atlas_tables(4)
     n = len(vars_list)
+    if n <= 14:
+        table_arr = _table_from_fn(vars_list, fn)
+        return _compile_table_factored(
+            vars_list, table_arr, max_leaf=max_leaf, atlas_tables=atlas_tables, _depth=_depth
+        )
     if n <= max_leaf:
         return _leaf_compile(vars_list, fn, atlas_tables=atlas_tables)
 
@@ -208,6 +427,7 @@ def compile_profile_factored(
     dec_res = compile_profile_factored(dec_vars, _dec_fn, max_leaf=max_leaf, atlas_tables=atlas_tables, _depth=_depth + 1)
     composed_body = subst_expr(dec_res["expr"]["body"], enc_map)
     composed_expr = {"kind": "expr", "body": composed_body}
+    circ_art = _expr_to_dag_circuit(composed_body, vars_list)
 
     neuron_ub = None
     if dec_res["atlas_min_neurons"] is not None and all(e["atlas_min_neurons"] is not None for e in encoders):
@@ -216,8 +436,8 @@ def compile_profile_factored(
     return {
         "vars": list(vars_list),
         "expr": composed_expr,
-        "circuit": None,
-        "circuit_cost": {"gates": expr_gate_count(composed_body)},
+        "circuit": circ_art,
+        "circuit_cost": circuit_cost(circ_art),
         "atlas_min_neurons": neuron_ub,
         "decomposed": True,
         "profile_rank": rank,
@@ -328,6 +548,145 @@ def compile_unified(spec: dict[str, Any]) -> dict[str, Any]:
         return {
             "kind": "lts",
             "compiled_outputs": compiled_outputs,
+            "csir": b,
+            "validation_errors": csir.validate(b),
+        }
+
+    if kind == "stochastic_lts":
+        states = list(spec["states"])
+        actions = list(spec["actions"])
+        transitions = spec["transitions"]  # (s, a) -> dict[(ns, ob), prob] or list[(ns, ob, prob)]
+        s_bits = max(1, math.ceil(math.log2(max(2, len(states)))))
+        a_bits = max(1, math.ceil(math.log2(max(2, len(actions)))))
+        s_vars = [f"s{i}" for i in range(s_bits)]
+        a_vars = [f"a{i}" for i in range(a_bits)]
+        step_vars = s_vars + a_vars
+        s_index = {s: i for i, s in enumerate(states)}
+
+        det_trans: dict[tuple[Any, Any], tuple[Any, int]] = {}
+        eps_bound = 0.0
+        for s in states:
+            for a in actions:
+                dist = transitions[(s, a)]
+                items = list(dist.items()) if isinstance(dist, dict) else [((ns, ob), p) for ns, ob, p in dist]
+                best_pair, best_p = max(items, key=lambda kv: kv[1])
+                det_trans[(s, a)] = (best_pair[0], int(bool(best_pair[1])))
+                eps_bound = max(eps_bound, max(0.0, 1.0 - float(best_p)))
+
+        nodes = [
+            csir.node(
+                "stochastic_lts_spec",
+                {"kind": "lts", "body": {"states": states, "actions": actions, "stochastic": True, "eps_bound": eps_bound}},
+                {"actions": actions},
+                resources={"eps_bound": eps_bound, "cost_model": "1-step-TV"},
+                provenance={"produced_by": "stochastic_lts_spec"},
+            )
+        ]
+        links = []
+        compiled_outputs = {}
+        for out_name, getter in (
+            [(f"next_s{b}", lambda ns, ob, bit=b: (s_index[ns] >> bit) & 1) for b in range(s_bits)]
+            + [("out", lambda ns, ob: int(bool(ob)))]
+        ):
+            def _make_sstep_fn(g=getter):
+                def _step(env: dict[str, int]) -> int:
+                    si = sum((env[s_vars[j]] << j) for j in range(s_bits))
+                    ai = sum((env[a_vars[j]] << j) for j in range(a_bits))
+                    if si >= len(states) or ai >= len(actions):
+                        return 0
+                    ns, ob = det_trans[(states[si], actions[ai])]
+                    return g(ns, ob)
+                return _step
+
+            comp = compile_profile_factored(step_vars, _make_sstep_fn())
+            compiled_outputs[out_name] = comp
+            nodes.append(
+                csir.node(
+                    out_name,
+                    comp["expr"],
+                    {"vars": step_vars},
+                    resources={"cost": comp["circuit_cost"], "atlas_neuron_ub": comp["atlas_min_neurons"],
+                               "eps_bound": eps_bound, "cost_model": "F0/compositional"},
+                    provenance={"produced_by": "ur_compiler.stochastic_lts_step", "parents": ["stochastic_lts_spec"],
+                                "eps_bound": eps_bound},
+                )
+            )
+            links.append(
+                csir.link(
+                    "stochastic_lts_spec", out_name, "distills",
+                    {"vars": step_vars, "target": out_name},
+                    certificate={"method": "argmax-determinization", "eps_bound": eps_bound},
+                    warrant={"basis": ["kernel-checked", "1-step-TV-bound"],
+                             "trusted_base": ["cerp/ur_compiler.py"],
+                             "conditions": [f"1-step TV error <= {eps_bound:.6g}"]},
+                )
+            )
+        b = csir.bundle(nodes, links)
+        return {
+            "kind": "stochastic_lts",
+            "eps_bound": eps_bound,
+            "compiled_outputs": compiled_outputs,
+            "csir": b,
+            "validation_errors": csir.validate(b),
+        }
+
+    if kind == "continuous":
+        # Quantized continuous function f: [0, 1]^d -> {0, 1} (or R -> bool via threshold)
+        dim = int(spec["dim"])
+        bits = int(spec.get("bits_per_coord", 3))
+        fn_cont = spec["fn"]  # Callable[[list[float]], int|bool|float]
+        threshold = float(spec.get("threshold", 0.5))
+        lipschitz = spec.get("lipschitz")
+        coord_eps = 2.0 ** (-bits)
+        eps_bound = float(lipschitz) * math.sqrt(dim) * coord_eps if lipschitz is not None else coord_eps
+
+        vars_list = [f"x{d}_b{b}" for d in range(dim) for b in range(bits)]
+        denom = float((1 << bits) - 1) if bits > 0 else 1.0
+
+        def _quantized_fn(env: dict[str, int]) -> int:
+            xs = []
+            for d in range(dim):
+                q = sum((int(env[f"x{d}_b{b}"]) << b) for b in range(bits))
+                xs.append(q / denom if denom > 0 else 0.0)
+            val = fn_cont(xs)
+            if isinstance(val, bool):
+                return int(val)
+            return 1 if float(val) >= threshold else 0
+
+        comp = compile_profile_factored(vars_list, _quantized_fn)
+        n_id = spec.get("name", "continuous_compiled")
+        c_id = f"{n_id}_circuit"
+        expr_node = csir.node(
+            n_id,
+            comp["expr"],
+            {"vars": vars_list},
+            resources={"cost": comp["circuit_cost"], "atlas_neuron_ub": comp["atlas_min_neurons"],
+                       "coord_eps": coord_eps, "eps_bound": eps_bound, "cost_model": "F0/quantized"},
+            provenance={"produced_by": "ur_compiler.continuous_quantized",
+                        "dim": dim, "bits_per_coord": bits, "eps_bound": eps_bound,
+                        "decomposed": comp["decomposed"], "profile_rank": comp["profile_rank"]},
+        )
+        circ_node = csir.node(
+            c_id,
+            comp["circuit"],
+            {"vars": vars_list},
+            resources={"cost": comp["circuit_cost"], "coord_eps": coord_eps, "eps_bound": eps_bound,
+                       "cost_model": "circuit/DAG"},
+            provenance={"produced_by": "ur_compiler.continuous_quantized", "parents": [n_id]},
+        )
+        link = csir.link(
+            n_id, c_id, "extensional",
+            {"vars": vars_list},
+            certificate={"method": "hash-consed-dag-translation"},
+            warrant={"basis": ["structural-sharing"], "trusted_base": ["cerp/ur_compiler.py"],
+                     "conditions": [f"quantization resolution <= {coord_eps:.6g}"]},
+        )
+        b = csir.bundle([expr_node, circ_node], [link])
+        return {
+            "kind": "continuous",
+            "eps_bound": eps_bound,
+            "coord_eps": coord_eps,
+            "compiled": comp,
             "csir": b,
             "validation_errors": csir.validate(b),
         }
