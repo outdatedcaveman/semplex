@@ -42,7 +42,7 @@ RELATIONS = {
     "trace": ({"lts"}, set()),
     "interventional": ({"causal-model", "world"}, set()),
     "adequate-to": ({"causal-model", "world"}, set()),
-    "distills": ({"causal-model", "expr", "circuit"}, set()),
+    "distills": ({"causal-model", "lts", "expr", "circuit"}, set()),
 }
 
 

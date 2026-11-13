@@ -363,4 +363,792 @@ def Expr.render : Expr → String
   | .xor a b => s!"[\"xor\", {a.render}, {b.render}]"
   | .ite c t e => s!"[\"ite\", {c.render}, {t.render}, {e.render}]"
 
+/-! ## Part C: Verified Tseitin encoder (P026) -/
+
+theorem cnfSat_append (σ : Nat → Bool) (F₁ F₂ : CNF) :
+    cnfSat σ (F₁ ++ F₂) = (cnfSat σ F₁ && cnfSat σ F₂) := by
+  induction F₁ with
+  | nil => simp [cnfSat]
+  | cons c F₁ ih => simp [cnfSat, ih, Bool.and_assoc]
+
+theorem wellFormed_append (F₁ F₂ : CNF) :
+    wellFormed (F₁ ++ F₂) = (wellFormed F₁ && wellFormed F₂) := by
+  induction F₁ with
+  | nil => simp [wellFormed]
+  | cons c F₁ ih => simp [wellFormed, ih, Bool.and_assoc]
+
+def gateNot (out a : Int) : CNF := [[out, a], [-out, -a]]
+def gateAnd (out a b : Int) : CNF := [[-out, a], [-out, b], [out, -a, -b]]
+def gateOr (out a b : Int) : CNF := [[out, -a], [out, -b], [-out, a, b]]
+def gateXor (out a b : Int) : CNF := [[-out, -a, -b], [-out, a, b], [out, -a, b], [out, a, -b]]
+def gateIte (out c t e : Int) : CNF := [[-c, -out, t], [-c, out, -t], [c, -out, e], [c, out, -e]]
+
+theorem gateNot_sound (σ : Nat → Bool) {out a : Int} (ho : out ≠ 0) (ha : a ≠ 0)
+    (h : cnfSat σ (gateNot out a) = true) : litTrue σ out = !(litTrue σ a) := by
+  simp only [gateNot, cnfSat, clauseSat, List.all_cons, List.all_nil, List.any_cons, List.any_nil,
+    Bool.or_false, Bool.and_true, Bool.and_eq_true, Bool.or_eq_true,
+    litTrue_neg σ out ho, litTrue_neg σ a ha] at h
+  cases h1 : litTrue σ out <;> cases h2 : litTrue σ a <;> simp_all
+
+theorem gateAnd_sound (σ : Nat → Bool) {out a b : Int} (ho : out ≠ 0) (ha : a ≠ 0) (hb : b ≠ 0)
+    (h : cnfSat σ (gateAnd out a b) = true) : litTrue σ out = (litTrue σ a && litTrue σ b) := by
+  simp only [gateAnd, cnfSat, clauseSat, List.all_cons, List.all_nil, List.any_cons, List.any_nil,
+    Bool.or_false, Bool.and_true, Bool.and_eq_true, Bool.or_eq_true,
+    litTrue_neg σ out ho, litTrue_neg σ a ha, litTrue_neg σ b hb] at h
+  cases h1 : litTrue σ out <;> cases h2 : litTrue σ a <;> cases h3 : litTrue σ b <;> simp_all
+
+theorem gateOr_sound (σ : Nat → Bool) {out a b : Int} (ho : out ≠ 0) (ha : a ≠ 0) (hb : b ≠ 0)
+    (h : cnfSat σ (gateOr out a b) = true) : litTrue σ out = (litTrue σ a || litTrue σ b) := by
+  simp only [gateOr, cnfSat, clauseSat, List.all_cons, List.all_nil, List.any_cons, List.any_nil,
+    Bool.or_false, Bool.and_true, Bool.and_eq_true, Bool.or_eq_true,
+    litTrue_neg σ out ho, litTrue_neg σ a ha, litTrue_neg σ b hb] at h
+  cases h1 : litTrue σ out <;> cases h2 : litTrue σ a <;> cases h3 : litTrue σ b <;> simp_all
+
+theorem gateXor_sound (σ : Nat → Bool) {out a b : Int} (ho : out ≠ 0) (ha : a ≠ 0) (hb : b ≠ 0)
+    (h : cnfSat σ (gateXor out a b) = true) : litTrue σ out = xor (litTrue σ a) (litTrue σ b) := by
+  simp only [gateXor, cnfSat, clauseSat, List.all_cons, List.all_nil, List.any_cons, List.any_nil,
+    Bool.or_false, Bool.and_true, Bool.and_eq_true, Bool.or_eq_true,
+    litTrue_neg σ out ho, litTrue_neg σ a ha, litTrue_neg σ b hb] at h
+  cases h1 : litTrue σ out <;> cases h2 : litTrue σ a <;> cases h3 : litTrue σ b <;> simp_all
+
+theorem gateIte_sound (σ : Nat → Bool) {out c t e : Int}
+    (ho : out ≠ 0) (hc : c ≠ 0) (ht : t ≠ 0) (he : e ≠ 0)
+    (h : cnfSat σ (gateIte out c t e) = true) :
+    litTrue σ out = (if litTrue σ c then litTrue σ t else litTrue σ e) := by
+  simp only [gateIte, cnfSat, clauseSat, List.all_cons, List.all_nil, List.any_cons, List.any_nil,
+    Bool.or_false, Bool.and_true, Bool.and_eq_true, Bool.or_eq_true,
+    litTrue_neg σ out ho, litTrue_neg σ c hc, litTrue_neg σ t ht, litTrue_neg σ e he] at h
+  cases h1 : litTrue σ out <;> cases h2 : litTrue σ c <;>
+    cases h3 : litTrue σ t <;> cases h4 : litTrue σ e <;> simp_all
+
+def tseitinEncode : Expr → Nat → Int × CNF × Nat
+  | .const true, nxt => ((nxt : Int), [[(nxt : Int)]], nxt + 1)
+  | .const false, nxt => ((nxt : Int), [[-(nxt : Int)]], nxt + 1)
+  | .var i, nxt => ((i : Int) + 1, [], nxt)
+  | .not a, nxt =>
+      let (oa, ca, n1) := tseitinEncode a nxt
+      let out : Int := (n1 : Int)
+      (out, ca ++ gateNot out oa, n1 + 1)
+  | .and a b, nxt =>
+      let (oa, ca, n1) := tseitinEncode a nxt
+      let (ob, cb, n2) := tseitinEncode b n1
+      let out : Int := (n2 : Int)
+      (out, ca ++ cb ++ gateAnd out oa ob, n2 + 1)
+  | .or a b, nxt =>
+      let (oa, ca, n1) := tseitinEncode a nxt
+      let (ob, cb, n2) := tseitinEncode b n1
+      let out : Int := (n2 : Int)
+      (out, ca ++ cb ++ gateOr out oa ob, n2 + 1)
+  | .xor a b, nxt =>
+      let (oa, ca, n1) := tseitinEncode a nxt
+      let (ob, cb, n2) := tseitinEncode b n1
+      let out : Int := (n2 : Int)
+      (out, ca ++ cb ++ gateXor out oa ob, n2 + 1)
+  | .ite c t e, nxt =>
+      let (oc, cc, n1) := tseitinEncode c nxt
+      let (ot, ct, n2) := tseitinEncode t n1
+      let (oe, ce, n3) := tseitinEncode e n2
+      let out : Int := (n3 : Int)
+      (out, cc ++ ct ++ ce ++ gateIte out oc ot oe, n3 + 1)
+
+theorem tseitinEncode_out_pos : ∀ (e : Expr) (nxt : Nat),
+    1 ≤ nxt → 0 < (tseitinEncode e nxt).1 ∧ nxt ≤ (tseitinEncode e nxt).2.2 := by
+  intro e
+  induction e with
+  | const b =>
+      intro nxt hnxt
+      cases b <;> simp only [tseitinEncode] <;> exact ⟨by omega, by omega⟩
+  | var i =>
+      intro nxt _
+      simp only [tseitinEncode]
+      exact ⟨by omega, Nat.le_refl nxt⟩
+  | not a iha =>
+      intro nxt hnxt
+      obtain ⟨_, hn1⟩ := iha nxt hnxt
+      simp only [tseitinEncode]
+      exact ⟨Int.ofNat_lt.mpr (Nat.lt_of_lt_of_le hnxt hn1), Nat.le_step hn1⟩
+  | and a b iha ihb =>
+      intro nxt hnxt
+      obtain ⟨_, hn1⟩ := iha nxt hnxt
+      have h1 : 1 ≤ (tseitinEncode a nxt).2.2 := Nat.le_trans hnxt hn1
+      obtain ⟨_, hn2⟩ := ihb _ h1
+      simp only [tseitinEncode]
+      exact ⟨Int.ofNat_lt.mpr (Nat.lt_of_lt_of_le h1 hn2), Nat.le_step (Nat.le_trans hn1 hn2)⟩
+  | or a b iha ihb =>
+      intro nxt hnxt
+      obtain ⟨_, hn1⟩ := iha nxt hnxt
+      have h1 : 1 ≤ (tseitinEncode a nxt).2.2 := Nat.le_trans hnxt hn1
+      obtain ⟨_, hn2⟩ := ihb _ h1
+      simp only [tseitinEncode]
+      exact ⟨Int.ofNat_lt.mpr (Nat.lt_of_lt_of_le h1 hn2), Nat.le_step (Nat.le_trans hn1 hn2)⟩
+  | xor a b iha ihb =>
+      intro nxt hnxt
+      obtain ⟨_, hn1⟩ := iha nxt hnxt
+      have h1 : 1 ≤ (tseitinEncode a nxt).2.2 := Nat.le_trans hnxt hn1
+      obtain ⟨_, hn2⟩ := ihb _ h1
+      simp only [tseitinEncode]
+      exact ⟨Int.ofNat_lt.mpr (Nat.lt_of_lt_of_le h1 hn2), Nat.le_step (Nat.le_trans hn1 hn2)⟩
+  | ite c t e ihc iht ihe =>
+      intro nxt hnxt
+      obtain ⟨_, hn1⟩ := ihc nxt hnxt
+      have h1 : 1 ≤ (tseitinEncode c nxt).2.2 := Nat.le_trans hnxt hn1
+      obtain ⟨_, hn2⟩ := iht _ h1
+      have h2 : 1 ≤ (tseitinEncode t (tseitinEncode c nxt).2.2).2.2 := Nat.le_trans h1 hn2
+      obtain ⟨_, hn3⟩ := ihe _ h2
+      simp only [tseitinEncode]
+      exact ⟨Int.ofNat_lt.mpr (Nat.lt_of_lt_of_le h2 hn3),
+        Nat.le_step (Nat.le_trans hn1 (Nat.le_trans hn2 hn3))⟩
+
+theorem litTrue_pos (σ : Nat → Bool) (i : Nat) : litTrue σ ((i : Int) + 1) = σ (i + 1) := by
+  have hgt : (0 : Int) < (i : Int) + 1 := by omega
+  have hnat : ((i : Int) + 1).natAbs = i + 1 := by omega
+  simp [litTrue, hgt, hnat]
+
+theorem tseitinEncode_sound (σ : Nat → Bool) : ∀ (e : Expr) (nxt : Nat),
+    1 ≤ nxt →
+    cnfSat σ (tseitinEncode e nxt).2.1 = true →
+    litTrue σ (tseitinEncode e nxt).1 = eval (fun i => σ (i + 1)) e := by
+  intro e
+  induction e with
+  | const b =>
+      intro nxt hnxt hsat
+      cases b
+      · simp [tseitinEncode, cnfSat, clauseSat, litTrue_neg σ (nxt : Int) (by omega)] at hsat ⊢
+        simpa [eval] using hsat
+      · simp [tseitinEncode, cnfSat, clauseSat] at hsat ⊢
+        simpa [eval] using hsat
+  | var i =>
+      intro nxt _ _
+      simp [tseitinEncode, eval, litTrue_pos]
+  | not a iha =>
+      intro nxt hnxt hsat
+      simp only [tseitinEncode] at hsat ⊢
+      rw [cnfSat_append, Bool.and_eq_true] at hsat
+      obtain ⟨ha_pos, hn1⟩ := tseitinEncode_out_pos a nxt hnxt
+      have ho : (((tseitinEncode a nxt).2.2 : Nat) : Int) ≠ 0 := by omega
+      have hga := gateNot_sound σ ho (by omega) hsat.2
+      rw [hga, iha nxt hnxt hsat.1, eval]
+  | and a b iha ihb =>
+      intro nxt hnxt hsat
+      simp only [tseitinEncode] at hsat ⊢
+      rw [cnfSat_append, cnfSat_append, Bool.and_eq_true, Bool.and_eq_true] at hsat
+      obtain ⟨⟨hca, hcb⟩, hgate⟩ := hsat
+      obtain ⟨ha_pos, hn1⟩ := tseitinEncode_out_pos a nxt hnxt
+      have hn1' : 1 ≤ (tseitinEncode a nxt).2.2 := Nat.le_trans hnxt hn1
+      obtain ⟨hb_pos, hn2⟩ := tseitinEncode_out_pos b _ hn1'
+      have ho : (((tseitinEncode b (tseitinEncode a nxt).2.2).2.2 : Nat) : Int) ≠ 0 :=
+        Int.ne_of_gt (Int.ofNat_lt.mpr (Nat.lt_of_lt_of_le hn1' hn2))
+      have hga := gateAnd_sound σ ho (Int.ne_of_gt ha_pos) (Int.ne_of_gt hb_pos) hgate
+      rw [hga, iha nxt hnxt hca, ihb _ hn1' hcb, eval]
+  | or a b iha ihb =>
+      intro nxt hnxt hsat
+      simp only [tseitinEncode] at hsat ⊢
+      rw [cnfSat_append, cnfSat_append, Bool.and_eq_true, Bool.and_eq_true] at hsat
+      obtain ⟨⟨hca, hcb⟩, hgate⟩ := hsat
+      obtain ⟨ha_pos, hn1⟩ := tseitinEncode_out_pos a nxt hnxt
+      have hn1' : 1 ≤ (tseitinEncode a nxt).2.2 := Nat.le_trans hnxt hn1
+      obtain ⟨hb_pos, hn2⟩ := tseitinEncode_out_pos b _ hn1'
+      have ho : (((tseitinEncode b (tseitinEncode a nxt).2.2).2.2 : Nat) : Int) ≠ 0 :=
+        Int.ne_of_gt (Int.ofNat_lt.mpr (Nat.lt_of_lt_of_le hn1' hn2))
+      have hga := gateOr_sound σ ho (Int.ne_of_gt ha_pos) (Int.ne_of_gt hb_pos) hgate
+      rw [hga, iha nxt hnxt hca, ihb _ hn1' hcb, eval]
+  | xor a b iha ihb =>
+      intro nxt hnxt hsat
+      simp only [tseitinEncode] at hsat ⊢
+      rw [cnfSat_append, cnfSat_append, Bool.and_eq_true, Bool.and_eq_true] at hsat
+      obtain ⟨⟨hca, hcb⟩, hgate⟩ := hsat
+      obtain ⟨ha_pos, hn1⟩ := tseitinEncode_out_pos a nxt hnxt
+      have hn1' : 1 ≤ (tseitinEncode a nxt).2.2 := Nat.le_trans hnxt hn1
+      obtain ⟨hb_pos, hn2⟩ := tseitinEncode_out_pos b _ hn1'
+      have ho : (((tseitinEncode b (tseitinEncode a nxt).2.2).2.2 : Nat) : Int) ≠ 0 :=
+        Int.ne_of_gt (Int.ofNat_lt.mpr (Nat.lt_of_lt_of_le hn1' hn2))
+      have hga := gateXor_sound σ ho (Int.ne_of_gt ha_pos) (Int.ne_of_gt hb_pos) hgate
+      rw [hga, iha nxt hnxt hca, ihb _ hn1' hcb, eval]
+  | ite c t e ihc iht ihe =>
+      intro nxt hnxt hsat
+      simp only [tseitinEncode] at hsat ⊢
+      rw [cnfSat_append, cnfSat_append, cnfSat_append,
+        Bool.and_eq_true, Bool.and_eq_true, Bool.and_eq_true] at hsat
+      obtain ⟨⟨⟨hcc, hct⟩, hce⟩, hgate⟩ := hsat
+      obtain ⟨hc_pos, hn1⟩ := tseitinEncode_out_pos c nxt hnxt
+      have hn1' : 1 ≤ (tseitinEncode c nxt).2.2 := Nat.le_trans hnxt hn1
+      obtain ⟨ht_pos, hn2⟩ := tseitinEncode_out_pos t _ hn1'
+      have hn2' : 1 ≤ (tseitinEncode t (tseitinEncode c nxt).2.2).2.2 := Nat.le_trans hn1' hn2
+      obtain ⟨he_pos, hn3⟩ := tseitinEncode_out_pos e _ hn2'
+      have ho : (((tseitinEncode e (tseitinEncode t (tseitinEncode c nxt).2.2).2.2).2.2 : Nat) : Int) ≠ 0 :=
+        Int.ne_of_gt (Int.ofNat_lt.mpr (Nat.lt_of_lt_of_le hn2' hn3))
+      have hga := gateIte_sound σ ho (Int.ne_of_gt hc_pos) (Int.ne_of_gt ht_pos) (Int.ne_of_gt he_pos) hgate
+      rw [hga, ihc nxt hnxt hcc, iht _ hn1' hct, ihe _ hn2' hce, eval]
+
+/-! ## Part D: Tseitin completeness and end-to-end miter soundness (Gap 2 / P026) -/
+
+def CNFBelow (k : Nat) (F : CNF) : Prop :=
+  ∀ c, c ∈ F → ∀ l, l ∈ c → 0 < l.natAbs ∧ l.natAbs < k
+
+theorem cnfBelow_mono {k₁ k₂ : Nat} {F : CNF} (hle : k₁ ≤ k₂) (h : CNFBelow k₁ F) :
+    CNFBelow k₂ F :=
+  fun c hc l hl => let ⟨h1, h2⟩ := h c hc l hl; ⟨h1, Nat.lt_of_lt_of_le h2 hle⟩
+
+theorem cnfBelow_append {k : Nat} {F₁ F₂ : CNF} :
+    CNFBelow k (F₁ ++ F₂) ↔ CNFBelow k F₁ ∧ CNFBelow k F₂ := by
+  constructor
+  · intro h
+    exact ⟨fun c hc l hl => h c (List.mem_append_left F₂ hc) l hl,
+           fun c hc l hl => h c (List.mem_append_right F₁ hc) l hl⟩
+  · intro ⟨h1, h2⟩ c hc l hl
+    cases List.mem_append.mp hc with
+    | inl h => exact h1 c h l hl
+    | inr h => exact h2 c h l hl
+
+theorem litTrue_upd_ne (σ : Nat → Bool) (w : Nat) (b : Bool) (l : Int)
+    (hne : l.natAbs ≠ w) : litTrue (upd σ w b) l = litTrue σ l := by
+  unfold litTrue upd
+  by_cases hpos : 0 < l
+  · simp [hpos, hne]
+  · simp [hpos, Int.natAbs_neg, hne]
+
+theorem cnfSat_congr_below (σ τ : Nat → Bool) (k : Nat)
+    (hagree : ∀ i, i < k → τ i = σ i) :
+    ∀ F, CNFBelow k F → cnfSat τ F = cnfSat σ F := by
+  intro F hF
+  induction F with
+  | nil => rfl
+  | cons c F ih =>
+      have hc : ∀ l, l ∈ c → litTrue τ l = litTrue σ l := by
+        intro l hl
+        obtain ⟨_, hlt⟩ := hF c (List.mem_cons_self c F) l hl
+        unfold litTrue
+        by_cases hpos : 0 < l
+        · simp [hpos, hagree l.natAbs hlt]
+        · simp [hpos, Int.natAbs_neg, hagree l.natAbs hlt]
+      have hcs : clauseSat τ c = clauseSat σ c := by
+        simp only [clauseSat]
+        clear hF ih
+        induction c with
+        | nil => rfl
+        | cons l ls ihc =>
+            simp only [List.any_cons]
+            rw [hc l (List.mem_cons_self l ls), ihc (fun l' hl' => hc l' (List.mem_cons_of_mem l hl'))]
+      simp only [cnfSat, List.all_cons] at ih ⊢
+      rw [hcs, ih (fun c' hc' l hl => hF c' (List.mem_cons_of_mem c hc') l hl)]
+
+theorem natAbs_pos_lt (x : Int) (k m : Nat) (hpos : 0 < x) (hlt : x.natAbs < k) (hkm : k ≤ m) :
+    0 < x.natAbs ∧ x.natAbs < m :=
+  ⟨by omega, Nat.lt_of_lt_of_le hlt hkm⟩
+
+theorem natAbs_neg_pos_lt (x : Int) (k m : Nat) (hpos : 0 < x) (hlt : x.natAbs < k) (hkm : k ≤ m) :
+    0 < (-x).natAbs ∧ (-x).natAbs < m := by
+  rw [Int.natAbs_neg]; exact natAbs_pos_lt x k m hpos hlt hkm
+
+theorem natAbs_nat_self_lt (n : Nat) (hn : 0 < n) :
+    0 < (n : Int).natAbs ∧ (n : Int).natAbs < n + 1 := by
+  simp [hn]
+
+theorem natAbs_neg_nat_self_lt (n : Nat) (hn : 0 < n) :
+    0 < (-(n : Int)).natAbs ∧ (-(n : Int)).natAbs < n + 1 := by
+  rw [Int.natAbs_neg]; simp [hn]
+
+theorem tseitinEncode_below : ∀ (e : Expr) (n nxt : Nat),
+    1 ≤ nxt → n + 1 ≤ nxt → Scoped n e = true →
+    (tseitinEncode e nxt).1.natAbs < (tseitinEncode e nxt).2.2 ∧
+      CNFBelow (tseitinEncode e nxt).2.2 (tseitinEncode e nxt).2.1 := by
+  intro e
+  induction e with
+  | const b =>
+      intro n nxt hnxt hn hs
+      cases b <;> simp only [tseitinEncode]
+      · refine ⟨by omega, fun c hc l hl => ?_⟩
+        simp at hc; subst hc; simp at hl; subst hl; exact natAbs_neg_nat_self_lt nxt hnxt
+      · refine ⟨by omega, fun c hc l hl => ?_⟩
+        simp at hc; subst hc; simp at hl; subst hl; exact natAbs_nat_self_lt nxt hnxt
+  | var i =>
+      intro n nxt hnxt hn hs
+      simp [Scoped] at hs
+      simp only [tseitinEncode]
+      exact ⟨by omega, fun c hc => by simp at hc⟩
+  | not a iha =>
+      intro n nxt hnxt hn hs
+      simp [Scoped] at hs
+      obtain ⟨ha_lt, hca⟩ := iha n nxt hnxt hn hs
+      obtain ⟨ha_pos, hn1⟩ := tseitinEncode_out_pos a nxt hnxt
+      have hn1_pos : 0 < (tseitinEncode a nxt).2.2 := Nat.lt_of_lt_of_le hnxt hn1
+      simp only [tseitinEncode]
+      refine ⟨by omega, cnfBelow_append.mpr ⟨cnfBelow_mono (Nat.le_succ _) hca, ?_⟩⟩
+      intro c hc l hl
+      simp [gateNot] at hc
+      rcases hc with rfl | rfl <;> simp at hl <;> rcases hl with rfl | rfl
+      · exact natAbs_nat_self_lt _ hn1_pos
+      · exact natAbs_pos_lt _ _ _ ha_pos ha_lt (Nat.le_succ _)
+      · exact natAbs_neg_nat_self_lt _ hn1_pos
+      · exact natAbs_neg_pos_lt _ _ _ ha_pos ha_lt (Nat.le_succ _)
+  | and a b iha ihb =>
+      intro n nxt hnxt hn hs
+      simp [Scoped] at hs
+      obtain ⟨ha_lt, hca⟩ := iha n nxt hnxt hn hs.1
+      obtain ⟨ha_pos, hn1⟩ := tseitinEncode_out_pos a nxt hnxt
+      have h1 : 1 ≤ (tseitinEncode a nxt).2.2 := Nat.le_trans hnxt hn1
+      have h1n : n + 1 ≤ (tseitinEncode a nxt).2.2 := Nat.le_trans hn hn1
+      obtain ⟨hb_lt, hcb⟩ := ihb n _ h1 h1n hs.2
+      obtain ⟨hb_pos, hn2⟩ := tseitinEncode_out_pos b _ h1
+      have hn2_pos : 0 < (tseitinEncode b (tseitinEncode a nxt).2.2).2.2 := Nat.lt_of_lt_of_le h1 hn2
+      have h12 : (tseitinEncode a nxt).2.2 ≤ (tseitinEncode b (tseitinEncode a nxt).2.2).2.2 + 1 :=
+        Nat.le_trans hn2 (Nat.le_succ _)
+      simp only [tseitinEncode]
+      refine ⟨by omega, cnfBelow_append.mpr ⟨cnfBelow_append.mpr ⟨cnfBelow_mono h12 hca, cnfBelow_mono (Nat.le_succ _) hcb⟩, ?_⟩⟩
+      intro c hc l hl
+      simp [gateAnd] at hc
+      rcases hc with rfl | rfl | rfl <;> simp at hl <;> rcases hl with rfl | rfl | rfl
+      · exact natAbs_neg_nat_self_lt _ hn2_pos
+      · exact natAbs_pos_lt _ _ _ ha_pos ha_lt h12
+      · exact natAbs_neg_nat_self_lt _ hn2_pos
+      · exact natAbs_pos_lt _ _ _ hb_pos hb_lt (Nat.le_succ _)
+      · exact natAbs_nat_self_lt _ hn2_pos
+      · exact natAbs_neg_pos_lt _ _ _ ha_pos ha_lt h12
+      · exact natAbs_neg_pos_lt _ _ _ hb_pos hb_lt (Nat.le_succ _)
+  | or a b iha ihb =>
+      intro n nxt hnxt hn hs
+      simp [Scoped] at hs
+      obtain ⟨ha_lt, hca⟩ := iha n nxt hnxt hn hs.1
+      obtain ⟨ha_pos, hn1⟩ := tseitinEncode_out_pos a nxt hnxt
+      have h1 : 1 ≤ (tseitinEncode a nxt).2.2 := Nat.le_trans hnxt hn1
+      have h1n : n + 1 ≤ (tseitinEncode a nxt).2.2 := Nat.le_trans hn hn1
+      obtain ⟨hb_lt, hcb⟩ := ihb n _ h1 h1n hs.2
+      obtain ⟨hb_pos, hn2⟩ := tseitinEncode_out_pos b _ h1
+      have hn2_pos : 0 < (tseitinEncode b (tseitinEncode a nxt).2.2).2.2 := Nat.lt_of_lt_of_le h1 hn2
+      have h12 : (tseitinEncode a nxt).2.2 ≤ (tseitinEncode b (tseitinEncode a nxt).2.2).2.2 + 1 :=
+        Nat.le_trans hn2 (Nat.le_succ _)
+      simp only [tseitinEncode]
+      refine ⟨by omega, cnfBelow_append.mpr ⟨cnfBelow_append.mpr ⟨cnfBelow_mono h12 hca, cnfBelow_mono (Nat.le_succ _) hcb⟩, ?_⟩⟩
+      intro c hc l hl
+      simp [gateOr] at hc
+      rcases hc with rfl | rfl | rfl <;> simp at hl <;> rcases hl with rfl | rfl | rfl
+      · exact natAbs_nat_self_lt _ hn2_pos
+      · exact natAbs_neg_pos_lt _ _ _ ha_pos ha_lt h12
+      · exact natAbs_nat_self_lt _ hn2_pos
+      · exact natAbs_neg_pos_lt _ _ _ hb_pos hb_lt (Nat.le_succ _)
+      · exact natAbs_neg_nat_self_lt _ hn2_pos
+      · exact natAbs_pos_lt _ _ _ ha_pos ha_lt h12
+      · exact natAbs_pos_lt _ _ _ hb_pos hb_lt (Nat.le_succ _)
+  | xor a b iha ihb =>
+      intro n nxt hnxt hn hs
+      simp [Scoped] at hs
+      obtain ⟨ha_lt, hca⟩ := iha n nxt hnxt hn hs.1
+      obtain ⟨ha_pos, hn1⟩ := tseitinEncode_out_pos a nxt hnxt
+      have h1 : 1 ≤ (tseitinEncode a nxt).2.2 := Nat.le_trans hnxt hn1
+      have h1n : n + 1 ≤ (tseitinEncode a nxt).2.2 := Nat.le_trans hn hn1
+      obtain ⟨hb_lt, hcb⟩ := ihb n _ h1 h1n hs.2
+      obtain ⟨hb_pos, hn2⟩ := tseitinEncode_out_pos b _ h1
+      have hn2_pos : 0 < (tseitinEncode b (tseitinEncode a nxt).2.2).2.2 := Nat.lt_of_lt_of_le h1 hn2
+      have h12 : (tseitinEncode a nxt).2.2 ≤ (tseitinEncode b (tseitinEncode a nxt).2.2).2.2 + 1 :=
+        Nat.le_trans hn2 (Nat.le_succ _)
+      simp only [tseitinEncode]
+      refine ⟨by omega, cnfBelow_append.mpr ⟨cnfBelow_append.mpr ⟨cnfBelow_mono h12 hca, cnfBelow_mono (Nat.le_succ _) hcb⟩, ?_⟩⟩
+      intro c hc l hl
+      simp [gateXor] at hc
+      rcases hc with rfl | rfl | rfl | rfl <;> simp at hl <;> rcases hl with rfl | rfl | rfl
+      · exact natAbs_neg_nat_self_lt _ hn2_pos
+      · exact natAbs_neg_pos_lt _ _ _ ha_pos ha_lt h12
+      · exact natAbs_neg_pos_lt _ _ _ hb_pos hb_lt (Nat.le_succ _)
+      · exact natAbs_neg_nat_self_lt _ hn2_pos
+      · exact natAbs_pos_lt _ _ _ ha_pos ha_lt h12
+      · exact natAbs_pos_lt _ _ _ hb_pos hb_lt (Nat.le_succ _)
+      · exact natAbs_nat_self_lt _ hn2_pos
+      · exact natAbs_neg_pos_lt _ _ _ ha_pos ha_lt h12
+      · exact natAbs_pos_lt _ _ _ hb_pos hb_lt (Nat.le_succ _)
+      · exact natAbs_nat_self_lt _ hn2_pos
+      · exact natAbs_pos_lt _ _ _ ha_pos ha_lt h12
+      · exact natAbs_neg_pos_lt _ _ _ hb_pos hb_lt (Nat.le_succ _)
+  | ite c t e ihc iht ihe =>
+      intro n nxt hnxt hn hs
+      simp [Scoped] at hs
+      obtain ⟨hc_lt, hcc⟩ := ihc n nxt hnxt hn hs.1.1
+      obtain ⟨hc_pos, hn1⟩ := tseitinEncode_out_pos c nxt hnxt
+      have h1 : 1 ≤ (tseitinEncode c nxt).2.2 := Nat.le_trans hnxt hn1
+      have h1n : n + 1 ≤ (tseitinEncode c nxt).2.2 := Nat.le_trans hn hn1
+      obtain ⟨ht_lt, hct⟩ := iht n _ h1 h1n hs.1.2
+      obtain ⟨ht_pos, hn2⟩ := tseitinEncode_out_pos t _ h1
+      have h2 : 1 ≤ (tseitinEncode t (tseitinEncode c nxt).2.2).2.2 := Nat.le_trans h1 hn2
+      have h2n : n + 1 ≤ (tseitinEncode t (tseitinEncode c nxt).2.2).2.2 := Nat.le_trans h1n hn2
+      obtain ⟨he_lt, hce⟩ := ihe n _ h2 h2n hs.2
+      obtain ⟨he_pos, hn3⟩ := tseitinEncode_out_pos e _ h2
+      have hn3_pos : 0 < (tseitinEncode e (tseitinEncode t (tseitinEncode c nxt).2.2).2.2).2.2 :=
+        Nat.lt_of_lt_of_le h2 hn3
+      have h23 : (tseitinEncode t (tseitinEncode c nxt).2.2).2.2 ≤
+          (tseitinEncode e (tseitinEncode t (tseitinEncode c nxt).2.2).2.2).2.2 + 1 :=
+        Nat.le_trans hn3 (Nat.le_succ _)
+      have h13 : (tseitinEncode c nxt).2.2 ≤
+          (tseitinEncode e (tseitinEncode t (tseitinEncode c nxt).2.2).2.2).2.2 + 1 :=
+        Nat.le_trans hn2 h23
+      simp only [tseitinEncode]
+      refine ⟨by omega, cnfBelow_append.mpr ⟨cnfBelow_append.mpr ⟨cnfBelow_append.mpr
+        ⟨cnfBelow_mono h13 hcc, cnfBelow_mono h23 hct⟩, cnfBelow_mono (Nat.le_succ _) hce⟩, ?_⟩⟩
+      intro cl hcl l hl
+      simp [gateIte] at hcl
+      rcases hcl with rfl | rfl | rfl | rfl <;> simp at hl <;> rcases hl with rfl | rfl | rfl
+      · exact natAbs_neg_pos_lt _ _ _ hc_pos hc_lt h13
+      · exact natAbs_neg_nat_self_lt _ hn3_pos
+      · exact natAbs_pos_lt _ _ _ ht_pos ht_lt h23
+      · exact natAbs_neg_pos_lt _ _ _ hc_pos hc_lt h13
+      · exact natAbs_nat_self_lt _ hn3_pos
+      · exact natAbs_neg_pos_lt _ _ _ ht_pos ht_lt h23
+      · exact natAbs_pos_lt _ _ _ hc_pos hc_lt h13
+      · exact natAbs_neg_nat_self_lt _ hn3_pos
+      · exact natAbs_pos_lt _ _ _ he_pos he_lt (Nat.le_succ _)
+      · exact natAbs_pos_lt _ _ _ hc_pos hc_lt h13
+      · exact natAbs_nat_self_lt _ hn3_pos
+      · exact natAbs_neg_pos_lt _ _ _ he_pos he_lt (Nat.le_succ _)
+
+theorem tseitinEncode_complete : ∀ (e : Expr) (n nxt : Nat) (σ : Nat → Bool),
+    1 ≤ nxt → n + 1 ≤ nxt → Scoped n e = true →
+    ∃ τ, (∀ i, i < nxt → τ i = σ i) ∧
+      cnfSat τ (tseitinEncode e nxt).2.1 = true ∧
+      litTrue τ (tseitinEncode e nxt).1 = eval (fun i => σ (i + 1)) e := by
+  intro e
+  induction e with
+  | const b =>
+      intro n nxt σ hnxt hn _
+      refine ⟨upd σ nxt b, fun i hi => by simp [upd, Nat.ne_of_lt hi], ?_, ?_⟩
+      · cases b
+        · simp [tseitinEncode, cnfSat, clauseSat, litTrue_neg _ (nxt : Int) (by omega), litTrue, upd, Int.toNat]
+          omega
+        · simp [tseitinEncode, cnfSat, clauseSat, litTrue, upd]
+          omega
+      · cases b <;> simp [tseitinEncode, litTrue, upd, eval] <;> omega
+  | var i =>
+      intro n nxt σ hnxt hn hs
+      simp [Scoped] at hs
+      exact ⟨σ, fun _ _ => rfl, rfl, by simp [tseitinEncode, eval, litTrue_pos]⟩
+  | not a iha =>
+      intro n nxt σ hnxt hn hs
+      simp [Scoped] at hs
+      obtain ⟨τ₁, hagree₁, hsat₁, hval₁⟩ := iha n nxt σ hnxt hn hs
+      obtain ⟨ha_lt, hca⟩ := tseitinEncode_below a n nxt hnxt hn hs
+      obtain ⟨ha_pos, hn1⟩ := tseitinEncode_out_pos a nxt hnxt
+      let n₁ := (tseitinEncode a nxt).2.2
+      let val := !(eval (fun i => σ (i + 1)) a)
+      let τ := upd τ₁ n₁ val
+      refine ⟨τ, fun i hi => ?_, ?_, ?_⟩
+      · have hne : i ≠ n₁ := by omega
+        simp [τ, upd, hne, hagree₁ i hi]
+      · simp only [tseitinEncode]
+        rw [cnfSat_append, Bool.and_eq_true]
+        have hsat_ca : cnfSat τ (tseitinEncode a nxt).2.1 = true := by
+          rw [cnfSat_congr_below τ₁ τ n₁ (fun i hi => by simp [τ, upd, Nat.ne_of_lt hi]) _ hca]
+          exact hsat₁
+        have hoa : litTrue τ (tseitinEncode a nxt).1 = eval (fun i => σ (i + 1)) a := by
+          rw [litTrue_upd_ne τ₁ n₁ val _ (by omega), hval₁]
+        have hn1_lit : litTrue τ (n₁ : Int) = val := by
+          have hpos : (0 : Int) < (n₁ : Int) := by omega
+          simp [litTrue, hpos, τ, upd]
+        refine ⟨hsat_ca, ?_⟩
+        simp [gateNot, cnfSat, clauseSat, litTrue_neg τ (n₁ : Int) (by omega),
+          litTrue_neg τ (tseitinEncode a nxt).1 (Int.ne_of_gt ha_pos), hoa, hn1_lit, val]
+      · have hpos : (0 : Int) < (n₁ : Int) := by omega
+        simp [tseitinEncode, litTrue, hpos, τ, upd, eval, val]
+  | and a b iha ihb =>
+      intro n nxt σ hnxt hn hs
+      simp [Scoped] at hs
+      obtain ⟨τ₁, hagree₁, hsat₁, hval₁⟩ := iha n nxt σ hnxt hn hs.1
+      obtain ⟨ha_lt, hca⟩ := tseitinEncode_below a n nxt hnxt hn hs.1
+      obtain ⟨ha_pos, hn1⟩ := tseitinEncode_out_pos a nxt hnxt
+      let n₁ := (tseitinEncode a nxt).2.2
+      have h1 : 1 ≤ n₁ := Nat.le_trans hnxt hn1
+      have h1n : n + 1 ≤ n₁ := Nat.le_trans hn hn1
+      obtain ⟨τ₂, hagree₂, hsat₂, hval₂⟩ := ihb n n₁ τ₁ h1 h1n hs.2
+      obtain ⟨hb_lt, hcb⟩ := tseitinEncode_below b n n₁ h1 h1n hs.2
+      obtain ⟨hb_pos, hn2⟩ := tseitinEncode_out_pos b n₁ h1
+      let n₂ := (tseitinEncode b n₁).2.2
+      let va := eval (fun i => σ (i + 1)) a
+      let vb := eval (fun i => σ (i + 1)) b
+      let val := va && vb
+      let τ := upd τ₂ n₂ val
+      have hvb : eval (fun i => τ₁ (i + 1)) b = vb :=
+        eval_congr n (fun i => τ₁ (i + 1)) (fun i => σ (i + 1))
+          (fun i hi => hagree₁ (i + 1) (by omega)) b hs.2
+      refine ⟨τ, fun i hi => ?_, ?_, ?_⟩
+      · have hne : i ≠ n₂ := by omega
+        have hi1 : i < n₁ := by omega
+        simp [τ, upd, hne, hagree₂ i hi1, hagree₁ i hi]
+      · simp only [tseitinEncode]
+        rw [cnfSat_append, cnfSat_append, Bool.and_eq_true, Bool.and_eq_true]
+        have hsat_ca : cnfSat τ (tseitinEncode a nxt).2.1 = true := by
+          rw [cnfSat_congr_below τ₂ τ n₁ (fun i hi => by simp [τ, upd, Nat.ne_of_lt (Nat.lt_of_lt_of_le hi hn2)]) _ hca]
+          rw [cnfSat_congr_below τ₁ τ₂ n₁ hagree₂ _ hca]
+          exact hsat₁
+        have hsat_cb : cnfSat τ (tseitinEncode b n₁).2.1 = true := by
+          rw [cnfSat_congr_below τ₂ τ n₂ (fun i hi => by simp [τ, upd, Nat.ne_of_lt hi]) _ hcb]
+          exact hsat₂
+        have hoa : litTrue τ (tseitinEncode a nxt).1 = va := by
+          rw [litTrue_upd_ne τ₂ n₂ val _ (by omega)]
+          have : litTrue τ₂ (tseitinEncode a nxt).1 = litTrue τ₁ (tseitinEncode a nxt).1 := by
+            have := cnfSat_congr_below τ₁ τ₂ n₁ hagree₂ [[(tseitinEncode a nxt).1]]
+              (fun c hc l hl => by simp at hc; subst hc; simp at hl; subst hl; exact ⟨by omega, ha_lt⟩)
+            simp [cnfSat, clauseSat] at this
+            exact this
+          rw [this, hval₁]
+        have hob : litTrue τ (tseitinEncode b n₁).1 = vb := by
+          rw [litTrue_upd_ne τ₂ n₂ val _ (by omega), hval₂, hvb]
+        have hn2_lit : litTrue τ (n₂ : Int) = val := by
+          have hpos : (0 : Int) < (n₂ : Int) := by omega
+          simp [litTrue, hpos, τ, upd]
+        refine ⟨⟨hsat_ca, hsat_cb⟩, ?_⟩
+        simp [gateAnd, cnfSat, clauseSat, litTrue_neg τ (n₂ : Int) (by omega),
+          litTrue_neg τ (tseitinEncode a nxt).1 (Int.ne_of_gt ha_pos),
+          litTrue_neg τ (tseitinEncode b n₁).1 (Int.ne_of_gt hb_pos), hoa, hob, hn2_lit, val]
+        cases va <;> cases vb <;> simp
+      · have hpos : (0 : Int) < (n₂ : Int) := by omega
+        simp [tseitinEncode, litTrue, hpos, τ, upd, eval, val, va, vb]
+  | or a b iha ihb =>
+      intro n nxt σ hnxt hn hs
+      simp [Scoped] at hs
+      obtain ⟨τ₁, hagree₁, hsat₁, hval₁⟩ := iha n nxt σ hnxt hn hs.1
+      obtain ⟨ha_lt, hca⟩ := tseitinEncode_below a n nxt hnxt hn hs.1
+      obtain ⟨ha_pos, hn1⟩ := tseitinEncode_out_pos a nxt hnxt
+      let n₁ := (tseitinEncode a nxt).2.2
+      have h1 : 1 ≤ n₁ := Nat.le_trans hnxt hn1
+      have h1n : n + 1 ≤ n₁ := Nat.le_trans hn hn1
+      obtain ⟨τ₂, hagree₂, hsat₂, hval₂⟩ := ihb n n₁ τ₁ h1 h1n hs.2
+      obtain ⟨hb_lt, hcb⟩ := tseitinEncode_below b n n₁ h1 h1n hs.2
+      obtain ⟨hb_pos, hn2⟩ := tseitinEncode_out_pos b n₁ h1
+      let n₂ := (tseitinEncode b n₁).2.2
+      let va := eval (fun i => σ (i + 1)) a
+      let vb := eval (fun i => σ (i + 1)) b
+      let val := va || vb
+      let τ := upd τ₂ n₂ val
+      have hvb : eval (fun i => τ₁ (i + 1)) b = vb :=
+        eval_congr n (fun i => τ₁ (i + 1)) (fun i => σ (i + 1))
+          (fun i hi => hagree₁ (i + 1) (by omega)) b hs.2
+      refine ⟨τ, fun i hi => ?_, ?_, ?_⟩
+      · have hne : i ≠ n₂ := by omega
+        have hi1 : i < n₁ := by omega
+        simp [τ, upd, hne, hagree₂ i hi1, hagree₁ i hi]
+      · simp only [tseitinEncode]
+        rw [cnfSat_append, cnfSat_append, Bool.and_eq_true, Bool.and_eq_true]
+        have hsat_ca : cnfSat τ (tseitinEncode a nxt).2.1 = true := by
+          rw [cnfSat_congr_below τ₂ τ n₁ (fun i hi => by simp [τ, upd, Nat.ne_of_lt (Nat.lt_of_lt_of_le hi hn2)]) _ hca]
+          rw [cnfSat_congr_below τ₁ τ₂ n₁ hagree₂ _ hca]
+          exact hsat₁
+        have hsat_cb : cnfSat τ (tseitinEncode b n₁).2.1 = true := by
+          rw [cnfSat_congr_below τ₂ τ n₂ (fun i hi => by simp [τ, upd, Nat.ne_of_lt hi]) _ hcb]
+          exact hsat₂
+        have hoa : litTrue τ (tseitinEncode a nxt).1 = va := by
+          rw [litTrue_upd_ne τ₂ n₂ val _ (by omega)]
+          have : litTrue τ₂ (tseitinEncode a nxt).1 = litTrue τ₁ (tseitinEncode a nxt).1 := by
+            have := cnfSat_congr_below τ₁ τ₂ n₁ hagree₂ [[(tseitinEncode a nxt).1]]
+              (fun c hc l hl => by simp at hc; subst hc; simp at hl; subst hl; exact ⟨by omega, ha_lt⟩)
+            simp [cnfSat, clauseSat] at this
+            exact this
+          rw [this, hval₁]
+        have hob : litTrue τ (tseitinEncode b n₁).1 = vb := by
+          rw [litTrue_upd_ne τ₂ n₂ val _ (by omega), hval₂, hvb]
+        have hn2_lit : litTrue τ (n₂ : Int) = val := by
+          have hpos : (0 : Int) < (n₂ : Int) := by omega
+          simp [litTrue, hpos, τ, upd]
+        refine ⟨⟨hsat_ca, hsat_cb⟩, ?_⟩
+        simp [gateOr, cnfSat, clauseSat, litTrue_neg τ (n₂ : Int) (by omega),
+          litTrue_neg τ (tseitinEncode a nxt).1 (Int.ne_of_gt ha_pos),
+          litTrue_neg τ (tseitinEncode b n₁).1 (Int.ne_of_gt hb_pos), hoa, hob, hn2_lit, val]
+        cases va <;> cases vb <;> simp
+      · have hpos : (0 : Int) < (n₂ : Int) := by omega
+        simp [tseitinEncode, litTrue, hpos, τ, upd, eval, val, va, vb]
+  | xor a b iha ihb =>
+      intro n nxt σ hnxt hn hs
+      simp [Scoped] at hs
+      obtain ⟨τ₁, hagree₁, hsat₁, hval₁⟩ := iha n nxt σ hnxt hn hs.1
+      obtain ⟨ha_lt, hca⟩ := tseitinEncode_below a n nxt hnxt hn hs.1
+      obtain ⟨ha_pos, hn1⟩ := tseitinEncode_out_pos a nxt hnxt
+      let n₁ := (tseitinEncode a nxt).2.2
+      have h1 : 1 ≤ n₁ := Nat.le_trans hnxt hn1
+      have h1n : n + 1 ≤ n₁ := Nat.le_trans hn hn1
+      obtain ⟨τ₂, hagree₂, hsat₂, hval₂⟩ := ihb n n₁ τ₁ h1 h1n hs.2
+      obtain ⟨hb_lt, hcb⟩ := tseitinEncode_below b n n₁ h1 h1n hs.2
+      obtain ⟨hb_pos, hn2⟩ := tseitinEncode_out_pos b n₁ h1
+      let n₂ := (tseitinEncode b n₁).2.2
+      let va := eval (fun i => σ (i + 1)) a
+      let vb := eval (fun i => σ (i + 1)) b
+      let val := xor va vb
+      let τ := upd τ₂ n₂ val
+      have hvb : eval (fun i => τ₁ (i + 1)) b = vb :=
+        eval_congr n (fun i => τ₁ (i + 1)) (fun i => σ (i + 1))
+          (fun i hi => hagree₁ (i + 1) (by omega)) b hs.2
+      refine ⟨τ, fun i hi => ?_, ?_, ?_⟩
+      · have hne : i ≠ n₂ := by omega
+        have hi1 : i < n₁ := by omega
+        simp [τ, upd, hne, hagree₂ i hi1, hagree₁ i hi]
+      · simp only [tseitinEncode]
+        rw [cnfSat_append, cnfSat_append, Bool.and_eq_true, Bool.and_eq_true]
+        have hsat_ca : cnfSat τ (tseitinEncode a nxt).2.1 = true := by
+          rw [cnfSat_congr_below τ₂ τ n₁ (fun i hi => by simp [τ, upd, Nat.ne_of_lt (Nat.lt_of_lt_of_le hi hn2)]) _ hca]
+          rw [cnfSat_congr_below τ₁ τ₂ n₁ hagree₂ _ hca]
+          exact hsat₁
+        have hsat_cb : cnfSat τ (tseitinEncode b n₁).2.1 = true := by
+          rw [cnfSat_congr_below τ₂ τ n₂ (fun i hi => by simp [τ, upd, Nat.ne_of_lt hi]) _ hcb]
+          exact hsat₂
+        have hoa : litTrue τ (tseitinEncode a nxt).1 = va := by
+          rw [litTrue_upd_ne τ₂ n₂ val _ (by omega)]
+          have : litTrue τ₂ (tseitinEncode a nxt).1 = litTrue τ₁ (tseitinEncode a nxt).1 := by
+            have := cnfSat_congr_below τ₁ τ₂ n₁ hagree₂ [[(tseitinEncode a nxt).1]]
+              (fun c hc l hl => by simp at hc; subst hc; simp at hl; subst hl; exact ⟨ha_pos, ha_lt⟩)
+            simp [cnfSat, clauseSat] at this
+            exact this
+          rw [this, hval₁]
+        have hob : litTrue τ (tseitinEncode b n₁).1 = vb := by
+          rw [litTrue_upd_ne τ₂ n₂ val _ (by omega), hval₂, hvb]
+        have hn2_lit : litTrue τ (n₂ : Int) = val := by
+          have hpos : (0 : Int) < (n₂ : Int) := by omega
+          simp [litTrue, hpos, τ, upd]
+          have : (n₂ : Int).toNat = n₂ := by omega
+          simp [this]
+        refine ⟨⟨hsat_ca, hsat_cb⟩, ?_⟩
+        simp [gateXor, cnfSat, clauseSat, litTrue_neg τ (n₂ : Int) (by omega),
+          litTrue_neg τ (tseitinEncode a nxt).1 (Int.ne_of_gt ha_pos),
+          litTrue_neg τ (tseitinEncode b n₁).1 (Int.ne_of_gt hb_pos), hoa, hob, hn2_lit, val]
+        cases va <;> cases vb <;> simp
+      · have hpos : (0 : Int) < (n₂ : Int) := by omega
+        simp [tseitinEncode, litTrue, hpos, τ, upd, eval, val, va, vb]
+  | ite c t e ihc iht ihe =>
+      intro n nxt σ hnxt hn hs
+      simp [Scoped] at hs
+      obtain ⟨τ₁, hagree₁, hsat₁, hval₁⟩ := ihc n nxt σ hnxt hn hs.1.1
+      obtain ⟨hc_lt, hcc⟩ := tseitinEncode_below c n nxt hnxt hn hs.1.1
+      obtain ⟨hc_pos, hn1⟩ := tseitinEncode_out_pos c nxt hnxt
+      let n₁ := (tseitinEncode c nxt).2.2
+      have h1 : 1 ≤ n₁ := Nat.le_trans hnxt hn1
+      have h1n : n + 1 ≤ n₁ := Nat.le_trans hn hn1
+      obtain ⟨τ₂, hagree₂, hsat₂, hval₂⟩ := iht n n₁ τ₁ h1 h1n hs.1.2
+      obtain ⟨ht_lt, hct⟩ := tseitinEncode_below t n n₁ h1 h1n hs.1.2
+      obtain ⟨ht_pos, hn2⟩ := tseitinEncode_out_pos t n₁ h1
+      let n₂ := (tseitinEncode t n₁).2.2
+      have h2 : 1 ≤ n₂ := Nat.le_trans h1 hn2
+      have h2n : n + 1 ≤ n₂ := Nat.le_trans h1n hn2
+      obtain ⟨τ₃, hagree₃, hsat₃, hval₃⟩ := ihe n n₂ τ₂ h2 h2n hs.2
+      obtain ⟨he_lt, hce⟩ := tseitinEncode_below e n n₂ h2 h2n hs.2
+      obtain ⟨he_pos, hn3⟩ := tseitinEncode_out_pos e n₂ h2
+      let n₃ := (tseitinEncode e n₂).2.2
+      let vc := eval (fun i => σ (i + 1)) c
+      let vt := eval (fun i => σ (i + 1)) t
+      let ve := eval (fun i => σ (i + 1)) e
+      let val := if vc then vt else ve
+      let τ := upd τ₃ n₃ val
+      have hvt : eval (fun i => τ₁ (i + 1)) t = vt :=
+        eval_congr n (fun i => τ₁ (i + 1)) (fun i => σ (i + 1))
+          (fun i hi => hagree₁ (i + 1) (by omega)) t hs.1.2
+      have hve : eval (fun i => τ₂ (i + 1)) e = ve :=
+        eval_congr n (fun i => τ₂ (i + 1)) (fun i => σ (i + 1))
+          (fun i hi => by dsimp only; rw [hagree₂ (i + 1) (by omega), hagree₁ (i + 1) (by omega)]) e hs.2
+      refine ⟨τ, fun i hi => ?_, ?_, ?_⟩
+      · have hne : i ≠ n₃ := by omega
+        have hi2 : i < n₂ := by omega
+        have hi1 : i < n₁ := by omega
+        simp [τ, upd, hne, hagree₃ i hi2, hagree₂ i hi1, hagree₁ i hi]
+      · simp only [tseitinEncode]
+        rw [cnfSat_append, cnfSat_append, cnfSat_append,
+          Bool.and_eq_true, Bool.and_eq_true, Bool.and_eq_true]
+        have hsat_cc : cnfSat τ (tseitinEncode c nxt).2.1 = true := by
+          rw [cnfSat_congr_below τ₃ τ n₁ (fun i hi => by simp [τ, upd, Nat.ne_of_lt (Nat.lt_of_lt_of_le hi (Nat.le_trans hn2 hn3))]) _ hcc]
+          rw [cnfSat_congr_below τ₂ τ₃ n₁ (fun i hi => hagree₃ i (Nat.lt_of_lt_of_le hi hn2)) _ hcc]
+          rw [cnfSat_congr_below τ₁ τ₂ n₁ hagree₂ _ hcc]
+          exact hsat₁
+        have hsat_ct : cnfSat τ (tseitinEncode t n₁).2.1 = true := by
+          rw [cnfSat_congr_below τ₃ τ n₂ (fun i hi => by simp [τ, upd, Nat.ne_of_lt (Nat.lt_of_lt_of_le hi hn3)]) _ hct]
+          rw [cnfSat_congr_below τ₂ τ₃ n₂ hagree₃ _ hct]
+          exact hsat₂
+        have hsat_ce : cnfSat τ (tseitinEncode e n₂).2.1 = true := by
+          rw [cnfSat_congr_below τ₃ τ n₃ (fun i hi => by simp [τ, upd, Nat.ne_of_lt hi]) _ hce]
+          exact hsat₃
+        have hoc : litTrue τ (tseitinEncode c nxt).1 = vc := by
+          rw [litTrue_upd_ne τ₃ n₃ val _ (by omega)]
+          have h32 : litTrue τ₃ (tseitinEncode c nxt).1 = litTrue τ₂ (tseitinEncode c nxt).1 := by
+            have := cnfSat_congr_below τ₂ τ₃ n₁ (fun i hi => hagree₃ i (Nat.lt_of_lt_of_le hi hn2)) [[(tseitinEncode c nxt).1]]
+              (fun cl hcl l hl => by simp at hcl; subst hcl; simp at hl; subst hl; exact ⟨by omega, hc_lt⟩)
+            simp [cnfSat, clauseSat] at this; exact this
+          have h21 : litTrue τ₂ (tseitinEncode c nxt).1 = litTrue τ₁ (tseitinEncode c nxt).1 := by
+            have := cnfSat_congr_below τ₁ τ₂ n₁ hagree₂ [[(tseitinEncode c nxt).1]]
+              (fun cl hcl l hl => by simp at hcl; subst hcl; simp at hl; subst hl; exact ⟨by omega, hc_lt⟩)
+            simp [cnfSat, clauseSat] at this; exact this
+          rw [h32, h21, hval₁]
+        have hot : litTrue τ (tseitinEncode t n₁).1 = vt := by
+          rw [litTrue_upd_ne τ₃ n₃ val _ (by omega)]
+          have h32 : litTrue τ₃ (tseitinEncode t n₁).1 = litTrue τ₂ (tseitinEncode t n₁).1 := by
+            have := cnfSat_congr_below τ₂ τ₃ n₂ hagree₃ [[(tseitinEncode t n₁).1]]
+              (fun cl hcl l hl => by simp at hcl; subst hcl; simp at hl; subst hl; exact ⟨by omega, ht_lt⟩)
+            simp [cnfSat, clauseSat] at this; exact this
+          rw [h32, hval₂, hvt]
+        have hoe : litTrue τ (tseitinEncode e n₂).1 = ve := by
+          rw [litTrue_upd_ne τ₃ n₃ val _ (by omega), hval₃, hve]
+        have hn3_lit : litTrue τ (n₃ : Int) = val := by
+          have hpos : (0 : Int) < (n₃ : Int) := by omega
+          simp [litTrue, hpos, τ, upd]
+        refine ⟨⟨⟨hsat_cc, hsat_ct⟩, hsat_ce⟩, ?_⟩
+        simp [gateIte, cnfSat, clauseSat, litTrue_neg τ (n₃ : Int) (by omega),
+          litTrue_neg τ (tseitinEncode c nxt).1 (Int.ne_of_gt hc_pos),
+          litTrue_neg τ (tseitinEncode t n₁).1 (Int.ne_of_gt ht_pos),
+          litTrue_neg τ (tseitinEncode e n₂).1 (Int.ne_of_gt he_pos),
+          hoc, hot, hoe, hn3_lit, val]
+        cases vc <;> cases vt <;> cases ve <;> simp
+      · have hpos : (0 : Int) < (n₃ : Int) := by omega
+        simp [tseitinEncode, litTrue, hpos, τ, upd, eval, val, vc, vt, ve]
+
+def tseitinMiter (n : Nat) (e₁ e₂ : Expr) : CNF :=
+  let (o₁, c₁, n₁) := tseitinEncode e₁ (n + 1)
+  let (o₂, c₂, n₂) := tseitinEncode e₂ n₁
+  c₁ ++ c₂ ++ gateXor (n₂ : Int) o₁ o₂ ++ [[(n₂ : Int)]]
+
+theorem tseitinMiter_unsat_implies_equiv (n : Nat) (e₁ e₂ : Expr) (Ls : List Clause)
+    (hs₁ : Scoped n e₁ = true) (hs₂ : Scoped n e₂ = true)
+    (hw : wellFormed (tseitinMiter n e₁ e₂) = true)
+    (hchk : checkAll (tseitinMiter n e₁ e₂) Ls = true) :
+    ∀ σ, eval σ e₁ = eval σ e₂ := by
+  intro σ
+  by_cases hne : eval σ e₁ = eval σ e₂
+  · exact hne
+  · exfalso
+    let σ₀ : Nat → Bool := fun i => match i with | 0 => false | k + 1 => σ k
+    have h1 : 1 ≤ n + 1 := by omega
+    obtain ⟨τ₁, hagree₁, hsat₁, hval₁⟩ := tseitinEncode_complete e₁ n (n + 1) σ₀ h1 (Nat.le_refl _) hs₁
+    obtain ⟨ho₁_lt, hc₁⟩ := tseitinEncode_below e₁ n (n + 1) h1 (Nat.le_refl _) hs₁
+    obtain ⟨ho₁_pos, hn₁⟩ := tseitinEncode_out_pos e₁ (n + 1) h1
+    let n₁ := (tseitinEncode e₁ (n + 1)).2.2
+    have hn₁_ge : 1 ≤ n₁ := Nat.le_trans h1 hn₁
+    have hn₁_n : n + 1 ≤ n₁ := hn₁
+    obtain ⟨τ₂, hagree₂, hsat₂, hval₂⟩ := tseitinEncode_complete e₂ n n₁ τ₁ hn₁_ge hn₁_n hs₂
+    obtain ⟨ho₂_lt, hc₂⟩ := tseitinEncode_below e₂ n n₁ hn₁_ge hn₁_n hs₂
+    obtain ⟨ho₂_pos, hn₂⟩ := tseitinEncode_out_pos e₂ n₁ hn₁_ge
+    let n₂ := (tseitinEncode e₂ n₁).2.2
+    let τ := upd τ₂ n₂ true
+    have hsat_miter : cnfSat τ (tseitinMiter n e₁ e₂) = true := by
+      simp only [tseitinMiter, cnfSat_append, Bool.and_eq_true]
+      have hsat_c₁ : cnfSat τ (tseitinEncode e₁ (n + 1)).2.1 = true := by
+        rw [cnfSat_congr_below τ₂ τ n₁ (fun i hi => by simp [τ, upd, Nat.ne_of_lt (Nat.lt_of_lt_of_le hi hn₂)]) _ hc₁]
+        rw [cnfSat_congr_below τ₁ τ₂ n₁ hagree₂ _ hc₁]
+        exact hsat₁
+      have hsat_c₂ : cnfSat τ (tseitinEncode e₂ n₁).2.1 = true := by
+        rw [cnfSat_congr_below τ₂ τ n₂ (fun i hi => by simp [τ, upd, Nat.ne_of_lt hi]) _ hc₂]
+        exact hsat₂
+      have ho₁ : litTrue τ (tseitinEncode e₁ (n + 1)).1 = eval σ e₁ := by
+        rw [litTrue_upd_ne τ₂ n₂ true _ (by omega)]
+        have : litTrue τ₂ (tseitinEncode e₁ (n + 1)).1 = litTrue τ₁ (tseitinEncode e₁ (n + 1)).1 := by
+          have := cnfSat_congr_below τ₁ τ₂ n₁ hagree₂ [[(tseitinEncode e₁ (n + 1)).1]]
+            (fun c hc l hl => by simp at hc; subst hc; simp at hl; subst hl; exact ⟨by omega, ho₁_lt⟩)
+          simp [cnfSat, clauseSat] at this; exact this
+        rw [this, hval₁]
+        rfl
+      have ho₂ : litTrue τ (tseitinEncode e₂ n₁).1 = eval σ e₂ := by
+        rw [litTrue_upd_ne τ₂ n₂ true _ (by omega), hval₂]
+        exact eval_congr n (fun i => τ₁ (i + 1)) σ (fun i hi => hagree₁ (i + 1) (by omega)) e₂ hs₂
+      have hn₂_lit : litTrue τ (n₂ : Int) = true := by
+        have hpos : (0 : Int) < (n₂ : Int) := by omega
+        simp [litTrue, hpos, τ, upd]
+      have hxor : cnfSat τ (gateXor (n₂ : Int) (tseitinEncode e₁ (n + 1)).1 (tseitinEncode e₂ n₁).1) = true := by
+        simp [gateXor, cnfSat, clauseSat, litTrue_neg τ (n₂ : Int) (by omega),
+          litTrue_neg τ (tseitinEncode e₁ (n + 1)).1 (Int.ne_of_gt ho₁_pos),
+          litTrue_neg τ (tseitinEncode e₂ n₁).1 (Int.ne_of_gt ho₂_pos), ho₁, ho₂, hn₂_lit]
+        cases h1v : eval σ e₁ <;> cases h2v : eval σ e₂ <;> simp_all
+      have hunit : cnfSat τ [[(n₂ : Int)]] = true := by
+        simp [cnfSat, clauseSat, hn₂_lit]
+      exact ⟨⟨⟨hsat_c₁, hsat_c₂⟩, hxor⟩, hunit⟩
+    have hfalse := checkAll_sound Ls (tseitinMiter n e₁ e₂) hw hchk τ
+    rw [hfalse] at hsat_miter
+    exact Bool.false_ne_true hsat_miter
+
 end Cerp
