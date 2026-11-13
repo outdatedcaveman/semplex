@@ -496,4 +496,47 @@ theorem even_span_excludes_odd (f g : Int → Int)
   rw [hf y, hg y] at h2
   omega
 
+/-- Flip unit `0` in a hidden-layer vector. -/
+def flip0 (v : Nat → Int) : Nat → Int := fun i => if i = 0 then -v 0 else v i
+
+/-- Sum of `v` over indices `< d`. -/
+def sumVec (v : Nat → Int) : Nat → Int
+  | 0 => 0
+  | d + 1 => sumVec v d + v d
+
+theorem sumVec_flip0 (v : Nat → Int) :
+    ∀ d, 0 < d → sumVec (flip0 v) d = sumVec v d - 2 * v 0 := by
+  intro d hd
+  induction d with
+  | zero => omega
+  | succ d ih =>
+      cases d with
+      | zero => simp [sumVec, flip0]; omega
+      | succ k =>
+          have ih' := ih (by omega)
+          change sumVec (flip0 v) (k + 1) + flip0 v (k + 1) = sumVec v (k + 1) + v (k + 1) - 2 * v 0
+          rw [ih']
+          have hne : k + 1 ≠ 0 := by omega
+          simp [flip0, hne]
+          omega
+
+/-- Multi-unit symmetry gap (Proposition 14): any function `f` of a hidden
+    vector invariant under flipping unit `0` cannot equal `E * sumVec v d`
+    when `d > 0` and `E ≠ 0`. -/
+theorem multi_unit_symmetry_gap (f : (Nat → Int) → Int) (E : Int) (d : Nat)
+    (hd : 0 < d) (hE : E ≠ 0)
+    (hinv : ∀ v, f (flip0 v) = f v) :
+    ¬ (∀ v, f v = E * sumVec v d) := by
+  intro h
+  let v : Nat → Int := fun i => if i = 0 then 1 else 0
+  have h1 := h v
+  have h2 := h (flip0 v)
+  rw [hinv v, h1, sumVec_flip0 v d hd] at h2
+  have hv0 : v 0 = 1 := rfl
+  rw [hv0] at h2
+  have hmul : E * (sumVec v d - 2 * 1) = E * sumVec v d - 2 * E := by
+    rw [Int.mul_sub]; simp [Int.mul_comm]
+  rw [hmul] at h2
+  omega
+
 end PFT

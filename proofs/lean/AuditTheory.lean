@@ -20,3 +20,4 @@ open PFT
 #print axioms eventuallyOn_upd
 #print axioms task_blind
 #print axioms even_span_excludes_odd
+#print axioms multi_unit_symmetry_gap

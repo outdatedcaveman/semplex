@@ -278,12 +278,18 @@ def natural_units(monos, trainer, X, H, n, rng, samples=64, ref_rms=None):
     return np.array(out, dtype=np.float32)
 
 
+def embed_coefficients(src_monos, src_coef, dst_monos):
+    """Embed coefficients from a subset dictionary into a superset dictionary
+    by matching canonical monomial labels, guaranteeing warm-start monotonicity."""
+    by_label = {m["label"]: float(c) for m, c in zip(src_monos, src_coef)}
+    return np.array([by_label.get(m["label"], 0.0) for m in dst_monos], dtype=np.float32)
+
+
 def cem_search(trainer, units, X, targets, cares, H, n, rng, T=200, pop=32, elite=6, gens=40,
                sigma0=0.5, start=None, l1=0.002, log=None):
     """Cross-entropy method over rule coefficients (in natural units), scoring the
-    FINAL loss after T training steps. Each generation uses fresh initial networks
-    shared by all candidates; the incumbent is re-scored every generation, so a
-    lucky draw cannot be kept forever."""
+    FINAL loss after T training steps. Uses antithetic sampling and optional warm
+    starts; the incumbent is re-scored every generation."""
     import jax.numpy as jnp
     d = len(units)
     run = trainer["run"](T)
@@ -303,7 +309,15 @@ def cem_search(trainer, units, X, targets, cares, H, n, rng, T=200, pop=32, elit
     hist = []
     for g in range(gens):
         st = tuple(map(jnp.asarray, init_states(len(targets), H, n, rng)))
-        cands = [best] + [mean + sig * rng.normal(size=d).astype(np.float32) for _ in range(pop - 1)]
+        # Antithetic pairs around `mean` reduce gradient-estimation variance in high D
+        half = (pop - 1) // 2
+        eps = rng.normal(size=(half, d)).astype(np.float32)
+        cands = [best]
+        for z in eps:
+            cands.append(mean + sig * z)
+            cands.append(mean - sig * z)
+        if len(cands) < pop:
+            cands.append(mean + sig * rng.normal(size=d).astype(np.float32))
         sc = [score(c, st) for c in cands]
         order = np.argsort([s[0] for s in sc])
         el = np.array([cands[i] for i in order[:elite]])

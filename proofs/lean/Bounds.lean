@@ -104,4 +104,90 @@ theorem not_threshold_cert_sound (n : Nat) (pos neg : List (Nat → Int))
   rw [hlen] at h1
   omega
 
+/-- Soundness of the two-halfspace coloring certificate (P048): if every
+    2-colouring of the negative points makes at least one certified bad set
+    `b.2` monochromatic, then no two threshold neurons can both accept all
+    corresponding `b.1` points while covering all `b.2` points. -/
+theorem not_two_halfspaces_cert_sound (n : Nat)
+    (bad : List (List (Nat → Int) × List (Nat → Int)))
+    (hcert : ∀ b, b ∈ bad → b.1.length = b.2.length ∧ 0 < b.1.length ∧
+      ∀ j, j < n → csum j b.1 = csum j b.2)
+    (hforce : ∀ col : (Nat → Int) → Bool, ∃ b, b ∈ bad ∧
+      ((∀ q, q ∈ b.2 → col q = true) ∨ (∀ q, q ∈ b.2 → col q = false))) :
+    ¬ ∃ (w₁ w₂ : Nat → Int) (t₁ t₂ : Int),
+      (∀ b, b ∈ bad → (∀ p, p ∈ b.1 → t₁ ≤ dot n w₁ p) ∧ (∀ p, p ∈ b.1 → t₂ ≤ dot n w₂ p)) ∧
+      (∀ b, b ∈ bad → ∀ q, q ∈ b.2 → dot n w₁ q < t₁ ∨ dot n w₂ q < t₂) := by
+  intro ⟨w₁, w₂, t₁, t₂, hpos, hneg⟩
+  let col : (Nat → Int) → Bool := fun q => decide (dot n w₁ q < t₁)
+  obtain ⟨b, hb, hmono⟩ := hforce col
+  obtain ⟨hlen, hne, hsum⟩ := hcert b hb
+  obtain ⟨hp1, hp2⟩ := hpos b hb
+  cases hmono with
+  | inl htrue =>
+      have hq1 : ∀ q, q ∈ b.2 → dot n w₁ q < t₁ := by
+        intro q hq
+        have ht := htrue q hq
+        exact of_decide_eq_true ht
+      exact not_threshold_cert_sound n b.1 b.2 hlen hne hsum ⟨w₁, t₁, hp1, hq1⟩
+  | inr hfalse =>
+      have hq2 : ∀ q, q ∈ b.2 → dot n w₂ q < t₂ := by
+        intro q hq
+        have hf := hfalse q hq
+        have hn : ¬ (dot n w₁ q < t₁) := of_decide_eq_false hf
+        cases hneg b hb q hq with
+        | inl h1 => exact absurd h1 hn
+        | inr h2 => exact h2
+      exact not_threshold_cert_sound n b.1 b.2 hlen hne hsum ⟨w₂, t₂, hp2, hq2⟩
+
+/-- Point-indicator weight vector for a binary point `x₀` (P042 constructive core). -/
+def ptWeight (x₀ : Nat → Int) : Nat → Int :=
+  fun j => if x₀ j = 1 then 1 else -1
+
+/-- Sum of `x₀` over coordinates `< n`. -/
+def ptThresh (x₀ : Nat → Int) : Nat → Int
+  | 0 => 0
+  | n + 1 => ptThresh x₀ n + x₀ n
+
+theorem ptDot_le (x₀ x : Nat → Int) :
+    ∀ n, (∀ j, j < n → x₀ j = 0 ∨ x₀ j = 1) → (∀ j, j < n → x j = 0 ∨ x j = 1) →
+      dot n (ptWeight x₀) x ≤ ptThresh x₀ n := by
+  intro n hx0 hx
+  induction n with
+  | zero => simp [dot, ptThresh]
+  | succ n ih =>
+      have ih' := ih (fun j hj => hx0 j (Nat.lt_succ_of_lt hj)) (fun j hj => hx j (Nat.lt_succ_of_lt hj))
+      have h0 := hx0 n (Nat.lt_succ_self n)
+      have h1 := hx n (Nat.lt_succ_self n)
+      simp only [dot, ptThresh, ptWeight]
+      rcases h0 with h0 | h0 <;> rcases h1 with h1 | h1 <;> simp [h0, h1] <;> omega
+
+theorem ptDot_ge_iff (x₀ x : Nat → Int) :
+    ∀ n, (∀ j, j < n → x₀ j = 0 ∨ x₀ j = 1) → (∀ j, j < n → x j = 0 ∨ x j = 1) →
+      (ptThresh x₀ n ≤ dot n (ptWeight x₀) x ↔ ∀ j, j < n → x j = x₀ j) := by
+  intro n hx0 hx
+  induction n with
+  | zero =>
+      simp [dot, ptThresh]
+  | succ n ih =>
+      have hx0' : ∀ j, j < n → x₀ j = 0 ∨ x₀ j = 1 := fun j hj => hx0 j (Nat.lt_succ_of_lt hj)
+      have hx' : ∀ j, j < n → x j = 0 ∨ x j = 1 := fun j hj => hx j (Nat.lt_succ_of_lt hj)
+      have ih' := ih hx0' hx'
+      have hle := ptDot_le x₀ x n hx0' hx'
+      have h0 := hx0 n (Nat.lt_succ_self n)
+      have h1 := hx n (Nat.lt_succ_self n)
+      constructor
+      · intro hge j hj
+        have hstep : ptThresh x₀ n ≤ dot n (ptWeight x₀) x ∧ x n = x₀ n := by
+          simp only [dot, ptThresh, ptWeight] at hge
+          rcases h0 with h0 | h0 <;> rcases h1 with h1 | h1 <;> simp [h0, h1] at hge ⊢ <;> omega
+        by_cases hjn : j < n
+        · exact ih'.mp hstep.1 j hjn
+        · have : j = n := by omega
+          rw [this]; exact hstep.2
+      · intro heq
+        have hprev := ih'.mpr (fun j hj => heq j (Nat.lt_succ_of_lt hj))
+        have hn := heq n (Nat.lt_succ_self n)
+        simp only [dot, ptThresh, ptWeight, hn]
+        rcases h0 with h0 | h0 <;> simp [h0] <;> omega
+
 end CerpBounds
