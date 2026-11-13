@@ -241,7 +241,7 @@ def check(path=REGISTER):
     lines += ["## Weakest links behind the status notes", "",
               "Upgrading these (e.g. mechanizing a paper proof in Lean) lifts every note that rests on them.", ""]
     lines += [f"- {k} ({v} note(s)): {byid[k].status} | {byid[k].statement[:120]}"
-              for k, v in sorted(root_count.items(), key=lambda kv: -kv[1])] or ["None."]
+              for k, v in sorted(root_count.items(), key=lambda kv: (-kv[1], kv[0]))] or ["None."]
     lines += ["", "## Corrections: claims to re-review", "",
               "A correction depends on the claim it corrects. Every other claim built on the corrected one must be re-read in its light.", ""]
     for cid in corrections:
