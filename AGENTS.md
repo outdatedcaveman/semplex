@@ -9,7 +9,8 @@ semplex studies why learning works and which mechanisms training builds, on an e
 3. **Report every verdict as it came out:** held, broken, or neither. A refuted conjecture is stated as refuted in `THEORY.md`, and gets a claim row in `claims/REGISTER.md`.
 4. **Grow the tree downward.** Fan out over the options of one decision, then descend onto what that round established (`experiments/TREE.md`).
 5. **Keep the register on the ledger.** After editing `claims/REGISTER.md`, run `python -m cerp.register check`. It must report 0 problems. Re-read every claim it lists under a correction.
-6. **Read before you cite.** Literature goes into `charter/LITERATURE_REVIEW.md` §5 with what was read and what it changes here.
+6. **Switch basins on purpose.** After every 4–5 spikes on one question, run at least one spike on a different front of the charter (`ROADMAP.md`). Spikes 11–34 refined one basin; the switch to the compiler at n = 6 (Spike 35) gave the largest gain of the series. This matches Bespoke Labs' finding that new-idea switches gain about 9× a refinement step.
+7. **Read before you cite.** Literature goes into `charter/LITERATURE_REVIEW.md` §5 with what was read and what it changes here.
 
 ## Running
 
