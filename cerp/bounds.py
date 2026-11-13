@@ -53,3 +53,18 @@ def _forces(bad):
     uni = sorted({q for b in bad for q in b["set"]})
     masks = [sum(1 << uni.index(q) for q in b["set"]) for b in bad]
     return all(any((s & c) == s or (s & c) == 0 for s in masks) for c in range(1 << len(uni)))
+
+
+def not_threshold_cert_partial(n, f, care, kmax=4):
+    """Untrusted search for a check_not_threshold_partial certificate: uses care points only."""
+    T = [p for p in range(1 << n) if (care >> p) & 1 and (f >> p) & 1]
+    F = [p for p in range(1 << n) if (care >> p) & 1 and not (f >> p) & 1]
+    for k in range(2, kmax + 1):
+        sums = {}
+        for a in combinations_with_replacement(T, k):
+            sums.setdefault(_vec(n, a), a)
+        for b in combinations_with_replacement(F, k):
+            a = sums.get(_vec(n, b))
+            if a is not None:
+                return {"pos": list(a), "neg": list(b)}
+    return None

@@ -37,8 +37,11 @@ def chain(n, k, act="step"):
     return [(act if j < k - 1 else "step", list(range(n + j))) for j in range(k)]
 
 
-def solve(f, n, spec, W=3, B=None, time_limit=60.0, workers=4, relu_cap=None, care=None):
-    """care: optional bitmask of the input points that must be matched (default: all)."""
+def solve(f, n, spec, W=3, B=None, time_limit=60.0, workers=4, relu_cap=None, care=None, rand_obj=None):
+    """care: optional bitmask of the input points that must be matched (default: all).
+    rand_obj: optional int seed; minimizes a random linear objective over the weights so that
+    repeated calls return different satisfying networks (Spike 35 tie sampling). Status and
+    feasibility are unchanged by it."""
     B = B if B is not None else W * (n + len(spec)) + 1
     m = cp_model.CpModel()
     pts = range(1 << n)
@@ -90,6 +93,10 @@ def solve(f, n, spec, W=3, B=None, time_limit=60.0, workers=4, relu_cap=None, ca
         if spec[j] == spec[j + 1]:
             key = lambda q: sum(wv[q][i] * (2 * W + 1) ** i for i in range(len(spec[q][1]))) + bv[q] * (2 * W + 1) ** len(spec[q][1])
             m.Add(key(j) <= key(j + 1))
+    if rand_obj is not None:
+        import random
+        r = random.Random(rand_obj)
+        m.Minimize(sum(r.randint(-5, 5) * v for row in wv for v in row) + sum(r.randint(-5, 5) * v for v in bv))
     s = cp_model.CpSolver()
     s.parameters.max_time_in_seconds = time_limit
     s.parameters.num_workers = workers

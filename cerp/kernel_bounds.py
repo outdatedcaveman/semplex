@@ -70,3 +70,17 @@ def check_not_two_halfspaces(n, f, bad) -> Verdict:
         if not any((s & colouring) == s or (s & colouring) == 0 for s in masks):
             return Verdict(False, "not-two-halfspaces", (), colouring, None, KERNEL_VERSION, _TOKEN)
     return Verdict(True, "not-two-halfspaces", (), 1 << len(universe), None, KERNEL_VERSION, _TOKEN)
+
+
+def check_not_threshold_partial(n, f, care, pos, neg) -> Verdict:
+    """Partially specified f: only points in `care` carry labels. Certifies that NO
+    completion of f is a threshold function. Same argument as check_not_threshold,
+    but every pos/neg point must be a care point, so the certificate never relies on
+    a don't-care value (Spike 35: the total-function search wrongly used don't-cares)."""
+    _valid(n, f, list(pos) + list(neg))
+    if type(care) is not int or not 0 <= care < (1 << (1 << n)):
+        raise KernelError("bad care mask")
+    ok = (all((care >> p) & 1 for p in list(pos) + list(neg))
+          and all(_val(f, p) == 1 for p in pos) and all(_val(f, q) == 0 for q in neg)
+          and _sums_equal(n, pos, neg))
+    return Verdict(ok, "not-threshold-partial", (), len(pos), None, KERNEL_VERSION, _TOKEN)
