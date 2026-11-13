@@ -1,4 +1,4 @@
-# Experiment tree (spikes 11–33)
+# Experiment tree (spikes 11–34)
 
 Each node is a spike. A child builds on what its parent established; siblings are co-equal options of one decision. Nodes with verdicts are **frozen**: never edited, only branched from. Statuses as of 2026-11-12. Reports: `experiments/SPIKE_NN_REPORT.md`.
 
@@ -23,6 +23,7 @@ Each node is a spike. A child builds on what its parent established; siblings ar
               │               └ 31  Walsh-degree spectral bias (C16)          frozen: C16 refuted; spectrum matching wins; balanced-accuracy caveat
               │                 └ 32  exact init-prior Bayes posterior (SLT)  frozen: describes nets best; nets beat it 24/24
               │                   └ 33  feature learning vs tilt (C18)        frozen: feature learning necessary; tilt not shown to carry the gain
+              │                     └ 34  compiler as prior (Occam, C19)        frozen: competitive but coarse at n = 4; not where training moves
               ├ 23  distance-matched choice test (from 19 arm 1)     frozen: symmetry and information both steer single steps
               ├ 25  less strict CSP at low labels (from 19 arm 2)    frozen: certificates fail at power; anisotropic smoothness
               └ 26  lawful completion of algebra; Curie transfer (C8(c), from 14 and 20)   frozen: Curie transfers (β = −1.85); lawful 9.6× chance
