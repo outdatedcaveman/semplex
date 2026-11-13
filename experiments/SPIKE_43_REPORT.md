@@ -1,6 +1,6 @@
 # Spike 43: Kernel-smoothed target first, Occam later? (H-J)
 
-**Date:** 2026-11-13 · **Status:** pre-registered (no runs yet) · **Follows:** Spike 36 (C19′ replicated: on held-out inputs where trained nets depart from their NTK prediction, the minimum-circuit (Occam) completion sides with the net in 73–81% of cases).
+**Date:** 2026-11-13 · **Status:** complete (pre-registered in e244824; results below) · **Follows:** Spike 36 (C19′ replicated: on held-out inputs where trained nets depart from their NTK prediction, the minimum-circuit (Occam) completion sides with the net in 73–81% of cases).
 **Source of the hypothesis:** Nichani, Damian & Lee, arXiv:2305.06986 (`charter/LITERATURE_REVIEW.md` §5, H-J). In their layer-wise analysis the first gradient step learns a feature ≈ K f\*, the target smoothed by the initial kernel.
 
 ## Question
@@ -43,4 +43,27 @@ python -m experiments.spike43 analyse
 
 ## Results
 
-(To be filled after the runs.)
+`experiments/results/spike43.json`; raw checkpoints in `spike43_raw/`.
+
+**Sanity check passed.** Arm A's final outputs equal Spike 36's `nets_n6_tanh.json` on 100% of bits, so this is Spike 36's run with checkpoints. Fit: 99.97% (arm A) and 100% (arm G). 9,085 held-out (net, input) points have Occam ≠ k.
+
+| t | A_K (A) | S (A) | agree Occam, sign z (A) | agree ridge NTK (A) | bal. acc. (A) | A_K (G) | S (G) |
+|---|---|---|---|---|---|---|---|
+| 1 | 0.767 | 0.395 | 0.544 | 0.542 | 0.543 | 0.783 | 0.328 |
+| 3 | 0.775 | 0.393 | 0.627 | 0.625 | 0.626 | 0.830 | 0.363 |
+| 10 | 0.807 | 0.395 | 0.785 | 0.776 | 0.777 | 0.854 | 0.449 |
+| 30 | 0.854 | 0.465 | 0.855 | 0.830 | 0.839 | 0.851 | 0.543 |
+| 100 | 0.841 | 0.623 | 0.893 | 0.820 | 0.873 | 0.839 | 0.634 |
+| 300 | 0.829 | 0.681 | 0.901 | 0.809 | 0.881 | 0.832 | 0.668 |
+| 3000 | 0.818 | 0.721 | 0.903 | 0.799 | 0.882 | 0.827 | 0.699 |
+
+### Verdicts
+
+- **H43.1: neither.** A_K(1) = 0.767, between the kill line 0.65 and the bar 0.80. The first Adam step agrees with the kernel-smoothed target on 77% of held-out inputs; plain GD gives 78%. Adam's sign step is therefore not the reason it falls short of 0.80. A_K peaks at 0.85 around step 30, then declines.
+- **H43.2: held.** S(1) = 0.395. Where the Occam completion and the kernel-smoothed target disagree, the early change sides with the kernel 60% of the time. S stays at 0.39–0.40 through step 10.
+- **H43.3: held.** S(3000) − S(1) = +0.326. S first reaches 0.5 between step 30 and step 100 and ends at 0.72.
+- **H-J overall: neither.** It needed all three to hold. Its two-phase core held (H43.2 and H43.3), and arm G shows the same shape: S goes 0.33 → 0.70 and crosses 0.5 by step 30.
+
+### Reading
+
+The order predicted from Nichani et al. holds in our atlas. Training first moves along the kernel-smoothed target; on the inputs where that target and the minimum circuit disagree, the net turns toward the circuit only after about 10–30 steps. Held-out balanced accuracy is 0.78 at step 10, when the change is kernel-like, and rises to 0.88 as S rises. This puts a time on C19′: the move toward Occam is a *later* phase, not present from the first step.
