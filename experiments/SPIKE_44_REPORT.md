@@ -1,6 +1,6 @@
 # Spike 44: Does depth raise Occam agreement? (H-K)
 
-**Date:** 2026-11-13 · **Status:** pre-registered (no runs yet) · **Follows:** Spike 36 (C19′, two-layer nets).
+**Date:** 2026-11-13 · **Status:** complete (pre-registered in e244824; results below) · **Follows:** Spike 36 (C19′, two-layer nets).
 **Source of the hypothesis:** Nichani, Damian & Lee, arXiv:2305.06986. Three-layer nets learn nonlinear features that two-layer nets cannot learn efficiently. In our setting, the Occam completion is a two-hidden-unit threshold circuit, a composition of features.
 
 ## Question
@@ -42,4 +42,22 @@ python -m experiments.spike44 analyse
 
 ## Results
 
-(To be filled after the runs.)
+`experiments/results/spike44.json`; L3 outputs in `spike44_raw/`. The empirical L2 kernel matches Spike 36's analytic one (correlation 1.000 at n = 5, 0.9999 at n = 6), and the L2 numbers barely move between the two kernels. Fit: L3 99.7% (n = 5) and 99.6% (n = 6), so the fit guard does not apply.
+
+| n | arch | agree Occam | agree own NTK | Occam sides with net on departures | balanced acc. | fit |
+|---|---|---|---|---|---|---|
+| 5 | L2 (2-layer, 8) | 0.867 | 0.799 | 0.734 | 0.791 | 0.999 |
+| 5 | L3 (3-layer, 5-5) | 0.864 | 0.821 | 0.719 | 0.783 | 0.997 |
+| 6 | L2 | 0.903 | 0.800 | 0.802 | 0.882 | 1.000 |
+| 6 | L3 | 0.896 | 0.820 | 0.782 | 0.876 | 0.996 |
+
+### Verdicts
+
+- **H44.1: broken.** agree_occam(L3) − agree_occam(L2) = −0.003 (n = 5) and −0.007 (n = 6). Both are ≤ 0.
+- **H44.2: broken.** The change in the Occam-sides fraction is −0.015 (n = 5) and −0.019 (n = 6). Both are < 0.
+- **H44.3: neither.** Balanced accuracy changes by −0.009 and −0.005: not ≥ 0, and not ≤ −0.01 at both.
+- **H-K: broken.** At matched parameter count, the three-layer nets do not side with the minimum circuit more. They stay slightly *closer to their own kernel*: agreement with the NTK is 0.82 vs 0.80.
+
+### Reading
+
+Nichani et al.'s depth advantage is asymptotic in d and concerns targets of the form g(xᵀAx). Our targets are two-unit threshold circuits on 5–6 inputs, which a two-layer net represents exactly. At this scale, the extra layer adds no pull toward the minimum circuit. The Occam pull of C19′ is therefore a property of feature learning in the first layer, not of depth. This is a scale-limited negative: it does not test targets that need depth (e.g. Spike 42's parity5 depth separation).
