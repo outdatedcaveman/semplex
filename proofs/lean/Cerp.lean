@@ -988,7 +988,7 @@ theorem tseitinEncode_complete : ∀ (e : Expr) (n nxt : Nat) (σ : Nat → Bool
           rw [litTrue_upd_ne τ₂ n₂ val _ (by omega)]
           have : litTrue τ₂ (tseitinEncode a nxt).1 = litTrue τ₁ (tseitinEncode a nxt).1 := by
             have := cnfSat_congr_below τ₁ τ₂ n₁ hagree₂ [[(tseitinEncode a nxt).1]]
-              (fun c hc l hl => by simp at hc; subst hc; simp at hl; subst hl; exact ⟨ha_pos, ha_lt⟩)
+              (fun c hc l hl => by simp at hc; subst hc; simp at hl; subst hl; exact ⟨by omega, ha_lt⟩)
             simp [cnfSat, clauseSat] at this
             exact this
           rw [this, hval₁]
@@ -997,8 +997,6 @@ theorem tseitinEncode_complete : ∀ (e : Expr) (n nxt : Nat) (σ : Nat → Bool
         have hn2_lit : litTrue τ (n₂ : Int) = val := by
           have hpos : (0 : Int) < (n₂ : Int) := by omega
           simp [litTrue, hpos, τ, upd]
-          have : (n₂ : Int).toNat = n₂ := by omega
-          simp [this]
         refine ⟨⟨hsat_ca, hsat_cb⟩, ?_⟩
         simp [gateXor, cnfSat, clauseSat, litTrue_neg τ (n₂ : Int) (by omega),
           litTrue_neg τ (tseitinEncode a nxt).1 (Int.ne_of_gt ha_pos),
@@ -1132,7 +1130,6 @@ theorem tseitinMiter_unsat_implies_equiv (n : Nat) (e₁ e₂ : Expr) (Ls : List
             (fun c hc l hl => by simp at hc; subst hc; simp at hl; subst hl; exact ⟨by omega, ho₁_lt⟩)
           simp [cnfSat, clauseSat] at this; exact this
         rw [this, hval₁]
-        rfl
       have ho₂ : litTrue τ (tseitinEncode e₂ n₁).1 = eval σ e₂ := by
         rw [litTrue_upd_ne τ₂ n₂ true _ (by omega), hval₂]
         exact eval_congr n (fun i => τ₁ (i + 1)) σ (fun i hi => hagree₁ (i + 1) (by omega)) e₂ hs₂
