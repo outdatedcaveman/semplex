@@ -1,6 +1,6 @@
 # Spike 30: Why do these nets generalize? The initial-kernel account (C15)
 
-**Date:** 2026-11-13 · **Status:** pre-registered (no run made) · **Follows:** Spike 29 (the information tilt *anti*-correlates with held-out accuracy, ρ = −0.69), Spike 16 (function-level symmetry inheritance is mostly the kernel limit)
+**Date:** 2026-11-13 · **Status:** complete (pre-registered in 4df8933; results below) · **Follows:** Spike 29 (the information tilt *anti*-correlates with held-out accuracy, ρ = −0.69), Spike 16 (function-level symmetry inheritance is mostly the kernel limit)
 
 ## Conjecture C15
 
@@ -33,3 +33,51 @@ Each matches the reading that an indicator unit commits early to a hard partitio
 | H30.4 | **Departure costs accuracy** | on held-out inputs where net and kernel disagree, pooled over activations, the kernel is right ≥ 55% of the time | ≤ 50% |
 
 If H30.1–H30.4 hold, the answer to "why does it generalize" here is that **gradient descent inherits the initial kernel's smoothness prior, and the parts that generalize are the parts that did not learn features**. If H30.2 or H30.4 break, the kernel is not the explanation, and the other priors must be tested: the minimal-circuit (Occam) prior, and the volume prior of Spike 19 over completions.
+
+---
+
+## Results
+
+The rerun reproduces Spike 29 exactly: the maximum difference in per-activation held-out accuracy is 0.000. Raw data in `results/spike30_raw/`, analysis in `results/spike30.json`. Over the 24 activations:
+
+| Quantity | Value |
+|---|---|
+| ρ(kernel held-out accuracy, net held-out accuracy) | **0.81** (looser ridge: 0.92) |
+| Mean net–kernel agreement on held-out inputs | **0.763** |
+| ρ(λ, net–kernel agreement) | **−0.61** |
+| Kernel right where net and kernel disagree (28,994 pooled cases) | **0.449**, i.e. the net is right 55.1% of the time |
+| Hamming-1 neighbour vote | 0.545 for every activation (it uses no kernel) |
+
+### Verdicts
+
+| # | Verdict |
+|---|---|
+| H30.1 | **Held.** ρ = 0.81. |
+| H30.2 | **Held.** Agreement 0.763 ≥ 0.75. |
+| H30.3 | **Held.** ρ = −0.61. Tilted activations depart further from their kernel. |
+| H30.4 | **Broken, in the opposite direction.** Where they disagree, the *net* is right (55.1%); the kernel is right only 44.9%. |
+
+### Exploratory (computed after the verdicts, not pre-registered)
+
+| | Spearman ρ with λ |
+|---|---|
+| Kernel held-out accuracy | **−0.73** |
+| Net held-out accuracy (Spike 29) | −0.69 |
+| Net gain over its own kernel | +0.23 |
+| Net accuracy after regressing out kernel accuracy | **−0.03** |
+
+The net beats its kernel in 23 of 24 activations, by a mean of +0.024 (range −0.001 to +0.037).
+
+## Findings
+
+**F1. Generalization here has two parts, and both are now measured.**
+- **(a) The initial kernel sets the baseline and the ranking.** Kernel regression with the activation's NTK at init, fitted on the 12 seen points, ranks the activations' held-out accuracy at ρ = 0.81–0.92. The trained net agrees with it on 76% of unseen inputs.
+- **(b) Training improves on the kernel.** Where the net leaves its kernel, it is right 55% of the time. That adds +2.4 points on average.
+
+**F2. Spike 29's "tilt costs generalization" was a confound, and C14 is refuted as a mechanism.** Activations that produce a strong information tilt also have a *worse initial kernel* for this task (ρ = −0.73). Once the kernel is controlled for, the tilt has no relation to held-out accuracy (ρ = −0.03). Learning gains no less in tilted activations (ρ = +0.23). Feature learning departs further from the kernel *and* those departures are net-positive. So the tilt is not a cost. The indicator-like shape of an activation does two separate things: it makes the tilt, and it makes a worse smoothness prior over Hamming space.
+
+**F3. Revised conjecture C15′.** "Why does it generalize" splits into a prior and an update.
+- **The prior** is the activation's initial tangent kernel. For graded activations (ReLU family, |x|, GELU) it is smoother over Hamming space and suits these threshold-like targets better than the kernels of saturating activations.
+- **The update** is feature learning. It moves away from the prior, toward crisp, information-tilted threshold mechanisms, and gains a consistent few points.
+
+Open: *why* graded activations give better kernels here. A candidate, untested: their kernels decay more gradually with Hamming distance, so nearby inputs share labels more strongly. A direct test is the kernel's correlation with Hamming distance against its held-out accuracy.

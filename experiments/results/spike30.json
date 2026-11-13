@@ -1,0 +1,227 @@
+{
+ "rows": {
+  "abs": {
+   "lambda": -1.8890800236989744,
+   "net_acc": 0.5802734375,
+   "kern_acc": 0.54765625,
+   "kern_loose_acc": 0.554296875,
+   "nn1_acc": 0.5453125,
+   "agree": 0.7099609375,
+   "kern_right_when_disagree": 0.44377104377104376
+  },
+  "arcsinh": {
+   "lambda": 9.092303530454855,
+   "net_acc": 0.550390625,
+   "kern_acc": 0.5205078125,
+   "kern_loose_acc": 0.5302734375,
+   "nn1_acc": 0.5453125,
+   "agree": 0.7435546875,
+   "kern_right_when_disagree": 0.44173648134044174
+  },
+  "bentid": {
+   "lambda": 0.8602547651673834,
+   "net_acc": 0.56484375,
+   "kern_acc": 0.5486328125,
+   "kern_loose_acc": 0.5419921875,
+   "nn1_acc": 0.5453125,
+   "agree": 0.7654296875,
+   "kern_right_when_disagree": 0.46544546211490423
+  },
+  "clip2": {
+   "lambda": 6.68730691183222,
+   "net_acc": 0.5601340694006309,
+   "kern_acc": 0.5469242902208202,
+   "kern_loose_acc": 0.5506703470031545,
+   "nn1_acc": 0.544558359621451,
+   "agree": 0.7632097791798107,
+   "kern_right_when_disagree": 0.47210657785179017
+  },
+  "clip4": {
+   "lambda": 2.012872259408398,
+   "net_acc": 0.5720738413197172,
+   "kern_acc": 0.549489395129615,
+   "kern_loose_acc": 0.5516496465043205,
+   "nn1_acc": 0.5447761194029851,
+   "agree": 0.77356637863315,
+   "kern_right_when_disagree": 0.45013009540329574
+  },
+  "cliprelu": {
+   "lambda": 10.47146985914664,
+   "net_acc": 0.5622983870967742,
+   "kern_acc": 0.5393145161290323,
+   "kern_loose_acc": 0.5453629032258065,
+   "nn1_acc": 0.5433467741935484,
+   "agree": 0.7709677419354839,
+   "kern_right_when_disagree": 0.4498239436619718
+  },
+  "elu": {
+   "lambda": 5.949136919612891,
+   "net_acc": 0.56796875,
+   "kern_acc": 0.5404296875,
+   "kern_loose_acc": 0.5419921875,
+   "nn1_acc": 0.5453125,
+   "agree": 0.7791015625,
+   "kern_right_when_disagree": 0.4376657824933687
+  },
+  "erf": {
+   "lambda": 11.614612641645863,
+   "net_acc": 0.5537109375,
+   "kern_acc": 0.5236328125,
+   "kern_loose_acc": 0.5306640625,
+   "nn1_acc": 0.5453125,
+   "agree": 0.73515625,
+   "kern_right_when_disagree": 0.44321533923303835
+  },
+  "gelu": {
+   "lambda": 2.1206481735914866,
+   "net_acc": 0.572265625,
+   "kern_acc": 0.54375,
+   "kern_loose_acc": 0.5513671875,
+   "nn1_acc": 0.5453125,
+   "agree": 0.769140625,
+   "kern_right_when_disagree": 0.43824027072758037
+  },
+  "hardtanh": {
+   "lambda": 10.706074645535217,
+   "net_acc": 0.5551211884284597,
+   "kern_acc": 0.527756059421423,
+   "kern_loose_acc": 0.5316653635652854,
+   "nn1_acc": 0.5453479280688037,
+   "agree": 0.7529319781078968,
+   "kern_right_when_disagree": 0.44462025316455694
+  },
+  "leaky0.01": {
+   "lambda": 1.0839889387703265,
+   "net_acc": 0.5728515625,
+   "kern_acc": 0.5498046875,
+   "kern_loose_acc": 0.5521484375,
+   "nn1_acc": 0.5453125,
+   "agree": 0.798046875,
+   "kern_right_when_disagree": 0.44294003868471954
+  },
+  "leaky0.1": {
+   "lambda": 0.9788546080481135,
+   "net_acc": 0.57109375,
+   "kern_acc": 0.551171875,
+   "kern_loose_acc": 0.55,
+   "nn1_acc": 0.5453125,
+   "agree": 0.80703125,
+   "kern_right_when_disagree": 0.4483805668016194
+  },
+  "leaky0.3": {
+   "lambda": 0.3377859204498965,
+   "net_acc": 0.567578125,
+   "kern_acc": 0.548828125,
+   "kern_loose_acc": 0.5470703125,
+   "nn1_acc": 0.5453125,
+   "agree": 0.80625,
+   "kern_right_when_disagree": 0.45161290322580644
+  },
+  "relu": {
+   "lambda": 1.1900500576112338,
+   "net_acc": 0.5721830985915493,
+   "kern_acc": 0.548904538341158,
+   "kern_loose_acc": 0.5516431924882629,
+   "nn1_acc": 0.5447965571205008,
+   "agree": 0.7998826291079812,
+   "kern_right_when_disagree": 0.4418377321603128
+  },
+  "relu2": {
+   "lambda": 0.43141757357743943,
+   "net_acc": 0.5581673306772909,
+   "kern_acc": 0.5306772908366534,
+   "kern_loose_acc": 0.5410358565737052,
+   "nn1_acc": 0.5462151394422311,
+   "agree": 0.7784860557768924,
+   "kern_right_when_disagree": 0.4379496402877698
+  },
+  "sigmoid": {
+   "lambda": 12.75655685103734,
+   "net_acc": 0.5570695102685624,
+   "kern_acc": 0.5199447077409163,
+   "kern_loose_acc": 0.540481832543444,
+   "nn1_acc": 0.544826224328594,
+   "agree": 0.7187993680884676,
+   "kern_right_when_disagree": 0.4339887640449438
+  },
+  "signsqrt": {
+   "lambda": 10.97281452214711,
+   "net_acc": 0.5376953125,
+   "kern_acc": 0.5388671875,
+   "kern_loose_acc": 0.53984375,
+   "nn1_acc": 0.5453125,
+   "agree": 0.752734375,
+   "kern_right_when_disagree": 0.5023696682464455
+  },
+  "silu": {
+   "lambda": 2.0912877576026947,
+   "net_acc": 0.571875,
+   "kern_acc": 0.5470703125,
+   "kern_loose_acc": 0.551171875,
+   "nn1_acc": 0.5453125,
+   "agree": 0.7626953125,
+   "kern_right_when_disagree": 0.4477366255144033
+  },
+  "softplus": {
+   "lambda": 2.0149889350955976,
+   "net_acc": 0.56796875,
+   "kern_acc": 0.546875,
+   "kern_loose_acc": 0.5443359375,
+   "nn1_acc": 0.5453125,
+   "agree": 0.76953125,
+   "kern_right_when_disagree": 0.4542372881355932
+  },
+  "softsign": {
+   "lambda": 12.104730462198969,
+   "net_acc": 0.54453125,
+   "kern_acc": 0.5275390625,
+   "kern_loose_acc": 0.53046875,
+   "nn1_acc": 0.5453125,
+   "agree": 0.7552734375,
+   "kern_right_when_disagree": 0.4652833200319234
+  },
+  "ssq": {
+   "lambda": 2.825149254322348,
+   "net_acc": 0.5353515625,
+   "kern_acc": 0.51328125,
+   "kern_loose_acc": 0.525,
+   "nn1_acc": 0.5453125,
+   "agree": 0.7564453125,
+   "kern_right_when_disagree": 0.454691259021652
+  },
+  "tanh": {
+   "lambda": 11.550201231300917,
+   "net_acc": 0.5541015625,
+   "kern_acc": 0.5220703125,
+   "kern_loose_acc": 0.5306640625,
+   "nn1_acc": 0.5453125,
+   "agree": 0.7421875,
+   "kern_right_when_disagree": 0.43787878787878787
+  },
+  "tanh02": {
+   "lambda": 10.24363611834661,
+   "net_acc": 0.5578125,
+   "kern_acc": 0.52265625,
+   "kern_loose_acc": 0.5271484375,
+   "nn1_acc": 0.5453125,
+   "agree": 0.754296875,
+   "kern_right_when_disagree": 0.42845786963434024
+  },
+  "tanh05": {
+   "lambda": 9.488814409650386,
+   "net_acc": 0.5501953125,
+   "kern_acc": 0.5236328125,
+   "kern_loose_acc": 0.5287109375,
+   "nn1_acc": 0.5453125,
+   "agree": 0.75390625,
+   "kern_right_when_disagree": 0.44603174603174606
+  }
+ },
+ "max_abs_diff_vs_spike29_heldout": 0.0,
+ "H30.1_rho_kernacc_netacc": 0.8142670726402782,
+ "H30.2_mean_agreement": 0.7632744215970702,
+ "H30.3_rho_lambda_agreement": -0.608695652173913,
+ "H30.4_kernel_right_when_disagree_pooled": 0.44912740567013865,
+ "pooled_disagreements": 28994,
+ "rho_kernloose_netacc": 0.9151620838675348
+}
