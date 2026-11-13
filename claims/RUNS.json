@@ -1,0 +1,88 @@
+{
+ "runs": [
+  {
+   "spike": "43",
+   "date": "2026-11-13",
+   "commit": "f93de55",
+   "question": "Does training follow the kernel first and turn toward Occam later? (H-J)",
+   "overall": "NEITHER",
+   "verdicts": [
+    {
+     "id": "H43.1",
+     "verdict": "NEITHER",
+     "measured": "A_K(1) = 0.767",
+     "bar": "held ≥ 0.80, broken < 0.65"
+    },
+    {
+     "id": "H43.2",
+     "verdict": "HELD",
+     "measured": "S(1) = 0.395",
+     "bar": "held ≤ 0.40, broken ≥ 0.55"
+    },
+    {
+     "id": "H43.3",
+     "verdict": "HELD",
+     "measured": "S(3000) − S(1) = +0.326",
+     "bar": "held ≥ +0.15, broken ≤ +0.05"
+    }
+   ],
+   "learned": "The move toward the minimum circuit is a later phase: kernel-like change for about 10 steps, Occam from step ~30. Plain gradient descent shows the same shape.",
+   "gaps_moved": [
+    {
+     "gap": "A5",
+     "from": "OPEN",
+     "to": "PARTIAL",
+     "why": "Two phases seen in one cell"
+    },
+    {
+     "gap": "A3",
+     "from": "OPEN",
+     "to": "OPEN",
+     "why": "Adds timing evidence, no derivation"
+    }
+   ],
+   "claims": [
+    "P152"
+   ]
+  },
+  {
+   "spike": "44",
+   "date": "2026-11-13",
+   "commit": "f02ab44",
+   "question": "Does depth raise agreement with Occam? (H-K)",
+   "overall": "BROKEN",
+   "verdicts": [
+    {
+     "id": "H44.1",
+     "verdict": "BROKEN",
+     "measured": "−0.003 (n = 5), −0.007 (n = 6)",
+     "bar": "held ≥ +0.02 at both, broken ≤ 0 at either"
+    },
+    {
+     "id": "H44.2",
+     "verdict": "BROKEN",
+     "measured": "−0.015, −0.019",
+     "bar": "held ≥ +0.03 at both, broken < 0 at both"
+    },
+    {
+     "id": "H44.3",
+     "verdict": "NEITHER",
+     "measured": "−0.009, −0.005",
+     "bar": "held ≥ 0 at both, broken ≤ −0.01 at both"
+    }
+   ],
+   "learned": "For targets two layers can represent, a third layer adds no pull toward the minimum circuit; three-layer nets stay closer to their kernel.",
+   "gaps_moved": [
+    {
+     "gap": "A7",
+     "from": "OPEN",
+     "to": "PARTIAL",
+     "why": "Negative for two-layer-representable targets; depth-requiring targets untested"
+    }
+   ],
+   "claims": [
+    "P153"
+   ]
+  }
+ ]
+}

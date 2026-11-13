@@ -1,0 +1,280 @@
+{
+ "goal": "A theory of why trained networks generalize that predicts, explains, scales and is certified; and a verified compiler that makes its predictions computable.",
+ "effective_when": [
+  {
+   "id": "E1",
+   "name": "Predicts",
+   "test": "On tasks outside the class it was fitted on, including real data, the theory predicts held-out behaviour better than the kernel baseline, in a pre-registered test."
+  },
+  {
+   "id": "E2",
+   "name": "Explains",
+   "test": "The pull toward the minimum circuit is derived from the training dynamics (a theorem or a quantitative law verified prospectively), not only observed."
+  },
+  {
+   "id": "E3",
+   "name": "Scales",
+   "test": "The same result holds at n ≥ 8 inputs and beyond width 8, with compiler-computed completions."
+  },
+  {
+   "id": "E4",
+   "name": "Certified",
+   "test": "Every claim the theory rests on is machine-checked or pre-registered and replicated; the ledger shows no claim stated stronger than its support."
+  }
+ ],
+ "gaps": [
+  {
+   "id": "A1",
+   "pillar": "Theory",
+   "serves": "E1",
+   "title": "Other target classes",
+   "status": "OPEN",
+   "leverage": "HIGH",
+   "have": "Occam sides with the net on 73–81% of departures from the kernel, but only for random two-unit threshold targets at n = 5, 6.",
+   "claims": [
+    "P128",
+    "P129"
+   ],
+   "missing": "The same test on targets of other kinds: higher circuit cost, symmetric functions, targets that need depth, noisy labels.",
+   "closes_when": "Pre-registered: Occam sides with the net ≥ 0.65 on at least 3 further target classes, or the class where it fails is characterized.",
+   "next": "Spike 45 (arm S)"
+  },
+  {
+   "id": "A2",
+   "pillar": "Theory",
+   "serves": "E1",
+   "title": "Real data",
+   "status": "OPEN",
+   "leverage": "HIGH",
+   "have": "Gemini's exploratory compilations of PlayTennis and Breast Cancer; no generalization test on real data.",
+   "claims": [
+    "P138",
+    "P140"
+   ],
+   "missing": "A held-out test on real binarized datasets comparing trained nets, their kernel, and the compiler's Occam completion.",
+   "closes_when": "Pre-registered on ≥ 3 real datasets: report whether Occam beats the kernel as a predictor of the net, with the verdict as it comes out.",
+   "next": "Spike 45 (arm R)"
+  },
+  {
+   "id": "A3",
+   "pillar": "Theory",
+   "serves": "E2",
+   "title": "Mechanism: why feature learning finds small circuits",
+   "status": "OPEN",
+   "leverage": "HIGH",
+   "have": "Correlation (73–81%), one causal arm (lazy regime moves nets back to the kernel), and timing (kernel first, Occam from step ~30).",
+   "claims": [
+    "P129",
+    "P152"
+   ],
+   "missing": "A derivation. The unit-level selection law (volume × information tilt) is not shown to produce the Occam pull (C18 not supported).",
+   "closes_when": "A stated law that predicts the Occam-sides fraction or S(t) from measurable quantities, confirmed in a prospective test.",
+   "next": "After A1/A2: fit candidates on Spike 43 curves, test on fresh tasks"
+  },
+  {
+   "id": "A4",
+   "pillar": "Theory",
+   "serves": "E1",
+   "title": "One predictor for the net's held-out outputs",
+   "status": "OPEN",
+   "leverage": "MEDIUM",
+   "have": "Three separate predictors at n = 6: kernel 0.80 agreement, Occam 0.90; at n = 5 nets beat Occam on accuracy.",
+   "claims": [
+    "P126",
+    "P130"
+   ],
+   "missing": "A single rule combining kernel and circuit cost that predicts each held-out output, and explains where nets beat Occam.",
+   "closes_when": "Pre-registered: per-input agreement with trained nets ≥ 0.93 at n = 6 on fresh tasks.",
+   "next": "Unscheduled"
+  },
+  {
+   "id": "A5",
+   "pillar": "Theory",
+   "serves": "E2",
+   "title": "Two-phase timing replicated",
+   "status": "PARTIAL",
+   "leverage": "LOW",
+   "have": "One cell (n = 6, tanh, width 8); the first-step criterion fell short (0.77 vs 0.80).",
+   "claims": [
+    "P152"
+   ],
+   "missing": "ReLU, n = 5, another width.",
+   "closes_when": "Two phases in ≥ 3 further cells.",
+   "next": "Unscheduled (cheap)"
+  },
+  {
+   "id": "A6",
+   "pillar": "Theory",
+   "serves": "E3",
+   "title": "Scale: n ≥ 8",
+   "status": "OPEN",
+   "leverage": "HIGH",
+   "have": "Everything is at n ≤ 6. Width was varied only toward the lazy regime.",
+   "claims": [
+    "P129"
+   ],
+   "missing": "Occam completions at n = 8–10, which need care-set compilation at scale (gap B2).",
+   "closes_when": "The Spike 36 protocol at n ≥ 8 with certified or bounded Occam completions.",
+   "next": "Blocked by B2",
+   "blocked_by": [
+    "B2"
+   ]
+  },
+  {
+   "id": "A7",
+   "pillar": "Theory",
+   "serves": "E1",
+   "title": "Depth on targets that need it",
+   "status": "PARTIAL",
+   "leverage": "MEDIUM",
+   "have": "Depth adds no Occam pull when two layers can represent the target (H-K refuted).",
+   "claims": [
+    "P153"
+   ],
+   "missing": "Targets that need three layers (e.g. parity5).",
+   "closes_when": "The Spike 44 protocol on depth-requiring targets.",
+   "next": "Could be an arm of Spike 45"
+  },
+  {
+   "id": "B1",
+   "pillar": "Compiler",
+   "serves": "E4",
+   "title": "Lean check of nets beyond fan-in 4",
+   "status": "OPEN",
+   "leverage": "MEDIUM",
+   "have": "A Lean checker for threshold nets; xor3 passes in 219 s, xor4 times out.",
+   "claims": [
+    "P147"
+   ],
+   "missing": "A linear pseudo-Boolean encoding in Lean (the current one is exponential in fan-in).",
+   "closes_when": "xor4 verified by pure kernel `decide` in under 60 s.",
+   "next": "Unscheduled"
+  },
+  {
+   "id": "B2",
+   "pillar": "Compiler",
+   "serves": "E3",
+   "title": "Care-set compilation at scale",
+   "status": "OPEN",
+   "leverage": "HIGH",
+   "have": "CP-SAT compiles partial functions to n = 6 with certificates; the Ur-Compiler handles total, factored functions to n = 16.",
+   "claims": [
+    "P126",
+    "P148"
+   ],
+   "missing": "Minimum (or bounded) circuits for partial functions at n = 8–10.",
+   "closes_when": "≥ 90% of n = 8 care-set tasks compiled with a lower-bound certificate within 60 s each.",
+   "next": "Unscheduled; unblocks A6"
+  },
+  {
+   "id": "B3",
+   "pillar": "Compiler",
+   "serves": "E4",
+   "title": "Minimality certificates",
+   "status": "OPEN",
+   "leverage": "MEDIUM",
+   "have": "Gate counts against a flat-BDD baseline; parity4 ≥ 5 neurons is uncertified.",
+   "claims": [
+    "P141",
+    "P040"
+   ],
+   "missing": "Lower bounds for Ur-Compiler outputs; the parity4 certificate.",
+   "closes_when": "parity4 ≥ 5 certified; Ur-Compiler outputs carry a bound.",
+   "next": "Unscheduled"
+  },
+  {
+   "id": "C1",
+   "pillar": "Formal",
+   "serves": "E4",
+   "title": "Theorem 15 in Lean",
+   "status": "OPEN",
+   "leverage": "HIGH",
+   "have": "A paper proof, confirmed empirically.",
+   "claims": [
+    "P069"
+   ],
+   "missing": "Mechanization. It is the weakest link behind 20 ledger notes.",
+   "closes_when": "Lean proof with standard axioms; the ledger notes resting on P069 clear.",
+   "next": "Parallel track (no training needed)"
+  },
+  {
+   "id": "C2",
+   "pillar": "Formal",
+   "serves": "E4",
+   "title": "No-transfer lemma in Lean",
+   "status": "OPEN",
+   "leverage": "MEDIUM",
+   "have": "An elementary paper proof.",
+   "claims": [
+    "P077"
+   ],
+   "missing": "Mechanization (6 ledger notes rest on it).",
+   "closes_when": "Lean proof with standard axioms.",
+   "next": "After C1"
+  },
+  {
+   "id": "C3",
+   "pillar": "Formal",
+   "serves": "E4",
+   "title": "Statistical lift (C1) with real probability",
+   "status": "OPEN",
+   "leverage": "MEDIUM",
+   "have": "Arithmetic scaffolding in Lean; 0/48 false rejections in an exploratory run.",
+   "claims": [
+    "P139",
+    "P137"
+   ],
+   "missing": "A probabilistic statement and proof.",
+   "closes_when": "A proved finite-sample bound, or a pre-registered test of the conjectured rate.",
+   "next": "Unscheduled"
+  },
+  {
+   "id": "C4",
+   "pillar": "Formal",
+   "serves": "E4",
+   "title": "C4 converse and C3 rank bound",
+   "status": "OPEN",
+   "leverage": "LOW",
+   "have": "One inclusion of C4; a lower bound for C3.",
+   "claims": [
+    "P134",
+    "P136"
+   ],
+   "missing": "The converse inclusion for separable queries; the rank bound on the adaptivity gap.",
+   "closes_when": "Proof or counterexample for each.",
+   "next": "Unscheduled"
+  },
+  {
+   "id": "D1",
+   "pillar": "Process",
+   "serves": "E4",
+   "title": "Replicate Gemini's unregistered results",
+   "status": "OPEN",
+   "leverage": "MEDIUM",
+   "have": "Six spikes run without pre-registration; their claims are held as exploratory.",
+   "claims": [
+    "P131",
+    "P132",
+    "P150"
+   ],
+   "missing": "Pre-registered replications of the ones the theory would use (width compression 86–89%; real-data circuits).",
+   "closes_when": "Each used result is replicated under rule 1 or dropped.",
+   "next": "Real-data part folds into Spike 45"
+  },
+  {
+   "id": "D2",
+   "pillar": "Process",
+   "serves": "E4",
+   "title": "One intermittently failing test",
+   "status": "OPEN",
+   "leverage": "LOW",
+   "have": "Diagnosed as Monte-Carlo variance (mean 0.95, min 0.875 against a 0.9 bar).",
+   "claims": [
+    "P149"
+   ],
+   "missing": "A deterministic version of the test.",
+   "closes_when": "The suite passes on every run.",
+   "next": "Unscheduled"
+  }
+ ]
+}

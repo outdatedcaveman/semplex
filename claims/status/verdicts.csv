@@ -1,0 +1,7 @@
+key,spike,id,verdict,measured,bar
+43:H43.1,43,H43.1,NEITHER,A_K(1) = 0.767,"held ≥ 0.80, broken < 0.65"
+43:H43.2,43,H43.2,HELD,S(1) = 0.395,"held ≤ 0.40, broken ≥ 0.55"
+43:H43.3,43,H43.3,HELD,S(3000) − S(1) = +0.326,"held ≥ +0.15, broken ≤ +0.05"
+44:H44.1,44,H44.1,BROKEN,"−0.003 (n = 5), −0.007 (n = 6)","held ≥ +0.02 at both, broken ≤ 0 at either"
+44:H44.2,44,H44.2,BROKEN,"−0.015, −0.019","held ≥ +0.03 at both, broken < 0 at both"
+44:H44.3,44,H44.3,NEITHER,"−0.009, −0.005","held ≥ 0 at both, broken ≤ −0.01 at both"

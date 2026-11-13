@@ -1,0 +1,21 @@
+id,title,state,note
+C1,statistical lift,Open,"CONJECTURE, unchanged"
+C2,limit representations,Proved,"PROVED for stabilized slices and the metric limit; Lean, P135, P139"
+C3,adaptivity gap,Open,"CONJECTURE, unchanged; a lower bound is PROVED"
+C4,compositional frames,Partly,"PARTLY PROVED; Lean, P134"
+C5,trust-indexed escalation,Proved,"PROVED in an assumed linear-gain model; Lean, P139"
+C6,reach vs choice,Withdrawn,"withdrawn in its strong form, Spike 10c F3"
+C7,minimal observational power for learning,Open,
+C8,Curie principle for learning,Open,
+C9,tilted-volume law,Refuted,temperature form REFUTED by Spike 20
+C10,origin of the tilt,Refuted,REFUTED by Spike 22
+C11,oddness or saturation,Refuted,REFUTED by Spike 24
+C12,positive homogeneity,Refuted,REFUTED by Spike 27
+C13,indicator alignment,Supported,"SUPPORTED, prospectively, by Spike 28"
+C14,interpretability–generalization trade-off,Refuted,REFUTED as a mechanism by Spike 30
+C15′,why these nets generalize: kernel prior plus a positive feature-learning update,Supported,SUPPORTED by Spike 30
+C16,degree-1 spectral bias,Refuted,REFUTED by Spike 31
+C17,training as the init-prior Bayes posterior,Partly,"PARTLY SUPPORTED, Spike 32"
+C18,the tilt carries the gain beyond the init prior,Not supported,"NOT SUPPORTED, Spike 33; not refuted"
+C19,Occam (minimum circuit cost) as the missing prior,Not supported,"NOT SUPPORTED at n = 4, Spike 34"
+C19′,feature learning as approximate minimum-circuit search,Supported,"SUPPORTED and REPLICATED, Spike 36: departures from the kernel go toward Occam in 73–81% of cases in all 4 fresh cells; partly causal: widening toward the lazy regime raises kernel agreement +0.048, lowers Occam agreement −0.038 and lowers held-out accuracy −0.033"
