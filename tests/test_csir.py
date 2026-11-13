@@ -3,6 +3,8 @@
 import copy
 import json
 
+import pytest
+
 from cerp import csir, kernel
 from cerp.benchmarks import carry_prefix, carry_ripple
 from cerp.demo import ALARM, SENSORS_AGREE
@@ -87,6 +89,7 @@ def test_validator_rejects_dishonest_or_ill_typed_bundles():
         assert frag in text, frag
 
 
+@pytest.mark.slow
 def test_world_models_export_with_commitments_and_stay_empirical():
     rep = inquire(Interface("latent_causal", ALL_ACTIONS, seed=1), CANDIDATES, seed=1)
     b = csir.from_inquiry(rep, [str(a) for a in ALL_ACTIONS])

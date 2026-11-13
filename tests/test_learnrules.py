@@ -1,10 +1,12 @@
 """Spike 10b: learning rules and general-n circuit read-out."""
 
 import numpy as np
+import pytest
 
 from cerp import learnrules as lr
 
 
+@pytest.mark.slow
 def test_rules_fit_xor_except_frozen_is_weaker():
     XS = lr.inputs(4)
     f = sum(1 << x for x in range(16) if ((x >> 0) ^ (x >> 1)) & 1)

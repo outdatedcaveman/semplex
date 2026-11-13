@@ -42,7 +42,8 @@ All sources, with how far each was verified: `charter/REFERENCES.md`.
 
 ```bash
 pip install pytest numpy ortools
-python -m pytest -q                                   # 86 tests (Lean tests need CERP_LEAN=/path/to/lean)
+python -m pytest -m "not slow" -q                        # fast unit/integration loop (~23s)
+python -m pytest -q                                   # full suite including Lean (elan uses lean-toolchain 4.12.0) and slow sweeps
 python -m cerp.demo                                   # spike 01: redundant-sensor alarm, full ledger
 python -m cerp.epistemics.demo latent_confounded all  # spike 02: watch an inquiry into a hidden world
 python -m experiments.spike01                         # -> experiments/results/spike01.json

@@ -133,10 +133,14 @@ def _check(body, theorem, statement, renders=(), build_dir=None, allowed=ALLOWED
     for name in renders:
         text += f"#eval IO.println ({name}.render)\n"
     sha = hashlib.sha256(text.encode()).hexdigest()
+    tc_file = LEAN_DIR / "lean-toolchain"
+    env = {"LEAN_PATH": str(lib)}
+    if tc_file.exists() and "ELAN_TOOLCHAIN" not in os.environ:
+        env["ELAN_TOOLCHAIN"] = tc_file.read_text().strip()
     with tempfile.TemporaryDirectory() as d:
         f = pathlib.Path(d) / "Claim.lean"
         f.write_text(text)
-        code, log = _run([lean_binary(), str(f)], cwd=d, env={"LEAN_PATH": str(lib)})
+        code, log = _run([lean_binary(), str(f)], cwd=d, env=env)
     ax = _axioms(log, theorem)
     ok = (code == 0 and "error" not in log.lower() and ax is not None and set(ax) <= allowed
           and "sorryAx" not in ax)

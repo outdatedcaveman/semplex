@@ -11,6 +11,7 @@ from cerp.sat import prove_equivalence
 from cerp.translate import bdd_to_expr
 
 lean_bridge = pytest.importorskip("cerp.lean_bridge")
+pytestmark = [pytest.mark.lean, pytest.mark.slow]
 try:
     lean_bridge.lean_binary()
 except lean_bridge.LeanUnavailable:
