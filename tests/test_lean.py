@@ -11,6 +11,7 @@ from cerp.sat import prove_equivalence
 from cerp.translate import bdd_to_expr
 
 lean_bridge = pytest.importorskip("cerp.lean_bridge")
+pytestmark = [pytest.mark.lean, pytest.mark.slow]
 try:
     lean_bridge.lean_binary()
 except lean_bridge.LeanUnavailable:
@@ -81,3 +82,57 @@ def test_proof_files_compile_and_use_only_standard_axioms(tmp_path):
         for m in re.finditer(r"depends on axioms: \[([^\]]*)\]", r.stdout):
             assert set(a.strip() for a in m.group(1).split(",")) <= {"propext", "Quot.sound", "Classical.choice"}
         assert "sorryAx" not in r.stdout
+
+
+def test_tseitin_miter_equiv_proved_by_lean_kernel():
+    vs = ["a", "b"]
+    e1 = {"kind": "expr", "body": ["and", ["var", "a"], ["var", "b"]]}
+    e2 = {"kind": "expr", "body": ["not", ["or", ["not", ["var", "a"]], ["not", ["var", "b"]]]]}
+    _, lemmas, _ = prove_equivalence({"vars": vs, "left": e1, "right": e2})
+    r, _ = lean_bridge.verify_expr_equiv_tseitin(e1, e2, vs, lemmas, name="t_tseitin_demorgan")
+    assert r.ok and set(r.axioms) <= {"propext", "Quot.sound", "Classical.choice"}
+
+
+def test_lrat_miter_equiv_and_ur_compiler_certify_lean():
+    from cerp import sat, ur_compiler
+    vs = ["a", "b", "c"]
+    e1 = {"kind": "expr", "body": ["xor", ["var", "a"], ["xor", ["var", "b"], ["var", "c"]]]}
+    e2 = {"kind": "expr", "body": ["xor", ["xor", ["var", "a"], ["var", "b"]], ["var", "c"]]}
+    status, lrat_steps, _ = sat.prove_equivalence_lrat({"vars": vs, "left": e1, "right": e2})
+    assert status == "unsat"
+    r, _ = lean_bridge.verify_expr_equiv_lrat(e1, e2, vs, lrat_steps, name="t_lrat_xor")
+    assert r.ok and set(r.axioms) <= {"propext", "Quot.sound", "Classical.choice"}
+
+    out = ur_compiler.compile_unified({
+        "kind": "f0",
+        "vars": vs,
+        "fn": lambda env: env["a"] ^ env["b"] ^ env["c"],
+        "name": "xor3_cert",
+        "certify_lean": True,
+    })
+    assert out["validation_errors"] == []
+    assert out["lean_cert"] is not None and out["lean_cert"]["ok"] is True
+    assert out["lean_cert"].get("net_ok") is True
+
+
+def test_tnet_lean_exhaustive_and_lrat_equiv():
+    from cerp import sat, ur_compiler
+    vs = ["x0", "x1", "x2", "x3"]
+    comp = ur_compiler.compile_profile_factored(vs, lambda e: e["x0"] ^ e["x1"] ^ e["x2"] ^ e["x3"])
+    net = comp["threshold_net"]
+    assert net is not None
+
+    r_ex, _ = lean_bridge.verify_threshold_net_equiv(net, comp["expr"], vs, name="t_tnet_xor4_ex")
+    assert r_ex.ok and set(r_ex.axioms) <= {"propext", "Quot.sound", "Classical.choice"}
+
+    status, lrat_steps, _ = sat.prove_tnet_equivalence_lrat(net, comp["expr"], vs)
+    assert status == "unsat"
+    # Kernel `by decide` on XOR3 `tnet` is verified in `test_lrat_miter_equiv_and_ur_compiler_certify_lean`;
+    # 5-node XOR4 CNF (431 clauses via O(2^d) pbToExpr) uses `native=True` to avoid >900s WHNF replay.
+    r_lrat, _ = lean_bridge.verify_threshold_net_equiv(net, comp["expr"], vs, lrat_steps=lrat_steps, name="t_tnet_xor4_lrat", native=True)
+    assert r_lrat.ok and set(r_lrat.axioms) <= lean_bridge.NATIVE_AXIOMS
+
+    bad_net = {"inputs": list(net["inputs"]), "nodes": [dict(nd) for nd in net["nodes"]], "output": net["output"]}
+    bad_net["nodes"][-1]["t"] = int(bad_net["nodes"][-1]["t"]) + 10
+    bad_status, bad_ce, _ = sat.prove_tnet_equivalence_lrat(bad_net, comp["expr"], vs)
+    assert bad_status == "sat" and isinstance(bad_ce, dict)

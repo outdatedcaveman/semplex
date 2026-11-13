@@ -1,6 +1,6 @@
-# Experiment tree (spikes 11–36)
+# Experiment tree (spikes 11–42)
 
-Each node is a spike. A child builds on what its parent established; siblings are co-equal options of one decision. Nodes with verdicts are **frozen**: never edited, only branched from. Statuses as of 2026-11-12. Reports: `experiments/SPIKE_NN_REPORT.md`.
+Each node is a spike. A child builds on what its parent established; siblings are co-equal options of one decision. Nodes with verdicts are **frozen**: never edited, only branched from. Statuses as of 2026-11-13. Reports: `experiments/SPIKE_NN_REPORT.md`.
 
 ```
 11  volume at the circuit level                           frozen: volume fails for mechanisms
@@ -32,3 +32,17 @@ Each node is a spike. A child builds on what its parent established; siblings ar
 ```
 
 Spike 26 builds on two parents: the Curie estimator of 14 and the selection/building contrast of 20. It hangs under 19 because 19 is their nearest common resolved node.
+
+## Second track: Gemini on `master` (spikes 37–42), merged 2026-11-13
+
+Run in parallel by Gemini from the Spike 10c state; renumbered at the merge (original numbers in quotes). None was pre-registered, so every verdict is exploratory. These nodes are on the compiler / Lean / real-data front, not on the generalization basin above.
+
+```
+10c  rule search fixed (shared root)
+├ 37 ("11")  volume within an element (H-B, n=3); width compression (H-D)    exploratory: r = 0.67; 86–89% clean or coarser
+├ 38 ("12")  CSIR causal-circuit distillation                                 demonstration
+│ └ 40 ("14")  PlayTennis, Breast Cancer case studies                         exploratory: small kernel-verified circuits
+├ 39 ("13")  C1 statistical lift; XOR6 grokking (H-C); n=5 depth-3 (H-E)      exploratory: 0/48 rejections; H-C negative
+└ 41 ("15")  Ur-Compiler benchmarks                                           exploratory: 0.23–0.66× flat-BDD gates
+  └ 42 ("16")  scaling: n=16 SAT-CEGAR, width coarsening at n=8, XOR6, LRAT net checker   exploratory; Lean wall at pbToExpr O(2^d)
+```

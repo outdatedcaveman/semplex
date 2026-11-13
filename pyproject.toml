@@ -6,3 +6,7 @@ dependencies = ["numpy"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+markers = [
+    "slow: tests taking more than ~3s (epistemics sweeps, training, Lean compilation)",
+    "lean: tests invoking the Lean 4 compiler",
+]

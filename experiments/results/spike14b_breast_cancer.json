@@ -1,0 +1,36 @@
+{
+  "dataset": "sklearn_breast_cancer_569",
+  "n_rows": 569,
+  "selected_features": [
+    "worst radius",
+    "worst perimeter",
+    "worst concave points",
+    "worst area"
+  ],
+  "mutual_info": [
+    0.3224,
+    0.2901,
+    0.2856,
+    0.2845
+  ],
+  "distilled_rule_accuracy": 0.9156,
+  "loglik": -1723.1869,
+  "csir_validation_errors": [],
+  "csir_recheck": [
+    [
+      0,
+      "not kernel-checkable: empirical"
+    ],
+    [
+      1,
+      "verified"
+    ]
+  ],
+  "distilled_circuit_cost": {
+    "gates": 5,
+    "depth": 3
+  },
+  "atlas_min_threshold_neurons": 1,
+  "truth_table_bits": 24575,
+  "elapsed_s": 232.999
+}

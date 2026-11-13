@@ -42,6 +42,7 @@ RELATIONS = {
     "trace": ({"lts"}, set()),
     "interventional": ({"causal-model", "world"}, set()),
     "adequate-to": ({"causal-model", "world"}, set()),
+    "distills": ({"causal-model", "lts", "expr", "circuit"}, set()),
 }
 
 
@@ -232,3 +233,66 @@ def from_inquiry(rep, protocols):
                               certificate={"evidence": [c.evidence for c in ad]},
                               warrant=warrant_dict(L.effective_warrant(ad[-1].id)), claim=ad[-1].id))
     return bundle(nodes, links)
+
+
+def distill_causal_rule(structure, params, target="Y", *, features=None, do=None,
+                      model_id="model", threshold=0.5):
+    """Spike 12 bridge: distill a causal Bayes net's Bayes-optimal decision rule
+    P(target=1 | features, do) >= threshold into a canonical F0 expr + circuit,
+    exporting a CSIR bundle with a kernel-checked expr <-> circuit link."""
+    from .epistemics.bayesnet import distribution
+    from .semantics import TruthTable
+    from .substrates import cost
+    from .translate import bdd_to_circuit, bdd_to_expr, truthtable_to_bdd
+
+    obs = list(structure.observables)
+    if target not in obs:
+        raise CSIRError(f"target {target!r} not in observables {obs}")
+    feats = list(features) if features is not None else [v for v in obs if v != target]
+    t_idx = obs.index(target)
+    f_idxs = [obs.index(v) for v in feats]
+    dist = distribution(structure, params, do=do)
+
+    def predict(env):
+        key = tuple(env[v] for v in feats)
+        p1, pt = 0.0, 0.0
+        for cell, prob in dist.items():
+            if tuple(cell[i] for i in f_idxs) == key:
+                pt += prob
+                if cell[t_idx] == 1:
+                    p1 += prob
+        return int(pt > 0 and (p1 / pt) >= threshold)
+
+    tt = TruthTable.from_function(feats, predict)
+    bdd_art = truthtable_to_bdd(tt)
+    expr_art = bdd_to_expr(bdd_art)
+    circ_art = bdd_to_circuit(bdd_art, feats)
+    v = kernel.check({"relation": "extensional", "vars": feats, "left": expr_art, "right": circ_art})
+    if not v.ok:
+        raise CSIRError("distilled circuit failed kernel equivalence check")
+
+    m_node = node(
+        model_id,
+        {"kind": "causal-model", "body": {"parents": {k: list(v_) for k, v_ in structure.parents.items()},
+                                          "latents": list(structure.latents)}},
+        {"observables": obs, "latents": list(structure.latents)},
+        ontology={"commitments": sorted(map(list, structure.commitments()))},
+        provenance={"produced_by": "causal-model"},
+    )
+    e_id, c_id = f"{model_id}_rule", f"{model_id}_circuit"
+    e_node = node(e_id, expr_art, {"vars": feats}, provenance={"produced_by": "bayes-optimal-distill", "parents": [model_id]})
+    c_node = node(c_id, circ_art, {"vars": feats},
+                  resources={"cost": cost(circ_art), "cost_model": "F0/circuit"},
+                  provenance={"produced_by": "bdd_to_circuit", "parents": [e_id]})
+    l_distill = link(
+        model_id, e_id, "distills",
+        {"target": target, "features": feats, "threshold": threshold, "do": do or {}},
+        warrant={"basis": ["empirical"], "trusted_base": ["cerp/epistemics/bayesnet.py"],
+                 "conditions": ["model-adequacy", f"threshold={threshold}"]},
+    )
+    l_equiv = link(
+        e_id, c_id, "extensional", {"vars": feats},
+        certificate={"method": "exhaustive"},
+        warrant={"basis": ["kernel-checked"], "trusted_base": ["cerp/kernel.py"], "conditions": []},
+    )
+    return bundle([m_node, e_node, c_node], [l_distill, l_equiv])

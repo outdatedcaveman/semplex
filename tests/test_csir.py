@@ -3,6 +3,8 @@
 import copy
 import json
 
+import pytest
+
 from cerp import csir, kernel
 from cerp.benchmarks import carry_prefix, carry_ripple
 from cerp.demo import ALARM, SENSORS_AGREE
@@ -87,6 +89,7 @@ def test_validator_rejects_dishonest_or_ill_typed_bundles():
         assert frag in text, frag
 
 
+@pytest.mark.slow
 def test_world_models_export_with_commitments_and_stay_empirical():
     rep = inquire(Interface("latent_causal", ALL_ACTIONS, seed=1), CANDIDATES, seed=1)
     b = csir.from_inquiry(rep, [str(a) for a in ALL_ACTIONS])
@@ -94,3 +97,16 @@ def test_world_models_export_with_commitments_and_stay_empirical():
     models = [n for n in b["nodes"] if n["artifact"]["kind"] == "causal-model"]
     assert models and all(n["ontology"]["commitments"] for n in models)
     assert all(s.startswith("not kernel-checkable") for _, s in csir.recheck(b))
+
+
+def test_distill_causal_rule_bridges_world_model_to_verified_circuit():
+    import random
+    from cerp.epistemics.bayesnet import random_params
+    from cerp.epistemics.ontologies import O1_LATENT_CAUSAL
+
+    params = random_params(O1_LATENT_CAUSAL, random.Random(7))
+    b = csir.distill_causal_rule(O1_LATENT_CAUSAL, params, target="Y", model_id="O1")
+    assert csir.validate(b) == []
+    statuses = dict(csir.recheck(b))
+    assert statuses[0].startswith("not kernel-checkable")
+    assert statuses[1] == "verified"

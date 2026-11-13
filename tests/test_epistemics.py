@@ -67,6 +67,7 @@ def test_em_fit_is_a_witness_at_least_as_good_as_truth():
     assert ll >= loglik(s, p, data) - 1.0
 
 
+@pytest.mark.slow
 def test_calibrated_adequacy_does_not_reject_the_true_model():
     """The naive G-test did (spike-02 finding F2). Calibrated test: p not tiny."""
     ps = []
@@ -91,6 +92,7 @@ def test_calibrated_adequacy_still_rejects_a_wrong_model():
 
 # ------------------------------------------------------------ the loop
 
+@pytest.mark.slow
 def test_observation_alone_leaves_causal_question_undetermined():
     for world in ("latent_causal", "latent_confounded"):
         rep = inquire(Interface(world, ALL_ACTIONS[:1], seed=3), CANDIDATES, seed=3)
@@ -100,18 +102,21 @@ def test_observation_alone_leaves_causal_question_undetermined():
         assert any(v["witnessed"] for v in rep["equivalence"].values())
 
 
+@pytest.mark.slow
 def test_interventions_resolve_it_correctly():
     for world, expected in (("latent_causal", "YES"), ("latent_confounded", "NO")):
         rep = inquire(Interface(world, ALL_ACTIONS[:3], seed=4), CANDIDATES, seed=4)
         assert answers(rep)["intervening on A changes Y"] == ("EMPIRICALLY-SUPPORTED", expected)
 
 
+@pytest.mark.slow
 def test_untested_interventions_are_only_conjectures():
     rep = inquire(Interface("latent_causal", ALL_ACTIONS[:3], seed=4), CANDIDATES, seed=4)
     st, _ = answers(rep)["intervening on S1 changes S2"]
     assert st == "CONJECTURE"
 
 
+@pytest.mark.slow
 def test_truth_outside_candidates_refutes_closed_world_and_retracts():
     cands = (O1_LATENT_CAUSAL, O2_INDEPENDENT, O3_LATENT_CONFOUNDED)
     rep = inquire(Interface("copy_chain", ALL_ACTIONS, seed=5), cands, seed=5)
@@ -124,6 +129,7 @@ def test_truth_outside_candidates_refutes_closed_world_and_retracts():
     assert a["intervening on A changes Y"] == ("EMPIRICALLY-SUPPORTED", "YES")  # tested directly
 
 
+@pytest.mark.slow
 def test_revisions_are_recorded_with_commitment_diffs():
     rep = inquire(Interface("copy_chain", ALL_ACTIONS, seed=6), CANDIDATES, seed=6)
     L = rep["ledger"]
@@ -181,6 +187,7 @@ def test_dag_enumeration_count_matches_known_values():
     assert sum(1 for _ in enumerate_dags(("a", "b", "c"))) == 25
 
 
+@pytest.mark.slow
 def test_generation_respects_measured_facts_and_refutations():
     from cerp.epistemics.generate import _reach, canon_of_structure, constrained_structures
     facts = [("A", "Y", True), ("S1", "Y", False)]
@@ -192,6 +199,7 @@ def test_generation_respects_measured_facts_and_refutations():
         assert all(sum(a == z for a, _ in edges) >= 2 for z in lat)
 
 
+@pytest.mark.slow
 def test_generation_recovers_a_truth_outside_every_candidate_and_stays_conditional():
     from cerp.epistemics.generate import canon_of_structure
     from cerp.epistemics.inquiry import EXTENDED_QUERIES

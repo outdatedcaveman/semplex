@@ -88,6 +88,25 @@ def main():
         OUT.write_text(json.dumps(res, indent=1))
         print("backprop", res["backprop"]["fit"], "frozen", res["no first-layer learning"]["fit"], flush=True)
 
+    def _warm_start(P, G, K, monos):
+        """Return initial natural-unit coefficients from the best already-solved subset."""
+        sub_sym = {"O": ("O",), "B": ("B", "O"), "S": ("S", "B", "O")}[G]
+        sub_pow = {"A": ("A",), "B": ("B", "A"), "C": ("C", "B", "A")}[P]
+        best_fit, best_start = -1.0, None
+        for sp in sub_pow:
+            for sg in sub_sym:
+                for sk in range(2, K + 1):
+                    k = f"{sp},{sg},{sk}"
+                    if k in res and "coefficients_natural_units" in res[k]:
+                        fit = res[k].get("fit", 0.0)
+                        if fit > best_fit:
+                            best_fit = fit
+                            cdict = res[k]["coefficients_natural_units"]
+                            src_monos = L.enumerate_monomials(sp, sk, sg)
+                            src_coef = [cdict.get(m["label"], 0.0) for m in src_monos]
+                            best_start = L.embed_coefficients(src_monos, src_coef, monos)
+        return best_start
+
     for P, G, K in CONFIGS:
         key = f"{P},{G},{K}"
         if key in res:
@@ -99,7 +118,9 @@ def main():
         rng = np.random.default_rng(1000 + len(monos))
         units = L.natural_units(monos, tr, X, H, N, rng)
         gens = 40 if len(monos) <= 30 else 60
-        a, hist = L.cem_search(tr, units, X, Ttr, Ctr, H, N, rng, gens=gens, pop=32 if len(monos) <= 30 else 48,
+        start = _warm_start(P, G, K, monos)
+        a, hist = L.cem_search(tr, units, X, Ttr, Ctr, H, N, rng, gens=gens,
+                               pop=32 if len(monos) <= 30 else 48, start=start,
                                log=lambda s: print(key, s, flush=True))
         ev = evaluate(tr, a * units)
         order = np.argsort(-np.abs(a))

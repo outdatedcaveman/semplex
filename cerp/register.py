@@ -19,6 +19,7 @@ Mapping from the register's free-text status to a ledger warrant, weakest readin
   PROVED with Lean in the evidence    -> PROOF_ASSISTANT
   PROVED (literature)          -> ASSUMPTION   (rests on a cited source)
   PROVED (informal / sketch)   -> RATIONALE    (argued, not mechanized)
+  PARTLY MECHANIZED            -> RATIONALE    (a Lean lemma covers one step only)
 A status combining several (e.g. "PROVED + EMPIRICALLY-SUPPORTED") gets every
 matching method; the projection then reports the weakest.
 """
@@ -83,7 +84,10 @@ def methods_for(row):
         m.add(Method.EXACT_UNCERTIFIED)
     if "KERNEL-CHECKED" in s or "PROVED-IN-FRAGMENT" in s:
         m.add(Method.KERNEL_CHECKED)
-    if re.search(r"\bPROVED\b(?!-IN)", s):
+    if "PARTLY MECHANIZED" in s:
+        # a Lean lemma covers one step; the argument as a whole is still informal
+        m.add(Method.RATIONALE)
+    elif re.search(r"\bPROVED\b(?!-IN)", s):
         if "LEAN" in (row.evidence + row.status).upper():
             m.add(Method.PROOF_ASSISTANT)
         elif "LITERATURE" in s:

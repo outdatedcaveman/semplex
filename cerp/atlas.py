@@ -34,6 +34,9 @@ Truth tables are ints: bit number sum(x_j << j) is the value at x.
 from __future__ import annotations
 
 import itertools
+import os
+import pathlib
+import pickle
 from dataclasses import dataclass
 
 import numpy as np
@@ -245,10 +248,29 @@ def build(m, tables):
     return Table(m, L, W, T, canon, key // 8, key % 8, c2[canon], exhibit, wit, wenum)
 
 
-def build_all(m_max=4):
+_CACHE_DIR = pathlib.Path(__file__).resolve().parent.parent / "atlas" / ".cache"
+
+
+def build_all(m_max=4, *, use_cache=True):
+    cache_path = _CACHE_DIR / f"tables_m{m_max}.pkl"
+    if use_cache and cache_path.exists():
+        try:
+            with cache_path.open("rb") as fh:
+                return pickle.load(fh)
+        except Exception:
+            pass
     tables = {}
     for m in range(1, m_max + 1):
         tables[m] = build(m, tables)
+    if use_cache:
+        try:
+            _CACHE_DIR.mkdir(parents=True, exist_ok=True)
+            tmp_path = cache_path.with_suffix(f".tmp.{os.getpid()}")
+            with tmp_path.open("wb") as fh:
+                pickle.dump(tables, fh, protocol=pickle.HIGHEST_PROTOCOL)
+            tmp_path.replace(cache_path)
+        except Exception:
+            pass
     return tables
 
 
