@@ -54,3 +54,17 @@ open PFT
 #print axioms applyStop_preserves_supermartingale
 #print axioms optional_stopping_supermartingale
 #print axioms ville_anytime_valid_bound
+#print axioms symIntDiv_neg_left
+#print axioms intFixedScalar
+#print axioms actVec_left_inv
+#print axioms actVec_right_inv
+#print axioms actVec_comp
+#print axioms fdGrad_equivariant
+#print axioms gdStep_equivariant
+#print axioms adamwStep_equivariant
+#print axioms theorem15_trajectory_equivariant
+#print axioms theorem15_gd_trajectory_equivariant
+#print axioms theorem15_adamw_trajectory_equivariant
+#print axioms theorem15_finite_distribution_invariant
+#print axioms ensembleInvariant_of_nodup_support
+#print axioms theorem15_adamw_finite_distribution_invariant

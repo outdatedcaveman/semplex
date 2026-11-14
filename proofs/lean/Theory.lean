@@ -1579,4 +1579,748 @@ theorem ville_anytime_valid_bound (K M d : Nat) (t : ProbTree) (s : StopPolicy)
 
 end SemiosisAndVille
 
+/-! ## §20 Equivariance of mechanism choice (Theorem 15, gap C1 / P069)
+
+Mechanizes the four steps of `THEORY.md` §3.7 Theorem 15 in Lean 4 core
+(no Mathlib):
+1. Concrete group `SignedPerm n` of coordinate permutations and sign flips
+   acting linearly on parameter vectors `Fin n → S`, with first moments `m`
+   signed-permuted and second moments `v` strictly permuted.
+2. Concrete loss-induced central-difference gradient `fdGrad` proving
+   gradient equivariance directly from loss invariance `L (σ • θ) = L θ`.
+3. Concrete equivariance proofs for `gdStep` and full `adamwStep` (elementwise
+   first/second moments using `g * g` evenness, bias corrections, elementwise
+   normalization `m̂ / (sqrt(v̂) + eps)`, and decoupled weight decay).
+4. Deterministic trajectory equivariance (`theorem15_trajectory_equivariant`,
+   for both GD and time-varying AdamW schedules) and finite weighted ensemble
+   distribution invariance (`theorem15_finite_distribution_invariant`, lemma
+   toward Theorem 15; continuous Gaussian measure requires Mathlib). -/
+section Theorem15
+
+/-- Scalar arithmetic interface for parameter vectors, losses, and AdamW updates. -/
+structure AdamScalar (S : Type _) where
+  zero : S
+  add : S → S → S
+  sub : S → S → S
+  mul : S → S → S
+  neg : S → S
+  div : S → S → S
+  sqrt : S → S
+  neg_neg : ∀ a, neg (neg a) = a
+  add_neg : ∀ a b, add (neg a) (neg b) = neg (add a b)
+  sub_neg : ∀ a b, sub (neg a) (neg b) = neg (sub a b)
+  neg_add : ∀ a b, neg (add a b) = sub (neg a) b
+  neg_sub : ∀ a b, neg (sub a b) = add (neg a) b
+  sub_swap_neg : ∀ a b, neg (sub a b) = sub b a
+  mul_neg_right : ∀ a b, mul a (neg b) = neg (mul a b)
+  neg_mul_neg : ∀ a b, mul (neg a) (neg b) = mul a b
+  div_neg_left : ∀ a b, div (neg a) b = neg (div a b)
+
+/-- Sign-preserving truncated division on `Int` (`symIntDiv (-a) b = - symIntDiv a b`). -/
+def symIntDiv (a b : Int) : Int :=
+  if a = 0 then 0
+  else if (0 ≤ a) = (0 ≤ b) then Int.ofNat (a.natAbs / b.natAbs)
+  else -Int.ofNat (a.natAbs / b.natAbs)
+
+theorem symIntDiv_neg_left (a b : Int) : symIntDiv (-a) b = -symIntDiv a b := by
+  by_cases ha : a = 0
+  · subst ha
+    simp [symIntDiv]
+  · have hna : -a ≠ 0 := by omega
+    by_cases hpos : 0 ≤ a <;> by_cases hb : 0 ≤ b
+    · have hnpos : ¬ (0 ≤ -a) := by omega
+      simp [symIntDiv, ha, hna, hpos, hnpos, hb, Int.natAbs_neg]
+    · have hnpos : ¬ (0 ≤ -a) := by omega
+      simp [symIntDiv, ha, hna, hpos, hnpos, hb, Int.natAbs_neg]
+    · have hnpos : 0 ≤ -a := by omega
+      simp [symIntDiv, ha, hna, hpos, hnpos, hb, Int.natAbs_neg]
+    · have hnpos : 0 ≤ -a := by omega
+      simp [symIntDiv, ha, hna, hpos, hnpos, hb, Int.natAbs_neg]
+
+private def natSqrtLoop (n : Nat) : Nat → Nat → Nat
+  | 0, lo => lo
+  | fuel + 1, lo =>
+      if (lo + 1) * (lo + 1) ≤ n then natSqrtLoop n fuel (lo + 1) else lo
+
+/-- Concrete fixed-point `Int` instance of `AdamScalar` with all algebraic laws proved in Lean core. -/
+def intFixedScalar : AdamScalar Int where
+  zero := 0
+  add := Int.add
+  sub := Int.sub
+  mul := Int.mul
+  neg := Int.neg
+  div := symIntDiv
+  sqrt := fun x => Int.ofNat (natSqrtLoop x.natAbs x.natAbs 0)
+  neg_neg := fun a => by show -(-a) = a; omega
+  add_neg := fun a b => by show (-a) + (-b) = -(a + b); omega
+  sub_neg := fun a b => by show (-a) - (-b) = -(a - b); omega
+  neg_add := fun a b => by show -(a + b) = (-a) - b; omega
+  neg_sub := fun a b => by show -(a - b) = (-a) + b; omega
+  sub_swap_neg := fun a b => by show -(a - b) = b - a; omega
+  mul_neg_right := Int.mul_neg
+  neg_mul_neg := Int.neg_mul_neg
+  div_neg_left := symIntDiv_neg_left
+
+/-- Apply a Boolean sign flip (`true` negates, `false` preserves). -/
+def signedVal {S : Type _} (F : AdamScalar S) (flip : Bool) (x : S) : S :=
+  if flip then F.neg x else x
+
+private theorem signedVal_invol {S : Type _} (F : AdamScalar S) (fl : Bool) (x : S) :
+    signedVal F fl (signedVal F fl x) = x := by
+  cases fl <;> simp [signedVal, F.neg_neg]
+
+private theorem signedVal_add {S : Type _} (F : AdamScalar S) (fl : Bool) (a b : S) :
+    F.add (signedVal F fl a) (signedVal F fl b) = signedVal F fl (F.add a b) := by
+  cases fl
+  · rfl
+  · simp [signedVal, F.add_neg]
+
+private theorem signedVal_sub {S : Type _} (F : AdamScalar S) (fl : Bool) (a b : S) :
+    F.sub (signedVal F fl a) (signedVal F fl b) = signedVal F fl (F.sub a b) := by
+  cases fl
+  · rfl
+  · simp [signedVal, F.sub_neg]
+
+private theorem signedVal_mul_scalar {S : Type _} (F : AdamScalar S) (fl : Bool) (c x : S) :
+    F.mul c (signedVal F fl x) = signedVal F fl (F.mul c x) := by
+  cases fl
+  · rfl
+  · simp [signedVal, F.mul_neg_right]
+
+private theorem signedVal_div_denom {S : Type _} (F : AdamScalar S) (fl : Bool) (a b : S) :
+    F.div (signedVal F fl a) b = signedVal F fl (F.div a b) := by
+  cases fl
+  · rfl
+  · simp [signedVal, F.div_neg_left]
+
+private theorem signedVal_sq_invariant {S : Type _} (F : AdamScalar S) (fl : Bool) (x : S) :
+    F.mul (signedVal F fl x) (signedVal F fl x) = F.mul x x := by
+  cases fl
+  · rfl
+  · simp [signedVal, F.neg_mul_neg]
+
+/-- Concrete signed-permutation group element on `n` parameter coordinates.
+    Covers input column permutations and negations on `W1`, and output negations `(W2, b2)`. -/
+structure SignedPerm (n : Nat) where
+  toFun : Fin n → Fin n
+  invFun : Fin n → Fin n
+  left_inv : ∀ i, invFun (toFun i) = i
+  right_inv : ∀ i, toFun (invFun i) = i
+  sgn : Fin n → Bool
+
+def SignedPerm.id (n : Nat) : SignedPerm n where
+  toFun := fun i => i
+  invFun := fun i => i
+  left_inv := fun _ => rfl
+  right_inv := fun _ => rfl
+  sgn := fun _ => false
+
+def SignedPerm.inv {n : Nat} (σ : SignedPerm n) : SignedPerm n where
+  toFun := σ.invFun
+  invFun := σ.toFun
+  left_inv := σ.right_inv
+  right_inv := σ.left_inv
+  sgn := fun i => σ.sgn (σ.toFun i)
+
+def SignedPerm.comp {n : Nat} (σ τ : SignedPerm n) : SignedPerm n where
+  toFun := fun i => σ.toFun (τ.toFun i)
+  invFun := fun i => τ.invFun (σ.invFun i)
+  left_inv := fun i => by simp [σ.left_inv, τ.left_inv]
+  right_inv := fun i => by simp [σ.right_inv, τ.right_inv]
+  sgn := fun i => Bool.xor (σ.sgn i) (τ.sgn (σ.invFun i))
+
+/-- Linear signed-permutation action on parameter/gradient/first-moment vectors. -/
+def actVec {S : Type _} (F : AdamScalar S) {n : Nat} (σ : SignedPerm n)
+    (v : Fin n → S) : Fin n → S :=
+  fun i => signedVal F (σ.sgn i) (v (σ.invFun i))
+
+/-- Pure coordinate permutation action on non-negative second-moment vectors `v`. -/
+def permVec {S : Type _} {n : Nat} (σ : SignedPerm n) (v : Fin n → S) : Fin n → S :=
+  fun i => v (σ.invFun i)
+
+theorem actVec_id {S : Type _} (F : AdamScalar S) {n : Nat} (v : Fin n → S) :
+    actVec F (SignedPerm.id n) v = v := by
+  funext i
+  rfl
+
+theorem actVec_left_inv {S : Type _} (F : AdamScalar S) {n : Nat} (σ : SignedPerm n)
+    (v : Fin n → S) :
+    actVec F (SignedPerm.inv σ) (actVec F σ v) = v := by
+  funext i
+  simp only [actVec, SignedPerm.inv, σ.right_inv, σ.left_inv]
+  exact signedVal_invol F (σ.sgn (σ.toFun i)) (v i)
+
+theorem actVec_right_inv {S : Type _} (F : AdamScalar S) {n : Nat} (σ : SignedPerm n)
+    (v : Fin n → S) :
+    actVec F σ (actVec F (SignedPerm.inv σ) v) = v := by
+  funext i
+  simp only [actVec, SignedPerm.inv, σ.left_inv, σ.right_inv]
+  exact signedVal_invol F (σ.sgn i) (v i)
+
+theorem permVec_left_inv {S : Type _} {n : Nat} (σ : SignedPerm n) (v : Fin n → S) :
+    permVec (SignedPerm.inv σ) (permVec σ v) = v := by
+  funext i
+  simp only [permVec, SignedPerm.inv]
+  rw [σ.left_inv]
+
+theorem permVec_right_inv {S : Type _} {n : Nat} (σ : SignedPerm n) (v : Fin n → S) :
+    permVec σ (permVec (SignedPerm.inv σ) v) = v := by
+  funext i
+  simp only [permVec, SignedPerm.inv]
+  rw [σ.right_inv]
+
+private theorem signedVal_xor {S : Type _} (F : AdamScalar S) (a b : Bool) (x : S) :
+    signedVal F a (signedVal F b x) = signedVal F (Bool.xor a b) x := by
+  cases a <;> cases b <;> simp [signedVal, F.neg_neg]
+
+theorem actVec_comp {S : Type _} (F : AdamScalar S) {n : Nat} (σ τ : SignedPerm n)
+    (v : Fin n → S) :
+    actVec F (SignedPerm.comp σ τ) v = actVec F σ (actVec F τ v) := by
+  funext i
+  simp only [actVec, SignedPerm.comp]
+  exact (signedVal_xor F (σ.sgn i) (τ.sgn (σ.invFun i)) (v (τ.invFun (σ.invFun i)))).symm
+
+/-- Replace a single coordinate `j` of parameter vector `θ`. -/
+def updateCoord {S : Type _} {n : Nat} (θ : Fin n → S) (j : Fin n) (val : S) : Fin n → S :=
+  fun i => if i = j then val else θ i
+
+private theorem actVec_updateCoord {S : Type _} (F : AdamScalar S) {n : Nat}
+    (σ : SignedPerm n) (θ : Fin n → S) (j : Fin n) (val : S) :
+    actVec F σ (updateCoord θ j val) =
+    updateCoord (actVec F σ θ) (σ.toFun j) (signedVal F (σ.sgn (σ.toFun j)) val) := by
+  funext i
+  by_cases hi : i = σ.toFun j
+  · subst hi
+    simp [actVec, updateCoord, σ.left_inv]
+  · have hinv_ne : σ.invFun i ≠ j := by
+      intro heq
+      apply hi
+      calc
+        i = σ.toFun (σ.invFun i) := (σ.right_inv i).symm
+        _ = σ.toFun j := congrArg σ.toFun heq
+    simp [actVec, updateCoord, hi, hinv_ne]
+
+/-- Concrete central-difference gradient induced by a scalar loss `L : (Fin n → S) → S`. -/
+def fdGrad {S : Type _} (F : AdamScalar S) {n : Nat}
+    (L : (Fin n → S) → S) (stepScale h : S) (θ : Fin n → S) : Fin n → S :=
+  fun j =>
+    F.mul stepScale
+      (F.sub (L (updateCoord θ j (F.add (θ j) h))) (L (updateCoord θ j (F.sub (θ j) h))))
+
+/-- Loss invariance under `σ` implies gradient equivariance of `fdGrad` concretely
+    (Step 2 of Theorem 15, derived rather than assumed). -/
+theorem fdGrad_equivariant {S : Type _} (F : AdamScalar S) {n : Nat}
+    (σ : SignedPerm n) (L : (Fin n → S) → S) (stepScale h : S)
+    (hL_inv : ∀ θ, L (actVec F σ θ) = L θ) :
+    ∀ θ, fdGrad F L stepScale h (actVec F σ θ) = actVec F σ (fdGrad F L stepScale h θ) := by
+  intro θ
+  funext k
+  let j := σ.invFun k
+  have hkj : σ.toFun j = k := σ.right_inv k
+  cases hfl : σ.sgn k
+  · have hval : actVec F σ θ k = θ j := by simp [actVec, signedVal, hfl, j]
+    have hp : updateCoord (actVec F σ θ) k (F.add (actVec F σ θ k) h) =
+        actVec F σ (updateCoord θ j (F.add (θ j) h)) := by
+      rw [actVec_updateCoord F σ θ j (F.add (θ j) h), hkj]
+      simp [signedVal, hfl, hval]
+    have hm : updateCoord (actVec F σ θ) k (F.sub (actVec F σ θ k) h) =
+        actVec F σ (updateCoord θ j (F.sub (θ j) h)) := by
+      rw [actVec_updateCoord F σ θ j (F.sub (θ j) h), hkj]
+      simp [signedVal, hfl, hval]
+    simp only [fdGrad]
+    rw [hp, hm, hL_inv, hL_inv]
+    simp only [actVec, hfl, signedVal, if_false]
+    rfl
+  · have hval : actVec F σ θ k = F.neg (θ j) := by simp [actVec, signedVal, hfl, j]
+    have hp : updateCoord (actVec F σ θ) k (F.add (actVec F σ θ k) h) =
+        actVec F σ (updateCoord θ j (F.sub (θ j) h)) := by
+      rw [actVec_updateCoord F σ θ j (F.sub (θ j) h), hkj]
+      simp [signedVal, hfl, hval, F.neg_sub]
+    have hm : updateCoord (actVec F σ θ) k (F.sub (actVec F σ θ k) h) =
+        actVec F σ (updateCoord θ j (F.add (θ j) h)) := by
+      rw [actVec_updateCoord F σ θ j (F.add (θ j) h), hkj]
+      simp [signedVal, hfl, hval, F.neg_add]
+    simp only [fdGrad]
+    rw [hp, hm, hL_inv, hL_inv]
+    simp only [actVec, hfl, signedVal, if_true]
+    change F.mul stepScale (F.sub _ _) = F.neg (F.mul stepScale (F.sub _ _))
+    rw [← F.sub_swap_neg, F.mul_neg_right]
+
+/-- Concrete full-batch gradient descent step on `Fin n → S`. -/
+def gdStep {S : Type _} (F : AdamScalar S) {n : Nat}
+    (grad : (Fin n → S) → Fin n → S) (lr : S) (θ : Fin n → S) : Fin n → S :=
+  fun i => F.sub (θ i) (F.mul lr (grad θ i))
+
+theorem gdStep_equivariant_of_grad {S : Type _} (F : AdamScalar S) {n : Nat}
+    (σ : SignedPerm n) (grad : (Fin n → S) → Fin n → S) (lr : S)
+    (hgrad : ∀ θ, grad (actVec F σ θ) = actVec F σ (grad θ)) :
+    ∀ θ, gdStep F grad lr (actVec F σ θ) = actVec F σ (gdStep F grad lr θ) := by
+  intro θ
+  funext i
+  simp only [gdStep, hgrad θ, actVec]
+  rw [signedVal_mul_scalar, signedVal_sub]
+
+/-- Concrete GD step commutes with `σ` for any `σ`-invariant loss `L`. -/
+theorem gdStep_equivariant {S : Type _} (F : AdamScalar S) {n : Nat}
+    (σ : SignedPerm n) (L : (Fin n → S) → S) (stepScale h lr : S)
+    (hL_inv : ∀ θ, L (actVec F σ θ) = L θ) :
+    ∀ θ, gdStep F (fdGrad F L stepScale h) lr (actVec F σ θ) =
+         actVec F σ (gdStep F (fdGrad F L stepScale h) lr θ) :=
+  gdStep_equivariant_of_grad F σ _ lr (fdGrad_equivariant F σ L stepScale h hL_inv)
+
+/-- AdamW hyperparameters / per-step scalars (moments, bias corrections, eps, decoupled decay). -/
+structure AdamWCfg (S : Type _) where
+  b1 : S
+  oneSubB1 : S
+  b2 : S
+  oneSubB2 : S
+  invOneSubB1t : S
+  invOneSubB2t : S
+  lr : S
+  eps : S
+  oneSubLrWd : S
+
+/-- Optimizer state `(θ, m, v)` for AdamW on `Fin n → S`. -/
+structure AdamWState (n : Nat) (S : Type _) where
+  θ : Fin n → S
+  m : Fin n → S
+  v : Fin n → S
+
+/-- Group action on AdamW state: permute and sign-flip `(θ, m)`, strictly permute `v`. -/
+def actAdamWState {S : Type _} (F : AdamScalar S) {n : Nat}
+    (σ : SignedPerm n) (s : AdamWState n S) : AdamWState n S where
+  θ := actVec F σ s.θ
+  m := actVec F σ s.m
+  v := permVec σ s.v
+
+theorem actAdamWState_left_inv {S : Type _} (F : AdamScalar S) {n : Nat}
+    (σ : SignedPerm n) (s : AdamWState n S) :
+    actAdamWState F (SignedPerm.inv σ) (actAdamWState F σ s) = s := by
+  cases s with
+  | mk θ m v =>
+      simp only [actAdamWState, actVec_left_inv, permVec_left_inv]
+
+theorem actAdamWState_right_inv {S : Type _} (F : AdamScalar S) {n : Nat}
+    (σ : SignedPerm n) (s : AdamWState n S) :
+    actAdamWState F σ (actAdamWState F (SignedPerm.inv σ) s) = s := by
+  cases s with
+  | mk θ m v =>
+      simp only [actAdamWState, actVec_right_inv, permVec_right_inv]
+
+/-- Concrete AdamW update with elementwise 1st & 2nd moments, sqrt normalization, and decoupled weight decay. -/
+def adamwStep {S : Type _} (F : AdamScalar S) {n : Nat}
+    (grad : (Fin n → S) → Fin n → S) (cfg : AdamWCfg S) (s : AdamWState n S) :
+    AdamWState n S :=
+  let g := grad s.θ
+  let m' : Fin n → S := fun i => F.add (F.mul cfg.b1 (s.m i)) (F.mul cfg.oneSubB1 (g i))
+  let v' : Fin n → S := fun i => F.add (F.mul cfg.b2 (s.v i)) (F.mul cfg.oneSubB2 (F.mul (g i) (g i)))
+  let θ' : Fin n → S := fun i =>
+    let mHat := F.mul cfg.invOneSubB1t (m' i)
+    let vHat := F.mul cfg.invOneSubB2t (v' i)
+    let dir := F.div mHat (F.add (F.sqrt vHat) cfg.eps)
+    F.sub (F.mul cfg.oneSubLrWd (s.θ i)) (F.mul cfg.lr dir)
+  ⟨θ', m', v'⟩
+
+theorem adamwStep_equivariant_of_grad {S : Type _} (F : AdamScalar S) {n : Nat}
+    (σ : SignedPerm n) (grad : (Fin n → S) → Fin n → S) (cfg : AdamWCfg S)
+    (hgrad : ∀ θ, grad (actVec F σ θ) = actVec F σ (grad θ)) :
+    ∀ s, adamwStep F grad cfg (actAdamWState F σ s) =
+         actAdamWState F σ (adamwStep F grad cfg s) := by
+  intro s
+  cases s with
+  | mk θ m v =>
+      have hg : grad (actVec F σ θ) = actVec F σ (grad θ) := hgrad θ
+      have hm_eq :
+          (adamwStep F grad cfg (actAdamWState F σ ⟨θ, m, v⟩)).m =
+          actVec F σ (adamwStep F grad cfg ⟨θ, m, v⟩).m := by
+        funext i
+        simp only [adamwStep, actAdamWState, hg, actVec]
+        rw [signedVal_mul_scalar, signedVal_mul_scalar, signedVal_add]
+      have hv_eq :
+          (adamwStep F grad cfg (actAdamWState F σ ⟨θ, m, v⟩)).v =
+          permVec σ (adamwStep F grad cfg ⟨θ, m, v⟩).v := by
+        funext i
+        simp only [adamwStep, actAdamWState, hg, actVec, permVec]
+        rw [signedVal_sq_invariant]
+      have hθ_eq :
+          (adamwStep F grad cfg (actAdamWState F σ ⟨θ, m, v⟩)).θ =
+          actVec F σ (adamwStep F grad cfg ⟨θ, m, v⟩).θ := by
+        funext i
+        have hm_i :
+            F.add (F.mul cfg.b1 (actVec F σ m i)) (F.mul cfg.oneSubB1 (grad (actVec F σ θ) i)) =
+            signedVal F (σ.sgn i) (F.add (F.mul cfg.b1 (m (σ.invFun i))) (F.mul cfg.oneSubB1 (grad θ (σ.invFun i)))) := by
+          have hc := congrFun hm_eq i
+          simpa [adamwStep, actAdamWState, actVec] using hc
+        have hv_i :
+            F.add (F.mul cfg.b2 (permVec σ v i))
+              (F.mul cfg.oneSubB2 (F.mul (grad (actVec F σ θ) i) (grad (actVec F σ θ) i))) =
+            F.add (F.mul cfg.b2 (v (σ.invFun i)))
+              (F.mul cfg.oneSubB2 (F.mul (grad θ (σ.invFun i)) (grad θ (σ.invFun i)))) := by
+          have hc := congrFun hv_eq i
+          simpa [adamwStep, actAdamWState, permVec] using hc
+        simp only [adamwStep, actAdamWState]
+        change F.sub (F.mul cfg.oneSubLrWd (actVec F σ θ i))
+            (F.mul cfg.lr (F.div (F.mul cfg.invOneSubB1t _) (F.add (F.sqrt (F.mul cfg.invOneSubB2t _)) cfg.eps))) =
+          signedVal F (σ.sgn i)
+            (F.sub (F.mul cfg.oneSubLrWd (θ (σ.invFun i)))
+              (F.mul cfg.lr (F.div (F.mul cfg.invOneSubB1t _) (F.add (F.sqrt (F.mul cfg.invOneSubB2t _)) cfg.eps))))
+        rw [hm_i, hv_i]
+        simp only [actVec]
+        rw [signedVal_mul_scalar, signedVal_mul_scalar, signedVal_div_denom, signedVal_mul_scalar, signedVal_sub]
+      cases hL : adamwStep F grad cfg (actAdamWState F σ ⟨θ, m, v⟩) with
+      | mk θL mL vL =>
+          cases hR : adamwStep F grad cfg ⟨θ, m, v⟩ with
+          | mk θR mR vR =>
+              simp only [actAdamWState]
+              rw [hL] at hθ_eq hm_eq hv_eq
+              rw [hR] at hθ_eq hm_eq hv_eq
+              simp only at hθ_eq hm_eq hv_eq
+              rw [hθ_eq, hm_eq, hv_eq]
+
+/-- Concrete AdamW step commutes with `SignedPerm n` for any `σ`-invariant loss `L`. -/
+theorem adamwStep_equivariant {S : Type _} (F : AdamScalar S) {n : Nat}
+    (σ : SignedPerm n) (L : (Fin n → S) → S) (stepScale h : S) (cfg : AdamWCfg S)
+    (hL_inv : ∀ θ, L (actVec F σ θ) = L θ) :
+    ∀ s, adamwStep F (fdGrad F L stepScale h) cfg (actAdamWState F σ s) =
+         actAdamWState F σ (adamwStep F (fdGrad F L stepScale h) cfg s) :=
+  adamwStep_equivariant_of_grad F σ _ cfg (fdGrad_equivariant F σ L stepScale h hL_inv)
+
+/-- Iterate a step function `t` times. -/
+def iterStep {α : Type _} (step : α → α) : Nat → α → α
+  | 0, x => x
+  | t + 1, x => step (iterStep step t x)
+
+/-- Iterate a time-dependent step schedule (e.g. AdamW with `(1 - β₁^t)` bias correction). -/
+def runSchedule {α : Type _} (stepAt : Nat → α → α) : Nat → α → α
+  | 0, x => x
+  | t + 1, x => stepAt t (runSchedule stepAt t x)
+
+theorem iterStep_equivariant {α : Type _} (step act : α → α)
+    (hstep : ∀ x, step (act x) = act (step x)) :
+    ∀ t x, iterStep step t (act x) = act (iterStep step t x)
+  | 0, _ => rfl
+  | t + 1, x => by
+      simp only [iterStep, iterStep_equivariant step act hstep t x, hstep]
+
+theorem runSchedule_equivariant {α : Type _} (stepAt : Nat → α → α) (act : α → α)
+    (hstep : ∀ t x, stepAt t (act x) = act (stepAt t x)) :
+    ∀ t x, runSchedule stepAt t (act x) = act (runSchedule stepAt t x)
+  | 0, _ => rfl
+  | t + 1, x => by
+      simp only [runSchedule, runSchedule_equivariant stepAt act hstep t x, hstep]
+
+/-- Theorem 15, Conclusion 1 (deterministic trajectory equivariance, abstract form). -/
+theorem theorem15_trajectory_equivariant {Θ C : Type _}
+    (actΘ : Θ → Θ) (actC : C → C)
+    (step : Θ → Θ) (readout : Θ → C)
+    (hstep : ∀ θ, step (actΘ θ) = actΘ (step θ))
+    (hreadout : ∀ θ, readout (actΘ θ) = actC (readout θ)) :
+    ∀ t θ, readout (iterStep step t (actΘ θ)) = actC (readout (iterStep step t θ)) := by
+  intro t θ
+  rw [iterStep_equivariant step actΘ hstep t θ, hreadout]
+
+/-- Theorem 15, Conclusion 1 instantiated concretely for full-batch GD on `Fin n → S`. -/
+theorem theorem15_gd_trajectory_equivariant {S C : Type _} (F : AdamScalar S) {n : Nat}
+    (σ : SignedPerm n) (actC : C → C)
+    (L : (Fin n → S) → S) (stepScale h lr : S)
+    (readout : (Fin n → S) → C)
+    (hL_inv : ∀ θ, L (actVec F σ θ) = L θ)
+    (hreadout : ∀ θ, readout (actVec F σ θ) = actC (readout θ)) :
+    ∀ t θ, readout (iterStep (gdStep F (fdGrad F L stepScale h) lr) t (actVec F σ θ)) =
+           actC (readout (iterStep (gdStep F (fdGrad F L stepScale h) lr) t θ)) :=
+  theorem15_trajectory_equivariant (actVec F σ) actC _ readout
+    (gdStep_equivariant F σ L stepScale h lr hL_inv) hreadout
+
+/-- Theorem 15, Conclusion 1 instantiated concretely for AdamW with time-varying schedule
+    on an invariant loss `L` and signed-permutation action `σ : SignedPerm n`. -/
+theorem theorem15_adamw_trajectory_equivariant {S C : Type _} (F : AdamScalar S) {n : Nat}
+    (σ : SignedPerm n) (actC : C → C)
+    (L : (Fin n → S) → S) (stepScale h : S) (sched : Nat → AdamWCfg S)
+    (readout : (Fin n → S) → C)
+    (hL_inv : ∀ θ, L (actVec F σ θ) = L θ)
+    (hreadout : ∀ θ, readout (actVec F σ θ) = actC (readout θ)) :
+    ∀ t s,
+      readout (runSchedule (fun k => adamwStep F (fdGrad F L stepScale h) (sched k)) t (actAdamWState F σ s)).θ =
+      actC (readout (runSchedule (fun k => adamwStep F (fdGrad F L stepScale h) (sched k)) t s).θ) := by
+  intro t s
+  have hsched : ∀ k s',
+      adamwStep F (fdGrad F L stepScale h) (sched k) (actAdamWState F σ s') =
+      actAdamWState F σ (adamwStep F (fdGrad F L stepScale h) (sched k) s') :=
+    fun k => adamwStep_equivariant F σ L stepScale h (sched k) hL_inv
+  rw [runSchedule_equivariant _ (actAdamWState F σ) hsched t s]
+  exact hreadout _
+
+private def sumNatT15 : List Nat → Nat
+  | [] => 0
+  | x :: xs => x + sumNatT15 xs
+
+/-- Pushforward invariance of a finite weighted list of initial parameter states under `actΘ`. -/
+def EnsembleInvariant {Θ : Type _} (actΘ : Θ → Θ) (init : List (Nat × Θ)) : Prop :=
+  ∀ P : Θ → Nat,
+    sumNatT15 (init.map fun p => p.1 * P (actΘ p.2)) =
+    sumNatT15 (init.map fun p => p.1 * P p.2)
+
+/-- Total initial weight landing on circuit `tgt` after readout. -/
+def circuitMass {Θ C : Type _} [DecidableEq C] (finalReadout : Θ → C)
+    (tgt : C) (init : List (Nat × Θ)) : Nat :=
+  sumNatT15 (init.map fun p => if finalReadout p.2 = tgt then p.1 else 0)
+
+private theorem list_map_congr_t15 {α β : Type _} (l : List α) (g₁ g₂ : α → β)
+    (h : ∀ a, g₁ a = g₂ a) : l.map g₁ = l.map g₂ := by
+  induction l with
+  | nil => rfl
+  | cons x xs ih => simp only [List.map, h x, ih]
+
+/-- Theorem 15, Conclusion 2 (finite weighted distribution — lemma toward Theorem 15;
+    continuous Gaussian measure requires Mathlib): any `actΘ`-invariant finite
+    weighted ensemble assigns equal weight to circuit `I` and circuit `actC I`. -/
+theorem theorem15_finite_distribution_invariant {Θ C : Type _} [DecidableEq C]
+    (actΘ : Θ → Θ) (actC invC : C → C)
+    (hC_left : ∀ c, invC (actC c) = c)
+    (step : Θ → Θ) (readout : Θ → C)
+    (hstep : ∀ θ, step (actΘ θ) = actΘ (step θ))
+    (hreadout : ∀ θ, readout (actΘ θ) = actC (readout θ))
+    (init : List (Nat × Θ)) (hinit : EnsembleInvariant actΘ init)
+    (t : Nat) (tgt : C) :
+    circuitMass (fun θ => readout (iterStep step t θ)) (actC tgt) init =
+    circuitMass (fun θ => readout (iterStep step t θ)) tgt init := by
+  have heq : circuitMass (fun θ => readout (iterStep step t θ)) (actC tgt) init =
+      sumNatT15 (init.map fun p => p.1 * (if readout (iterStep step t p.2) = actC tgt then 1 else 0)) := by
+    simp only [circuitMass]
+    congr 1
+    apply list_map_congr_t15
+    intro p
+    split <;> simp
+  have heq2 : circuitMass (fun θ => readout (iterStep step t θ)) tgt init =
+      sumNatT15 (init.map fun p => p.1 * (if readout (iterStep step t p.2) = tgt then 1 else 0)) := by
+    simp only [circuitMass]
+    congr 1
+    apply list_map_congr_t15
+    intro p
+    split <;> simp
+  rw [heq, heq2, ← hinit (fun θ => if readout (iterStep step t θ) = actC tgt then 1 else 0)]
+  congr 1
+  apply list_map_congr_t15
+  intro p
+  have htraj := theorem15_trajectory_equivariant actΘ actC step readout hstep hreadout t p.2
+  have hiff : actC (readout (iterStep step t p.2)) = actC tgt ↔
+      readout (iterStep step t p.2) = tgt := by
+    constructor
+    · intro h
+      have h' := congrArg invC h
+      simpa [hC_left] using h'
+    · intro h
+      rw [h]
+  have hind :
+      (if readout (iterStep step t (actΘ p.2)) = actC tgt then 1 else 0) =
+      (if readout (iterStep step t p.2) = tgt then 1 else 0) := by
+    rw [htraj]
+    by_cases hhit : readout (iterStep step t p.2) = tgt
+    · simp [hhit]
+    · have hne : actC (readout (iterStep step t p.2)) ≠ actC tgt :=
+        fun heq' => hhit (hiff.mp heq')
+      simp [hhit, hne]
+  rw [hind]
+
+private def countEqT15 {α : Type _} [DecidableEq α] (a : α) : List α → Nat
+  | [] => 0
+  | x :: xs => (if x = a then 1 else 0) + countEqT15 a xs
+
+private def eraseOneT15 {α : Type _} [DecidableEq α] (a : α) : List α → List α
+  | [] => []
+  | x :: xs => if x = a then xs else x :: eraseOneT15 a xs
+
+inductive NoDupSupport {α : Type _} : List α → Prop
+  | nil : NoDupSupport []
+  | cons {x xs} : x ∉ xs → NoDupSupport xs → NoDupSupport (x :: xs)
+
+private theorem countEqT15_pos_mem {α : Type _} [DecidableEq α] {a : α} :
+    ∀ {l : List α}, 0 < countEqT15 a l → a ∈ l
+  | [], h => by simp [countEqT15] at h
+  | x :: xs, h => by
+      if hxa : x = a then
+        subst hxa; exact List.Mem.head _
+      else
+        simp [countEqT15, hxa] at h
+        exact List.Mem.tail _ (countEqT15_pos_mem h)
+
+private theorem countEqT15_not_mem {α : Type _} [DecidableEq α] {a : α} :
+    ∀ {l : List α}, a ∉ l → countEqT15 a l = 0
+  | [], _ => rfl
+  | x :: xs, h => by
+      have hx : x ≠ a := fun heq => h (heq ▸ List.Mem.head _)
+      have hxs : a ∉ xs := fun hm => h (List.Mem.tail _ hm)
+      simp [countEqT15, hx, countEqT15_not_mem hxs]
+
+private theorem countEqT15_of_noDup {α : Type _} [DecidableEq α] {a : α} :
+    ∀ {l : List α}, NoDupSupport l → a ∈ l → countEqT15 a l = 1
+  | [], hn, hm => by cases hm
+  | x :: xs, NoDupSupport.cons hnx hnodup, hm => by
+      if hxa : x = a then
+        subst hxa; simp [countEqT15, countEqT15_not_mem hnx]
+      else
+        cases hm with
+        | head => exact absurd rfl hxa
+        | tail _ ht => simp [countEqT15, hxa, countEqT15_of_noDup hnodup ht]
+
+private theorem sumNatT15_map_eraseOne {α : Type _} [DecidableEq α] (w : α → Nat) {a : α} :
+    ∀ {l : List α}, a ∈ l → sumNatT15 (l.map w) = w a + sumNatT15 ((eraseOneT15 a l).map w)
+  | [], hm => by cases hm
+  | x :: xs, hm => by
+      if hxa : x = a then
+        subst hxa; simp [eraseOneT15, sumNatT15]
+      else
+        cases hm with
+        | head => exact absurd rfl hxa
+        | tail _ ht =>
+            simp [eraseOneT15, hxa, sumNatT15, sumNatT15_map_eraseOne w ht]; omega
+
+private theorem countEqT15_eraseOne_self {α : Type _} [DecidableEq α] (a : α) :
+    ∀ {l : List α}, a ∈ l → countEqT15 a (eraseOneT15 a l) + 1 = countEqT15 a l
+  | [], hm => by cases hm
+  | x :: xs, hm => by
+      if hxa : x = a then
+        subst hxa; simp [eraseOneT15, countEqT15]; omega
+      else
+        cases hm with
+        | head => exact absurd rfl hxa
+        | tail _ ht => simp [eraseOneT15, countEqT15, hxa, countEqT15_eraseOne_self a ht]
+
+private theorem countEqT15_eraseOne_ne {α : Type _} [DecidableEq α] {a b : α} (hne : b ≠ a) :
+    ∀ l : List α, countEqT15 b (eraseOneT15 a l) = countEqT15 b l
+  | [] => rfl
+  | x :: xs => by
+      if hxa : x = a then
+        subst hxa; simp [eraseOneT15, countEqT15, hne.symm]
+      else
+        simp [eraseOneT15, countEqT15, hxa, countEqT15_eraseOne_ne hne xs]
+
+private theorem sumNatT15_map_eq_of_countEq {α : Type _} [DecidableEq α] (w : α → Nat) :
+    ∀ {l₁ l₂ : List α}, (∀ z, countEqT15 z l₁ = countEqT15 z l₂) →
+      sumNatT15 (l₁.map w) = sumNatT15 (l₂.map w)
+  | [], l₂, h => by
+      cases l₂ with
+      | nil => rfl
+      | cons y ys => have hy := h y; simp [countEqT15] at hy; omega
+  | x :: xs, l₂, h => by
+      have hx : 0 < countEqT15 x l₂ := by have h0 := h x; simp [countEqT15] at h0; omega
+      have hmem := countEqT15_pos_mem hx
+      have heq := sumNatT15_map_eraseOne w hmem
+      have hcount : ∀ z, countEqT15 z xs = countEqT15 z (eraseOneT15 x l₂) := by
+        intro z
+        have hz := h z
+        if hzx : z = x then
+          subst hzx
+          have hs := countEqT15_eraseOne_self z hmem
+          simp [countEqT15] at hz; omega
+        else
+          rw [countEqT15_eraseOne_ne hzx l₂]
+          have hxz : x ≠ z := fun e => hzx e.symm
+          simp [countEqT15, hxz] at hz
+          exact hz
+      have ih := sumNatT15_map_eq_of_countEq w hcount
+      simp [sumNatT15, heq, ih]
+
+private theorem countEqT15_map_bijection {α : Type _} [DecidableEq α] {f inv : α → α}
+    (hl : ∀ x, inv (f x) = x) (hr : ∀ x, f (inv x) = x) :
+    ∀ (l : List α) (y : α), countEqT15 y (l.map f) = countEqT15 (inv y) l
+  | [], _ => rfl
+  | x :: xs, y => by
+      have ih := countEqT15_map_bijection hl hr xs y
+      if hfx : f x = y then
+        have hinv : x = inv y := by rw [← hl x, hfx]
+        simp only [List.map, countEqT15, if_pos hfx, if_pos hinv, ih]
+      else
+        have hinv : x ≠ inv y := fun heq => hfx (by rw [heq, hr])
+        simp only [List.map, countEqT15, if_neg hfx, if_neg hinv, ih]
+
+/-- Any finite `NoDupSupport` pool closed under `act` and `inv` with `act`-invariant weights
+    automatically forms an `EnsembleInvariant` weighted parameter distribution. -/
+theorem ensembleInvariant_of_nodup_support {Θ : Type _} [DecidableEq Θ]
+    (support : List Θ) (hnodup : NoDupSupport support) (w : Θ → Nat)
+    (act inv : Θ → Θ)
+    (hl : ∀ θ, inv (act θ) = θ) (hr : ∀ θ, act (inv θ) = θ)
+    (hc1 : ∀ θ, θ ∈ support → act θ ∈ support)
+    (hc2 : ∀ θ, θ ∈ support → inv θ ∈ support)
+    (hw : ∀ θ, w (act θ) = w θ) :
+    EnsembleInvariant act (support.map fun θ => (w θ, θ)) := by
+  intro P
+  have h1 : (support.map fun θ => (w θ, θ)).map (fun p => p.1 * P (act p.2)) =
+      (support.map act).map (fun θ => w (inv θ) * P θ) := by
+    clear hnodup hc1 hc2
+    induction support with
+    | nil => rfl
+    | cons θ θs ih => simp only [List.map, hl, hw, ih]
+  have h2 : (support.map fun θ => (w θ, θ)).map (fun p => p.1 * P p.2) =
+      support.map (fun θ => w (inv θ) * P θ) := by
+    clear hnodup hc1 hc2 h1
+    induction support with
+    | nil => rfl
+    | cons θ θs ih =>
+        have hw' : w (inv θ) = w θ := by simpa [hr] using (hw (inv θ)).symm
+        simp only [List.map, hw', ih]
+  rw [h1, h2]
+  apply sumNatT15_map_eq_of_countEq
+  intro y
+  rw [countEqT15_map_bijection hl hr support y]
+  if hym : y ∈ support then
+    rw [countEqT15_of_noDup hnodup (hc2 y hym), countEqT15_of_noDup hnodup hym]
+  else
+    have hn : inv y ∉ support := fun h => hym (hr y ▸ hc1 (inv y) h)
+    rw [countEqT15_not_mem hn, countEqT15_not_mem hym]
+
+/-- End-to-end finite Theorem 15 lemma specialized to concrete AdamW with invariant loss
+    `L` and signed-permutation action `σ : SignedPerm n`. -/
+theorem theorem15_adamw_finite_distribution_invariant {S C : Type _} [DecidableEq C]
+    (F : AdamScalar S) {n : Nat}
+    (σ : SignedPerm n) (actC invC : C → C)
+    (hC_left : ∀ c, invC (actC c) = c)
+    (L : (Fin n → S) → S) (stepScale δ : S) (sched : Nat → AdamWCfg S)
+    (readout : (Fin n → S) → C)
+    (hL_inv : ∀ θ, L (actVec F σ θ) = L θ)
+    (hreadout : ∀ θ, readout (actVec F σ θ) = actC (readout θ))
+    (init : List (Nat × AdamWState n S))
+    (hinit : EnsembleInvariant (actAdamWState F σ) init)
+    (t : Nat) (tgt : C) :
+    circuitMass (fun s => readout (runSchedule (fun k => adamwStep F (fdGrad F L stepScale δ) (sched k)) t s).θ)
+      (actC tgt) init =
+    circuitMass (fun s => readout (runSchedule (fun k => adamwStep F (fdGrad F L stepScale δ) (sched k)) t s).θ)
+      tgt init := by
+  have heq : ∀ target : C,
+      circuitMass (fun s => readout (runSchedule (fun k => adamwStep F (fdGrad F L stepScale δ) (sched k)) t s).θ)
+        target init =
+      sumNatT15 (init.map fun p => p.1 * (if readout (runSchedule (fun k => adamwStep F (fdGrad F L stepScale δ) (sched k)) t p.2).θ = target then 1 else 0)) := by
+    intro target
+    simp only [circuitMass]
+    congr 1
+    apply list_map_congr_t15
+    intro p
+    split <;> simp
+  rw [heq (actC tgt), heq tgt]
+  rw [← hinit (fun s => if readout (runSchedule (fun k => adamwStep F (fdGrad F L stepScale δ) (sched k)) t s).θ = actC tgt then 1 else 0)]
+  congr 1
+  apply list_map_congr_t15
+  intro p
+  have htraj := theorem15_adamw_trajectory_equivariant F σ actC L stepScale δ sched readout hL_inv hreadout t p.2
+  have hiff : actC (readout (runSchedule (fun k => adamwStep F (fdGrad F L stepScale δ) (sched k)) t p.2).θ) = actC tgt ↔
+      readout (runSchedule (fun k => adamwStep F (fdGrad F L stepScale δ) (sched k)) t p.2).θ = tgt := by
+    constructor
+    · intro h
+      have h' := congrArg invC h
+      simpa [hC_left] using h'
+    · intro h
+      rw [h]
+  have hind :
+      (if readout (runSchedule (fun k => adamwStep F (fdGrad F L stepScale δ) (sched k)) t (actAdamWState F σ p.2)).θ = actC tgt then 1 else 0) =
+      (if readout (runSchedule (fun k => adamwStep F (fdGrad F L stepScale δ) (sched k)) t p.2).θ = tgt then 1 else 0) := by
+    rw [htraj]
+    by_cases hhit : readout (runSchedule (fun k => adamwStep F (fdGrad F L stepScale δ) (sched k)) t p.2).θ = tgt
+    · simp [hhit]
+    · have hne : actC (readout (runSchedule (fun k => adamwStep F (fdGrad F L stepScale δ) (sched k)) t p.2).θ) ≠ actC tgt :=
+        fun heq' => hhit (hiff.mp heq')
+      simp [hhit, hne]
+  rw [hind]
+
+end Theorem15
+
 end PFT
