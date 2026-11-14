@@ -146,7 +146,7 @@
   {
    "spike": "46",
    "date": "2026-11-14",
-   "commit": "pending",
+   "commit": "e670ebe",
    "question": "Under label noise, do nets follow a simpler circuit plus memorized exceptions? (C20′, exact cost–error frontier)",
    "overall": "NEITHER",
    "verdicts": [

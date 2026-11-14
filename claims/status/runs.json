@@ -32,7 +32,7 @@
  {
   "spike": "46",
   "date": "2026-11-14",
-  "commit": "pending",
+  "commit": "e670ebe",
   "question": "Under label noise, do nets follow a simpler circuit plus memorized exceptions? (C20′, exact cost–error frontier)",
   "overall": "NEITHER",
   "learned": "Label noise removes the pull toward the minimum circuit quickly: two flipped labels in 48 take it from 0.83 to 0.66. Noise does not move the net to a simpler circuit; it makes the net less like any circuit (best agreement 0.89 → 0.75). Exploratory: a two-part-code circuit from the compiler generalizes better than the trained net under noise.",

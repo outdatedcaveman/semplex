@@ -85,7 +85,7 @@ Progress counts a closed gap as 1 and a partial one as ½. It measures the gap l
 
 ### Spike 46: Under label noise, do nets follow a simpler circuit plus memorized exceptions? (C20′, exact cost–error frontier)
 
-2026-11-14 · commit `pending` · overall **NEITHER** · report `experiments/SPIKE_46_REPORT.md` · claims P157, P158, P159
+2026-11-14 · commit `e670ebe` · overall **NEITHER** · report `experiments/SPIKE_46_REPORT.md` · claims P157, P158, P159
 
 | Hypothesis | Verdict | Measured | Criterion |
 |---|---|---|---|
