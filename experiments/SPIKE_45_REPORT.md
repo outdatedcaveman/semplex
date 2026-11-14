@@ -1,6 +1,6 @@
 # Spike 45: Does "feature learning moves toward the minimum circuit" hold outside its home setting?
 
-**Date:** 2026-11-14 · **Status:** pre-registered (no runs yet) · **Follows:** Spike 36 (C19′ replicated, but only for random two-unit threshold targets at n = 5, 6). **Gaps addressed:** A1 (other target classes), A2 (real data), part of D1.
+**Date:** 2026-11-14 · **Status:** complete (pre-registered in 9a78ce0; results below) · **Follows:** Spike 36 (C19′ replicated, but only for random two-unit threshold targets at n = 5, 6). **Gaps addressed:** A1 (other target classes), A2 (real data), part of D1.
 
 ## Question
 
@@ -64,4 +64,36 @@ python -m experiments.spike45 analyse
 
 ## Results
 
-(To be filled after the runs.)
+`experiments/results/spike45.json`; raw outputs in `spike45_raw/`. Every task compiled and every compiled net was verified on its seen inputs. All eight cells pass the guards.
+
+**Deviation recorded.** A worker restart killed the Diabetes compilation part-way. It was rerun from scratch with the same code and tasks; no other cell was touched.
+
+| Cell | `sides` | verdict | agree Occam | agree kernel | bal. net | bal. kernel | bal. Occam | mean cost | disagreements | fit |
+|---|---|---|---|---|---|---|---|---|---|---|
+| cost4 | 0.716 | **held** | 0.846 | 0.772 | 0.782 | 0.732 | 0.805 | 3.57 | 3621 | 0.993 |
+| symmetric | 0.897 | **held** | 0.828 | 0.441 | 0.832 | 0.319 | 0.899 | 3.95 | 8492 | 0.949 |
+| noisy | 0.582 | **neither** | 0.756 | 0.740 | 0.737 | 0.697 | 0.723 | 3.98 | 4099 | 0.984 |
+| dnf | 0.668 | **held** | 0.900 | 0.904 | 0.933 | 0.926 | 0.890 | 3.10 | 1540 | 1.000 |
+| breast_cancer | 0.291 | **broken** | 0.742 | 0.844 | 0.744 | 0.674 | 0.653 | 1.00 | 437 | 1.000 |
+| wine | 0.741 | **held** | 0.930 | 0.891 | 0.814 | 0.887 | 0.782 | 2.05 | 478 | 1.000 |
+| digits | 0.556 | **neither** | 0.734 | 0.767 | 0.687 | 0.712 | 0.667 | 3.90 | 1209 | 1.000 |
+| diabetes | 0.450 | **broken** | 0.742 | 0.798 | 0.707 | 0.750 | 0.671 | 3.83 | 1030 | 0.983 |
+
+### Verdicts
+
+- **H45.1: held.** The Occam pull holds in 3 of 4 synthetic classes: cost-4 targets 0.72, symmetric 0.90, DNF 0.67. With 5 flipped labels it drops to 0.58 (neither).
+- **H45.2: broken.** On real data the pull holds only for Wine (0.74). It is broken for Breast Cancer (0.29) and Diabetes (0.45), and neither for Digits (0.56).
+- **H45.3: broken.** Occam predicts the net better than the kernel in only 4 of 8 cells (cost4 +0.07, symmetric +0.39, noisy +0.02, wine +0.04). The kernel is the better predictor for DNF (−0.004), Breast Cancer (−0.10), Digits (−0.03) and Diabetes (−0.06).
+- **H45.4: broken.** Trained nets beat their kernel on held-out real cells only for Breast Cancer (+0.07). They are worse on Wine (−0.07), Digits (−0.03) and Diabetes (−0.04).
+
+### Reading
+
+1. **C19′ is a statement about clean, structured targets.** It extends beyond its home class (costlier circuits, symmetric functions, DNF). It does not extend to real data in this protocol.
+2. **Label noise is the likely boundary.** The one synthetic class with noise is the weakest (0.58), and the real tasks are noisy by construction: a cell's label is a majority vote over overlapping classes. The exact-fit Occam completion has to spend circuit cost on the noise (mean cost 3.8–4.0 for noisy, Digits and Diabetes), and it generalizes worst of the three predictors in all four real cells.
+3. **Symmetric targets are where the kernel fails outright** (balanced accuracy 0.32, below chance) and nets follow Occam almost entirely (0.90). This is the strongest single piece of evidence for the pull.
+4. **On real data here, training does not help.** The kernel generalizes better than the trained net in 3 of 4 datasets. The +2–10 point gain from feature learning seen on synthetic targets is absent.
+5. **Breast Cancer's cost is 1.0**: every task is fitted by a single threshold unit, so "minimum circuit" picks among many single units and is not a sharp prediction there.
+
+**Limits.** Real tasks are six median-binarized features with majority labels per cell; 28–52 cells per dataset; splits of one dataset share a target. Noise was not varied as a dose. The conclusion "noise is the boundary" is a hypothesis from this pattern, not a tested result.
+
+**Next.** A noise dose–response on synthetic targets, and a noise-tolerant Occam (minimum cost allowing errors, a two-part code) as the revised predictor.

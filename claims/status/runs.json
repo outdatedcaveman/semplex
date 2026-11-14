@@ -18,5 +18,15 @@
   "learned": "For targets two layers can represent, a third layer adds no pull toward the minimum circuit; three-layer nets stay closer to their kernel.",
   "moved": "A7: OPEN → PARTIAL (Negative for two-layer-representable targets; depth-requiring targets untested)",
   "claims": "P153"
+ },
+ {
+  "spike": "45",
+  "date": "2026-11-14",
+  "commit": "pending",
+  "question": "Does the pull toward the minimum circuit hold on other target classes and on real data?",
+  "overall": "BROKEN",
+  "learned": "The theory holds for clean, structured targets, including classes it was not built on, and fails on real data. Label noise is the likely boundary: the noisy synthetic class is the weakest, real cell labels are noisy, and the exact-fit minimum circuit generalizes worst on all four real datasets. On real tasks the kernel also beats the trained net on 3 of 4.",
+  "moved": "A1: OPEN → CLOSED (Three further clean classes held; the failing condition (noise) is characterized); A2: OPEN → OPEN (Tested and failed: the gap is now a theory that predicts on real data); A8: new → OPEN (Opened by this run: the noise boundary and conjecture C20)",
+  "claims": "P154 P155 P156"
  }
 ]

@@ -1,0 +1,194 @@
+{
+ "cells": {
+  "cost4": {
+   "compiled": 1.0,
+   "fit": 0.993,
+   "n_disagreements": 3621,
+   "sides": 0.716100524716929,
+   "agree_occam": 0.845984390735146,
+   "agree_ntk": 0.7720921450151057,
+   "bal_net": 0.7818109851672712,
+   "bal_ntk": 0.7322184648403518,
+   "bal_occam": 0.805044293480444,
+   "mean_cost": 3.57,
+   "verified": 1.0,
+   "guard_ok": true,
+   "sides_verdict": "held"
+  },
+  "symmetric": {
+   "compiled": 1.0,
+   "fit": 0.949,
+   "n_disagreements": 8492,
+   "sides": 0.8974328780028262,
+   "agree_occam": 0.8279768177028451,
+   "agree_ntk": 0.44072708113804004,
+   "bal_net": 0.8322692157372331,
+   "bal_ntk": 0.3186415980814936,
+   "bal_occam": 0.8990826694212171,
+   "mean_cost": 3.95,
+   "verified": 1.0,
+   "guard_ok": true,
+   "sides_verdict": "held"
+  },
+  "noisy": {
+   "compiled": 1.0,
+   "fit": 0.984,
+   "n_disagreements": 4099,
+   "sides": 0.5816052695779459,
+   "agree_occam": 0.7556529471544715,
+   "agree_ntk": 0.7396468495934959,
+   "bal_net": 0.7372244874518017,
+   "bal_ntk": 0.6971890872527566,
+   "bal_occam": 0.7225676502962524,
+   "mean_cost": 3.98,
+   "verified": 1.0,
+   "guard_ok": true,
+   "sides_verdict": "neither"
+  },
+  "dnf": {
+   "compiled": 1.0,
+   "fit": 1.0,
+   "n_disagreements": 1540,
+   "sides": 0.6681818181818182,
+   "agree_occam": 0.9005,
+   "agree_ntk": 0.90375,
+   "bal_net": 0.9325690773816979,
+   "bal_ntk": 0.9259531801898846,
+   "bal_occam": 0.8896077056038478,
+   "mean_cost": 3.1,
+   "verified": 1.0,
+   "guard_ok": true,
+   "sides_verdict": "held"
+  },
+  "breast_cancer": {
+   "compiled": 1.0,
+   "fit": 1.0,
+   "n_disagreements": 437,
+   "sides": 0.2906178489702517,
+   "agree_occam": 0.7417857142857143,
+   "agree_ntk": 0.8439285714285715,
+   "bal_net": 0.7438585858585858,
+   "bal_ntk": 0.6735353535353535,
+   "bal_occam": 0.6529292929292929,
+   "mean_cost": 1.0,
+   "verified": 1.0,
+   "guard_ok": true,
+   "sides_verdict": "broken"
+  },
+  "wine": {
+   "compiled": 1.0,
+   "fit": 1.0,
+   "n_disagreements": 478,
+   "sides": 0.7405857740585774,
+   "agree_occam": 0.9295454545454546,
+   "agree_ntk": 0.8913636363636364,
+   "bal_net": 0.8139732142857143,
+   "bal_ntk": 0.8870535714285714,
+   "bal_occam": 0.7816964285714285,
+   "mean_cost": 2.05,
+   "verified": 1.0,
+   "guard_ok": true,
+   "sides_verdict": "held"
+  },
+  "digits": {
+   "compiled": 1.0,
+   "fit": 1.0,
+   "n_disagreements": 1209,
+   "sides": 0.5558312655086849,
+   "agree_occam": 0.7336538461538461,
+   "agree_ntk": 0.7675,
+   "bal_net": 0.6866882567424114,
+   "bal_ntk": 0.7119955691626025,
+   "bal_occam": 0.6672102647733043,
+   "mean_cost": 3.9,
+   "verified": 1.0,
+   "guard_ok": true,
+   "sides_verdict": "neither"
+  },
+  "diabetes": {
+   "compiled": 1.0,
+   "fit": 0.9825,
+   "n_disagreements": 1030,
+   "sides": 0.45048543689320386,
+   "agree_occam": 0.7420238794284596,
+   "agree_ntk": 0.7983949892346839,
+   "bal_net": 0.7066002412400414,
+   "bal_ntk": 0.74966491833293,
+   "bal_occam": 0.6710949502794145,
+   "mean_cost": 3.825,
+   "verified": 1.0,
+   "guard_ok": true,
+   "sides_verdict": "broken"
+  }
+ },
+ "meta": {
+  "breast_cancer": {
+   "observed_cells": 28,
+   "features": [
+    27,
+    22,
+    7,
+    20,
+    2,
+    23
+   ],
+   "ones": 3
+  },
+  "wine": {
+   "observed_cells": 44,
+   "features": [
+    0,
+    9,
+    12,
+    2,
+    10,
+    4
+   ],
+   "ones": 15
+  },
+  "digits": {
+   "observed_cells": 51,
+   "features": [
+    52,
+    20,
+    6,
+    5,
+    35,
+    12
+   ],
+   "ones": 30
+  },
+  "diabetes": {
+   "observed_cells": 52,
+   "features": [
+    8,
+    2,
+    3,
+    7,
+    6,
+    9
+   ],
+   "ones": 29
+  }
+ },
+ "H45.1": "HELD",
+ "H45.2": "BROKEN",
+ "H45.3": "BROKEN",
+ "H45.4": "BROKEN",
+ "d_agree": {
+  "cost4": 0.07389224572004027,
+  "symmetric": 0.3872497365648051,
+  "noisy": 0.016006097560975596,
+  "dnf": -0.003250000000000086,
+  "breast_cancer": -0.1021428571428572,
+  "wine": 0.038181818181818206,
+  "digits": -0.03384615384615386,
+  "diabetes": -0.056371109806224284
+ },
+ "d_bal_real": {
+  "breast_cancer": 0.07032323232323223,
+  "wine": -0.0730803571428571,
+  "digits": -0.02530731242019113,
+  "diabetes": -0.04306467709288864
+ }
+}

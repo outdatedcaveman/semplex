@@ -46,5 +46,37 @@
   "verdict": "NEITHER",
   "measured": "−0.009, −0.005",
   "bar": "held ≥ 0 at both, broken ≤ −0.01 at both"
+ },
+ {
+  "key": "45:H45.1",
+  "spike": "45",
+  "id": "H45.1",
+  "verdict": "HELD",
+  "measured": "cost-4 0.72, symmetric 0.90, DNF 0.67 held; noisy 0.58 neither",
+  "bar": "held if ≥ 0.65 in ≥ 3 of 4 classes; broken if ≤ 0.50 in ≥ 2"
+ },
+ {
+  "key": "45:H45.2",
+  "spike": "45",
+  "id": "H45.2",
+  "verdict": "BROKEN",
+  "measured": "Breast Cancer 0.29, Diabetes 0.45 broken; Digits 0.56 neither; Wine 0.74 held",
+  "bar": "held if ≥ 0.60 in ≥ 3 of 4 datasets; broken if ≤ 0.50 in ≥ 2"
+ },
+ {
+  "key": "45:H45.3",
+  "spike": "45",
+  "id": "H45.3",
+  "verdict": "BROKEN",
+  "measured": "Occam minus kernel agreement ≤ 0 in 4 of 8 cells (DNF, Breast Cancer, Digits, Diabetes)",
+  "bar": "held if ≥ +0.02 in ≥ 6 of 8; broken if ≤ 0 in ≥ 4"
+ },
+ {
+  "key": "45:H45.4",
+  "spike": "45",
+  "id": "H45.4",
+  "verdict": "BROKEN",
+  "measured": "net minus kernel accuracy: Breast Cancer +0.07, Wine −0.07, Digits −0.03, Diabetes −0.04",
+  "bar": "held if ≥ +0.01 in ≥ 3 of 4; broken if ≤ 0 in ≥ 3"
  }
 ]

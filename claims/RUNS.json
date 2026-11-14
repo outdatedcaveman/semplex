@@ -83,6 +83,65 @@
    "claims": [
     "P153"
    ]
+  },
+  {
+   "spike": "45",
+   "date": "2026-11-14",
+   "commit": "pending",
+   "question": "Does the pull toward the minimum circuit hold on other target classes and on real data?",
+   "overall": "BROKEN",
+   "verdicts": [
+    {
+     "id": "H45.1",
+     "verdict": "HELD",
+     "measured": "cost-4 0.72, symmetric 0.90, DNF 0.67 held; noisy 0.58 neither",
+     "bar": "held if ≥ 0.65 in ≥ 3 of 4 classes; broken if ≤ 0.50 in ≥ 2"
+    },
+    {
+     "id": "H45.2",
+     "verdict": "BROKEN",
+     "measured": "Breast Cancer 0.29, Diabetes 0.45 broken; Digits 0.56 neither; Wine 0.74 held",
+     "bar": "held if ≥ 0.60 in ≥ 3 of 4 datasets; broken if ≤ 0.50 in ≥ 2"
+    },
+    {
+     "id": "H45.3",
+     "verdict": "BROKEN",
+     "measured": "Occam minus kernel agreement ≤ 0 in 4 of 8 cells (DNF, Breast Cancer, Digits, Diabetes)",
+     "bar": "held if ≥ +0.02 in ≥ 6 of 8; broken if ≤ 0 in ≥ 4"
+    },
+    {
+     "id": "H45.4",
+     "verdict": "BROKEN",
+     "measured": "net minus kernel accuracy: Breast Cancer +0.07, Wine −0.07, Digits −0.03, Diabetes −0.04",
+     "bar": "held if ≥ +0.01 in ≥ 3 of 4; broken if ≤ 0 in ≥ 3"
+    }
+   ],
+   "learned": "The theory holds for clean, structured targets, including classes it was not built on, and fails on real data. Label noise is the likely boundary: the noisy synthetic class is the weakest, real cell labels are noisy, and the exact-fit minimum circuit generalizes worst on all four real datasets. On real tasks the kernel also beats the trained net on 3 of 4.",
+   "gaps_moved": [
+    {
+     "gap": "A1",
+     "from": "OPEN",
+     "to": "CLOSED",
+     "why": "Three further clean classes held; the failing condition (noise) is characterized"
+    },
+    {
+     "gap": "A2",
+     "from": "OPEN",
+     "to": "OPEN",
+     "why": "Tested and failed: the gap is now a theory that predicts on real data"
+    },
+    {
+     "gap": "A8",
+     "from": "new",
+     "to": "OPEN",
+     "why": "Opened by this run: the noise boundary and conjecture C20"
+    }
+   ],
+   "claims": [
+    "P154",
+    "P155",
+    "P156"
+   ]
   }
  ]
 }

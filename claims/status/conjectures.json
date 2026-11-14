@@ -116,7 +116,7 @@
  {
   "id": "C19′",
   "title": "feature learning as approximate minimum-circuit search",
-  "state": "Supported",
-  "note": "SUPPORTED and REPLICATED, Spike 36: departures from the kernel go toward Occam in 73–81% of cases in all 4 fresh cells; partly causal: widening toward the lazy regime raises kernel agreement +0.048, lowers Occam agreement −0.038 and lowers held-out accuracy −0.033"
+  "state": "Partly",
+  "note": "PARTLY SUPPORTED: holds and replicates on clean targets, fails on real data in Spike 45; Spike 36: departures from the kernel go toward Occam in 73–81% of cases in all 4 fresh cells; partly causal: widening toward the lazy regime raises kernel agreement +0.048, lowers Occam agreement −0.038 and lowers held-out accuracy −0.033"
  }
 ]

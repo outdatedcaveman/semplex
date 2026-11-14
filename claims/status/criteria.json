@@ -3,11 +3,11 @@
   "id": "E1",
   "name": "Predicts",
   "test": "On tasks outside the class it was fitted on, including real data, the theory predicts held-out behaviour better than the kernel baseline, in a pre-registered test.",
-  "gaps": 4,
+  "gaps": 5,
   "OPEN": 3,
   "PARTIAL": 1,
-  "CLOSED": 0,
-  "progress_pct": 12
+  "CLOSED": 1,
+  "progress_pct": 30
  },
  {
   "id": "E2",

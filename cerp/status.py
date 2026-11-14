@@ -26,6 +26,7 @@ RUNS = ROOT / "claims" / "RUNS.json"
 OUT = ROOT / "STATUS.md"
 CSVDIR = ROOT / "claims" / "status"
 STATES = ("OPEN", "PARTIAL", "CLOSED")
+MOVES = STATES + ("new",)
 LEVER = {"HIGH": 0, "MEDIUM": 1, "LOW": 2}
 VERDICTS = ("HELD", "BROKEN", "NEITHER")
 CONJ = re.compile(r"^- \*\*(C\d+′?), (.+?)\*\*", re.M)
