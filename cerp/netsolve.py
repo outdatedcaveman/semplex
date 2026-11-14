@@ -37,6 +37,59 @@ def chain(n, k, act="step"):
     return [(act if j < k - 1 else "step", list(range(n + j))) for j in range(k)]
 
 
+def _solve_two_halfspaces(f, n, care, W, time_limit, workers, and_mode=True, rand_obj=None):
+    """Fast decoupled CP-SAT solver for f = h0 AND h1 (or h0 OR h1) over care points."""
+    pts = [x for x in range(1 << n) if care is None or (care >> x) & 1]
+    want_t = 1 if and_mode else 0
+    T = [x for x in pts if ((f >> x) & 1) == want_t]
+    F = [x for x in pts if ((f >> x) & 1) != want_t]
+    B = W * n + 1
+    m = cp_model.CpModel()
+    w0 = [m.NewIntVar(-W, W, f"w0_{i}") for i in range(n)]
+    w1 = [m.NewIntVar(-W, W, f"w1_{i}") for i in range(n)]
+    b0 = m.NewIntVar(-B, B, "b0")
+    b1 = m.NewIntVar(-B, B, "b1")
+    for x in T:
+        idx = [i for i in range(n) if (x >> i) & 1]
+        m.Add(sum(w0[i] for i in idx) + b0 >= 0)
+        m.Add(sum(w1[i] for i in idx) + b1 >= 0)
+    s_vars = []
+    for k, x in enumerate(F):
+        idx = [i for i in range(n) if (x >> i) & 1]
+        s = m.NewBoolVar(f"s_{k}")
+        s_vars.append(s)
+        m.Add(sum(w0[i] for i in idx) + b0 <= -1).OnlyEnforceIf(s.Not())
+        m.Add(sum(w1[i] for i in idx) + b1 <= -1).OnlyEnforceIf(s)
+    if F:
+        m.Add(s_vars[0] == 0)
+    if rand_obj is not None:
+        import random
+        r = random.Random(rand_obj)
+        m.Minimize(sum(r.randint(-5, 5) * v for v in w0 + w1 + [b0, b1]))
+    solver = cp_model.CpSolver()
+    solver.parameters.max_time_in_seconds = time_limit
+    solver.parameters.num_workers = workers
+    st = solver.Solve(m)
+    if st not in (cp_model.OPTIMAL, cp_model.FEASIBLE):
+        return ("unsat" if st == cp_model.INFEASIBLE else "unknown"), None
+    v0 = [int(solver.Value(v)) for v in w0]; c0 = int(solver.Value(b0))
+    v1 = [int(solver.Value(v)) for v in w1]; c1 = int(solver.Value(b1))
+    refs = list(range(n))
+    if and_mode:
+        neurons = [
+            {"in": refs, "w": v0, "b": c0, "act": "step"},
+            {"in": refs, "w": v1, "b": c1, "act": "step"},
+            {"in": [n, n + 1], "w": [1, 1], "b": -2, "act": "step"},
+        ]
+    else:
+        neurons = [
+            {"in": refs, "w": [-z for z in v0], "b": -c0 - 1, "act": "step"},
+            {"in": refs, "w": [-z for z in v1], "b": -c1 - 1, "act": "step"},
+            {"in": [n, n + 1], "w": [1, 1], "b": -1, "act": "step"},
+        ]
+    return "sat", {"kind": "dnet", "body": {"inputs": [f"x{i}" for i in range(n)], "neurons": neurons}}
+
+
 def solve(f, n, spec, W=3, B=None, time_limit=60.0, workers=4, relu_cap=None, care=None, rand_obj=None,
           max_errors=None, min_errors=False):
     """care: optional bitmask of the input points that must be matched (default: all).
@@ -46,6 +99,19 @@ def solve(f, n, spec, W=3, B=None, time_limit=60.0, workers=4, relu_cap=None, ca
     max_errors: optional int; the net may disagree with f on at most this many care points (Spike 46).
     min_errors: if True, minimize the number of disagreeing care points; the status is then "optimal"
     (proved minimum) or "feasible" (best found within the time limit) instead of "sat"."""
+    if (B is None and max_errors is None and not min_errors and W >= 1
+            and len(spec) == 3
+            and spec[0] == ("step", list(range(n)))
+            and spec[1] == ("step", list(range(n)))
+            and spec[2] == ("step", [n, n + 1])):
+        half = max(0.05, time_limit * 0.5)
+        st1, art1 = _solve_two_halfspaces(f, n, care, W, half, workers, and_mode=True, rand_obj=rand_obj)
+        if st1 == "sat":
+            return st1, art1
+        st2, art2 = _solve_two_halfspaces(f, n, care, W, max(0.05, time_limit - half), workers, and_mode=False, rand_obj=rand_obj)
+        if st2 == "sat":
+            return st2, art2
+        return ("unsat" if st1 == "unsat" and st2 == "unsat" else "unknown"), None
     B = B if B is not None else W * (n + len(spec)) + 1
     m = cp_model.CpModel()
     pts = range(1 << n)
@@ -102,8 +168,28 @@ def solve(f, n, spec, W=3, B=None, time_limit=60.0, workers=4, relu_cap=None, ca
     # symmetry breaking between interchangeable neurons (same act, same refs)
     for j in range(len(spec) - 2):
         if spec[j] == spec[j + 1]:
-            key = lambda q: sum(wv[q][i] * (2 * W + 1) ** i for i in range(len(spec[q][1]))) + bv[q] * (2 * W + 1) ** len(spec[q][1])
-            m.Add(key(j) <= key(j + 1))
+            xs = [bv[j]] + list(wv[j])
+            ys = [bv[j + 1]] + list(wv[j + 1])
+            pref = None
+            for idx, (vx, vy) in enumerate(zip(xs, ys)):
+                if pref is None:
+                    m.Add(vx <= vy)
+                    if idx + 1 < len(xs):
+                        lt = m.NewBoolVar("")
+                        nxt = m.NewBoolVar("")
+                        m.Add(vx <= vy - 1).OnlyEnforceIf(lt)
+                        m.Add(vx >= vy).OnlyEnforceIf(lt.Not())
+                        m.AddBoolOr([lt, nxt])
+                        pref = nxt
+                else:
+                    m.Add(vx <= vy).OnlyEnforceIf(pref)
+                    if idx + 1 < len(xs):
+                        lt = m.NewBoolVar("")
+                        nxt = m.NewBoolVar("")
+                        m.Add(vx <= vy - 1).OnlyEnforceIf([pref, lt])
+                        m.Add(vx >= vy).OnlyEnforceIf([pref, lt.Not()])
+                        m.AddBoolOr([pref.Not(), lt, nxt])
+                        pref = nxt
     if max_errors is not None:
         m.Add(sum(errs) <= max_errors)
     if min_errors:
@@ -122,3 +208,134 @@ def solve(f, n, spec, W=3, B=None, time_limit=60.0, workers=4, relu_cap=None, ca
         tag = "sat" if not min_errors else ("optimal" if st == cp_model.OPTIMAL else "feasible")
         return tag, {"kind": "dnet", "body": {"inputs": [f"x{i}" for i in range(n)], "neurons": neurons}}
     return ("unsat" if st == cp_model.INFEASIBLE else "unknown"), None
+
+
+def compile_partial(f, n, care, W=4, max_width=4, time_limit=60.0, workers=4):
+    """Compile a partial Boolean function (f on care-set bits) into a minimal
+    layered threshold net with kernel-verified lower-bound certificates."""
+    import time
+    from . import bounds, kernel_bounds
+
+    t0 = time.perf_counter()
+    full_mask = (1 << (1 << n)) - 1
+    fc = f & care
+    deadline = t0 + time_limit
+
+    def rem():
+        return max(0.05, deadline - time.perf_counter())
+
+    w_sched = [W] if W <= 3 else [3, W]
+
+    # 1. Check 1-threshold lower bound via partial Farkas witness first
+    lower_bound = 1
+    certs = {}
+    c1 = bounds.not_threshold_cert_partial(n, fc, care)
+    if c1 is not None and kernel_bounds.check_not_threshold_partial(n, fc, care, c1["pos"], c1["neg"]).ok:
+        lower_bound = 3
+        certs["not_threshold"] = c1
+    else:
+        spec0 = layered(n, [])
+        for wi, W_try in enumerate(w_sched):
+            if time.perf_counter() >= deadline:
+                break
+            budget = min(10.0, rem()) / (len(w_sched) - wi)
+            st, art = solve(fc, n, spec0, W=W_try, time_limit=budget, workers=workers, care=care)
+            if st == "sat":
+                return {
+                    "status": "sat",
+                    "cost": 1,
+                    "artifact": art,
+                    "certified_minimal": True,
+                    "lower_bound": 1,
+                    "cert_kind": "trivial",
+                    "certs": {},
+                    "seconds": round(time.perf_counter() - t0, 4),
+                }
+
+    # 2. Try width-2 hidden layer (cost 3: 2 hidden + 1 output)
+    spec2 = layered(n, [2])
+    st2, art2 = solve(fc, n, spec2, W=min(W, 3), time_limit=min(12.0, rem() * 0.45), workers=workers, care=care)
+    if st2 == "sat":
+        cert_min = (lower_bound >= 3)
+        return {
+            "status": "sat",
+            "cost": 3,
+            "artifact": art2,
+            "certified_minimal": cert_min,
+            "lower_bound": lower_bound,
+            "cert_kind": "not-threshold-partial" if cert_min else "uncertified",
+            "certs": certs,
+            "seconds": round(time.perf_counter() - t0, 4),
+        }
+
+    # 3. Try certifying >= 4 neurons (no 2-halfspace AND/OR representation exists)
+    f_neg = (~fc) & care & full_mask
+    if lower_bound >= 3 and time.perf_counter() < deadline:
+        c_pos = bounds.not_two_halfspaces_cert_partial(n, fc, care)
+        c_neg = bounds.not_two_halfspaces_cert_partial(n, f_neg, care) if c_pos is not None else None
+        if (c_pos is not None and c_neg is not None
+                and kernel_bounds.check_not_two_halfspaces_partial(n, fc, care, c_pos).ok
+                and kernel_bounds.check_not_two_halfspaces_partial(n, f_neg, care, c_neg).ok):
+            lower_bound = 4
+            certs["not_two_halfspaces_pos"] = c_pos
+            certs["not_two_halfspaces_neg"] = c_neg
+
+    # If lower_bound < 4 and W > 3 (or quick pass was unknown), give spec2 another shot
+    if lower_bound < 4 and time.perf_counter() < deadline:
+        w2_list = [W] if W > 3 else ([3] if st2 == "unknown" else [])
+        for W_try in w2_list:
+            if time.perf_counter() >= deadline:
+                break
+            st2b, art2b = solve(fc, n, spec2, W=W_try, time_limit=rem() * 0.6, workers=workers, care=care)
+            if st2b == "sat":
+                cert_min = (lower_bound >= 3)
+                return {
+                    "status": "sat",
+                    "cost": 3,
+                    "artifact": art2b,
+                    "certified_minimal": cert_min,
+                    "lower_bound": lower_bound,
+                    "cert_kind": "not-threshold-partial" if cert_min else "uncertified",
+                    "certs": certs,
+                    "seconds": round(time.perf_counter() - t0, 4),
+                }
+
+    # 4. Incremental search over widths w = 3 .. max_width (cost = w + 1)
+    for w in range(3, max_width + 1):
+        if time.perf_counter() >= deadline:
+            break
+        spec_w = layered(n, [w])
+        widths_left = max_width - w + 1
+        for wi, W_try in enumerate(w_sched):
+            if time.perf_counter() >= deadline:
+                break
+            budget = rem() / max(1, widths_left * len(w_sched) - wi)
+            st, art = solve(fc, n, spec_w, W=W_try, time_limit=budget, workers=workers, care=care)
+            if st == "sat":
+                cost = w + 1
+                cert_min = (lower_bound == cost)
+                return {
+                    "status": "sat",
+                    "cost": cost,
+                    "artifact": art,
+                    "certified_minimal": cert_min,
+                    "lower_bound": lower_bound,
+                    "cert_kind": "not-two-halfspaces-partial" if cert_min else (
+                        "not-threshold-partial" if lower_bound >= 3 else "uncertified"
+                    ),
+                    "certs": certs,
+                    "seconds": round(time.perf_counter() - t0, 4),
+                }
+
+    return {
+        "status": "unknown",
+        "cost": None,
+        "artifact": None,
+        "certified_minimal": False,
+        "lower_bound": lower_bound,
+        "cert_kind": "not-two-halfspaces-partial" if lower_bound >= 4 else (
+            "not-threshold-partial" if lower_bound >= 3 else "uncertified"
+        ),
+        "certs": certs,
+        "seconds": round(time.perf_counter() - t0, 4),
+    }
