@@ -22,7 +22,7 @@
  {
   "spike": "45",
   "date": "2026-11-14",
-  "commit": "pending",
+  "commit": "031662a",
   "question": "Does the pull toward the minimum circuit hold on other target classes and on real data?",
   "overall": "BROKEN",
   "learned": "The theory holds for clean, structured targets, including classes it was not built on, and fails on real data. Label noise is the likely boundary: the noisy synthetic class is the weakest, real cell labels are noisy, and the exact-fit minimum circuit generalizes worst on all four real datasets. On real tasks the kernel also beats the trained net on 3 of 4.",

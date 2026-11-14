@@ -79,7 +79,7 @@ Progress counts a closed gap as 1 and a partial one as ½. It measures the gap l
 
 ### Spike 45: Does the pull toward the minimum circuit hold on other target classes and on real data?
 
-2026-11-14 · commit `pending` · overall **BROKEN** · report `experiments/SPIKE_45_REPORT.md` · claims P154, P155, P156
+2026-11-14 · commit `031662a` · overall **BROKEN** · report `experiments/SPIKE_45_REPORT.md` · claims P154, P155, P156
 
 | Hypothesis | Verdict | Measured | Criterion |
 |---|---|---|---|

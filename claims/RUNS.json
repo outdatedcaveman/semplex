@@ -87,7 +87,7 @@
   {
    "spike": "45",
    "date": "2026-11-14",
-   "commit": "pending",
+   "commit": "031662a",
    "question": "Does the pull toward the minimum circuit hold on other target classes and on real data?",
    "overall": "BROKEN",
    "verdicts": [
