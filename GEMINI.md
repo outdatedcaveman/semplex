@@ -82,4 +82,6 @@ Certify that 4-input parity has no layered threshold net with 4 neurons. The enu
 
 Then extend the sweep to what one arXiv-centred pass could not reach: computational mechanics (Crutchfield, Shalizi), formal concept analysis (Ganter & Wille), rough sets (Pawlak; Skowron & Rauszer), Myhill–Nerode and exact automata learning (Angluin), symbol grounding (Harnad; Mollo & Millière), identifiability in nonlinear ICA and causal representation learning (Hyvärinen; Schölkopf et al.), causal abstraction (Geiger et al.; Beckers & Halpern), Occam learning and minimum circuit size (Blumer et al.; Kearns & Vazirani).
 
+**Searching.** Use `python -m cerp.litsearch "<query>"` (Crossref and the arXiv API; free, no account). A hit is a lead, not a reading.
+
 **Done when:** every queued paper has a row with what was read (full text / abstract only), its main claim, and one of {anticipates, contradicts, orthogonal} for a named claim of ours, with the sentence that shows it. Then update the verdict table in `PRIOR_ART.md` §1 where a verdict changes. Abstract-only rows must say so. No row for a paper that was not opened. If a paper already contains one of our results, say so at the top of the handoff.

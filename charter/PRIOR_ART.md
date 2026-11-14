@@ -4,6 +4,8 @@ What is already known on each front of the project, what that does to our claims
 
 **Coverage, stated plainly.** Eight topical searches (alphaXiv index, about 130 candidate papers returned) and one Consensus search. This is a structured sweep, not an exhaustive one: non-arXiv literature (books, older journals, logic and semantics) was reached only through one search. Each entry carries its read status:
 
+**Tools.** Searches use the alphaXiv index and `python -m cerp.litsearch` (Crossref and the arXiv API; free, no account). Crossref's ranking is keyword-based and weak on concepts. A free OpenAlex key in `OPENALEX_API_KEY` adds a better-ranked source.
+
 - **R** = main text or a full structured report read;
 - **P** = abstract, introduction and theorem statements read;
 - **A** = abstract or listing only;
