@@ -1,6 +1,6 @@
 # Spike 46: The exact cost–error frontier. Do nets under label noise follow a simpler circuit plus exceptions?
 
-**Date:** 2026-11-14 · **Status:** pre-registered (no runs yet) · **Follows:** Spike 45 (the Occam pull holds on clean classes, drops to 0.58 with 5 flipped labels, and fails on real data). **Gap:** A8. **Direction:** R3 in `charter/PRIOR_ART.md`.
+**Date:** 2026-11-14 · **Status:** complete (pre-registered in 147c135; results below) · **Follows:** Spike 45 (the Occam pull holds on clean classes, drops to 0.58 with 5 flipped labels, and fails on real data). **Gap:** A8. **Direction:** R3 in `charter/PRIOR_ART.md`.
 
 **Prior art this is built on.** Harel et al. (arXiv:2410.19092) prove that a minimum-size threshold net fitted to noisy labels can be built as *the teacher circuit plus a part that memorizes the flipped labels*, and that it overfits only mildly. Manoj & Srebro (2302.07263) show the same for minimum description length. Neither compares gradient-trained nets with the exact frontier.
 
@@ -47,4 +47,33 @@ python -m experiments.spike46 analyse
 
 ## Results
 
-(To be filled after the runs.)
+`experiments/results/spike46.json`; raw outputs in `spike46_raw/`. Every task has an exact-fit point; 98–100% of frontier values are proved optimal. Net fit 97–100%. Breast Cancer gives no verdict, as expected (every task has cost 1, so `simpler` = `exact`).
+
+| Cell | sides(exact) | agree exact | agree simpler | agree mdl | agree kernel | bal. net | bal. exact | bal. simpler | bal. mdl | bal. kernel | mean exact cost | guard |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| d0 | 0.832 | 0.887 | 0.883 | 0.883 | 0.792 | 0.886 | 0.887 | 0.843 | 0.843 | 0.750 | 2.87 | yes |
+| d2 | 0.655 | 0.811 | 0.800 | 0.824 | 0.785 | 0.788 | 0.812 | 0.856 | 0.829 | 0.726 | 3.63 | yes |
+| d5 | 0.569 | 0.743 | 0.759 | 0.772 | 0.744 | 0.728 | 0.718 | 0.760 | 0.775 | 0.710 | 3.92 | yes |
+| d8 | 0.567 | 0.739 | 0.745 | 0.745 | 0.724 | 0.701 | 0.704 | 0.718 | 0.766 | 0.663 | 4.10 | yes |
+| breast_cancer | 0.291 | 0.742 | 0.742 | 0.742 | 0.844 | 0.744 | 0.653 | 0.653 | 0.653 | 0.674 | 1.00 | no |
+| wine | 0.741 | 0.927 | 0.943 | 0.943 | 0.891 | 0.814 | 0.776 | 0.799 | 0.799 | 0.887 | 2.05 | yes |
+| digits | 0.557 | 0.738 | 0.747 | 0.799 | 0.767 | 0.687 | 0.655 | 0.652 | 0.708 | 0.712 | 3.90 | yes |
+| diabetes | 0.480 | 0.746 | 0.787 | 0.798 | 0.798 | 0.707 | 0.660 | 0.685 | 0.767 | 0.750 | 3.83 | yes |
+
+### Verdicts
+
+- **H46.1: held.** The exact-fit Occam pull falls with noise: 0.83 with no flips, 0.66 with 2, 0.57 with 5, 0.57 with 8 (a drop of 0.27 from 0 to 8). Most of the drop happens by 2 flipped labels out of 48.
+- **H46.2: neither.** The crossing has the predicted sign but is far too small: agree(simpler) − agree(exact) = −0.004 at d = 0 and +0.006 at d = 8, against bars of ∓0.02.
+- **H46.3: neither.** The simpler circuit beats the kernel on Wine (+0.05) and loses on Digits (−0.02) and Diabetes (−0.01).
+- **H46.4: neither.** The simpler circuit is more accurate than the exact-fit one by +0.042 at d = 5 and +0.014 at d = 8 (the bar was +0.02 at both).
+- **C20′: not supported.** "One cost level simpler, plus exceptions" does not describe what noisy-label nets do on held-out inputs any better than the exact-fit circuit does.
+
+### Reading
+
+1. **Noise does not move the net to another point on the frontier. It makes the net less like any circuit.** The net's agreement with its best circuit predictor falls from 0.89 (no noise) to 0.75 (8 flips), while its agreement with the kernel stays at 0.72–0.79. Under noise the net sits about as far from the circuits as from the kernel.
+2. **Two flipped labels in 48 are enough** to take the pull from 0.83 to 0.66. The exact-fit circuit's cost rises from 2.9 to 3.6 units to absorb them.
+3. **Exploratory (no criterion was set for `mdl`).** The two-part-code circuit is the best or joint-best predictor of the net in 5 of the 7 cells with a verdict, and it generalizes better than the trained net under noise: 0.775 vs 0.728 at d = 5, 0.766 vs 0.701 at d = 8, 0.767 vs 0.707 on Diabetes, 0.708 vs 0.687 on Digits. On real data it beats the kernel on Diabetes only. This says the compiler can *denoise better than training does* here; it does not say nets follow it.
+
+**Limit of the landing statistic.** "Where nets land" picks the best-matching frontier point with ties going to the cheaper point, so it over-counts cheaper points (62% even with no noise). It is reported in the JSON and should not be read as evidence.
+
+**Next.** The pull toward the minimum circuit is a clean-data phenomenon that label noise removes quickly. Two open routes: (a) nets that are *not* forced to fit every label (early stopping, stronger weight decay), where prior work predicts a return to the clean rule; (b) leave noise and pursue the canonical-quotient line (gap A9), which asks what the hidden layer represents and does not depend on exact fitting.

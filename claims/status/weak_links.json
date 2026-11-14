@@ -6,16 +6,16 @@
   "statement": "Theorem 15: under task-symmetric initialization and equivariant training, circuit probability is constant on task-symmet"
  },
  {
+  "claim": "P127",
+  "notes": 7,
+  "status": "EXPLORATORY (post hoc)",
+  "statement": "Feature learning moves nets from the NTK toward the Occam completion: 91% agreement with Occam vs 81–83% with the NTK; w"
+ },
+ {
   "claim": "P077",
   "notes": 6,
   "status": "PROVED (elementary) + EMPIRICAL (gains within ±0.003)",
   "statement": "No-transfer lemma: symmetrizing over the exact stabilizer of the labelled data cannot change expected accuracy on unlabe"
- },
- {
-  "claim": "P127",
-  "notes": 5,
-  "status": "EXPLORATORY (post hoc)",
-  "statement": "Feature learning moves nets from the NTK toward the Occam completion: 91% agreement with Occam vs 81–83% with the NTK; w"
  },
  {
   "claim": "P133",
@@ -40,5 +40,11 @@
   "notes": 1,
   "status": "PROVED (informal sketch)",
   "statement": "With full care, the minimal sufficient variable set is unique and equals support(f)"
+ },
+ {
+  "claim": "P155",
+  "notes": 1,
+  "status": "REFUTED (C19′ on real data; pre-registered, H45.2 and H45.3 broken)",
+  "statement": "The Occam pull does not hold on real data (C19′ REFUTED outside clean targets): on four real datasets binarized to 6 fea"
  }
 ]

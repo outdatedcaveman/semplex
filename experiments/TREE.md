@@ -29,7 +29,7 @@ Each node is a spike. A child builds on what its parent established; siblings ar
               │                           ├ 43  when: kernel-smoothed target first, Occam later? (H-J)   frozen: two phases held; Occam from step ~30
               │                           ├ 44  depth: do three-layer nets side with Occam more? (H-K)   frozen: H-K refuted at matched params
               │                           └ 45  external validity: 4 other target classes + 4 real datasets   frozen: holds on clean classes; refuted on real data
-              │                             └ 46  exact cost–error frontier under label noise (C20′)   pre-registered
+              │                             └ 46  exact cost–error frontier under label noise (C20′)   frozen: dose–response held; C20′ not supported
               ├ 23  distance-matched choice test (from 19 arm 1)     frozen: symmetry and information both steer single steps
               ├ 25  less strict CSP at low labels (from 19 arm 2)    frozen: certificates fail at power; anisotropic smoothness
               └ 26  lawful completion of algebra; Curie transfer (C8(c), from 14 and 20)   frozen: Curie transfers (β = −1.85); lawful 9.6× chance

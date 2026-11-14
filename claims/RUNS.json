@@ -142,6 +142,59 @@
     "P155",
     "P156"
    ]
+  },
+  {
+   "spike": "46",
+   "date": "2026-11-14",
+   "commit": "pending",
+   "question": "Under label noise, do nets follow a simpler circuit plus memorized exceptions? (C20′, exact cost–error frontier)",
+   "overall": "NEITHER",
+   "verdicts": [
+    {
+     "id": "H46.1",
+     "verdict": "HELD",
+     "measured": "pull 0.83 (no flips), 0.66 (2), 0.57 (5), 0.57 (8); drop 0.27",
+     "bar": "held if drop from 0 to 8 flips ≥ 0.10; broken if ≤ 0.02"
+    },
+    {
+     "id": "H46.2",
+     "verdict": "NEITHER",
+     "measured": "agree(simpler) − agree(exact): −0.004 at 0 flips, +0.006 at 8",
+     "bar": "held if ≤ −0.02 at 0 and ≥ +0.02 at 8; broken if ≤ 0 at 8"
+    },
+    {
+     "id": "H46.3",
+     "verdict": "NEITHER",
+     "measured": "simpler minus kernel agreement: Wine +0.05, Digits −0.02, Diabetes −0.01; Breast Cancer no verdict",
+     "bar": "held if > 0 in ≥ 3 of 4; broken if ≤ 0 in ≥ 3"
+    },
+    {
+     "id": "H46.4",
+     "verdict": "NEITHER",
+     "measured": "accuracy of simpler minus exact: +0.042 at 5 flips, +0.014 at 8",
+     "bar": "held if ≥ +0.02 at both; broken if ≤ 0 at both"
+    }
+   ],
+   "learned": "Label noise removes the pull toward the minimum circuit quickly: two flipped labels in 48 take it from 0.83 to 0.66. Noise does not move the net to a simpler circuit; it makes the net less like any circuit (best agreement 0.89 → 0.75). Exploratory: a two-part-code circuit from the compiler generalizes better than the trained net under noise.",
+   "gaps_moved": [
+    {
+     "gap": "A8",
+     "from": "OPEN",
+     "to": "PARTIAL",
+     "why": "Dose–response established; the proposed predictor is not supported"
+    },
+    {
+     "gap": "A2",
+     "from": "OPEN",
+     "to": "OPEN",
+     "why": "Still no predictor that beats the kernel on real data"
+    }
+   ],
+   "claims": [
+    "P157",
+    "P158",
+    "P159"
+   ]
   }
  ]
 }

@@ -78,5 +78,37 @@
   "verdict": "BROKEN",
   "measured": "net minus kernel accuracy: Breast Cancer +0.07, Wine −0.07, Digits −0.03, Diabetes −0.04",
   "bar": "held if ≥ +0.01 in ≥ 3 of 4; broken if ≤ 0 in ≥ 3"
+ },
+ {
+  "key": "46:H46.1",
+  "spike": "46",
+  "id": "H46.1",
+  "verdict": "HELD",
+  "measured": "pull 0.83 (no flips), 0.66 (2), 0.57 (5), 0.57 (8); drop 0.27",
+  "bar": "held if drop from 0 to 8 flips ≥ 0.10; broken if ≤ 0.02"
+ },
+ {
+  "key": "46:H46.2",
+  "spike": "46",
+  "id": "H46.2",
+  "verdict": "NEITHER",
+  "measured": "agree(simpler) − agree(exact): −0.004 at 0 flips, +0.006 at 8",
+  "bar": "held if ≤ −0.02 at 0 and ≥ +0.02 at 8; broken if ≤ 0 at 8"
+ },
+ {
+  "key": "46:H46.3",
+  "spike": "46",
+  "id": "H46.3",
+  "verdict": "NEITHER",
+  "measured": "simpler minus kernel agreement: Wine +0.05, Digits −0.02, Diabetes −0.01; Breast Cancer no verdict",
+  "bar": "held if > 0 in ≥ 3 of 4; broken if ≤ 0 in ≥ 3"
+ },
+ {
+  "key": "46:H46.4",
+  "spike": "46",
+  "id": "H46.4",
+  "verdict": "NEITHER",
+  "measured": "accuracy of simpler minus exact: +0.042 at 5 flips, +0.014 at 8",
+  "bar": "held if ≥ +0.02 at both; broken if ≤ 0 at both"
  }
 ]

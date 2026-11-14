@@ -20,10 +20,10 @@
   "title": "Real data: the theory currently fails there",
   "status": "OPEN",
   "leverage": "HIGH",
-  "have": "Pre-registered test on four real datasets (Spike 45): the Occam pull holds only on Wine (0.74); it is broken on Breast Cancer (0.29) and Diabetes (0.45). The kernel predicts the net better than Occam on 3 of 4, and beats the trained net on 3 of 4.",
+  "have": "Pre-registered test on four real datasets (Spike 45): the Occam pull holds only on Wine (0.74); it is broken on Breast Cancer (0.29) and Diabetes (0.45). The kernel predicts the net better than Occam on 3 of 4, and beats the trained net on 3 of 4. Spike 46: the simpler-circuit predictor beats the kernel on Wine only.",
   "missing": "A version of the theory that predicts trained nets on noisy real tasks better than the kernel does.",
   "closes_when": "Pre-registered on the same four datasets plus two new ones: a stated predictor agrees with trained nets more than the kernel does in at least 4 of 6.",
-  "next": "After A8: test the noise-tolerant minimum circuit on these datasets",
+  "next": "Blocked on A8: no predictor yet beats the kernel on these datasets",
   "blocked_by": "",
   "claims": "P155 P156"
  },
@@ -32,14 +32,14 @@
   "pillar": "Theory",
   "serves": "E1",
   "title": "Label noise: where the Occam pull breaks",
-  "status": "OPEN",
+  "status": "PARTIAL",
   "leverage": "HIGH",
-  "have": "One noisy synthetic cell: pull 0.58 against 0.67–0.90 on clean classes; real tasks fail. Prior theory (Harel et al. 2024; Manoj & Srebro 2023) covers exact minimum-size interpolators under noise.",
-  "missing": "The exact, certified frontier of circuit cost against misfit labels for each task, and where on it trained nets land as weight decay and training time vary (direction R3).",
-  "closes_when": "Pre-registered: (a) the pull falls monotonically with the number of flipped labels; (b) the frontier point that best predicts the net sides with it ≥ 0.65 where the exact-fit circuit is ≤ 0.60; (c) the same predictor beats the kernel on ≥ 3 of the 4 real datasets of Spike 45.",
-  "next": "Spike 46",
+  "have": "Dose–response measured (Spike 46): the pull is 0.83 with no flipped labels, 0.66 with 2 of 48, 0.57 with 5 or 8. The exact cost–error frontier is computed and certified. The 'one level simpler plus exceptions' predictor (C20′) is not supported.",
+  "missing": "An account of what noisy-label nets do on held-out inputs: they agree with their best circuit only 0.75 of the time, about as much as with the kernel. Untested: nets that are not forced to fit every label.",
+  "closes_when": "Pre-registered: with early stopping or stronger weight decay chosen without the test labels, the pull toward the clean rule's circuit returns to ≥ 0.65 at 5 and 8 flips; or a predictor agrees with noisy-label nets ≥ 0.85.",
+  "next": "Unscheduled; lower priority than A9",
   "blocked_by": "",
-  "claims": "P154 P155"
+  "claims": "P157 P158 P159"
  },
  {
   "id": "A3",
@@ -247,7 +247,7 @@
   "have": "Exact frames and minimal determining sets (THEORY §2). Gemini's exploratory Spike 37: 86–89% of units are members or coarsenings of minimal determining sets. Belief-state geometry is established for sequence models (Shai et al. 2024).",
   "missing": "A pre-registered test that hidden layers factor through a partition between the task's coarsest sufficient partition and a minimum circuit's first-layer partition, and a statement of which one and when (direction R1).",
   "closes_when": "Pre-registered at n = 5, 6: decodability of the canonical class from hidden activations ≥ 0.9, and convergence to one minimum-circuit partition in ≥ 70% of runs, or the reverse reported.",
-  "next": "Spike 47 (after 46)",
+  "next": "Spike 47 (next)",
   "blocked_by": "",
   "claims": "P132"
  },
