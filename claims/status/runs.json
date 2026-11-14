@@ -1,0 +1,22 @@
+[
+ {
+  "spike": "43",
+  "date": "2026-11-13",
+  "commit": "f93de55",
+  "question": "Does training follow the kernel first and turn toward Occam later? (H-J)",
+  "overall": "NEITHER",
+  "learned": "The move toward the minimum circuit is a later phase: kernel-like change for about 10 steps, Occam from step ~30. Plain gradient descent shows the same shape.",
+  "moved": "A5: OPEN → PARTIAL (Two phases seen in one cell); A3: OPEN → OPEN (Adds timing evidence, no derivation)",
+  "claims": "P152"
+ },
+ {
+  "spike": "44",
+  "date": "2026-11-13",
+  "commit": "f02ab44",
+  "question": "Does depth raise agreement with Occam? (H-K)",
+  "overall": "BROKEN",
+  "learned": "For targets two layers can represent, a third layer adds no pull toward the minimum circuit; three-layer nets stay closer to their kernel.",
+  "moved": "A7: OPEN → PARTIAL (Negative for two-layer-representable targets; depth-requiring targets untested)",
+  "claims": "P153"
+ }
+]

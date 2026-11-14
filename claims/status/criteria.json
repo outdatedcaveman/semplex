@@ -1,0 +1,42 @@
+[
+ {
+  "id": "E1",
+  "name": "Predicts",
+  "test": "On tasks outside the class it was fitted on, including real data, the theory predicts held-out behaviour better than the kernel baseline, in a pre-registered test.",
+  "gaps": 4,
+  "OPEN": 3,
+  "PARTIAL": 1,
+  "CLOSED": 0,
+  "progress_pct": 12
+ },
+ {
+  "id": "E2",
+  "name": "Explains",
+  "test": "The pull toward the minimum circuit is derived from the training dynamics (a theorem or a quantitative law verified prospectively), not only observed.",
+  "gaps": 2,
+  "OPEN": 1,
+  "PARTIAL": 1,
+  "CLOSED": 0,
+  "progress_pct": 25
+ },
+ {
+  "id": "E3",
+  "name": "Scales",
+  "test": "The same result holds at n ≥ 8 inputs and beyond width 8, with compiler-computed completions.",
+  "gaps": 2,
+  "OPEN": 2,
+  "PARTIAL": 0,
+  "CLOSED": 0,
+  "progress_pct": 0
+ },
+ {
+  "id": "E4",
+  "name": "Certified",
+  "test": "Every claim the theory rests on is machine-checked or pre-registered and replicated; the ledger shows no claim stated stronger than its support.",
+  "gaps": 8,
+  "OPEN": 8,
+  "PARTIAL": 0,
+  "CLOSED": 0,
+  "progress_pct": 0
+ }
+]

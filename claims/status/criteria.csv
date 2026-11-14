@@ -1,5 +1,0 @@
-id,name,test,gaps,OPEN,PARTIAL,CLOSED,progress
-E1,Predicts,"On tasks outside the class it was fitted on, including real data, the theory predicts held-out behaviour better than the kernel baseline, in a pre-registered test.",4,3,1,0,0.12
-E2,Explains,"The pull toward the minimum circuit is derived from the training dynamics (a theorem or a quantitative law verified prospectively), not only observed.",2,1,1,0,0.25
-E3,Scales,"The same result holds at n ≥ 8 inputs and beyond width 8, with compiler-computed completions.",2,2,0,0,0.0
-E4,Certified,Every claim the theory rests on is machine-checked or pre-registered and replicated; the ledger shows no claim stated stronger than its support.,8,8,0,0,0.0

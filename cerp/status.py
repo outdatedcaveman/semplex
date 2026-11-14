@@ -1,6 +1,6 @@
 """The project status board: what the theory still lacks to be effective.
 
-  python -m cerp.status            regenerate STATUS.md and claims/status/*.csv
+  python -m cerp.status            regenerate STATUS.md and claims/status/*.json
   python -m cerp.status --check    fail if STATUS.md is out of date or a source is inconsistent
 
 Sources (edit these, never STATUS.md):
@@ -13,8 +13,6 @@ AGENTS.md rule 8: after every run, append to RUNS.json, update GAPS.json, regene
 
 from __future__ import annotations
 
-import csv
-import io
 import json
 import pathlib
 import re
@@ -137,9 +135,9 @@ def render(d):
 
 
 def tables(d):
-    """Flat tables for the dashboard page."""
+    """Flat tables for the dashboard page, as JSON rows."""
     g = d["g"]
-    t = {"criteria": [{k: c[k] for k in ("id", "name", "test", "gaps", "OPEN", "PARTIAL", "CLOSED", "progress")} for c in criteria(d)],
+    t = {"criteria": [{k: c[k] for k in ("id", "name", "test", "gaps", "OPEN", "PARTIAL", "CLOSED")} | {"progress_pct": int(round(100 * c["progress"]))} for c in criteria(d)],
          "gaps": [{"id": x["id"], "pillar": x["pillar"], "serves": x["serves"], "title": x["title"], "status": x["status"], "leverage": x["leverage"],
                    "have": x["have"], "missing": x["missing"], "closes_when": x["closes_when"], "next": x["next"],
                    "blocked_by": " ".join(x.get("blocked_by", [])), "claims": " ".join(x.get("claims", []))} for x in g["gaps"]],
@@ -153,11 +151,7 @@ def tables(d):
          "weak_links": [{"claim": a, "notes": int(b), "status": c, "statement": s[:200]} for a, b, c, s in d["weak"][:8]],
          "ledger": [{"metric": "Claims", "value": len(d["rows"])}, {"metric": "Ledger problems", "value": len([e for e in d["errs"] if e.startswith("ledger")])},
                     {"metric": "Claims stated stronger than their support", "value": len(d["notes"])}, {"metric": "Frozen spike files", "value": d["frozen"]}]}
-    out = {}
-    for name, rows in t.items():
-        buf = io.StringIO(); w = csv.DictWriter(buf, fieldnames=list(rows[0]), lineterminator="\n"); w.writeheader(); w.writerows(rows)
-        out[name] = buf.getvalue()
-    return out
+    return {name: json.dumps(rows, indent=1, ensure_ascii=False) + "\n" for name, rows in t.items()}
 
 
 def main(argv):
@@ -166,13 +160,13 @@ def main(argv):
         print("  PROBLEM", e)
     if "--check" in argv:
         stale = (not OUT.exists() or OUT.read_text(encoding="utf-8") != text
-                 or any(not (CSVDIR / f"{k}.csv").exists() or (CSVDIR / f"{k}.csv").read_text(encoding="utf-8") != v for k, v in tb.items()))
+                 or any(not (CSVDIR / f"{k}.json").exists() or (CSVDIR / f"{k}.json").read_text(encoding="utf-8") != v for k, v in tb.items()))
         if stale:
             print("STATUS.md or claims/status/ is out of date: run python -m cerp.status")
         return 1 if (stale or d["errs"]) else 0
     OUT.write_text(text, encoding="utf-8"); CSVDIR.mkdir(exist_ok=True)
     for k, v in tb.items():
-        (CSVDIR / f"{k}.csv").write_text(v, encoding="utf-8")
+        (CSVDIR / f"{k}.json").write_text(v, encoding="utf-8")
     c = criteria(d)
     print(f"STATUS.md written: {len(d['g']['gaps'])} gaps, " + ", ".join(f"{x['id']} {int(100 * x['progress'])}%" for x in c) + f"; {len(d['errs'])} problem(s)")
     return 1 if d["errs"] else 0

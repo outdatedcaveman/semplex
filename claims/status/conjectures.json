@@ -1,0 +1,122 @@
+[
+ {
+  "id": "C1",
+  "title": "statistical lift",
+  "state": "Open",
+  "note": "CONJECTURE, unchanged"
+ },
+ {
+  "id": "C2",
+  "title": "limit representations",
+  "state": "Proved",
+  "note": "PROVED for stabilized slices and the metric limit; Lean, P135, P139"
+ },
+ {
+  "id": "C3",
+  "title": "adaptivity gap",
+  "state": "Open",
+  "note": "CONJECTURE, unchanged; a lower bound is PROVED"
+ },
+ {
+  "id": "C4",
+  "title": "compositional frames",
+  "state": "Partly",
+  "note": "PARTLY PROVED; Lean, P134"
+ },
+ {
+  "id": "C5",
+  "title": "trust-indexed escalation",
+  "state": "Proved",
+  "note": "PROVED in an assumed linear-gain model; Lean, P139"
+ },
+ {
+  "id": "C6",
+  "title": "reach vs choice",
+  "state": "Withdrawn",
+  "note": "withdrawn in its strong form, Spike 10c F3"
+ },
+ {
+  "id": "C7",
+  "title": "minimal observational power for learning",
+  "state": "Open",
+  "note": ""
+ },
+ {
+  "id": "C8",
+  "title": "Curie principle for learning",
+  "state": "Open",
+  "note": ""
+ },
+ {
+  "id": "C9",
+  "title": "tilted-volume law",
+  "state": "Refuted",
+  "note": "temperature form REFUTED by Spike 20"
+ },
+ {
+  "id": "C10",
+  "title": "origin of the tilt",
+  "state": "Refuted",
+  "note": "REFUTED by Spike 22"
+ },
+ {
+  "id": "C11",
+  "title": "oddness or saturation",
+  "state": "Refuted",
+  "note": "REFUTED by Spike 24"
+ },
+ {
+  "id": "C12",
+  "title": "positive homogeneity",
+  "state": "Refuted",
+  "note": "REFUTED by Spike 27"
+ },
+ {
+  "id": "C13",
+  "title": "indicator alignment",
+  "state": "Supported",
+  "note": "SUPPORTED, prospectively, by Spike 28"
+ },
+ {
+  "id": "C14",
+  "title": "interpretability–generalization trade-off",
+  "state": "Refuted",
+  "note": "REFUTED as a mechanism by Spike 30"
+ },
+ {
+  "id": "C15′",
+  "title": "why these nets generalize: kernel prior plus a positive feature-learning update",
+  "state": "Supported",
+  "note": "SUPPORTED by Spike 30"
+ },
+ {
+  "id": "C16",
+  "title": "degree-1 spectral bias",
+  "state": "Refuted",
+  "note": "REFUTED by Spike 31"
+ },
+ {
+  "id": "C17",
+  "title": "training as the init-prior Bayes posterior",
+  "state": "Partly",
+  "note": "PARTLY SUPPORTED, Spike 32"
+ },
+ {
+  "id": "C18",
+  "title": "the tilt carries the gain beyond the init prior",
+  "state": "Not supported",
+  "note": "NOT SUPPORTED, Spike 33; not refuted"
+ },
+ {
+  "id": "C19",
+  "title": "Occam (minimum circuit cost) as the missing prior",
+  "state": "Not supported",
+  "note": "NOT SUPPORTED at n = 4, Spike 34"
+ },
+ {
+  "id": "C19′",
+  "title": "feature learning as approximate minimum-circuit search",
+  "state": "Supported",
+  "note": "SUPPORTED and REPLICATED, Spike 36: departures from the kernel go toward Occam in 73–81% of cases in all 4 fresh cells; partly causal: widening toward the lazy regime raises kernel agreement +0.048, lowers Occam agreement −0.038 and lowers held-out accuracy −0.033"
+ }
+]

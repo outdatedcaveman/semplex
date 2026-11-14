@@ -1,0 +1,44 @@
+[
+ {
+  "claim": "P069",
+  "notes": 20,
+  "status": "PROVED (paper proof) + EMPIRICALLY-CONFIRMED (H14.1)",
+  "statement": "Theorem 15: under task-symmetric initialization and equivariant training, circuit probability is constant on task-symmet"
+ },
+ {
+  "claim": "P077",
+  "notes": 6,
+  "status": "PROVED (elementary) + EMPIRICAL (gains within ±0.003)",
+  "statement": "No-transfer lemma: symmetrizing over the exact stabilizer of the labelled data cannot change expected accuracy on unlabe"
+ },
+ {
+  "claim": "P127",
+  "notes": 3,
+  "status": "EXPLORATORY (post hoc)",
+  "statement": "Feature learning moves nets from the NTK toward the Occam completion: 91% agreement with Occam vs 81–83% with the NTK; w"
+ },
+ {
+  "claim": "P133",
+  "notes": 2,
+  "status": "EXPLORATORY (demonstrated, tested)",
+  "statement": "A causal Bayes net's Bayes-optimal decision rule can be distilled to a canonical F0 expr + circuit in CSIR with a kernel"
+ },
+ {
+  "claim": "P141",
+  "notes": 2,
+  "status": "EXPLORATORY + PARTLY MECHANIZED",
+  "statement": "Profile-factor compilation (`profile_factor_compile` in Lean; `cerp/ur_compiler.py`, H-G) factors low-rank partitions `f"
+ },
+ {
+  "claim": "P001",
+  "notes": 1,
+  "status": "PROVED (literature)",
+  "statement": "ROBDD under a fixed order is a normal form for F0 (idempotent; equal iff extensionally equivalent)"
+ },
+ {
+  "claim": "P003",
+  "notes": 1,
+  "status": "PROVED (informal sketch)",
+  "statement": "With full care, the minimal sufficient variable set is unique and equals support(f)"
+ }
+]
