@@ -127,10 +127,8 @@ def test_tnet_lean_exhaustive_and_lrat_equiv():
 
     status, lrat_steps, _ = sat.prove_tnet_equivalence_lrat(net, comp["expr"], vs)
     assert status == "unsat"
-    # Kernel `by decide` on XOR3 `tnet` is verified in `test_lrat_miter_equiv_and_ur_compiler_certify_lean`;
-    # 5-node XOR4 CNF (431 clauses via O(2^d) pbToExpr) uses `native=True` to avoid >900s WHNF replay.
-    r_lrat, _ = lean_bridge.verify_threshold_net_equiv(net, comp["expr"], vs, lrat_steps=lrat_steps, name="t_tnet_xor4_lrat", native=True)
-    assert r_lrat.ok and set(r_lrat.axioms) <= lean_bridge.NATIVE_AXIOMS
+    r_lrat, _ = lean_bridge.verify_threshold_net_equiv(net, comp["expr"], vs, lrat_steps=lrat_steps, name="t_tnet_xor4_lrat", native=False)
+    assert r_lrat.ok and set(r_lrat.axioms) <= set(lean_bridge.ALLOWED_AXIOMS)
 
     bad_net = {"inputs": list(net["inputs"]), "nodes": [dict(nd) for nd in net["nodes"]], "output": net["output"]}
     bad_net["nodes"][-1]["t"] = int(bad_net["nodes"][-1]["t"]) + 10
