@@ -76,8 +76,10 @@ Certify that 4-input parity has no layered threshold net with 4 neurons. The enu
 
 **Done when:** 20 consecutive `pytest -q` runs pass.
 
-### G7. Prior-art sweep for C19′ (supports gap A3)
+### G7. Work through the prior-art reading queue (gap D3)
 
-Claim under review: "gradient training starts from the initial-kernel prior, and feature learning moves the network toward the minimum-circuit completion". Find and **read in full** the closest prior work: simplicity bias (Valle-Pérez et al.; Mingard et al.), "SGD learns functions of increasing complexity" (Nakkiran et al.), leap complexity and the staircase property (Abbe et al.), minimum-description-length and circuit-complexity accounts of generalization, lazy vs rich regime (Chizat & Bach; Woodworth et al.).
+`charter/PRIOR_ART.md` §4 lists about 20 papers found on 2026-11-14 and not yet read, with the reason each matters. Read each **in full** and add a row to `charter/LITERATURE_REVIEW.md` §5. Start with 2606.04045 (it may already state our sufficiency result), then 1805.08522, 2302.07263, the proofs of 2410.19092, 2512.20607, 2507.19680.
 
-**Done when:** `charter/LITERATURE_REVIEW.md` §5 has one row per source with: what was read (full text / abstract only), its main claim, and one of {anticipates C19′, contradicts it, orthogonal} with the sentence that shows it. Abstract-only rows must say so. No row for a paper that was not opened.
+Then extend the sweep to what one arXiv-centred pass could not reach: computational mechanics (Crutchfield, Shalizi), formal concept analysis (Ganter & Wille), rough sets (Pawlak; Skowron & Rauszer), Myhill–Nerode and exact automata learning (Angluin), symbol grounding (Harnad; Mollo & Millière), identifiability in nonlinear ICA and causal representation learning (Hyvärinen; Schölkopf et al.), causal abstraction (Geiger et al.; Beckers & Halpern), Occam learning and minimum circuit size (Blumer et al.; Kearns & Vazirani).
+
+**Done when:** every queued paper has a row with what was read (full text / abstract only), its main claim, and one of {anticipates, contradicts, orthogonal} for a named claim of ours, with the sentence that shows it. Then update the verdict table in `PRIOR_ART.md` §1 where a verdict changes. Abstract-only rows must say so. No row for a paper that was not opened. If a paper already contains one of our results, say so at the top of the handoff.

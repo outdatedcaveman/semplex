@@ -106,3 +106,7 @@ Rules of thumb:
 - **Q-Bounds-Sym** (Spike 42): break the $\binom{1882}{3} \approx 1.1\times 10^9$ `parity4 >= 5` enumeration barrier in `Bounds.lean` via $B_4$ signed-permutation symmetry reduction or an algebraic hyperplane-slicing theorem.
 - **Q-OptStop-Connect** (Spike 42): instantiate `Theory.ville_anytime_valid_bound` directly on concrete sequential `QueryTree` / `cerp/epistemics.py` e-value processes and lift finite Markov-kernel DPI (`Fin n`) toward continuous state spaces.
 - **Q-HD-Theory** (Spike 42): formalize why width coarsening shifts canonical profile representations from isolated units (`max_unit_corr`) to distributed linear subspaces (`R^2 = 0.9850`), and test SAT-CEGAR compiler scaling on ASTs beyond `n = 16` without dense tables.
+
+## Research directions after the 2026-11-14 prior-art sweep
+
+See `charter/PRIOR_ART.md` §3. In order: **R3** the exact cost–error frontier (Spike 46, gap A8); **R1** meaning as the canonical quotient (gap A9); **R2** identifiability of mechanisms (gap A10); **R4** semantics that composes with a certified loss budget.

@@ -34,9 +34,9 @@
   "title": "Label noise: where the Occam pull breaks",
   "status": "OPEN",
   "leverage": "HIGH",
-  "have": "One noisy synthetic cell (5 of 48 labels flipped): pull 0.58, against 0.67–0.90 on clean classes. Real tasks, which are noisy, fail.",
-  "missing": "A dose–response in the noise level, and a test of conjecture C20: nets follow the cheapest circuit that is allowed to misfit some labels, not the exact-fit one.",
-  "closes_when": "Pre-registered: (a) the pull falls monotonically with the number of flipped labels; (b) a noise-tolerant minimum circuit sides with the net ≥ 0.65 at the noise level where the exact-fit one is ≤ 0.60.",
+  "have": "One noisy synthetic cell: pull 0.58 against 0.67–0.90 on clean classes; real tasks fail. Prior theory (Harel et al. 2024; Manoj & Srebro 2023) covers exact minimum-size interpolators under noise.",
+  "missing": "The exact, certified frontier of circuit cost against misfit labels for each task, and where on it trained nets land as weight decay and training time vary (direction R3).",
+  "closes_when": "Pre-registered: (a) the pull falls monotonically with the number of flipped labels; (b) the frontier point that best predicts the net sides with it ≥ 0.65 where the exact-fit circuit is ≤ 0.60; (c) the same predictor beats the kernel on ≥ 3 of the 4 real datasets of Spike 45.",
   "next": "Spike 46",
   "blocked_by": "",
   "claims": "P154 P155"
@@ -236,5 +236,47 @@
   "next": "Unscheduled",
   "blocked_by": "",
   "claims": "P149"
+ },
+ {
+  "id": "A9",
+  "pillar": "Theory",
+  "serves": "E2",
+  "title": "Meaning as the canonical quotient",
+  "status": "OPEN",
+  "leverage": "HIGH",
+  "have": "Exact frames and minimal determining sets (THEORY §2). Gemini's exploratory Spike 37: 86–89% of units are members or coarsenings of minimal determining sets. Belief-state geometry is established for sequence models (Shai et al. 2024).",
+  "missing": "A pre-registered test that hidden layers factor through a partition between the task's coarsest sufficient partition and a minimum circuit's first-layer partition, and a statement of which one and when (direction R1).",
+  "closes_when": "Pre-registered at n = 5, 6: decodability of the canonical class from hidden activations ≥ 0.9, and convergence to one minimum-circuit partition in ≥ 70% of runs, or the reverse reported.",
+  "next": "Spike 47 (after 46)",
+  "blocked_by": "",
+  "claims": "P132"
+ },
+ {
+  "id": "A10",
+  "pillar": "Theory",
+  "serves": "E2",
+  "title": "Identifiability of mechanisms",
+  "status": "OPEN",
+  "leverage": "MEDIUM",
+  "have": "The atlas lists minimum circuits per function; Theorem 15 gives the symmetry group acting on them.",
+  "missing": "For every function, the number of symmetry orbits of minimum circuits (one orbit = the function fixes its mechanism), and whether training's choice among orbits follows the Curie law (direction R2).",
+  "closes_when": "Orbit counts tabulated for all n ≤ 5 functions with kernel-checked circuits; uniqueness up to symmetry proved in Lean for cost-1 functions.",
+  "next": "Enumeration can start now; Lean part for Gemini",
+  "blocked_by": "",
+  "claims": "P069"
+ },
+ {
+  "id": "D3",
+  "pillar": "Process",
+  "serves": "E4",
+  "title": "Prior-art reading queue",
+  "status": "OPEN",
+  "leverage": "HIGH",
+  "have": "A structured sweep on 2026-11-14 (`charter/PRIOR_ART.md`): about 130 candidates, 7 read, verdict per claim. C19′, the timing, the noise result and Theorem 15 are each anticipated at least in part.",
+  "missing": "About 20 listed papers found but not read, including one that may state our sufficiency result; non-arXiv foundations (computational mechanics, formal concept analysis, symbol grounding) not opened.",
+  "closes_when": "Every paper in the reading queue has a row in LITERATURE_REVIEW §5 with what was read and a verdict of anticipates / contradicts / orthogonal.",
+  "next": "Gemini task G7 (expanded)",
+  "blocked_by": "",
+  "claims": "P128 P156"
  }
 ]
