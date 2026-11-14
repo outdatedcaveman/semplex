@@ -84,3 +84,29 @@ def check_not_threshold_partial(n, f, care, pos, neg) -> Verdict:
           and all(_val(f, p) == 1 for p in pos) and all(_val(f, q) == 0 for q in neg)
           and _sums_equal(n, pos, neg))
     return Verdict(ok, "not-threshold-partial", (), len(pos), None, KERNEL_VERSION, _TOKEN)
+
+
+def check_not_two_halfspaces_partial(n, f, care, bad) -> Verdict:
+    """Partial-function analogue of check_not_two_halfspaces: every point in every
+    bad set and witness (S, pos, neg) must lie in `care`."""
+    if type(care) is not int or not 0 <= care < (1 << (1 << n)):
+        raise KernelError("bad care mask")
+    masks, universe = [], []
+    for b in bad:
+        S, pos, neg = list(b["set"]), list(b["pos"]), list(b["neg"])
+        pts = S + pos + neg
+        _valid(n, f, pts)
+        if not (all((care >> q) & 1 for q in pts)
+                and all(_val(f, q) == 0 for q in S) and all(q in S for q in neg)
+                and all(_val(f, p) == 1 for p in pos) and _sums_equal(n, pos, neg)):
+            return Verdict(False, "not-two-halfspaces-partial", (), 0, None, KERNEL_VERSION, _TOKEN)
+        for q in S:
+            if q not in universe:
+                universe.append(q)
+        masks.append(sum(1 << universe.index(q) for q in S))
+    if len(universe) > 20:
+        raise KernelError("too many points to colour exhaustively")
+    for colouring in range(1 << len(universe)):
+        if not any((s & colouring) == s or (s & colouring) == 0 for s in masks):
+            return Verdict(False, "not-two-halfspaces-partial", (), colouring, None, KERNEL_VERSION, _TOKEN)
+    return Verdict(True, "not-two-halfspaces-partial", (), 1 << len(universe), None, KERNEL_VERSION, _TOKEN)

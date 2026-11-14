@@ -40,3 +40,88 @@ def test_netsolve_min_errors_and_budget():
     assert wrong == 1
     assert netsolve.solve(f, n, spec, W=2, time_limit=10, max_errors=0)[0] == "unsat"
     assert netsolve.solve(f, n, spec, W=2, time_limit=10, max_errors=1)[0] == "sat"
+
+
+def test_not_two_halfspaces_partial_and_forgeries():
+    from cerp import bounds, kernel_bounds
+    import pytest
+
+    # 3-bit parity requires >= 3 halfspaces (neither 2-AND nor 2-OR works on all 8 inputs)
+    n, parity3, full = 3, 0b10010110, 0xFF
+    bad_pos = bounds.not_two_halfspaces_cert_partial(n, parity3, full)
+    bad_neg = bounds.not_two_halfspaces_cert_partial(n, (~parity3) & full, full)
+    assert bad_pos is not None and bad_neg is not None
+    assert kernel_bounds.check_not_two_halfspaces_partial(n, parity3, full, bad_pos).ok
+    assert kernel_bounds.check_not_two_halfspaces_partial(n, (~parity3) & full, full, bad_neg).ok
+
+    # Drop one used point from care -> forged care set must fail verification
+    used_pt = bad_pos[0]["set"][0]
+    assert not kernel_bounds.check_not_two_halfspaces_partial(n, parity3, full ^ (1 << used_pt), bad_pos).ok
+    # Empty bad list allows trivial colouring -> must fail
+    assert not kernel_bounds.check_not_two_halfspaces_partial(n, parity3, full, []).ok
+    # Parity3 without input 0 IS an OR of two halfspaces (sum<=1 or sum>=3 on nonzero inputs)
+    assert bounds.not_two_halfspaces_cert_partial(n, (~parity3) & 0xFE, 0xFE) is None
+    with pytest.raises(kernel_bounds.KernelError):
+        kernel_bounds.check_not_two_halfspaces_partial(n, parity3, -1, bad_pos)
+
+
+def test_not_threshold_partial_lp_n8():
+    import random
+    from cerp import bounds, kernel_bounds
+
+    n = 8
+    K = 1 << n
+    rng = random.Random(1234)
+    pts = rng.sample(range(K), int(round(0.75 * K)))
+    care = sum(1 << x for x in pts)
+
+    # Linearly separable threshold function on n=8: sum(x_i) >= 4
+    f_sep = sum((1 << x) for x in range(K) if x.bit_count() >= 4)
+    assert bounds.not_threshold_cert_partial(n, f_sep & care, care) is None
+
+    # Non-threshold function on n=8: x0 XOR x1
+    f_xor = sum((1 << x) for x in range(K) if ((x & 1) ^ ((x >> 1) & 1)))
+    wit = bounds.not_threshold_cert_partial(n, f_xor & care, care)
+    assert wit is not None
+    assert kernel_bounds.check_not_threshold_partial(n, f_xor & care, care, wit["pos"], wit["neg"]).ok
+
+
+def test_compile_partial_n4_and_n8():
+    import random
+    from cerp import kernel, netsolve
+
+    # 1. n=4 cost-1 threshold target (75% care)
+    n4 = 4
+    care4 = 0b1110_1101_1011_0111
+    f4_lin = sum((1 << x) for x in range(16) if x.bit_count() >= 2)
+    r1 = netsolve.compile_partial(f4_lin, n4, care4, W=3, time_limit=15.0, workers=2)
+    assert r1["status"] == "sat" and r1["cost"] == 1 and r1["certified_minimal"]
+    for x in range(16):
+        if (care4 >> x) & 1:
+            assert int(kernel.evaluate(r1["artifact"], {f"x{i}": (x >> i) & 1 for i in range(n4)})) == ((f4_lin >> x) & 1)
+
+    # 2. n=4 cost-4 parity3 lifted to x0..x2 (not 2-halfspaces, width-3 solves it)
+    f4_par = sum((1 << x) for x in range(16) if (x & 7).bit_count() % 2 == 1)
+    r4 = netsolve.compile_partial(f4_par, n4, 0xFFFF, W=3, max_width=4, time_limit=20.0, workers=2)
+    assert r4["status"] == "sat" and r4["cost"] == 4 and r4["certified_minimal"]
+    assert r4["lower_bound"] == 4 and r4["cert_kind"] == "not-two-halfspaces-partial"
+    for x in range(16):
+        assert int(kernel.evaluate(r4["artifact"], {f"x{i}": (x >> i) & 1 for i in range(n4)})) == ((f4_par >> x) & 1)
+
+    # 3. n=8 cost-3 2-halfspace AND target with 75% care
+    n8 = 8
+    K8 = 1 << n8
+    rng = random.Random(42)
+    care8 = sum(1 << x for x in rng.sample(range(K8), 192))
+    f8 = sum(
+        (1 << x)
+        for x in range(K8)
+        if (2 * ((x >> 0) & 1) - ((x >> 1) & 1) + ((x >> 2) & 1) + ((x >> 3) & 1) >= 2)
+        and (-((x >> 4) & 1) + 2 * ((x >> 5) & 1) + ((x >> 6) & 1) - ((x >> 7) & 1) >= 1)
+    )
+    r8 = netsolve.compile_partial(f8, n8, care8, W=4, time_limit=30.0, workers=4)
+    assert r8["status"] == "sat" and r8["cost"] in (1, 3) and r8["certified_minimal"]
+    for x in range(K8):
+        if (care8 >> x) & 1:
+            assert int(kernel.evaluate(r8["artifact"], {f"x{i}": (x >> i) & 1 for i in range(n8)})) == ((f8 >> x) & 1)
+
