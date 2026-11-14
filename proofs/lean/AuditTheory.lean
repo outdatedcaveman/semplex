@@ -54,3 +54,16 @@ open PFT
 #print axioms applyStop_preserves_supermartingale
 #print axioms optional_stopping_supermartingale
 #print axioms ville_anytime_valid_bound
+#print axioms sumNat_map_bijection
+#print axioms stabilizesLabelled_to_set
+#print axioms no_transfer_orbit_preserves_labelled
+#print axioms no_transfer_orbit_preserves_unlabelled
+#print axioms no_transfer_sym_list_independent_of_labelled
+#print axioms no_transfer_sym_predictor_independent_of_labelled
+#print axioms flipUnlabelled_preserves_labelled
+#print axioms flipUnlabelled_preserves_stabilizer
+#print axioms no_transfer_flip_pair_constant
+#print axioms no_transfer_flip_invariant_dist_eq
+#print axioms no_transfer_reynolds_fixed_invariant_target
+#print axioms no_transfer_reynolds_invariant_prior
+#print axioms sym_majority_can_improve_without_flip_symmetry
