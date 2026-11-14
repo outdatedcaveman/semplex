@@ -109,3 +109,49 @@ def test_weight_space_geometry_small(tables):
     assert r["weight_settings"] == 3 ** 9 and r["functions_realized"] == 16
     assert r["volume_share_by_min_neurons"][1] > 0.99                        # XOR is rare in weight space
     assert sum(r["border_pairs_by_hamming_distance"].values()) > 0
+
+
+def test_parity4_needs_5_neurons_certificate_and_forgeries():
+    import copy
+
+    cert = bounds.parity4_five_neuron_cert()
+    v = kb.check_parity4_needs_5_neurons(cert)
+    assert v.ok and v.relation == "parity4-needs-5-neurons"
+    assert not kb.check_parity4_needs_5_neurons(None).ok
+
+    bad_target = copy.deepcopy(cert)
+    bad_target["target"] ^= 1
+    assert not kb.check_parity4_needs_5_neurons(bad_target).ok
+
+    bad_mono = copy.deepcopy(cert)
+    bad_mono["reps"][1]["weights"] = [1, 0, 1, 1]
+    assert not kb.check_parity4_needs_5_neurons(bad_mono).ok
+
+    bad_thr = copy.deepcopy(cert)
+    bad_thr["reps"][1]["threshold"] += 10
+    assert not kb.check_parity4_needs_5_neurons(bad_thr).ok
+
+    bad_orb = copy.deepcopy(cert)
+    bad_orb["orbits"][0].pop()
+    assert not kb.check_parity4_needs_5_neurons(bad_orb).ok
+
+    bad_cc = copy.deepcopy(cert)
+    bad_cc["const_const"]["pos"] = [0]
+    bad_cc["const_const"]["neg"] = [0]
+    assert not kb.check_parity4_needs_5_neurons(bad_cc).ok
+
+    bad_rep = copy.deepcopy(cert)
+    bad_rep["const_reps"][0]["g2"] ^= 2
+    assert not kb.check_parity4_needs_5_neurons(bad_rep).ok
+
+    bad_pair = copy.deepcopy(cert)
+    pc = bad_pair["pair_certs"][0][0]
+    if pc["kind"] == "single":
+        pc["pos"] = [pc["neg"][0]] * len(pc["neg"])
+    else:
+        pc["wits"][0]["pos"] = list(pc["wits"][0]["neg"])
+    assert not kb.check_parity4_needs_5_neurons(bad_pair).ok
+
+    bad_wit = copy.deepcopy(cert)
+    bad_wit["pair_witnesses"][0][0].pop()
+    assert not kb.check_parity4_needs_5_neurons(bad_wit).ok
