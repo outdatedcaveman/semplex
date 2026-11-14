@@ -37,11 +37,15 @@ def chain(n, k, act="step"):
     return [(act if j < k - 1 else "step", list(range(n + j))) for j in range(k)]
 
 
-def solve(f, n, spec, W=3, B=None, time_limit=60.0, workers=4, relu_cap=None, care=None, rand_obj=None):
+def solve(f, n, spec, W=3, B=None, time_limit=60.0, workers=4, relu_cap=None, care=None, rand_obj=None,
+          max_errors=None, min_errors=False):
     """care: optional bitmask of the input points that must be matched (default: all).
     rand_obj: optional int seed; minimizes a random linear objective over the weights so that
     repeated calls return different satisfying networks (Spike 35 tie sampling). Status and
-    feasibility are unchanged by it."""
+    feasibility are unchanged by it.
+    max_errors: optional int; the net may disagree with f on at most this many care points (Spike 46).
+    min_errors: if True, minimize the number of disagreeing care points; the status is then "optimal"
+    (proved minimum) or "feasible" (best found within the time limit) instead of "sat"."""
     B = B if B is not None else W * (n + len(spec)) + 1
     m = cp_model.CpModel()
     pts = range(1 << n)
@@ -50,6 +54,8 @@ def solve(f, n, spec, W=3, B=None, time_limit=60.0, workers=4, relu_cap=None, ca
     kinds = ["in"] * n + [a for a, _ in spec]
     cap = relu_cap or (W * (n + len(spec)) + B)
     last = len(spec) - 1
+    slack = max_errors is not None or min_errors
+    errs = []
     for x in pts:
         if care is not None and not (care >> x) & 1:
             continue
@@ -72,7 +78,12 @@ def solve(f, n, spec, W=3, B=None, time_limit=60.0, workers=4, relu_cap=None, ca
                     terms.append(p)
             pre = sum(terms) + bv[j]
             if j == last:
-                if (f >> x) & 1:
+                if slack:
+                    e = m.NewBoolVar("")
+                    errs.append(e)
+                    (m.Add(pre >= 0) if (f >> x) & 1 else m.Add(pre <= -1)).OnlyEnforceIf(e.Not())
+                    (m.Add(pre <= -1) if (f >> x) & 1 else m.Add(pre >= 0)).OnlyEnforceIf(e)
+                elif (f >> x) & 1:
                     m.Add(pre >= 0)
                 else:
                     m.Add(pre <= -1)
@@ -93,7 +104,11 @@ def solve(f, n, spec, W=3, B=None, time_limit=60.0, workers=4, relu_cap=None, ca
         if spec[j] == spec[j + 1]:
             key = lambda q: sum(wv[q][i] * (2 * W + 1) ** i for i in range(len(spec[q][1]))) + bv[q] * (2 * W + 1) ** len(spec[q][1])
             m.Add(key(j) <= key(j + 1))
-    if rand_obj is not None:
+    if max_errors is not None:
+        m.Add(sum(errs) <= max_errors)
+    if min_errors:
+        m.Minimize(sum(errs))
+    elif rand_obj is not None:
         import random
         r = random.Random(rand_obj)
         m.Minimize(sum(r.randint(-5, 5) * v for row in wv for v in row) + sum(r.randint(-5, 5) * v for v in bv))
@@ -104,5 +119,6 @@ def solve(f, n, spec, W=3, B=None, time_limit=60.0, workers=4, relu_cap=None, ca
     if st in (cp_model.OPTIMAL, cp_model.FEASIBLE):
         neurons = [{"in": list(refs), "w": [int(s.Value(v)) for v in wv[j]], "b": int(s.Value(bv[j])), "act": act}
                    for j, (act, refs) in enumerate(spec)]
-        return "sat", {"kind": "dnet", "body": {"inputs": [f"x{i}" for i in range(n)], "neurons": neurons}}
+        tag = "sat" if not min_errors else ("optimal" if st == cp_model.OPTIMAL else "feasible")
+        return tag, {"kind": "dnet", "body": {"inputs": [f"x{i}" for i in range(n)], "neurons": neurons}}
     return ("unsat" if st == cp_model.INFEASIBLE else "unknown"), None
