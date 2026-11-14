@@ -2146,6 +2146,92 @@ private theorem countEqT15_pos_mem {α : Type _} [DecidableEq α] {a : α} :
 
 private theorem countEqT15_not_mem {α : Type _} [DecidableEq α] {a : α} :
     ∀ {l : List α}, a ∉ l → countEqT15 a l = 0
+/-! ## §20 No-transfer lemma for exact data stabilizers (Spike 16 F2 / P077)
+
+If a group `G` maps the labelled set `L` to itself, every `G`-orbit lies
+entirely inside `L` or entirely outside `L`. Consequently:
+1. A predictor's `G`-symmetrized values on unlabelled inputs depend only on its
+   values on unlabelled inputs (zero label transfer from `L`).
+2. Random-`G` (Reynolds) symmetrization leaves expected unlabelled accuracy
+   identically unchanged, both on any `G`-invariant target and under any
+   `G`-invariant finite target prior.
+3. Deterministic symmetrization (e.g. logit averaging / majority vote) leaves
+   expected unlabelled accuracy identically unchanged under any distribution
+   invariant under unlabelled label flips `y ↦ flipUnlabelled L y`.
+4. Honest scope limit (`sym_majority_can_improve_without_flip_symmetry`): without
+   label-flip invariance (e.g. a `G`-invariant prior skewed 4:1 toward all-1),
+   deterministic majority vote across an orbit can strictly improve expected
+   accuracy by denoising `f`. -/
+section NoTransfer
+
+def sumNat : List Nat → Nat
+  | [] => 0
+  | x :: xs => x + sumNat xs
+
+def countEq {α : Type _} [DecidableEq α] (a : α) : List α → Nat
+  | [] => 0
+  | x :: xs => (if x = a then 1 else 0) + countEq a xs
+
+def eraseOne {α : Type _} [DecidableEq α] (a : α) : List α → List α
+  | [] => []
+  | x :: xs => if x = a then xs else x :: eraseOne a xs
+
+inductive NoDupList {α : Type _} : List α → Prop
+  | nil : NoDupList []
+  | cons {x xs} : x ∉ xs → NoDupList xs → NoDupList (x :: xs)
+
+private theorem sumNat_map_add {α : Type _} (u v : α → Nat) :
+    ∀ xs : List α, sumNat (xs.map fun x => u x + v x) = sumNat (xs.map u) + sumNat (xs.map v)
+  | [] => rfl
+  | x :: xs => by
+      have ih := sumNat_map_add u v xs
+      simp only [List.map, sumNat]
+      omega
+
+private theorem sumNat_map_const {α : Type _} (c : Nat) :
+    ∀ xs : List α, sumNat (xs.map fun _ => c) = xs.length * c
+  | [] => by simp [sumNat]
+  | _ :: xs => by
+      have ih := sumNat_map_const c xs
+      simp only [List.map, sumNat, List.length, Nat.succ_mul]
+      omega
+
+private theorem sumNat_map_comm {α β : Type _} (h : α → β → Nat) :
+    ∀ (xs : List α) (ys : List β),
+      sumNat (xs.map fun a => sumNat (ys.map fun b => h a b)) =
+      sumNat (ys.map fun b => sumNat (xs.map fun a => h a b))
+  | [], ys => by
+      simp only [List.map, sumNat]
+      induction ys with
+      | nil => rfl
+      | cons _ ys ih => simp only [List.map, sumNat, ← ih]
+  | x :: xs, ys => by
+      have ih := sumNat_map_comm h xs ys
+      simp only [List.map, sumNat]
+      rw [ih, ← sumNat_map_add]
+
+private theorem list_map_congr {α β : Type _} (l : List α) (g₁ g₂ : α → β)
+    (h : ∀ a, a ∈ l → g₁ a = g₂ a) : l.map g₁ = l.map g₂ := by
+  induction l with
+  | nil => rfl
+  | cons x xs ih =>
+      simp only [List.map, h x (List.Mem.head _)]
+      congr 1
+      exact ih (fun a ha => h a (List.Mem.tail _ ha))
+
+private theorem countEq_pos_mem {α : Type _} [DecidableEq α] {a : α} :
+    ∀ {l : List α}, 0 < countEq a l → a ∈ l
+  | [], h => by simp [countEq] at h
+  | x :: xs, h => by
+      if hxa : x = a then
+        subst hxa
+        exact List.Mem.head _
+      else
+        simp [countEq, hxa] at h
+        exact List.Mem.tail _ (countEq_pos_mem h)
+
+private theorem countEq_not_mem {α : Type _} [DecidableEq α] {a : α} :
+    ∀ {l : List α}, a ∉ l → countEq a l = 0
   | [], _ => rfl
   | x :: xs, h => by
       have hx : x ≠ a := fun heq => h (heq ▸ List.Mem.head _)
@@ -2207,6 +2293,78 @@ private theorem sumNatT15_map_eq_of_countEq {α : Type _} [DecidableEq α] (w : 
       have hmem := countEqT15_pos_mem hx
       have heq := sumNatT15_map_eraseOne w hmem
       have hcount : ∀ z, countEqT15 z xs = countEqT15 z (eraseOneT15 x l₂) := by
+      simp [countEq, hx, countEq_not_mem hxs]
+
+private theorem countEq_of_noDup {α : Type _} [DecidableEq α] {a : α} :
+    ∀ {l : List α}, NoDupList l → a ∈ l → countEq a l = 1
+  | [], hn, hm => by cases hm
+  | x :: xs, NoDupList.cons hnx hnodup, hm => by
+      if hxa : x = a then
+        subst hxa
+        simp [countEq, countEq_not_mem hnx]
+      else
+        cases hm with
+        | head => exact absurd rfl hxa
+        | tail _ htail =>
+            simp [countEq, hxa]
+            exact countEq_of_noDup hnodup htail
+
+private theorem sumNat_map_eraseOne {α : Type _} [DecidableEq α] (w : α → Nat) {a : α} :
+    ∀ {l : List α}, a ∈ l → sumNat (l.map w) = w a + sumNat ((eraseOne a l).map w)
+  | [], hm => by cases hm
+  | x :: xs, hm => by
+      if hxa : x = a then
+        subst hxa
+        simp [eraseOne, sumNat]
+      else
+        cases hm with
+        | head => exact absurd rfl hxa
+        | tail _ htail =>
+            simp [eraseOne, hxa, sumNat, sumNat_map_eraseOne w htail]
+            omega
+
+private theorem countEq_eraseOne_self {α : Type _} [DecidableEq α] (a : α) :
+    ∀ {l : List α}, a ∈ l → countEq a (eraseOne a l) + 1 = countEq a l
+  | [], hm => by cases hm
+  | x :: xs, hm => by
+      if hxa : x = a then
+        subst hxa
+        simp [eraseOne, countEq]
+        omega
+      else
+        cases hm with
+        | head => exact absurd rfl hxa
+        | tail _ htail =>
+            simp [eraseOne, countEq, hxa]
+            exact countEq_eraseOne_self a htail
+
+private theorem countEq_eraseOne_ne {α : Type _} [DecidableEq α] {a b : α} (hne : b ≠ a) :
+    ∀ l : List α, countEq b (eraseOne a l) = countEq b l
+  | [] => rfl
+  | x :: xs => by
+      if hxa : x = a then
+        subst hxa
+        simp [eraseOne, countEq, hne.symm]
+      else
+        simp [eraseOne, countEq, hxa, countEq_eraseOne_ne hne xs]
+
+private theorem sumNat_map_eq_of_countEq {α : Type _} [DecidableEq α] (w : α → Nat) :
+    ∀ {l₁ l₂ : List α}, (∀ z, countEq z l₁ = countEq z l₂) → sumNat (l₁.map w) = sumNat (l₂.map w)
+  | [], l₂, h => by
+      cases l₂ with
+      | nil => rfl
+      | cons y ys =>
+          have hy := h y
+          simp [countEq] at hy
+          omega
+  | x :: xs, l₂, h => by
+      have hx : 0 < countEq x l₂ := by
+        have h0 := h x
+        simp [countEq] at h0
+        omega
+      have hmem : x ∈ l₂ := countEq_pos_mem hx
+      have heq := sumNat_map_eraseOne w hmem
+      have hcount : ∀ z, countEq z xs = countEq z (eraseOne x l₂) := by
         intro z
         have hz := h z
         if hzx : z = x then
@@ -2322,5 +2480,317 @@ theorem theorem15_adamw_finite_distribution_invariant {S C : Type _} [DecidableE
   rw [hind]
 
 end Theorem15
+          have hs := countEq_eraseOne_self z hmem
+          simp [countEq] at hz
+          omega
+        else
+          rw [countEq_eraseOne_ne hzx l₂]
+          have hxz : x ≠ z := fun e => hzx e.symm
+          simp [countEq, hxz] at hz
+          exact hz
+      have ih := sumNat_map_eq_of_countEq w hcount
+      simp [sumNat, heq, ih]
+
+private theorem countEq_map_bijection {α : Type _} [DecidableEq α] {f inv : α → α}
+    (hl : ∀ x, inv (f x) = x) (hr : ∀ x, f (inv x) = x) :
+    ∀ (l : List α) (y : α), countEq y (l.map f) = countEq (inv y) l
+  | [], _ => rfl
+  | x :: xs, y => by
+      have ih := countEq_map_bijection hl hr xs y
+      if hfx : f x = y then
+        have hinv : x = inv y := by rw [← hl x, hfx]
+        simp only [List.map, countEq, if_pos hfx, if_pos hinv, ih]
+      else
+        have hinv : x ≠ inv y := fun heq => hfx (by rw [heq, hr])
+        simp only [List.map, countEq, if_neg hfx, if_neg hinv, ih]
+
+theorem sumNat_map_bijection {α : Type _} [DecidableEq α]
+    (l : List α) (hnodup : NoDupList l)
+    (f inv : α → α)
+    (hl : ∀ x, inv (f x) = x) (hr : ∀ x, f (inv x) = x)
+    (hclosed_f : ∀ x, x ∈ l → f x ∈ l)
+    (hclosed_inv : ∀ x, x ∈ l → inv x ∈ l)
+    (w : α → Nat) :
+    sumNat (l.map fun x => w (f x)) = sumNat (l.map w) := by
+  have hmap : l.map (fun x => w (f x)) = (l.map f).map w := by
+    induction l with
+    | nil => rfl
+    | cons x xs ih => simp [List.map, ih]
+  rw [hmap]
+  apply sumNat_map_eq_of_countEq w
+  intro y
+  rw [countEq_map_bijection hl hr l y]
+  if hym : y ∈ l then
+    have hinvm : inv y ∈ l := hclosed_inv y hym
+    rw [countEq_of_noDup hnodup hinvm, countEq_of_noDup hnodup hym]
+  else
+    have hninvm : inv y ∉ l := fun h => hym (hr y ▸ hclosed_f (inv y) h)
+    rw [countEq_not_mem hninvm, countEq_not_mem hym]
+
+/-- Exact group action of a finite group `G` (represented by element list, action, and inverse). -/
+structure FiniteGroupAction (Gp : Type _) (X : Type _) where
+  elems : List Gp
+  act : Gp → X → X
+  inv : Gp → Gp
+  inv_mem : ∀ g, g ∈ elems → inv g ∈ elems
+  act_left_inv : ∀ g x, act (inv g) (act g x) = x
+  act_right_inv : ∀ g x, act g (act (inv g) x) = x
+
+/-- Setwise stabilization of the labelled set `L` under `G`. -/
+def StabilizesSet {Gp X : Type _} (ga : FiniteGroupAction Gp X) (L : X → Prop) : Prop :=
+  ∀ g, g ∈ ga.elems → ∀ x, L x → L (ga.act g x)
+
+/-- Exact label-preserving stabilization of `(L, yL)` under `G`. -/
+def StabilizesLabelled {Gp X : Type _} (ga : FiniteGroupAction Gp X)
+    (L : X → Prop) (yL : X → Bool) : Prop :=
+  ∀ g, g ∈ ga.elems → ∀ x, L x → L (ga.act g x) ∧ yL (ga.act g x) = yL x
+
+theorem stabilizesLabelled_to_set {Gp X : Type _} (ga : FiniteGroupAction Gp X)
+    (L : X → Prop) (yL : X → Bool) (hs : StabilizesLabelled ga L yL) :
+    StabilizesSet ga L :=
+  fun g hg x hx => (hs g hg x hx).1
+
+/-- Lemma (Spike 16 F2): Every `G`-orbit lies either wholly inside `L` or wholly outside `L`. -/
+theorem no_transfer_orbit_preserves_labelled {Gp X : Type _} (ga : FiniteGroupAction Gp X)
+    (L : X → Prop) (hstab : StabilizesSet ga L) :
+    ∀ g, g ∈ ga.elems → ∀ x, (L (ga.act g x) ↔ L x) := by
+  intro g hg x
+  constructor
+  · intro hact
+    have hback := hstab (ga.inv g) (ga.inv_mem g hg) (ga.act g x) hact
+    rw [ga.act_left_inv g x] at hback
+    exact hback
+  · intro hx
+    exact hstab g hg x hx
+
+theorem no_transfer_orbit_preserves_unlabelled {Gp X : Type _} (ga : FiniteGroupAction Gp X)
+    (L : X → Prop) (hstab : StabilizesSet ga L) :
+    ∀ g, g ∈ ga.elems → ∀ x, (¬ L (ga.act g x) ↔ ¬ L x) := by
+  intro g hg x
+  have h := no_transfer_orbit_preserves_labelled ga L hstab g hg x
+  exact ⟨fun hn hl => hn (h.mpr hl), fun hn hl => hn (h.mp hl)⟩
+
+/-- Any `G`-symmetrized predictor evaluated on an unlabelled input depends strictly
+    on the base predictor's values at unlabelled inputs (zero label transfer from `L`). -/
+theorem no_transfer_sym_list_independent_of_labelled {Gp X B : Type _}
+    (ga : FiniteGroupAction Gp X) (L : X → Prop) (hstab : StabilizesSet ga L)
+    (f₁ f₂ : X → B) (hunlab_eq : ∀ z, ¬ L z → f₁ z = f₂ z) :
+    ∀ x, ¬ L x →
+      ga.elems.map (fun g => f₁ (ga.act g x)) = ga.elems.map (fun g => f₂ (ga.act g x)) := by
+  intro x hnx
+  apply list_map_congr
+  intro g hg
+  apply hunlab_eq
+  exact (no_transfer_orbit_preserves_unlabelled ga L hstab g hg x).mpr hnx
+
+theorem no_transfer_sym_predictor_independent_of_labelled {Gp X B C : Type _}
+    (ga : FiniteGroupAction Gp X) (L : X → Prop) (hstab : StabilizesSet ga L)
+    (agg : List B → C) (f₁ f₂ : X → B) (hunlab_eq : ∀ z, ¬ L z → f₁ z = f₂ z) :
+    ∀ x, ¬ L x →
+      agg (ga.elems.map (fun g => f₁ (ga.act g x))) =
+      agg (ga.elems.map (fun g => f₂ (ga.act g x))) := by
+  intro x hnx
+  rw [no_transfer_sym_list_independent_of_labelled ga L hstab f₁ f₂ hunlab_eq x hnx]
+
+/-- Correct predictions (hit count) on unlabelled test list `U`. -/
+def hitCount {X : Type _} (U : List X) (h y : X → Bool) : Nat :=
+  sumNat (U.map fun x => if h x = y x then 1 else 0)
+
+/-- Flip every unlabelled label while preserving all labelled data `(L, y|_L)`. -/
+def flipUnlabelled {X : Type _} (L : X → Prop) [DecidablePred L] (y : X → Bool) (x : X) : Bool :=
+  if L x then y x else !(y x)
+
+theorem flipUnlabelled_preserves_labelled {X : Type _} (L : X → Prop) [DecidablePred L]
+    (y : X → Bool) : ∀ x, L x → flipUnlabelled L y x = y x := by
+  intro x hx
+  simp [flipUnlabelled, hx]
+
+theorem flipUnlabelled_preserves_stabilizer {Gp X : Type _} (ga : FiniteGroupAction Gp X)
+    (L : X → Prop) [DecidablePred L] (y : X → Bool)
+    (hs : StabilizesLabelled ga L y) :
+    StabilizesLabelled ga L (flipUnlabelled L y) := by
+  intro g hg x hx
+  have ⟨hlg, hyg⟩ := hs g hg x hx
+  refine ⟨hlg, ?_⟩
+  simp [flipUnlabelled, hx, hlg, hyg]
+
+/-- Paired unlabelled hit count under `(y, flipUnlabelled L y)` is identically `U.length`
+    for every Boolean predictor `h` (raw or deterministically symmetrized). -/
+theorem no_transfer_flip_pair_constant {X : Type _} (L : X → Prop) [DecidablePred L]
+    (U : List X) (hU : ∀ x, x ∈ U → ¬ L x) (h y : X → Bool) :
+    hitCount U h y + hitCount U h (flipUnlabelled L y) = U.length := by
+  induction U with
+  | nil => rfl
+  | cons x xs ih =>
+      have hnx : ¬ L x := hU x (List.Mem.head _)
+      have hxs : ∀ z, z ∈ xs → ¬ L z := fun z hz => hU z (List.Mem.tail _ hz)
+      have ih' := ih hxs
+      have hxflip : flipUnlabelled L y x = !(y x) := by simp [flipUnlabelled, hnx]
+      have hbit : (if h x = y x then 1 else 0) + (if h x = !(y x) then 1 else 0) = 1 := by
+        cases h x <;> cases y x <;> rfl
+      simp only [hitCount, List.map, sumNat, hxflip, List.length] at ih' ⊢
+      omega
+
+/-- Expected unlabelled hit count (scaled by weight) over a finite weighted target family
+    closed under unlabelled label flips `flipUnlabelled L` is identical for any two
+    predictors `h₁, h₂ : X → Bool` (in particular, raw `f` vs deterministic `symPred`). -/
+private theorem sumNat_flip_pair {X T : Type _} (L : X → Prop) [DecidablePred L]
+    (U : List X) (hU : ∀ x, x ∈ U → ¬ L x)
+    (decode : T → X → Bool) (flipT : T → T)
+    (hdecode_flip : ∀ t x, decode (flipT t) x = flipUnlabelled L (decode t) x)
+    (h : X → Bool) :
+    ∀ ts : List (Nat × T),
+      sumNat (ts.map fun p => p.1 * hitCount U h (decode p.2)) +
+      sumNat (ts.map fun p => p.1 * hitCount U h (decode (flipT p.2))) =
+      U.length * sumNat (ts.map fun p => p.1)
+  | [] => by simp [sumNat]
+  | p :: ps => by
+      have ih := sumNat_flip_pair L U hU decode flipT hdecode_flip h ps
+      have hpair := no_transfer_flip_pair_constant L U hU h (decode p.2)
+      have hdeceq : hitCount U h (decode (flipT p.2)) =
+          hitCount U h (flipUnlabelled L (decode p.2)) := by
+        simp only [hitCount]
+        congr 1
+        apply list_map_congr
+        intro x _
+        rw [hdecode_flip]
+      simp only [List.map, sumNat]
+      rw [hdeceq]
+      have hdist : p.1 * hitCount U h (decode p.2) + p.1 * hitCount U h (flipUnlabelled L (decode p.2)) =
+          p.1 * U.length := by
+        rw [← Nat.mul_add, hpair]
+      have hcomm : U.length * (p.1 + sumNat (ps.map fun q => q.1)) =
+          p.1 * U.length + U.length * sumNat (ps.map fun q => q.1) := by
+        rw [Nat.mul_add, Nat.mul_comm U.length p.1]
+      omega
+
+/-- Expected unlabelled hit count (scaled by weight) over a finite weighted target family
+    closed under unlabelled label flips `flipUnlabelled L` is identical for any two
+    predictors `h₁, h₂ : X → Bool` (in particular, raw `f` vs deterministic `symPred`). -/
+theorem no_transfer_flip_invariant_dist_eq {X T : Type _} (L : X → Prop) [DecidablePred L]
+    (U : List X) (hU : ∀ x, x ∈ U → ¬ L x)
+    (targets : List (Nat × T)) (decode : T → X → Bool) (flipT : T → T)
+    (hdecode_flip : ∀ t x, decode (flipT t) x = flipUnlabelled L (decode t) x)
+    (hclosed : ∀ P : T → Nat,
+      sumNat (targets.map fun p => p.1 * P p.2) =
+      sumNat (targets.map fun p => p.1 * P (flipT p.2)))
+    (h₁ h₂ : X → Bool) :
+    sumNat (targets.map fun p => p.1 * hitCount U h₁ (decode p.2)) =
+    sumNat (targets.map fun p => p.1 * hitCount U h₂ (decode p.2)) := by
+  have const_twice : ∀ h : X → Bool,
+      2 * sumNat (targets.map fun p => p.1 * hitCount U h (decode p.2)) =
+      U.length * sumNat (targets.map fun p => p.1) := by
+    intro h
+    have hf := hclosed (fun t => hitCount U h (decode t))
+    have hsum := sumNat_flip_pair L U hU decode flipT hdecode_flip h targets
+    omega
+  have h1 := const_twice h₁
+  have h2 := const_twice h₂
+  omega
+
+/-- Pullback of a target labeling along `g` preserves unlabelled expected accuracy
+    whenever `U` is `G`-closed and `targets` is closed under pulling back along `g`. -/
+theorem no_transfer_reynolds_fixed_invariant_target {Gp X : Type _} [DecidableEq X]
+    (ga : FiniteGroupAction Gp X) (U : List X) (hnoDup : NoDupList U)
+    (hU_closed : ∀ g, g ∈ ga.elems → ∀ x, x ∈ U → ga.act g x ∈ U)
+    (f y : X → Bool)
+    (hy_inv : ∀ g, g ∈ ga.elems → ∀ x, x ∈ U → y (ga.act g x) = y x) :
+    sumNat (ga.elems.map fun g => hitCount U (fun x => f (ga.act g x)) y) =
+    ga.elems.length * hitCount U f y := by
+  have heach : ∀ g, g ∈ ga.elems →
+      hitCount U (fun x => f (ga.act g x)) y = hitCount U f y := by
+    intro g hg
+    have hcongr : hitCount U (fun x => f (ga.act g x)) y =
+        hitCount U (fun x => f (ga.act g x)) (fun x => y (ga.act g x)) := by
+      simp only [hitCount]
+      congr 1
+      apply list_map_congr
+      intro x hx
+      have hy := hy_inv g hg x hx
+      simp only [hy]
+    rw [hcongr]
+    exact sumNat_map_bijection U hnoDup (ga.act g) (ga.act (ga.inv g))
+      (ga.act_left_inv g) (ga.act_right_inv g)
+      (hU_closed g hg) (hU_closed (ga.inv g) (ga.inv_mem g hg))
+      (fun z => if f z = y z then 1 else 0)
+  have hconst : ga.elems.map (fun g => hitCount U (fun x => f (ga.act g x)) y) =
+      ga.elems.map (fun _ => hitCount U f y) :=
+    list_map_congr ga.elems _ _ heach
+  rw [hconst, sumNat_map_const]
+
+/-- Random-`G` (Reynolds) symmetrization leaves expected unlabelled hit count
+    unchanged under any finite uniform prior over targets closed under pulling back
+    by every `g ∈ G` (without requiring each individual target to be `G`-invariant). -/
+theorem no_transfer_reynolds_invariant_prior {Gp X T : Type _}
+    [DecidableEq X] [DecidableEq T]
+    (ga : FiniteGroupAction Gp X) (U : List X) (hnoDup : NoDupList U)
+    (hU_closed : ∀ g, g ∈ ga.elems → ∀ x, x ∈ U → ga.act g x ∈ U)
+    (TList : List T) (hT_nodup : NoDupList TList) (decode : T → X → Bool)
+    (hT_inv : ∀ g, g ∈ ga.elems →
+      ∃ shiftT unshiftT : T → T,
+        (∀ t, unshiftT (shiftT t) = t) ∧
+        (∀ t, shiftT (unshiftT t) = t) ∧
+        (∀ t, t ∈ TList → shiftT t ∈ TList) ∧
+        (∀ t, t ∈ TList → unshiftT t ∈ TList) ∧
+        (∀ t x, decode (shiftT t) x = decode t (ga.act g x)))
+    (f : X → Bool) :
+    sumNat (ga.elems.map fun g =>
+      sumNat (TList.map fun t => hitCount U (fun x => f (ga.act g x)) (decode t))) =
+    ga.elems.length * sumNat (TList.map fun t => hitCount U f (decode t)) := by
+  have heach : ∀ g, g ∈ ga.elems →
+      sumNat (TList.map fun t => hitCount U (fun x => f (ga.act g x)) (decode t)) =
+      sumNat (TList.map fun t => hitCount U f (decode t)) := by
+    intro g hg
+    obtain ⟨shiftT, unshiftT, hl, hr, hc1, hc2, hdec⟩ := hT_inv g hg
+    have hbijT := sumNat_map_bijection TList hT_nodup shiftT unshiftT hl hr hc1 hc2
+      (fun t => hitCount U (fun x => f (ga.act g x)) (decode t))
+    rw [← hbijT]
+    have hinner : TList.map (fun t => hitCount U (fun x => f (ga.act g x)) (decode (shiftT t))) =
+        TList.map (fun t => hitCount U f (decode t)) := by
+      apply list_map_congr
+      intro t _
+      have hdec1 : hitCount U (fun x => f (ga.act g x)) (decode (shiftT t)) =
+          hitCount U (fun x => f (ga.act g x)) (fun x => decode t (ga.act g x)) := by
+        simp only [hitCount]
+        congr 1
+        apply list_map_congr
+        intro x _
+        have hdx := hdec t x
+        simp only [hdx]
+      rw [hdec1]
+      exact sumNat_map_bijection U hnoDup (ga.act g) (ga.act (ga.inv g))
+        (ga.act_left_inv g) (ga.act_right_inv g)
+        (hU_closed g hg) (hU_closed (ga.inv g) (ga.inv_mem g hg))
+        (fun z => if f z = decode t z then 1 else 0)
+    rw [hinner]
+  have hconst : ga.elems.map (fun g =>
+      sumNat (TList.map fun t => hitCount U (fun x => f (ga.act g x)) (decode t))) =
+      ga.elems.map (fun _ => sumNat (TList.map fun t => hitCount U f (decode t))) :=
+    list_map_congr ga.elems _ _ heach
+  rw [hconst, sumNat_map_const]
+
+/-- Majority-vote symmetrization helper for the scope-boundary counterexample. -/
+def symMajority (G : List Gp) (act : Gp → X → X) (f : X → Bool) (x : X) : Bool :=
+  2 * sumNat (G.map fun g => if f (act g x) then 1 else 0) >= G.length
+
+/-- Scope boundary (Rule 4 honesty): deterministic majority-vote / logit-average
+    symmetrization can strictly IMPROVE expected unlabelled accuracy when the target
+    prior is `G`-invariant yet lacks unlabelled label-flip symmetry (4:1 skewed
+    toward constant-true vs constant-false on a 3-point cyclic unlabelled orbit). -/
+theorem sym_majority_can_improve_without_flip_symmetry :
+    let elems : List (Fin 3) := [0, 1, 2]
+    let U : List (Fin 3) := [0, 1, 2]
+    let act : Fin 3 → Fin 3 → Fin 3 := fun g x => g + x
+    let f : Fin 3 → Bool := fun x => decide (x ≠ 2)
+    let symF : Fin 3 → Bool := symMajority elems act f
+    let yTrue : Fin 3 → Bool := fun _ => true
+    let yFalse : Fin 3 → Bool := fun _ => false
+    let accRaw := 4 * hitCount U f yTrue + 1 * hitCount U f yFalse
+    let accSym := 4 * hitCount U symF yTrue + 1 * hitCount U symF yFalse
+    accRaw = 9 ∧ accSym = 12 ∧ accRaw < accSym := by
+  decide
+
+end NoTransfer
 
 end PFT
+
