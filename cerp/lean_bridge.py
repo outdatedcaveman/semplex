@@ -245,7 +245,7 @@ def tnet_to_lean(net, vars_):
     return "[" + ", ".join(items) + "]"
 
 
-def verify_threshold_net_equiv(net, ref_expr, vars_, lrat_steps=None, name="tnet_equiv", native=False):
+def verify_threshold_net_equiv(net, ref_expr, vars_, lrat_steps=None, name="tnet_equiv", native=False, pb=True):
     """Prove `∀ σ, evalTNet n tns σ = eval σ eSpec` in Lean (exhaustive or LRAT)."""
     n = len(vars_)
     defs = [
@@ -260,7 +260,8 @@ def verify_threshold_net_equiv(net, ref_expr, vars_, lrat_steps=None, name="tnet
         fmt_step = lambda c, hs: f"([" + ", ".join(str(l) for l in c) + "], [" + ", ".join(str(h) for h in hs) + "])"
         Ls = "[" + ", ".join(fmt_step(c, hs) for c, hs in lrat_steps) + "]"
         defs.append(f"def Ls : List (Clause × List Nat) := {Ls}")
-        proof = f"tseitinTNetMiter_lrat_unsat_implies_equiv {n} tns eSpec Ls (by decide) (by decide) (by decide) (by {dec}) (by {dec})"
+        thm = "tseitinTNetMiterPB_lrat_unsat_implies_equiv" if pb else "tseitinTNetMiter_lrat_unsat_implies_equiv"
+        proof = f"{thm} {n} tns eSpec Ls (by decide) (by decide) (by decide) (by {dec}) (by {dec})"
     body = "\n".join(defs) + f"\n\ntheorem {name} : {stmt} :=\n  {proof}\n"
     ok, ax, log, sha, text = _check(
         body, name, stmt, renders=("eSpec",),
