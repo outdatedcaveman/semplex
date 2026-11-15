@@ -125,3 +125,92 @@ def test_compile_partial_n4_and_n8():
         if (care8 >> x) & 1:
             assert int(kernel.evaluate(r8["artifact"], {f"x{i}": (x >> i) & 1 for i in range(n8)})) == ((f8 >> x) & 1)
 
+
+def test_solve_three_halfspaces_all_gates_and_w1():
+    from cerp import kernel, netsolve
+
+    n = 4
+    K = 1 << n
+
+    def truth_table(fn):
+        return sum((1 << x) for x in range(K) if fn((x >> 0) & 1, (x >> 1) & 1, (x >> 2) & 1, (x >> 3) & 1))
+
+    def check_sol(f, W, care=None):
+        st, art = netsolve.solve(f, n, netsolve.layered(n, [3]), W=W, time_limit=15.0, workers=2, care=care)
+        assert st == "sat"
+        for x in range(K):
+            if care is None or ((care >> x) & 1):
+                assert int(kernel.evaluate(art, {f"x{i}": (x >> i) & 1 for i in range(n)})) == ((f >> x) & 1)
+
+    # All three W=1-representable 3-input threshold gates (AND3, OR3, MAJ3)
+    f_and3 = truth_table(lambda x0, x1, x2, x3: (x0 + x1 >= 2) and (x2 + x3 <= 0) and (x0 + x3 >= 1))
+    f_or3 = truth_table(lambda x0, x1, x2, x3: (x0 + x1 >= 2) or (x2 + x3 >= 2) or (x0 - x3 >= 1))
+    f_maj3 = truth_table(
+        lambda x0, x1, x2, x3: ((x0 + x1 >= 2) + (x2 + x3 >= 2) + (x0 + x2 - x1 - x3 >= 1)) >= 2
+    )
+    check_sol(f_and3, W=1)
+    check_sol(f_or3, W=1)
+    check_sol(f_maj3, W=1)
+
+    # W=2-only 3-input threshold gates (OR-AND, AND-OR)
+    f_or_and = truth_table(lambda x0, x1, x2, x3: (x0 + x1 + x2 + x3 >= 3) or ((x0 - x1 >= 1) and (x2 - x3 >= 1)))
+    f_and_or = truth_table(lambda x0, x1, x2, x3: (x0 - x1 + x2 >= 2) and ((x0 + x3 >= 2) or (x1 + x2 <= 0)))
+    check_sol(f_or_and, W=2)
+    check_sol(f_and_or, W=2)
+
+    # Partial care mask preserves care agreement
+    care = sum(1 << x for x in range(0, K, 2)) | (1 << 1) | (1 << 15)
+    check_sol(f_and_or, W=2, care=care)
+
+
+def test_compile_partial_cost4_certification_and_fields():
+    import random
+    from cerp import kernel, kernel_bounds, netsolve
+
+    # n=3 parity3 requires 3 hidden units (cost 4) and has valid not-two-halfspaces certs
+    n3 = 3
+    K3 = 1 << n3
+    care3 = (1 << K3) - 1
+    f_par3 = sum((1 << x) for x in range(K3) if bin(x).count("1") % 2 == 1)
+    r3 = netsolve.compile_partial(f_par3, n3, care3, W=3, max_width=4, time_limit=20.0, workers=2)
+    assert r3["status"] == "sat"
+    assert r3["cost"] == 4
+    assert r3["lower_bound"] == 4
+    assert r3["certified_minimal"] is True
+    assert r3["cert_kind"] == "not-two-halfspaces-partial"
+    assert r3["cost3_status"] == "certified_impossible"
+    assert r3["cost3_solver_unsat"] is False
+    assert kernel_bounds.check_not_two_halfspaces_partial(
+        n3, f_par3, care3, r3["certs"]["not_two_halfspaces_pos"]
+    ).ok
+    assert kernel_bounds.check_not_two_halfspaces_partial(
+        n3, (~f_par3) & care3, care3, r3["certs"]["not_two_halfspaces_neg"]
+    ).ok
+    for x in range(K3):
+        assert int(kernel.evaluate(r3["artifact"], {f"x{i}": (x >> i) & 1 for i in range(n3)})) == ((f_par3 >> x) & 1)
+
+    # n=6 disjoint 3-OR on partial care (90% of table) certifies cost 4
+    n6 = 6
+    K6 = 1 << n6
+    rng = random.Random(101)
+    care6 = sum(1 << x for x in rng.sample(range(K6), 58))
+    f6 = sum(
+        (1 << x)
+        for x in range(K6)
+        if (((x >> 0) & 1) and ((x >> 1) & 1))
+        or (((x >> 2) & 1) and ((x >> 3) & 1))
+        or (((x >> 4) & 1) and ((x >> 5) & 1))
+    )
+    r6 = netsolve.compile_partial(f6, n6, care6, W=4, max_width=4, time_limit=30.0, workers=2)
+    assert r6["status"] == "sat"
+    assert r6["cost"] == 4
+    assert r6["lower_bound"] == 4
+    assert r6["certified_minimal"] is True
+    assert r6["cost3_status"] == "certified_impossible"
+    assert r6["cost3_solver_unsat"] is False
+    assert "not_two_halfspaces_pos" in r6["certs"] and "not_two_halfspaces_neg" in r6["certs"]
+    for x in range(K6):
+        if (care6 >> x) & 1:
+            assert int(kernel.evaluate(r6["artifact"], {f"x{i}": (x >> i) & 1 for i in range(n6)})) == ((f6 >> x) & 1)
+
+
