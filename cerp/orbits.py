@@ -540,7 +540,8 @@ def enumerate_n5_cost_le3(W: int = 3, time_limit: float = 3600.0) -> dict:
         for s in range(0, len(node_u32), 256):
             chunk = node_u32[s:s + 256]
             bmats = ((chunk[:, None] >> bit_pos[None, :]) & np.uint32(1)).astype(np.uint8)
-            trans = np.packbits(bmats[:, idx_gf], axis=2, bitorder="little").view(np.uint32).reshape(len(chunk), len(gf_i))
+            p_bytes = np.ascontiguousarray(np.packbits(bmats[:, idx_gf], axis=2, bitorder="little"))
+            trans = p_bytes.view(np.uint32).reshape(len(chunk), len(gf_i))
             if unoriented:
                 trans = np.minimum(trans, full_u32 ^ trans)
             act_rows.extend(trans.tolist())
@@ -612,6 +613,8 @@ def enumerate_n5_cost_le3(W: int = 3, time_limit: float = 3600.0) -> dict:
             "oriented_orbit_sizes": sizes_o,
         })
         completed_cost3 += 1
+        if completed_cost3 == 50 or completed_cost3 % 500 == 0:
+            print(f"[n=5 cost=3] {completed_cost3}/{len(cost3_reps)} elapsed={time.perf_counter()-t0:.1f}s", flush=True)
 
     return {
         "n": 5,
