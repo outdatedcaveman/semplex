@@ -124,15 +124,16 @@
    "pillar": "Theory",
    "serves": "E3",
    "title": "Scale: n ≥ 8",
-   "status": "OPEN",
+   "status": "PARTIAL",
    "leverage": "HIGH",
-   "have": "Everything is at n ≤ 6. The compiler now handles care sets at n = 8 and 10 for two-unit targets (P163), which is the class Spike 36 used.",
+   "have": "Run at n = 8 and 10 (Spike 48): the pull is 0.72 and 0.65 at 8 labels per dimension (0.80 at n = 6) and 0.94 with 75% of inputs seen at n = 8. Nets beat their kernel at both sizes.",
    "claims": [
-    "P129"
+    "P129",
+    "P172"
    ],
-   "missing": "The Spike 36 protocol run at n = 8.",
-   "closes_when": "The Spike 36 protocol at n ≥ 8 with certified or bounded Occam completions.",
-   "next": "Unblocked for two-unit targets: Spike 48 candidate"
+   "missing": "The dependence on the number of seen inputs measured as a curve, and widths beyond 8 in the feature-learning regime.",
+   "closes_when": "Pre-registered: the pull at n = 8 predicted from the number of seen inputs (or from how often the minimum circuit is unique on them) on fresh targets, within ±0.05.",
+   "next": "Spike 49 candidate"
   },
   {
    "id": "A7",

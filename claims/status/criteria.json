@@ -24,10 +24,10 @@
   "name": "Scales",
   "test": "The same result holds at n ≥ 8 inputs and beyond width 8, with compiler-computed completions.",
   "gaps": 2,
-  "OPEN": 1,
-  "PARTIAL": 1,
+  "OPEN": 0,
+  "PARTIAL": 2,
   "CLOSED": 0,
-  "progress_pct": 25
+  "progress_pct": 50
  },
  {
   "id": "E4",

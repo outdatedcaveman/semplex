@@ -240,6 +240,45 @@
    "claims": [
     "P171"
    ]
+  },
+  {
+   "spike": "48",
+   "date": "2026-11-15",
+   "commit": "pending",
+   "question": "Does the pull toward the minimum circuit hold at 8 and 10 inputs?",
+   "overall": "NEITHER",
+   "verdicts": [
+    {
+     "id": "H48.1",
+     "verdict": "NEITHER",
+     "measured": "pull 0.716 at n = 8, 0.649 at n = 10",
+     "bar": "held if ≥ 0.65 in both; broken if ≤ 0.50 in either"
+    },
+    {
+     "id": "H48.2",
+     "verdict": "NEITHER",
+     "measured": "Occam minus kernel agreement: +0.039 at n = 8, +0.010 at n = 10",
+     "bar": "held if ≥ +0.02 in both; broken if ≤ 0 in either"
+    },
+    {
+     "id": "H48.3",
+     "verdict": "HELD",
+     "measured": "net minus kernel accuracy: +0.060 at n = 8, +0.037 at n = 10",
+     "bar": "held if ≥ +0.02 in both; broken if ≤ 0 in either"
+    }
+   ],
+   "learned": "The effect is not an artifact of small inputs, and it is not constant: at a fixed number of labels per dimension it shrinks from 0.80 (6 inputs) to 0.72 (8) to 0.65 (10). With three quarters of the inputs seen at 8 inputs it is 0.94. The pull appears to track how well the seen data pin down the minimum circuit.",
+   "gaps_moved": [
+    {
+     "gap": "A6",
+     "from": "OPEN",
+     "to": "PARTIAL",
+     "why": "Measured at 8 and 10 inputs; the sample-size dependence is not yet a curve"
+    }
+   ],
+   "claims": [
+    "P172"
+   ]
   }
  ]
 }

@@ -1,6 +1,6 @@
 # Spike 48: Does the pull toward the minimum circuit hold at 8 and 10 inputs?
 
-**Date:** 2026-11-15 · **Status:** pre-registered (no runs yet) · **Follows:** Spike 36 (C19′ at n = 5, 6: where trained nets depart from their kernel on held-out inputs, the minimum-circuit completion sides with the net in 73–81% of cases). **Gap:** A6 (scale). **Enabled by:** `netsolve.compile_partial` (Gemini G3, P163), which compiles and certifies care-set tasks at n = 8, 10.
+**Date:** 2026-11-15 · **Status:** complete (pre-registered in 911c34d; results below) · **Follows:** Spike 36 (C19′ at n = 5, 6: where trained nets depart from their kernel on held-out inputs, the minimum-circuit completion sides with the net in 73–81% of cases). **Gap:** A6 (scale). **Enabled by:** `netsolve.compile_partial` (Gemini G3, P163), which compiles and certifies care-set tasks at n = 8, 10.
 
 ## Question
 
@@ -49,4 +49,29 @@ python -m experiments.spike48 analyse
 
 ## Results
 
-(To be filled after the runs.)
+`experiments/results/spike48.json`; raw outputs in `spike48_raw/`. Every task compiled and every sampled net was verified on its seen inputs. All cells pass the guards. Tasks have cost 1 (20–25 per matched cell, where the seen inputs happen to be linearly separable) or cost 3.
+
+| Cell | n | seen | `sides` | agree Occam | agree kernel | bal. net | bal. kernel | bal. Occam | certified | fit | disagreements |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| n8_matched | 8 | 64 | 0.716 | 0.895 | 0.857 | 0.879 | 0.819 | 0.891 | 0.92 | 0.998 | 27451 |
+| n10_matched | 10 | 80 | 0.649 | 0.897 | 0.887 | 0.886 | 0.849 | 0.881 | 0.85 | 1.000 | 53144 |
+| n8_literal | 8 | 192 | 0.941 | 0.977 | 0.834 | 0.977 | 0.829 | 0.987 | 0.98 | 1.000 | 10634 |
+
+For reference, Spike 36 at n = 6 (48 seen): `sides` 0.79–0.81, agree Occam 0.89–0.90, agree kernel 0.80–0.83.
+
+### Verdicts
+
+- **H48.1: neither.** `sides` is 0.716 at n = 8 (above the 0.65 bar) and 0.649 at n = 10 (below it by 0.001). The pull is present at both sizes and well above 0.50, but it does not clear the bar at n = 10.
+- **H48.2: neither.** Occam predicts the net better than the kernel by +0.039 at n = 8 (above +0.02) and by +0.010 at n = 10 (below it).
+- **H48.3: held.** Trained nets beat their kernel by +0.060 (n = 8) and +0.037 (n = 10) in balanced accuracy.
+
+### Reading
+
+1. **The effect survives scale but shrinks at a fixed number of labels per dimension:** 0.80 (n = 6), 0.72 (n = 8), 0.65 (n = 10). It is not an artifact of n ≤ 6, and it is not constant either.
+2. **With more data it is very strong.** In the literal cell (75% of inputs seen at n = 8) Occam sides with the net on 94% of its departures from the kernel, and agrees with the net on 97.7% of held-out inputs against the kernel's 83.4%.
+3. **So the pull tracks how well the seen data pin down the circuit.** With 8 labels per dimension the minimum-cost completion is itself uncertain (its accuracy is 0.88–0.89, about the net's), and 20–25% of tasks look linearly separable on the seen inputs. With 192 labels the minimum circuit is nearly determined (accuracy 0.987) and nets follow it.
+4. **Occam and the net generalize about equally** in the matched cells (0.89 vs 0.88), both ahead of the kernel (0.82–0.85).
+
+**Limits.** One care set per target; two-unit targets only; width 8; 5 seeds at n = 10. The dependence on sample size is read off three cells, not measured as a curve.
+
+**Next.** Measure the pull as a function of the number of seen inputs at fixed n. The prediction from this reading: `sides` rises with the fraction of tasks whose minimum circuit is unique on the seen inputs.
