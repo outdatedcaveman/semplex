@@ -70,8 +70,4 @@ G10 found that kernel `decide` stops scaling at about 41–60 LRAT steps. Find a
 
 **Done when:** `[8]→[4]→1` (104 LRAT steps in G10's table) verifies in under 120 s with standard axioms only; or a handoff shows, with measurements, which stage is the irreducible cost.
 
-### G17. Make the Lean test's timeout configurable
-
-`tests/test_lean.py` allows 600 s per file; `Bounds.lean` takes 170 s here and about 600 s on your host. Read the limit from an environment variable with the current value as default, and document it in `proofs/lean/README.md`. Do not change what is checked.
-
-**Done when:** the suite passes on both hosts without editing the test.
+### G17. (done by Claude) The Lean test timeout is read from `SEMPLEX_LEAN_TIMEOUT` (default 600 s); see `proofs/lean/README.md`.

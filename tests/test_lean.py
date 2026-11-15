@@ -10,6 +10,11 @@ from cerp.ledger import Ledger, LedgerError, Method, Status, compare
 from cerp.sat import prove_equivalence
 from cerp.translate import bdd_to_expr
 
+# Seconds allowed per Lean file. Bounds.lean takes about 170 s on a fast host and about 600 s on a
+# memory-constrained one; raise SEMPLEX_LEAN_TIMEOUT there instead of editing this test.
+import os as _os
+LEAN_FILE_TIMEOUT = float(_os.environ.get("SEMPLEX_LEAN_TIMEOUT", "600"))
+
 lean_bridge = pytest.importorskip("cerp.lean_bridge")
 pytestmark = [pytest.mark.lean, pytest.mark.slow]
 try:
@@ -73,10 +78,10 @@ def test_proof_files_compile_and_use_only_standard_axioms(tmp_path):
     d = lean_bridge.LEAN_DIR
     for f in ("Cerp", "Theory", "Bounds"):
         r = subprocess.run([lean, f"--root={d}", "-o", str(tmp_path / f"{f}.olean"), str(d / f"{f}.lean")],
-                           cwd=d, capture_output=True, text=True, timeout=600)
+                           cwd=d, capture_output=True, text=True, timeout=LEAN_FILE_TIMEOUT)
         assert r.returncode == 0, r.stdout + r.stderr
     for audit in ("Audit.lean", "AuditTheory.lean", "AuditBounds.lean"):
-        r = subprocess.run([lean, str(d / audit)], cwd=d, capture_output=True, text=True, timeout=600,
+        r = subprocess.run([lean, str(d / audit)], cwd=d, capture_output=True, text=True, timeout=LEAN_FILE_TIMEOUT,
                            env={**__import__("os").environ, "LEAN_PATH": str(tmp_path)})
         assert r.returncode == 0, r.stdout + r.stderr
         for m in re.finditer(r"depends on axioms: \[([^\]]*)\]", r.stdout):
