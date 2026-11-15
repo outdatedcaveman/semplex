@@ -12,16 +12,21 @@ points and every lower-bound certificate is checked with cerp.kernel_bounds.
 
 from __future__ import annotations
 
+import argparse
 import json
 import pathlib
 import statistics
+import sys
 import time
+
+ROOT = pathlib.Path(__file__).resolve().parent.parent
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 import numpy as np
 
 from cerp import bounds, kernel, kernel_bounds, netsolve
 
-ROOT = pathlib.Path(__file__).resolve().parent.parent
 OUT = ROOT / "experiments" / "results" / "g8_cost4_benchmark.json"
 
 N_VARS = 8
@@ -148,7 +153,65 @@ def verify_certs(res: dict, f: int, n: int, care: int) -> bool:
     return True
 
 
+def audit_weight_bounds(rows: list[dict]) -> dict:
+    """For every uncertified W<=4 target, test whether a cheaper network exists at W<=8 or W<=16."""
+    spec0 = netsolve.layered(N_VARS, [])
+    spec2 = netsolve.layered(N_VARS, [2])
+    full_mask = (1 << (1 << N_VARS)) - 1
+    uncert_cost4 = []
+    uncert_cost3 = []
+    for r in rows:
+        f = int(r["f_hex"], 16)
+        care = int(r["care_hex"], 16)
+        if r["cost"] == 4 and not r["certified_minimal"]:
+            st_c8, art_c8 = netsolve.solve(f & care, N_VARS, spec2, W=8, time_limit=10.0, workers=WORKERS, care=care)
+            st_c16, art_c16 = (
+                (st_c8, art_c8)
+                if st_c8 == "sat"
+                else netsolve.solve(f & care, N_VARS, spec2, W=16, time_limit=15.0, workers=WORKERS, care=care)
+            )
+            st_f8, art_f8 = netsolve.solve(f, N_VARS, spec2, W=8, time_limit=10.0, workers=WORKERS)
+            st_f16, art_f16 = (
+                (st_f8, art_f8)
+                if st_f8 == "sat"
+                else netsolve.solve(f, N_VARS, spec2, W=16, time_limit=15.0, workers=WORKERS)
+            )
+            uncert_cost4.append({
+                "idx": r["idx"],
+                "care_width2_w8_sat": st_c8 == "sat" and verify_care(art_c8, f, N_VARS, care),
+                "care_width2_w16_sat": st_c16 == "sat" and verify_care(art_c16, f, N_VARS, care),
+                "full_width2_w8_sat": st_f8 == "sat" and verify_care(art_f8, f, N_VARS, full_mask),
+                "full_width2_w16_sat": st_f16 == "sat" and verify_care(art_f16, f, N_VARS, full_mask),
+            })
+        elif r["cost"] == 3 and not r["certified_minimal"]:
+            st_0_16, art_0_16 = netsolve.solve(f & care, N_VARS, spec0, W=16, time_limit=10.0, workers=WORKERS, care=care)
+            uncert_cost3.append({
+                "idx": r["idx"],
+                "care_cost1_w16_sat": st_0_16 == "sat" and verify_care(art_0_16, f, N_VARS, care),
+            })
+    return {
+        "uncertified_cost4_total": len(uncert_cost4),
+        "uncertified_cost4_care_width2_w8_sat": sum(1 for x in uncert_cost4 if x["care_width2_w8_sat"]),
+        "uncertified_cost4_care_width2_w16_sat": sum(1 for x in uncert_cost4 if x["care_width2_w16_sat"]),
+        "uncertified_cost4_full_width2_w8_sat": sum(1 for x in uncert_cost4 if x["full_width2_w8_sat"]),
+        "uncertified_cost4_full_width2_w16_sat": sum(1 for x in uncert_cost4 if x["full_width2_w16_sat"]),
+        "uncertified_cost4_rows": uncert_cost4,
+        "uncertified_cost3_total": len(uncert_cost3),
+        "uncertified_cost3_care_cost1_w16_sat": sum(1 for x in uncert_cost3 if x["care_cost1_w16_sat"]),
+        "uncertified_cost3_rows": uncert_cost3,
+    }
+
+
 def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--audit", action="store_true", help="Audit weight-bound collapses on existing results JSON")
+    args = parser.parse_args()
+    if args.audit:
+        summary = json.loads(OUT.read_text())
+        summary["weight_bound_audit"] = audit_weight_bounds(summary["tasks"])
+        OUT.write_text(json.dumps(summary, indent=2) + "\n")
+        print(json.dumps(summary["weight_bound_audit"], indent=2), flush=True)
+        return
     OUT.parent.mkdir(parents=True, exist_ok=True)
     t_gen0 = time.perf_counter()
     tasks, gen_stats = generate_tasks(N_TARGETS)
@@ -248,6 +311,7 @@ def main() -> None:
         "median_seconds": round(statistics.median(secs), 4),
         "mean_seconds": round(statistics.mean(secs), 4),
         "max_seconds": round(max(secs), 4),
+        "weight_bound_audit": audit_weight_bounds(rows),
         "tasks": rows,
     }
     OUT.write_text(json.dumps(summary, indent=2) + "\n")
