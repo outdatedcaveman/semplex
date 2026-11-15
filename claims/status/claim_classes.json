@@ -1,11 +1,11 @@
 [
  {
   "class": "Empirical",
-  "claims": 88
+  "claims": 89
  },
  {
   "class": "Proved in Lean",
-  "claims": 24
+  "claims": 29
  },
  {
   "class": "Exploratory",
@@ -13,7 +13,7 @@
  },
  {
   "class": "Proved on paper",
-  "claims": 12
+  "claims": 11
  },
  {
   "class": "Kernel-checked",
@@ -28,11 +28,11 @@
   "claims": 4
  },
  {
-  "class": "Computed",
-  "claims": 3
+  "class": "Method note",
+  "claims": 4
  },
  {
-  "class": "Method note",
+  "class": "Computed",
   "claims": 3
  }
 ]

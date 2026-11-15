@@ -126,16 +126,13 @@
    "title": "Scale: n ≥ 8",
    "status": "OPEN",
    "leverage": "HIGH",
-   "have": "Everything is at n ≤ 6. Width was varied only toward the lazy regime.",
+   "have": "Everything is at n ≤ 6. The compiler now handles care sets at n = 8 and 10 for two-unit targets (P163), which is the class Spike 36 used.",
    "claims": [
     "P129"
    ],
-   "missing": "Occam completions at n = 8–10, which need care-set compilation at scale (gap B2).",
+   "missing": "The Spike 36 protocol run at n = 8.",
    "closes_when": "The Spike 36 protocol at n ≥ 8 with certified or bounded Occam completions.",
-   "next": "Blocked by B2",
-   "blocked_by": [
-    "B2"
-   ]
+   "next": "Unblocked for two-unit targets: Spike 48 candidate"
   },
   {
    "id": "A7",
@@ -157,46 +154,46 @@
    "pillar": "Compiler",
    "serves": "E4",
    "title": "Lean check of nets beyond fan-in 4",
-   "status": "OPEN",
+   "status": "CLOSED",
    "leverage": "MEDIUM",
-   "have": "A Lean checker for threshold nets; xor3 passes in 219 s, xor4 times out.",
+   "have": "A layered pseudo-Boolean encoding (Gemini G2) lets the Lean kernel verify the xor4 net without native evaluation; the test passes here in 3.7 s.",
    "claims": [
-    "P147"
+    "P147",
+    "P162"
    ],
-   "missing": "A linear pseudo-Boolean encoding in Lean (the current one is exponential in fan-in).",
+   "missing": "Nothing for the stated test. Multi-layer nets at n = 6–8 are untested.",
    "closes_when": "xor4 verified by pure kernel `decide` in under 60 s.",
-   "next": "Unscheduled"
+   "next": "Closed"
   },
   {
    "id": "B2",
    "pillar": "Compiler",
    "serves": "E3",
    "title": "Care-set compilation at scale",
-   "status": "OPEN",
+   "status": "PARTIAL",
    "leverage": "HIGH",
-   "have": "CP-SAT compiles partial functions to n = 6 with certificates; the Ur-Compiler handles total, factored functions to n = 16.",
+   "have": "At n = 8 and 10, 100/100 benchmark tasks compile to verified, certified-minimum nets in seconds (Gemini G3; 20/20 on my fresh tasks). All of them have cost 1 or 3.",
    "claims": [
-    "P126",
-    "P148"
+    "P163"
    ],
-   "missing": "Minimum (or bounded) circuits for partial functions at n = 8–10.",
-   "closes_when": "≥ 90% of n = 8 care-set tasks compiled with a lower-bound certificate within 60 s each.",
-   "next": "Unscheduled; unblocks A6"
+   "missing": "Certified minimality at cost ≥ 4 for n ≥ 8: the benchmark I set contained no such task. Gemini's sweep notes that general lower bounds face known barriers, so this needs structure.",
+   "closes_when": "≥ 90% of n = 8 tasks drawn from three-unit targets (cost 4) compiled with a certificate that no cost-3 net exists, within 60 s each.",
+   "next": "Gemini: next delegation (a)"
   },
   {
    "id": "B3",
    "pillar": "Compiler",
    "serves": "E4",
    "title": "Minimality certificates",
-   "status": "OPEN",
+   "status": "PARTIAL",
    "leverage": "MEDIUM",
-   "have": "Gate counts against a flat-BDD baseline; parity4 ≥ 5 neurons is uncertified.",
+   "have": "parity4 ≥ 5 layered neurons is proved in Lean (Gemini G5).",
    "claims": [
     "P141",
-    "P040"
+    "P164"
    ],
-   "missing": "Lower bounds for Ur-Compiler outputs; the parity4 certificate.",
-   "closes_when": "parity4 ≥ 5 certified; Ur-Compiler outputs carry a bound.",
+   "missing": "Lower bounds for Ur-Compiler outputs.",
+   "closes_when": "Ur-Compiler outputs carry a certified lower bound.",
    "next": "Unscheduled"
   },
   {
@@ -204,30 +201,32 @@
    "pillar": "Formal",
    "serves": "E4",
    "title": "Theorem 15 in Lean",
-   "status": "OPEN",
+   "status": "PARTIAL",
    "leverage": "HIGH",
-   "have": "A paper proof, confirmed empirically.",
+   "have": "Proved in Lean for a discrete model (Gemini G1): GD and AdamW steps commute with signed permutations, trajectories are equivariant, invariant finite ensembles give equal circuit weights.",
    "claims": [
-    "P069"
+    "P069",
+    "P160"
    ],
-   "missing": "Mechanization. It is the weakest link behind 20 ledger notes.",
-   "closes_when": "Lean proof with standard axioms; the ledger notes resting on P069 clear.",
-   "next": "Parallel track (no training needed)"
+   "missing": "Invariance of the Gaussian initialization measure (needs measure theory), the true gradient in place of a central-difference one, and loss invariance for the concrete network. Until then the 20 dependent claims stay flagged.",
+   "closes_when": "The measure-theoretic step is proved (Mathlib) or the dependent claims are restated for finite ensembles.",
+   "next": "Decide: add Mathlib, or restate dependents"
   },
   {
    "id": "C2",
    "pillar": "Formal",
    "serves": "E4",
    "title": "No-transfer lemma in Lean",
-   "status": "OPEN",
+   "status": "CLOSED",
    "leverage": "MEDIUM",
-   "have": "An elementary paper proof.",
+   "have": "Proved in Lean (Gemini G4), with a correction: the lemma needs an invariance hypothesis, and a Lean counterexample shows it fails without one. P077 is restated.",
    "claims": [
-    "P077"
+    "P077",
+    "P161"
    ],
-   "missing": "Mechanization (6 ledger notes rest on it).",
+   "missing": "Nothing.",
    "closes_when": "Lean proof with standard axioms.",
-   "next": "After C1"
+   "next": "Closed"
   },
   {
    "id": "C3",
@@ -283,15 +282,15 @@
    "pillar": "Process",
    "serves": "E4",
    "title": "One intermittently failing test",
-   "status": "OPEN",
+   "status": "CLOSED",
    "leverage": "LOW",
-   "have": "Diagnosed as Monte-Carlo variance (mean 0.95, min 0.875 against a 0.9 bar).",
+   "have": "The test now averages over fixed seeds 0–4 with the bar unchanged (Gemini G6); the full suite passes.",
    "claims": [
     "P149"
    ],
-   "missing": "A deterministic version of the test.",
+   "missing": "Nothing.",
    "closes_when": "The suite passes on every run.",
-   "next": "Unscheduled"
+   "next": "Closed"
   },
   {
    "id": "A9",
@@ -300,11 +299,11 @@
    "title": "Meaning as the canonical quotient",
    "status": "OPEN",
    "leverage": "HIGH",
-   "have": "Exact frames and minimal determining sets (THEORY §2). Gemini's exploratory Spike 37: 86–89% of units are members or coarsenings of minimal determining sets. Belief-state geometry is established for sequence models (Shai et al. 2024).",
+   "have": "Exact frames and minimal determining sets (THEORY §2). Gemini's exploratory Spike 37: 86–89% of units are members or coarsenings of minimal determining sets. Belief-state geometry is established for sequence models (Shai et al. 2024). Prior art (P165): the canonical quotient as *the* minimal sufficient representation is already established (Sevetlidis 2606.04045; Shalizi & Crutchfield), including bottleneck experiments.",
    "claims": [
     "P132"
    ],
-   "missing": "A pre-registered test that hidden layers factor through a partition between the task's coarsest sufficient partition and a minimum circuit's first-layer partition, and a statement of which one and when (direction R1).",
+   "missing": "What is not in the prior work: the dynamics (which partition a trained hidden layer converges to, and when) and the link to certified minimum circuits. A pre-registered test of that.",
    "closes_when": "Pre-registered at n = 5, 6: decodability of the canonical class from hidden activations ≥ 0.9, and convergence to one minimum-circuit partition in ≥ 70% of runs, or the reverse reported.",
    "next": "Spike 47 (next)"
   },
@@ -315,7 +314,7 @@
    "title": "Identifiability of mechanisms",
    "status": "OPEN",
    "leverage": "MEDIUM",
-   "have": "The atlas lists minimum circuits per function; Theorem 15 gives the symmetry group acting on them.",
+   "have": "The atlas lists minimum circuits per function; Theorem 15 gives the symmetry group acting on them. Prior art (P165): alignment by arbitrary nonlinear maps is vacuous (Sutter et al.), so the question must be posed within a fixed circuit family, as here.",
    "claims": [
     "P069"
    ],
@@ -328,16 +327,15 @@
    "pillar": "Process",
    "serves": "E4",
    "title": "Prior-art reading queue",
-   "status": "OPEN",
+   "status": "CLOSED",
    "leverage": "HIGH",
-   "have": "A structured sweep on 2026-11-14 (`charter/PRIOR_ART.md`): about 130 candidates, 7 read, verdict per claim. C19′, the timing, the noise result and Theorem 15 are each anticipated at least in part.",
+   "have": "Gemini G7 worked through the queue and eight further areas: 53 works, 24 read in full, 9 metadata only (paywalled). Verdicts per claim are in `charter/PRIOR_ART.md`.",
    "claims": [
-    "P128",
-    "P156"
+    "P165"
    ],
-   "missing": "About 20 listed papers found but not read, including one that may state our sufficiency result; non-arXiv foundations (computational mechanics, formal concept analysis, symbol grounding) not opened.",
+   "missing": "Nothing for the stated test. Three of the four critical flags rest on Gemini's reading alone.",
    "closes_when": "Every paper in the reading queue has a row in LITERATURE_REVIEW §5 with what was read and a verdict of anticipates / contradicts / orthogonal.",
-   "next": "Gemini task G7 (expanded)"
+   "next": "Closed; spot-checks as needed"
   }
  ]
 }

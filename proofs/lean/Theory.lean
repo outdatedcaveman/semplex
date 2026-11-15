@@ -2146,92 +2146,6 @@ private theorem countEqT15_pos_mem {α : Type _} [DecidableEq α] {a : α} :
 
 private theorem countEqT15_not_mem {α : Type _} [DecidableEq α] {a : α} :
     ∀ {l : List α}, a ∉ l → countEqT15 a l = 0
-/-! ## §20 No-transfer lemma for exact data stabilizers (Spike 16 F2 / P077)
-
-If a group `G` maps the labelled set `L` to itself, every `G`-orbit lies
-entirely inside `L` or entirely outside `L`. Consequently:
-1. A predictor's `G`-symmetrized values on unlabelled inputs depend only on its
-   values on unlabelled inputs (zero label transfer from `L`).
-2. Random-`G` (Reynolds) symmetrization leaves expected unlabelled accuracy
-   identically unchanged, both on any `G`-invariant target and under any
-   `G`-invariant finite target prior.
-3. Deterministic symmetrization (e.g. logit averaging / majority vote) leaves
-   expected unlabelled accuracy identically unchanged under any distribution
-   invariant under unlabelled label flips `y ↦ flipUnlabelled L y`.
-4. Honest scope limit (`sym_majority_can_improve_without_flip_symmetry`): without
-   label-flip invariance (e.g. a `G`-invariant prior skewed 4:1 toward all-1),
-   deterministic majority vote across an orbit can strictly improve expected
-   accuracy by denoising `f`. -/
-section NoTransfer
-
-def sumNat : List Nat → Nat
-  | [] => 0
-  | x :: xs => x + sumNat xs
-
-def countEq {α : Type _} [DecidableEq α] (a : α) : List α → Nat
-  | [] => 0
-  | x :: xs => (if x = a then 1 else 0) + countEq a xs
-
-def eraseOne {α : Type _} [DecidableEq α] (a : α) : List α → List α
-  | [] => []
-  | x :: xs => if x = a then xs else x :: eraseOne a xs
-
-inductive NoDupList {α : Type _} : List α → Prop
-  | nil : NoDupList []
-  | cons {x xs} : x ∉ xs → NoDupList xs → NoDupList (x :: xs)
-
-private theorem sumNat_map_add {α : Type _} (u v : α → Nat) :
-    ∀ xs : List α, sumNat (xs.map fun x => u x + v x) = sumNat (xs.map u) + sumNat (xs.map v)
-  | [] => rfl
-  | x :: xs => by
-      have ih := sumNat_map_add u v xs
-      simp only [List.map, sumNat]
-      omega
-
-private theorem sumNat_map_const {α : Type _} (c : Nat) :
-    ∀ xs : List α, sumNat (xs.map fun _ => c) = xs.length * c
-  | [] => by simp [sumNat]
-  | _ :: xs => by
-      have ih := sumNat_map_const c xs
-      simp only [List.map, sumNat, List.length, Nat.succ_mul]
-      omega
-
-private theorem sumNat_map_comm {α β : Type _} (h : α → β → Nat) :
-    ∀ (xs : List α) (ys : List β),
-      sumNat (xs.map fun a => sumNat (ys.map fun b => h a b)) =
-      sumNat (ys.map fun b => sumNat (xs.map fun a => h a b))
-  | [], ys => by
-      simp only [List.map, sumNat]
-      induction ys with
-      | nil => rfl
-      | cons _ ys ih => simp only [List.map, sumNat, ← ih]
-  | x :: xs, ys => by
-      have ih := sumNat_map_comm h xs ys
-      simp only [List.map, sumNat]
-      rw [ih, ← sumNat_map_add]
-
-private theorem list_map_congr {α β : Type _} (l : List α) (g₁ g₂ : α → β)
-    (h : ∀ a, a ∈ l → g₁ a = g₂ a) : l.map g₁ = l.map g₂ := by
-  induction l with
-  | nil => rfl
-  | cons x xs ih =>
-      simp only [List.map, h x (List.Mem.head _)]
-      congr 1
-      exact ih (fun a ha => h a (List.Mem.tail _ ha))
-
-private theorem countEq_pos_mem {α : Type _} [DecidableEq α] {a : α} :
-    ∀ {l : List α}, 0 < countEq a l → a ∈ l
-  | [], h => by simp [countEq] at h
-  | x :: xs, h => by
-      if hxa : x = a then
-        subst hxa
-        exact List.Mem.head _
-      else
-        simp [countEq, hxa] at h
-        exact List.Mem.tail _ (countEq_pos_mem h)
-
-private theorem countEq_not_mem {α : Type _} [DecidableEq α] {a : α} :
-    ∀ {l : List α}, a ∉ l → countEq a l = 0
   | [], _ => rfl
   | x :: xs, h => by
       have hx : x ≠ a := fun heq => h (heq ▸ List.Mem.head _)
@@ -2293,78 +2207,6 @@ private theorem sumNatT15_map_eq_of_countEq {α : Type _} [DecidableEq α] (w : 
       have hmem := countEqT15_pos_mem hx
       have heq := sumNatT15_map_eraseOne w hmem
       have hcount : ∀ z, countEqT15 z xs = countEqT15 z (eraseOneT15 x l₂) := by
-      simp [countEq, hx, countEq_not_mem hxs]
-
-private theorem countEq_of_noDup {α : Type _} [DecidableEq α] {a : α} :
-    ∀ {l : List α}, NoDupList l → a ∈ l → countEq a l = 1
-  | [], hn, hm => by cases hm
-  | x :: xs, NoDupList.cons hnx hnodup, hm => by
-      if hxa : x = a then
-        subst hxa
-        simp [countEq, countEq_not_mem hnx]
-      else
-        cases hm with
-        | head => exact absurd rfl hxa
-        | tail _ htail =>
-            simp [countEq, hxa]
-            exact countEq_of_noDup hnodup htail
-
-private theorem sumNat_map_eraseOne {α : Type _} [DecidableEq α] (w : α → Nat) {a : α} :
-    ∀ {l : List α}, a ∈ l → sumNat (l.map w) = w a + sumNat ((eraseOne a l).map w)
-  | [], hm => by cases hm
-  | x :: xs, hm => by
-      if hxa : x = a then
-        subst hxa
-        simp [eraseOne, sumNat]
-      else
-        cases hm with
-        | head => exact absurd rfl hxa
-        | tail _ htail =>
-            simp [eraseOne, hxa, sumNat, sumNat_map_eraseOne w htail]
-            omega
-
-private theorem countEq_eraseOne_self {α : Type _} [DecidableEq α] (a : α) :
-    ∀ {l : List α}, a ∈ l → countEq a (eraseOne a l) + 1 = countEq a l
-  | [], hm => by cases hm
-  | x :: xs, hm => by
-      if hxa : x = a then
-        subst hxa
-        simp [eraseOne, countEq]
-        omega
-      else
-        cases hm with
-        | head => exact absurd rfl hxa
-        | tail _ htail =>
-            simp [eraseOne, countEq, hxa]
-            exact countEq_eraseOne_self a htail
-
-private theorem countEq_eraseOne_ne {α : Type _} [DecidableEq α] {a b : α} (hne : b ≠ a) :
-    ∀ l : List α, countEq b (eraseOne a l) = countEq b l
-  | [] => rfl
-  | x :: xs => by
-      if hxa : x = a then
-        subst hxa
-        simp [eraseOne, countEq, hne.symm]
-      else
-        simp [eraseOne, countEq, hxa, countEq_eraseOne_ne hne xs]
-
-private theorem sumNat_map_eq_of_countEq {α : Type _} [DecidableEq α] (w : α → Nat) :
-    ∀ {l₁ l₂ : List α}, (∀ z, countEq z l₁ = countEq z l₂) → sumNat (l₁.map w) = sumNat (l₂.map w)
-  | [], l₂, h => by
-      cases l₂ with
-      | nil => rfl
-      | cons y ys =>
-          have hy := h y
-          simp [countEq] at hy
-          omega
-  | x :: xs, l₂, h => by
-      have hx : 0 < countEq x l₂ := by
-        have h0 := h x
-        simp [countEq] at h0
-        omega
-      have hmem : x ∈ l₂ := countEq_pos_mem hx
-      have heq := sumNat_map_eraseOne w hmem
-      have hcount : ∀ z, countEq z xs = countEq z (eraseOne x l₂) := by
         intro z
         have hz := h z
         if hzx : z = x then
@@ -2480,6 +2322,173 @@ theorem theorem15_adamw_finite_distribution_invariant {S C : Type _} [DecidableE
   rw [hind]
 
 end Theorem15
+
+/-! ## §21 No-transfer lemma for exact data stabilizers (Spike 16 F2 / P077)
+
+If a group `G` maps the labelled set `L` to itself, every `G`-orbit lies
+entirely inside `L` or entirely outside `L`. Consequently:
+1. A predictor's `G`-symmetrized values on unlabelled inputs depend only on its
+   values on unlabelled inputs (zero label transfer from `L`).
+2. Random-`G` (Reynolds) symmetrization leaves expected unlabelled accuracy
+   identically unchanged, both on any `G`-invariant target and under any
+   `G`-invariant finite target prior.
+3. Deterministic symmetrization (e.g. logit averaging / majority vote) leaves
+   expected unlabelled accuracy identically unchanged under any distribution
+   invariant under unlabelled label flips `y ↦ flipUnlabelled L y`.
+4. Honest scope limit (`sym_majority_can_improve_without_flip_symmetry`): without
+   label-flip invariance (e.g. a `G`-invariant prior skewed 4:1 toward all-1),
+   deterministic majority vote across an orbit can strictly improve expected
+   accuracy by denoising `f`. -/
+section NoTransfer
+
+def sumNat : List Nat → Nat
+  | [] => 0
+  | x :: xs => x + sumNat xs
+
+def countEq {α : Type _} [DecidableEq α] (a : α) : List α → Nat
+  | [] => 0
+  | x :: xs => (if x = a then 1 else 0) + countEq a xs
+
+def eraseOne {α : Type _} [DecidableEq α] (a : α) : List α → List α
+  | [] => []
+  | x :: xs => if x = a then xs else x :: eraseOne a xs
+
+inductive NoDupList {α : Type _} : List α → Prop
+  | nil : NoDupList []
+  | cons {x xs} : x ∉ xs → NoDupList xs → NoDupList (x :: xs)
+
+private theorem sumNat_map_add {α : Type _} (u v : α → Nat) :
+    ∀ xs : List α, sumNat (xs.map fun x => u x + v x) = sumNat (xs.map u) + sumNat (xs.map v)
+  | [] => rfl
+  | x :: xs => by
+      have ih := sumNat_map_add u v xs
+      simp only [List.map, sumNat]
+      omega
+
+private theorem sumNat_map_const {α : Type _} (c : Nat) :
+    ∀ xs : List α, sumNat (xs.map fun _ => c) = xs.length * c
+  | [] => by simp [sumNat]
+  | _ :: xs => by
+      have ih := sumNat_map_const c xs
+      simp only [List.map, sumNat, List.length, Nat.succ_mul]
+      omega
+
+private theorem sumNat_map_comm {α β : Type _} (h : α → β → Nat) :
+    ∀ (xs : List α) (ys : List β),
+      sumNat (xs.map fun a => sumNat (ys.map fun b => h a b)) =
+      sumNat (ys.map fun b => sumNat (xs.map fun a => h a b))
+  | [], ys => by
+      simp only [List.map, sumNat]
+      induction ys with
+      | nil => rfl
+      | cons _ ys ih => simp only [List.map, sumNat, ← ih]
+  | x :: xs, ys => by
+      have ih := sumNat_map_comm h xs ys
+      simp only [List.map, sumNat]
+      rw [ih, ← sumNat_map_add]
+
+private theorem list_map_congr {α β : Type _} (l : List α) (g₁ g₂ : α → β)
+    (h : ∀ a, a ∈ l → g₁ a = g₂ a) : l.map g₁ = l.map g₂ := by
+  induction l with
+  | nil => rfl
+  | cons x xs ih =>
+      simp only [List.map, h x (List.Mem.head _)]
+      congr 1
+      exact ih (fun a ha => h a (List.Mem.tail _ ha))
+
+private theorem countEq_pos_mem {α : Type _} [DecidableEq α] {a : α} :
+    ∀ {l : List α}, 0 < countEq a l → a ∈ l
+  | [], h => by simp [countEq] at h
+  | x :: xs, h => by
+      if hxa : x = a then
+        subst hxa
+        exact List.Mem.head _
+      else
+        simp [countEq, hxa] at h
+        exact List.Mem.tail _ (countEq_pos_mem h)
+
+private theorem countEq_not_mem {α : Type _} [DecidableEq α] {a : α} :
+    ∀ {l : List α}, a ∉ l → countEq a l = 0
+  | [], _ => rfl
+  | x :: xs, h => by
+      have hx : x ≠ a := fun heq => h (heq ▸ List.Mem.head _)
+      have hxs : a ∉ xs := fun hm => h (List.Mem.tail _ hm)
+      simp [countEq, hx, countEq_not_mem hxs]
+
+private theorem countEq_of_noDup {α : Type _} [DecidableEq α] {a : α} :
+    ∀ {l : List α}, NoDupList l → a ∈ l → countEq a l = 1
+  | [], hn, hm => by cases hm
+  | x :: xs, NoDupList.cons hnx hnodup, hm => by
+      if hxa : x = a then
+        subst hxa
+        simp [countEq, countEq_not_mem hnx]
+      else
+        cases hm with
+        | head => exact absurd rfl hxa
+        | tail _ htail =>
+            simp [countEq, hxa]
+            exact countEq_of_noDup hnodup htail
+
+private theorem sumNat_map_eraseOne {α : Type _} [DecidableEq α] (w : α → Nat) {a : α} :
+    ∀ {l : List α}, a ∈ l → sumNat (l.map w) = w a + sumNat ((eraseOne a l).map w)
+  | [], hm => by cases hm
+  | x :: xs, hm => by
+      if hxa : x = a then
+        subst hxa
+        simp [eraseOne, sumNat]
+      else
+        cases hm with
+        | head => exact absurd rfl hxa
+        | tail _ htail =>
+            simp [eraseOne, hxa, sumNat, sumNat_map_eraseOne w htail]
+            omega
+
+private theorem countEq_eraseOne_self {α : Type _} [DecidableEq α] (a : α) :
+    ∀ {l : List α}, a ∈ l → countEq a (eraseOne a l) + 1 = countEq a l
+  | [], hm => by cases hm
+  | x :: xs, hm => by
+      if hxa : x = a then
+        subst hxa
+        simp [eraseOne, countEq]
+        omega
+      else
+        cases hm with
+        | head => exact absurd rfl hxa
+        | tail _ htail =>
+            simp [eraseOne, countEq, hxa]
+            exact countEq_eraseOne_self a htail
+
+private theorem countEq_eraseOne_ne {α : Type _} [DecidableEq α] {a b : α} (hne : b ≠ a) :
+    ∀ l : List α, countEq b (eraseOne a l) = countEq b l
+  | [] => rfl
+  | x :: xs => by
+      if hxa : x = a then
+        subst hxa
+        simp [eraseOne, countEq, hne.symm]
+      else
+        simp [eraseOne, countEq, hxa, countEq_eraseOne_ne hne xs]
+
+private theorem sumNat_map_eq_of_countEq {α : Type _} [DecidableEq α] (w : α → Nat) :
+    ∀ {l₁ l₂ : List α}, (∀ z, countEq z l₁ = countEq z l₂) → sumNat (l₁.map w) = sumNat (l₂.map w)
+  | [], l₂, h => by
+      cases l₂ with
+      | nil => rfl
+      | cons y ys =>
+          have hy := h y
+          simp [countEq] at hy
+          omega
+  | x :: xs, l₂, h => by
+      have hx : 0 < countEq x l₂ := by
+        have h0 := h x
+        simp [countEq] at h0
+        omega
+      have hmem : x ∈ l₂ := countEq_pos_mem hx
+      have heq := sumNat_map_eraseOne w hmem
+      have hcount : ∀ z, countEq z xs = countEq z (eraseOne x l₂) := by
+        intro z
+        have hz := h z
+        if hzx : z = x then
+          subst hzx
           have hs := countEq_eraseOne_self z hmem
           simp [countEq] at hz
           omega
@@ -2793,4 +2802,3 @@ theorem sym_majority_can_improve_without_flip_symmetry :
 end NoTransfer
 
 end PFT
-

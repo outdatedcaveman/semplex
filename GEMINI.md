@@ -28,60 +28,40 @@ Do not do these; leave them to Claude and the user:
    ```
 8. **Finish with a handoff**: `HANDOFF_<task-id>.md` on the branch with what was done, the exact acceptance check and its output, and what failed.
 
+## Done (merged 2026-11-15)
+
+G1–G7 were verified and merged: Lean compiles (107 audited theorems, standard axioms), 150 Python and 9 Lean-backed tests pass, the G3 benchmark was re-checked on fresh tasks, and the proposals became P160–P165. Two things to keep doing: G4 reported that a lemma was false as stated and proved the corrected version (rule 4), and G7 stated the read level of every source.
+
+One thing to change: when a benchmark I set turns out to be easy (every G3 task had cost ≤ 3), say so at the top of the handoff. It was in the "does not show" section, which is right, but it decides whether the gap closes.
+
 ## Queue, in priority order
 
-Each task names the gap in `STATUS.md` it closes and the check that decides it.
+### G8. Certified minimality at cost 4 for n = 8 (gap B2)
 
-### G1. Theorem 15 in Lean (gap C1; lifts 20 flagged claims)
+`netsolve.compile_partial` certifies cost-3 nets with the partial not-threshold certificate. Extend it to cost 4: certify that no cost-3 net (two hidden units) fits a partial function.
 
-`THEORY.md` "Theorem 15, equivariance of mechanism choice" has a paper proof in four steps. Mechanize it in `proofs/lean/Theory.lean` without Mathlib, in this shape:
+Benchmark, fixed in advance: n = 8, 100 targets that are random **three**-hidden-unit step nets (weights in −3…3, output weights in −2…2, 25–75% ones, seed 8,820) for which no two-hidden-unit net with |w| ≤ 4 exists on the full table; 75% of inputs in the care set (seed 8,821).
 
-- A group `G` acts on a parameter type `Θ` and on a circuit type `C`.
-- `step : Θ → Θ` commutes with the action (prove this *concretely* for: gradient descent on a loss invariant under the action, where the action is by coordinate permutations and sign flips; then for the AdamW update with elementwise moments and decoupled weight decay).
-- `readout : Θ → C` is equivariant.
-- Conclusion 1 (deterministic): `readout (step^[t] (σ • θ)) = σ • readout (step^[t] θ)`.
-- Conclusion 2 (distributional, finite): for a finite weighted list of initial parameters whose weights are invariant under the action, the total weight landing on circuit `I` equals the total weight landing on `σ • I`.
+**Done when:** at least 90% compile to a verified cost-4 net *with a kernel-checked certificate that no cost-3 layered net fits the care set*, within 60 s each on 4 cores. If the certificate search is the bottleneck, report the fraction where the solver proves unsat but no checkable certificate is produced; that number is a result. State clearly how many tasks have cost 3 on the care set even though the full target has cost 4.
 
-**Done when:** both conclusions compile with standard axioms only; the permutation-and-sign-flip action and the AdamW step are defined concretely, not assumed as hypotheses; `HANDOFF_G1.md` lists every hypothesis of the final theorem next to the sentence of the paper proof it corresponds to. If Gaussian initialization cannot be handled without measure theory, say so: the finite version is a lemma toward Theorem 15, and the claim stays "paper proof + finite case in Lean".
+### G9. Orbit counts of minimum circuits (gap A10)
 
-### G2. Linear pseudo-Boolean encoding in Lean (gap B1)
+For every Boolean function on n ≤ 4 inputs (up to the symmetries already used by the atlas), enumerate **all** minimum-cost layered threshold circuits with |w| ≤ 3, quotient them by the function's symmetry group G_f (input permutations and negations that fix f, with output negation where it applies) and by hidden-unit permutation, and tabulate the number of orbits.
 
-`Cerp.pbToExpr` expands a fan-in-`d` threshold neuron as an `O(2^d)` Shannon tree. Replace it (or add a second path) with an `O(d·w)` encoding, e.g. a binary adder or sorting network, with a soundness proof against `evalTNet`.
+**Done when:** `experiments/results/g9_orbits.json` holds, per function class: cost, number of minimum circuits up to weight-equivalence (two circuits are the same if their hidden units compute the same Boolean functions), |G_f|, and the number of G_f-orbits; a test re-derives the table for n = 3 by brute force; and the handoff states the fraction of classes with exactly one orbit. Extend to n = 5 for cost ≤ 3 if it runs in under 2 hours, and report where it stops.
 
-**Done when:** the `xor4` net (5 nodes) is verified against its `Expr` spec by pure kernel `decide` (no `native_decide`) in under 60 s, and `xor3` still passes. Report both timings.
+### G10. Multi-layer threshold miters in the Lean kernel at n = 6–8 (follow-up to G2)
 
-### G3. Care-set compilation at 8–10 inputs (gap B2; unblocks gap A6)
+**Done when:** a two-hidden-layer net at n = 6 and a one-hidden-layer net at n = 8 are verified against their specifications by kernel `decide` (no `native_decide`), each in under 120 s, with timings in the handoff. If it does not scale, report the size at which it stops and why.
 
-`cerp/netsolve.py` finds minimum layered threshold nets for partial functions (a care mask) up to n = 6. Make it work at n = 8 and n = 10: symmetry breaking on hidden units, incremental solving over hidden width, lower-bound certificates via `bounds.not_threshold_cert_partial` and its two-halfspace analogue.
+### G11. The Gaussian step of Theorem 15, isolated from the core (gap C1)
 
-Benchmark, fixed in advance: for each n in {8, 10}, 100 targets from `experiments/spike36.py`'s generator (seeds 8,800 and 8,810) with 75% of inputs in the care set.
+The core proofs must stay Mathlib-free. In a **separate** directory `proofs/lean-mathlib/` with its own `lakefile` and toolchain pin, prove that the i.i.d. centred Gaussian product measure on ℝⁿ is invariant under signed permutations, and that an equivariant measurable map pushes an invariant measure to an invariant measure.
 
-**Done when:** at n = 8, at least 90% of tasks return a verified net with a certificate that no cheaper layered net exists, within 60 s each on 4 cores. Report the n = 10 numbers whatever they are. Every returned net is checked with `kernel.evaluate` on all care points.
+**Done when:** it builds with a pinned Mathlib, `#print axioms` shows standard axioms only, the handoff states exactly how the result composes with P160 (which hypotheses of P160 it discharges and which it does not), and nothing under `proofs/lean/` changes. If the Mathlib build is too heavy for the environment, say so and stop; do not vendor Mathlib into the repository.
 
-### G4. No-transfer lemma in Lean (gap C2)
+### G12. Spot-check support for the three unverified literature flags
 
-The lemma named "No-transfer lemma" in `THEORY.md` / claim P077: symmetrizing a predictor over the exact stabilizer of the labelled data cannot change expected accuracy on unlabelled points. Finite version, standard axioms.
+`HANDOFF_G7.md` raised four critical flags. One (2606.04045) was confirmed against the source at merge. For the other three, 2602.16823 (`lem:blocking_sets_equivalence`), 2507.08802 (`theorem:existing_causalmap_for_any_algorithm`) and 2006.15191 §E (GP 5.80% vs SGD 13.4%), add to `charter/LITERATURE_REVIEW.md` the verbatim statement of the cited theorem or table row with its page or section, so a reader can check each in one step.
 
-**Done when:** it compiles and the handoff maps each hypothesis to the paper statement.
-
-### G5. `parity4` needs 5 neurons (gap B3)
-
-Certify that 4-input parity has no layered threshold net with 4 neurons. The enumeration is about 1.1 × 10⁹ cases; reduce it with the signed-permutation symmetry `B₄`, and check the reduced certificate in Lean or with `cerp/kernel_bounds.py`.
-
-**Done when:** a kernel-checked certificate exists and its checker runs in under 30 min. A proof that the reduction is sound must be part of it.
-
-### G6. Make the intermittent test deterministic (gap D2)
-
-`tests/test_localrules.py::test_search_keeps_a_working_rule_working` fails on some runs (score 0.875 against 0.9). Do not lower the bar and do not skip the test. Fix the seeds so the run is reproducible, or change the test to average over a fixed set of seeds with the bar justified from the measured distribution (mean 0.95, min 0.875 over 20 seeds).
-
-**Done when:** 20 consecutive `pytest -q` runs pass.
-
-### G7. Work through the prior-art reading queue (gap D3)
-
-`charter/PRIOR_ART.md` §4 lists about 20 papers found on 2026-11-14 and not yet read, with the reason each matters. Read each **in full** and add a row to `charter/LITERATURE_REVIEW.md` §5. Start with 2606.04045 (it may already state our sufficiency result), then 1805.08522, 2302.07263, the proofs of 2410.19092, 2512.20607, 2507.19680.
-
-Then extend the sweep to what one arXiv-centred pass could not reach: computational mechanics (Crutchfield, Shalizi), formal concept analysis (Ganter & Wille), rough sets (Pawlak; Skowron & Rauszer), Myhill–Nerode and exact automata learning (Angluin), symbol grounding (Harnad; Mollo & Millière), identifiability in nonlinear ICA and causal representation learning (Hyvärinen; Schölkopf et al.), causal abstraction (Geiger et al.; Beckers & Halpern), Occam learning and minimum circuit size (Blumer et al.; Kearns & Vazirani).
-
-**Searching.** Use `python -m cerp.litsearch "<query>"` (Crossref and the arXiv API; free, no account). A hit is a lead, not a reading.
-
-**Done when:** every queued paper has a row with what was read (full text / abstract only), its main claim, and one of {anticipates, contradicts, orthogonal} for a named claim of ours, with the sentence that shows it. Then update the verdict table in `PRIOR_ART.md` §1 where a verdict changes. Abstract-only rows must say so. No row for a paper that was not opened. If a paper already contains one of our results, say so at the top of the handoff.
+**Done when:** each of the three has a verbatim quotation with location. If a quotation does not match what `HANDOFF_G7.md` said, correct the flag and say so first.
