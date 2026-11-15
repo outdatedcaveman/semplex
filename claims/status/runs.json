@@ -62,7 +62,7 @@
  {
   "spike": "49",
   "date": "2026-11-15",
-  "commit": "pending",
+  "commit": "708ddc1",
   "question": "Do trained nets output what every minimum circuit agrees on? (C22, consensus law)",
   "overall": "NEITHER",
   "learned": "Nets contradict the consensus of minimum circuits about 2% of the time, the same at 8 and 10 inputs and from 48 to 144 seen inputs. The shrinking pull of Spike 48 is a shrinking share of forced inputs (17% to 81%), not weaker adherence. Caveat: forced inputs are mostly the easy ones, where the kernel is also right 87–97% of the time.",

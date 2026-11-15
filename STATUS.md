@@ -81,7 +81,7 @@ Progress counts a closed gap as 1 and a partial one as ½. It measures the gap l
 
 ### Spike 49: Do trained nets output what every minimum circuit agrees on? (C22, consensus law)
 
-2026-11-15 · commit `pending` · overall **NEITHER** · report `experiments/SPIKE_49_REPORT.md` · claims P173
+2026-11-15 · commit `708ddc1` · overall **NEITHER** · report `experiments/SPIKE_49_REPORT.md` · claims P173
 
 | Hypothesis | Verdict | Measured | Criterion |
 |---|---|---|---|

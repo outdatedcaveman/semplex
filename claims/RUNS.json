@@ -283,7 +283,7 @@
   {
    "spike": "49",
    "date": "2026-11-15",
-   "commit": "pending",
+   "commit": "708ddc1",
    "question": "Do trained nets output what every minimum circuit agrees on? (C22, consensus law)",
    "overall": "NEITHER",
    "verdicts": [
