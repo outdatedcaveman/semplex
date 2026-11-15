@@ -1,6 +1,6 @@
 # Spike 49: Do trained nets realize the consensus of minimum circuits?
 
-**Date:** 2026-11-15 · **Status:** pre-registered (no runs yet) · **Follows:** Spike 48 (the Occam pull is 0.72 at n = 8 and 0.65 at n = 10 with 8 labels per dimension, 0.94 with 75% of inputs seen). **Gaps:** A6 (scale), A3 (mechanism), A4 (one predictor).
+**Date:** 2026-11-15 · **Status:** complete (pre-registered in 2d6130e; one deviation recorded before any verdict; results below) · **Follows:** Spike 48 (the Occam pull is 0.72 at n = 8 and 0.65 at n = 10 with 8 labels per dimension, 0.94 with 75% of inputs seen). **Gaps:** A6 (scale), A3 (mechanism), A4 (one predictor).
 
 ## Where the hypothesis comes from (exploratory, on Spike 48's data)
 
@@ -63,4 +63,30 @@ python -m experiments.spike49 analyse
 
 ## Results
 
-(To be filled after the runs.)
+`experiments/results/spike49.json`; raw outputs in `spike49_raw/`. Every task compiled; 99.7–100% of nets fit; at most 0.4% of forcing queries timed out. All cells pass the guards.
+
+| Cell | n | seen | fraction forced | net adherence | kernel adherence | `sides_forced` | net vs majority on unforced | forced value = true label | net accuracy on unforced | forced pairs |
+|---|---|---|---|---|---|---|---|---|---|---|
+| n8_s48 | 8 | 48 | 0.172 | 0.981 | 0.952 | 0.827 | 0.848 | 0.973 | 0.818 | 20602 |
+| n8_s96 | 8 | 96 | 0.570 | 0.979 | 0.920 | 0.875 | 0.850 | 0.997 | 0.836 | 68210 |
+| n8_s144 | 8 | 144 | 0.807 | 0.986 | 0.867 | 0.947 | 0.861 | 0.999 | 0.871 | 90107 |
+| n10_s80 | 10 | 80 | 0.276 | 0.991 | 0.971 | 0.816 | 0.860 | 0.988 | 0.842 | 16530 |
+
+### Verdicts
+
+- **H49.1: held.** On forced inputs, nets output the forced value 97.9–99.1% of the time in every cell (bar 0.95).
+- **H49.2: held.** That rate varies by 0.011 across input sizes and sample sizes (bar 0.04), while the fraction of forced inputs varies from 17% to 81%.
+- **H49.3: held.** Where a net leaves its kernel on a forced input, it goes to the forced value 82–95% of the time (bar 0.80).
+- **H49.4: neither.** The net adheres more than the kernel in every cell, by +0.029, +0.059, +0.119 and +0.020. The bar was +0.05 in every cell; two cells miss it.
+- **C22: not fully supported under the pre-registered rule,** which required H49.4. Its first two parts (adherence, and independence of n and sample size) held.
+
+### Reading
+
+1. **The consensus law holds as a description.** A trained net almost never contradicts what every minimum circuit agrees on: 2% of the time, the same at 8 and 10 inputs and from 48 to 144 seen inputs.
+2. **It explains Spike 48's trend.** The pull shrinks with n at fixed labels per dimension because fewer inputs are forced (17–28% in the sparse cells against 81% with 144 seen), not because nets follow forced values less.
+3. **But forced inputs are also the easy ones.** The forced value is the true label 97–99.9% of the time, and the kernel gets 87–97% of them right too. In the sparse cells the net's edge over the kernel on forced inputs is only 2–3 points. So "nets follow the consensus" is partly "nets and kernels both get determined inputs right". The law distinguishes the net from the kernel clearly only when data are plentiful (+12 points at 144 seen).
+4. **Unforced inputs are not noise.** Nets agree with the majority of sampled minimum circuits on 85–86% of them and are right on 82–87%. Minimum circuits still carry information there, which the law as stated does not capture.
+
+**Limits.** Forcing is relative to |w| ≤ 4 and to layered nets of the minimum cost. Two-unit targets only. 120 sampled held-out inputs per task (112 in `n8_s144`).
+
+**Next.** A graded version: replace "forced or not" by the fraction of minimum circuits giving each value at an input, and test whether the net's output probability tracks it. That would cover point 4 and give a single predictor (gap A4).

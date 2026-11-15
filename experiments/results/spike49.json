@@ -1,3 +1,102 @@
 {
- "cells": {}
+ "cells": {
+  "n8_s48": {
+   "n": 8,
+   "seen": 48,
+   "compiled": 1.0,
+   "fit": 0.999,
+   "frac_forced": 0.17216666666666666,
+   "frac_unforced": 0.8278333333333333,
+   "frac_unknown": 0.0,
+   "cost_hist": {
+    "1": 16,
+    "3": 84
+   },
+   "n_forced_pairs": 20602,
+   "adherence": 0.9812639549558295,
+   "kernel_adherence": 0.9520920299000097,
+   "sides_forced": 0.8269858541893362,
+   "n_forced_departures": 919,
+   "majority_agreement": 0.8480529422429944,
+   "forced_value_is_true_label": 0.972894482090997,
+   "net_accuracy_on_unforced": 0.8177138943169685,
+   "guard_ok": true
+  },
+  "n8_s96": {
+   "n": 8,
+   "seen": 96,
+   "compiled": 1.0,
+   "fit": 0.997,
+   "frac_forced": 0.5704166666666667,
+   "frac_unforced": 0.4295833333333333,
+   "frac_unknown": 0.0,
+   "cost_hist": {
+    "1": 8,
+    "3": 92
+   },
+   "n_forced_pairs": 68210,
+   "adherence": 0.9794898108781703,
+   "kernel_adherence": 0.9196745345257293,
+   "sides_forced": 0.8747244673034533,
+   "n_forced_departures": 5444,
+   "majority_agreement": 0.8495819560567762,
+   "forced_value_is_true_label": 0.9970781592403214,
+   "net_accuracy_on_unforced": 0.8361462181606066,
+   "guard_ok": true
+  },
+  "n8_s144": {
+   "n": 8,
+   "seen": 144,
+   "compiled": 1.0,
+   "fit": 0.997,
+   "frac_forced": 0.8072321428571428,
+   "frac_unforced": 0.19276785714285713,
+   "frac_unknown": 0.0,
+   "cost_hist": {
+    "1": 5,
+    "3": 95
+   },
+   "n_forced_pairs": 90107,
+   "adherence": 0.9859389392611007,
+   "kernel_adherence": 0.8669248782003618,
+   "sides_forced": 0.9470568617642154,
+   "n_forced_departures": 11994,
+   "majority_agreement": 0.8614371201929768,
+   "forced_value_is_true_label": 0.9988939276628691,
+   "net_accuracy_on_unforced": 0.8706220717168437,
+   "guard_ok": true
+  },
+  "n10_s80": {
+   "n": 10,
+   "seen": 80,
+   "compiled": 1.0,
+   "fit": 1.0,
+   "frac_forced": 0.2755,
+   "frac_unforced": 0.7209166666666667,
+   "frac_unknown": 0.0035833333333333333,
+   "cost_hist": {
+    "1": 20,
+    "3": 80
+   },
+   "n_forced_pairs": 16530,
+   "adherence": 0.9909860859044162,
+   "kernel_adherence": 0.9709618874773139,
+   "sides_forced": 0.8164435946462715,
+   "n_forced_departures": 523,
+   "majority_agreement": 0.8601548953878164,
+   "forced_value_is_true_label": 0.9882032667876588,
+   "net_accuracy_on_unforced": 0.8418217547104381,
+   "guard_ok": true
+  }
+ },
+ "H49.1": "HELD",
+ "H49.2": "HELD",
+ "H49.3": "HELD",
+ "H49.4": "NEITHER",
+ "measured": {
+  "adherence_min": 0.9794898108781703,
+  "adherence_range": 0.011496275026245839,
+  "sides_forced_min": 0.8164435946462715,
+  "adherence_minus_kernel_min": 0.020024198427102236
+ }
 }

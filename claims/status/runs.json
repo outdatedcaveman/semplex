@@ -58,5 +58,15 @@
   "learned": "The effect is not an artifact of small inputs, and it is not constant: at a fixed number of labels per dimension it shrinks from 0.80 (6 inputs) to 0.72 (8) to 0.65 (10). With three quarters of the inputs seen at 8 inputs it is 0.94. The pull appears to track how well the seen data pin down the minimum circuit.",
   "moved": "A6: OPEN → PARTIAL (Measured at 8 and 10 inputs; the sample-size dependence is not yet a curve)",
   "claims": "P172"
+ },
+ {
+  "spike": "49",
+  "date": "2026-11-15",
+  "commit": "pending",
+  "question": "Do trained nets output what every minimum circuit agrees on? (C22, consensus law)",
+  "overall": "NEITHER",
+  "learned": "Nets contradict the consensus of minimum circuits about 2% of the time, the same at 8 and 10 inputs and from 48 to 144 seen inputs. The shrinking pull of Spike 48 is a shrinking share of forced inputs (17% to 81%), not weaker adherence. Caveat: forced inputs are mostly the easy ones, where the kernel is also right 87–97% of the time.",
+  "moved": "A4: OPEN → PARTIAL (A predictor that reaches 0.98–0.99 on the forced share of inputs); A6: PARTIAL → PARTIAL (The decline with input size is explained)",
+  "claims": "P173"
  }
 ]

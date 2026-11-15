@@ -158,5 +158,37 @@
   "verdict": "HELD",
   "measured": "net minus kernel accuracy: +0.060 at n = 8, +0.037 at n = 10",
   "bar": "held if ≥ +0.02 in both; broken if ≤ 0 in either"
+ },
+ {
+  "key": "49:H49.1",
+  "spike": "49",
+  "id": "H49.1",
+  "verdict": "HELD",
+  "measured": "adherence 0.979–0.991 in the four cells",
+  "bar": "held if ≥ 0.95 in every cell; broken if < 0.90 in any"
+ },
+ {
+  "key": "49:H49.2",
+  "spike": "49",
+  "id": "H49.2",
+  "verdict": "HELD",
+  "measured": "spread across cells 0.011",
+  "bar": "held if ≤ 0.04; broken if > 0.08"
+ },
+ {
+  "key": "49:H49.3",
+  "spike": "49",
+  "id": "H49.3",
+  "verdict": "HELD",
+  "measured": "on forced inputs where the net leaves the kernel: 0.816–0.947",
+  "bar": "held if ≥ 0.80 in every cell; broken if < 0.65 in any"
+ },
+ {
+  "key": "49:H49.4",
+  "spike": "49",
+  "id": "H49.4",
+  "verdict": "NEITHER",
+  "measured": "net minus kernel adherence: +0.029, +0.059, +0.119, +0.020",
+  "bar": "held if ≥ +0.05 in every cell; broken if ≤ 0 in any"
  }
 ]

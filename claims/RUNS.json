@@ -279,6 +279,57 @@
    "claims": [
     "P172"
    ]
+  },
+  {
+   "spike": "49",
+   "date": "2026-11-15",
+   "commit": "pending",
+   "question": "Do trained nets output what every minimum circuit agrees on? (C22, consensus law)",
+   "overall": "NEITHER",
+   "verdicts": [
+    {
+     "id": "H49.1",
+     "verdict": "HELD",
+     "measured": "adherence 0.979–0.991 in the four cells",
+     "bar": "held if ≥ 0.95 in every cell; broken if < 0.90 in any"
+    },
+    {
+     "id": "H49.2",
+     "verdict": "HELD",
+     "measured": "spread across cells 0.011",
+     "bar": "held if ≤ 0.04; broken if > 0.08"
+    },
+    {
+     "id": "H49.3",
+     "verdict": "HELD",
+     "measured": "on forced inputs where the net leaves the kernel: 0.816–0.947",
+     "bar": "held if ≥ 0.80 in every cell; broken if < 0.65 in any"
+    },
+    {
+     "id": "H49.4",
+     "verdict": "NEITHER",
+     "measured": "net minus kernel adherence: +0.029, +0.059, +0.119, +0.020",
+     "bar": "held if ≥ +0.05 in every cell; broken if ≤ 0 in any"
+    }
+   ],
+   "learned": "Nets contradict the consensus of minimum circuits about 2% of the time, the same at 8 and 10 inputs and from 48 to 144 seen inputs. The shrinking pull of Spike 48 is a shrinking share of forced inputs (17% to 81%), not weaker adherence. Caveat: forced inputs are mostly the easy ones, where the kernel is also right 87–97% of the time.",
+   "gaps_moved": [
+    {
+     "gap": "A4",
+     "from": "OPEN",
+     "to": "PARTIAL",
+     "why": "A predictor that reaches 0.98–0.99 on the forced share of inputs"
+    },
+    {
+     "gap": "A6",
+     "from": "PARTIAL",
+     "to": "PARTIAL",
+     "why": "The decline with input size is explained"
+    }
+   ],
+   "claims": [
+    "P173"
+   ]
   }
  ]
 }

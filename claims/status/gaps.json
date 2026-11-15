@@ -48,7 +48,7 @@
   "title": "Mechanism: why feature learning finds small circuits",
   "status": "OPEN",
   "leverage": "HIGH",
-  "have": "Correlation (73–81%), one causal arm (lazy regime moves nets back to the kernel), and timing (kernel first, Occam from step ~30). Spike 47 removes one candidate mechanism: the representation does not become the minimum circuit.",
+  "have": "Correlation (73–81%), one causal arm (lazy regime moves nets back to the kernel), and timing (kernel first, Occam from step ~30). Spike 47 removes one candidate mechanism: the representation does not become the minimum circuit. Spike 49: what nets follow is the consensus of minimum circuits, at a rate independent of n and sample size.",
   "missing": "A derivation. The unit-level selection law (volume × information tilt) is not shown to produce the Occam pull (C18 not supported).",
   "closes_when": "A stated law that predicts the Occam-sides fraction or S(t) from measurable quantities, confirmed in a prospective test.",
   "next": "After A8: the mechanism must also explain why noise removes the pull",
@@ -60,14 +60,14 @@
   "pillar": "Theory",
   "serves": "E1",
   "title": "One predictor for the net's held-out outputs",
-  "status": "OPEN",
+  "status": "PARTIAL",
   "leverage": "MEDIUM",
-  "have": "Three separate predictors at n = 6: kernel 0.80 agreement, Occam 0.90; at n = 5 nets beat Occam on accuracy.",
-  "missing": "A single rule combining kernel and circuit cost that predicts each held-out output, and explains where nets beat Occam.",
-  "closes_when": "Pre-registered: per-input agreement with trained nets ≥ 0.93 at n = 6 on fresh tasks.",
-  "next": "Unscheduled",
+  "have": "On forced inputs (17–81% of held-out inputs) the consensus of minimum circuits predicts the net at 0.98–0.99 (Spike 49). On the rest, the majority of sampled minimum circuits agrees with the net 0.85.",
+  "missing": "A graded predictor: the fraction of minimum circuits giving each value at an input, tested against the net's output frequency over seeds.",
+  "closes_when": "Pre-registered: per-input agreement with trained nets ≥ 0.93 over all held-out inputs at n = 8 on fresh tasks, and better than the kernel by ≥ 0.03.",
+  "next": "Spike 50 candidate",
   "blocked_by": "",
-  "claims": "P126 P130"
+  "claims": "P126 P130 P173"
  },
  {
   "id": "A5",
@@ -90,12 +90,12 @@
   "title": "Scale: n ≥ 8",
   "status": "PARTIAL",
   "leverage": "HIGH",
-  "have": "Run at n = 8 and 10 (Spike 48): the pull is 0.72 and 0.65 at 8 labels per dimension (0.80 at n = 6) and 0.94 with 75% of inputs seen at n = 8. Nets beat their kernel at both sizes.",
-  "missing": "The dependence on the number of seen inputs measured as a curve, and widths beyond 8 in the feature-learning regime.",
-  "closes_when": "Pre-registered: the pull at n = 8 predicted from the number of seen inputs (or from how often the minimum circuit is unique on them) on fresh targets, within ±0.05.",
-  "next": "Spike 49 candidate",
+  "have": "Run at n = 8 and 10 (Spike 48): the pull is 0.72 and 0.65 at 8 labels per dimension (0.80 at n = 6) and 0.94 with 75% of inputs seen at n = 8. Nets beat their kernel at both sizes. Spike 49 explains the decline: nets follow forced values at a constant 0.98–0.99, and the fraction of forced inputs is what falls (17–28% in sparse cells, 81% with 144 seen).",
+  "missing": "Widths beyond 8 in the feature-learning regime, and target classes other than two-unit ones at n ≥ 8.",
+  "closes_when": "The consensus law re-measured at width ≥ 32 and on cost-4 targets at n = 8.",
+  "next": "Unscheduled",
   "blocked_by": "",
-  "claims": "P129 P172"
+  "claims": "P129 P172 P173"
  },
  {
   "id": "A7",
