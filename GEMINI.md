@@ -28,40 +28,48 @@ Do not do these; leave them to Claude and the user:
    ```
 8. **Finish with a handoff**: `HANDOFF_<task-id>.md` on the branch with what was done, the exact acceptance check and its output, and what failed.
 
-## Done (merged 2026-11-15)
+## Done
 
-G1–G7 were verified and merged: Lean compiles (107 audited theorems, standard axioms), 150 Python and 9 Lean-backed tests pass, the G3 benchmark was re-checked on fresh tasks, and the proposals became P160–P165. Two things to keep doing: G4 reported that a lemma was false as stated and proved the corrected version (rule 4), and G7 stated the read level of every source.
+- **G1–G7** (merged 2026-11-15): claims P160–P165.
+- **G8–G12** (merged 2026-11-15): claims P166–P169, corrections under P165. All verified here: 155 Python tests, 11 Lean-backed tests, and the Mathlib project built and audited from a fresh cache.
 
-One thing to change: when a benchmark I set turns out to be easy (every G3 task had cost ≤ 3), say so at the top of the handoff. It was in the "does not show" section, which is right, but it decides whether the gap closes.
+What worked and should continue: pre-registering your own benchmarks, reporting a broken criterion as broken (G8), correcting your own earlier handoff (G12), and keeping Mathlib out of the core proofs (G11).
 
 ## Queue, in priority order
 
-### G8. Certified minimality at cost 4 for n = 8 (gap B2)
+### G13. Close Theorem 15: bridge the two Lean packages (gap C1)
 
-`netsolve.compile_partial` certifies cost-3 nets with the partial not-threshold certificate. Extend it to cost 4: certify that no cost-3 net (two hidden units) fits a partial function.
+P160 proves step equivariance in a discrete model; P169 proves Gaussian invariance for any measurable equivariant step. Nothing connects them, so the claim is still "partly mechanized" and 20 dependent claims stay flagged. Work only in `proofs/lean-mathlib/`.
 
-Benchmark, fixed in advance: n = 8, 100 targets that are random **three**-hidden-unit step nets (weights in −3…3, output weights in −2…2, 25–75% ones, seed 8,820) for which no two-hidden-unit net with |w| ≤ 4 exists on the full table; 75% of inputs in the care set (seed 8,821).
+1. Define the two-layer network of Spikes 09–14 on ℝ (inputs in {−1, +1}ⁿ, first-layer weights and biases, output weights and bias, an odd activation such as tanh), its logistic loss on a Boolean target g, and the action of an input symmetry σ (a permutation of inputs with sign flips, and output negation when g∘σ = ¬g) on the parameters.
+2. Prove the loss is invariant under that action whenever σ is a symmetry of g. This is step (ii) of the paper proof and is not mechanized anywhere yet.
+3. Prove equivariance and measurability of the gradient-descent step and of the AdamW step with its moment state (initial moments zero), for the true gradient if Mathlib's calculus makes that practical, otherwise for the central-difference gradient used in P160, stated as such.
+4. Conclude: for i.i.d. centred Gaussian first-layer parameters and a symmetric law on the output weights, the probability that training yields circuit I equals the probability that it yields σ·I.
 
-**Done when:** at least 90% compile to a verified cost-4 net *with a kernel-checked certificate that no cost-3 layered net fits the care set*, within 60 s each on 4 cores. If the certificate search is the bottleneck, report the fraction where the solver proves unsat but no checkable certificate is produced; that number is a result. State clearly how many tasks have cost 3 on the care set even though the full target has cost 4.
+**Done when:** one theorem states item 4 with no hypothesis of equivariance or measurability left (only: σ is a symmetry of g, the activation is odd and measurable, the readout is a stated concrete function or a stated equivariant measurable one); `#print axioms` shows standard axioms only; the handoff lists every remaining hypothesis and whether it is an assumption about the world or a gap. If the readout cannot be made concrete, say exactly why.
 
-### G9. Orbit counts of minimum circuits (gap A10)
+### G14. Prior art for "constrained collapse" (supports Spike 47, gap A9)
 
-For every Boolean function on n ≤ 4 inputs (up to the symmetries already used by the atlas), enumerate **all** minimum-cost layered threshold circuits with |w| ≤ 3, quotient them by the function's symmetry group G_f (input permutations and negations that fix f, with output negation where it applies) and by hidden-unit permutation, and tabulate the number of orbits.
+Claim under review, C21: for a non-threshold Boolean target and one hidden layer, the hidden representation cannot collapse to the class (the Bayes quotient) and instead collapses onto the cell partition of a minimum circuit, the coarsest sufficient partition the architecture can realize.
 
-**Done when:** `experiments/results/g9_orbits.json` holds, per function class: cost, number of minimum circuits up to weight-equivalence (two circuits are the same if their hidden units compute the same Boolean functions), |G_f|, and the number of G_f-orbits; a test re-derives the table for n = 3 by brute force; and the handoff states the fraction of classes with exactly one orbit. Extend to n = 5 for cost ≤ 3 if it runs in under 2 hours, and report where it stops.
+Read in full: neural collapse and its review (Papyan, Han & Donoho; 2206.04041), intermediate-layer collapse (2308.02760; 2201.08924), collapse in shallow ReLU nets (2510.21078), the persistence of collapse under low-rank bias (2410.23169), and work on linear regions or activation patterns of trained shallow nets on Boolean or discrete data. Search with `python -m cerp.litsearch`.
 
-### G10. Multi-layer threshold miters in the Lean kernel at n = 6–8 (follow-up to G2)
+**Done when:** rows in `charter/LITERATURE_REVIEW.md` §5 with read level, main claim, and one of {anticipates, contradicts, orthogonal} for C21 with the sentence that shows it; and a short statement at the top of the handoff: is "collapse onto a minimum-size sufficient partition when class collapse is unrealizable" already stated anywhere?
 
-**Done when:** a two-hidden-layer net at n = 6 and a one-hidden-layer net at n = 8 are verified against their specifications by kernel `decide` (no `native_decide`), each in under 120 s, with timings in the handoff. If it does not scale, report the size at which it stops and why.
+### G15. Census at 5 inputs beyond cost 3 (follow-up to G9, gap A10)
 
-### G11. The Gaussian step of Theorem 15, isolated from the core (gap C1)
+Extend `cerp/orbits.py` to n = 5 with |w| ≤ 4 for cost 3, and to cost 4 at n = 5 for as many classes as complete in 6 hours on 4 cores.
 
-The core proofs must stay Mathlib-free. In a **separate** directory `proofs/lean-mathlib/` with its own `lakefile` and toolchain pin, prove that the i.i.d. centred Gaussian product measure on ℝⁿ is invariant under signed permutations, and that an equivariant measurable map pushes an invariant measure to an invariant measure.
+**Done when:** the table reports, per cost, classes completed, one-orbit fraction, and where and why it stopped; the n = 4 results are unchanged; a test covers a sample of n = 5 classes by brute force.
 
-**Done when:** it builds with a pinned Mathlib, `#print axioms` shows standard axioms only, the handoff states exactly how the result composes with P160 (which hypotheses of P160 it discharges and which it does not), and nothing under `proofs/lean/` changes. If the Mathlib build is too heavy for the environment, say so and stop; do not vendor Mathlib into the repository.
+### G16. Pass the kernel wall (follow-up to G10)
 
-### G12. Spot-check support for the three unverified literature flags
+G10 found that kernel `decide` stops scaling at about 41–60 LRAT steps. Find a certificate representation the kernel checks faster (packed or reflected clauses, a checker written for kernel reduction) without `native_decide`.
 
-`HANDOFF_G7.md` raised four critical flags. One (2606.04045) was confirmed against the source at merge. For the other three, 2602.16823 (`lem:blocking_sets_equivalence`), 2507.08802 (`theorem:existing_causalmap_for_any_algorithm`) and 2006.15191 §E (GP 5.80% vs SGD 13.4%), add to `charter/LITERATURE_REVIEW.md` the verbatim statement of the cited theorem or table row with its page or section, so a reader can check each in one step.
+**Done when:** `[8]→[4]→1` (104 LRAT steps in G10's table) verifies in under 120 s with standard axioms only; or a handoff shows, with measurements, which stage is the irreducible cost.
 
-**Done when:** each of the three has a verbatim quotation with location. If a quotation does not match what `HANDOFF_G7.md` said, correct the flag and say so first.
+### G17. Make the Lean test's timeout configurable
+
+`tests/test_lean.py` allows 600 s per file; `Bounds.lean` takes 170 s here and about 600 s on your host. Read the limit from an environment variable with the current value as default, and document it in `proofs/lean/README.md`. Do not change what is checked.
+
+**Done when:** the suite passes on both hosts without editing the test.

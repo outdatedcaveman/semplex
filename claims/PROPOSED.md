@@ -1,4 +1,6 @@
 > **Reconciled at merge (2026-11-15).** These proposals from `gemini/G1`–`G7` were verified and entered in `claims/REGISTER.md` as P160 (G1), P161 with a correction to P077 (G4), P162 (G2), P163 (G3), P164 (G5) and P165 (G7's eight boundary proposals); G6 is recorded under P149. Kept below as filed. New proposals go under a new heading.
+>
+> **Second reconciliation (2026-11-15).** `gemini/G8`–`G12` were verified and entered as P166 (G8), P167 (G9), P168 (G10), P169 (G11); G12's corrections are recorded under P165.
 
 # Proposed Claims (`claims/PROPOSED.md` — `gemini/G6`)
 

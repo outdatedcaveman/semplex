@@ -1,7 +1,7 @@
 [
  {
   "claim": "P069",
-  "notes": 20,
+  "notes": 21,
   "status": "PROVED (paper proof) + PARTLY MECHANIZED (P160) + EMPIRICALLY-CONFIRMED (H14.1)",
   "statement": "Theorem 15: under task-symmetric initialization and equivariant training, circuit probability is constant on task-symmet"
  },
