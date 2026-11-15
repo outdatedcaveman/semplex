@@ -134,3 +134,73 @@ def test_tnet_lean_exhaustive_and_lrat_equiv():
     bad_net["nodes"][-1]["t"] = int(bad_net["nodes"][-1]["t"]) + 10
     bad_status, bad_ce, _ = sat.prove_tnet_equivalence_lrat(bad_net, comp["expr"], vs)
     assert bad_status == "sat" and isinstance(bad_ce, dict)
+
+
+def test_tnet_lean_n6_two_hidden_layer_kernel_decide():
+    from cerp import sat
+
+    vs = [f"x{i}" for i in range(6)]
+    _not = lambda a: ["not", a]
+    _and = lambda a, b: ["and", a, b]
+    _or = lambda a, b: ["or", a, b]
+    _xor = lambda a, b: ["xor", a, b]
+    _iff = lambda a, b: _not(_xor(a, b))
+
+    def _gt3(as_, bs_):
+        eq0 = _iff(as_[0], bs_[0])
+        eq1 = _iff(as_[1], bs_[1])
+        return _or(
+            _and(as_[0], _not(bs_[0])),
+            _or(_and(eq0, _and(as_[1], _not(bs_[1]))), _and(eq0, _and(eq1, _and(as_[2], _not(bs_[2]))))),
+        )
+
+    a3 = [["var", "x0"], ["var", "x1"], ["var", "x2"]]
+    b3 = [["var", "x3"], ["var", "x4"], ["var", "x5"]]
+    expr = {"kind": "expr", "body": _xor(_gt3(a3, b3), _gt3(a3, [_not(x) for x in b3]))}
+    net = {
+        "inputs": vs,
+        "nodes": [
+            {"id": "h0", "in": vs, "w": [4, 2, 1, -4, -2, -1], "t": 1},
+            {"id": "h1", "in": vs, "w": [4, 2, 1, 4, 2, 1], "t": 8},
+            {"id": "g0", "in": ["h0", "h1"], "w": [1, 1], "t": 1},
+            {"id": "g1", "in": ["h0", "h1"], "w": [1, 1], "t": 2},
+            {"id": "out", "in": ["g0", "g1"], "w": [1, -1], "t": 1},
+        ],
+        "output": "out",
+    }
+    status, lrat_steps, _ = sat.prove_tnet_equivalence_lrat(net, expr, vs, pb=True)
+    assert status == "unsat"
+    r, _ = lean_bridge.verify_threshold_net_equiv(
+        net, expr, vs, lrat_steps=lrat_steps, name="t_tnet_n6_2h_cmp_xor", native=False, pb=True
+    )
+    assert r.ok and set(r.axioms) <= set(lean_bridge.ALLOWED_AXIOMS)
+
+
+def test_tnet_lean_n8_one_hidden_layer_kernel_decide():
+    from cerp import sat
+
+    vs = [f"x{i}" for i in range(8)]
+    _iff = lambda a, b: ["not", ["xor", a, b]]
+    expr = {
+        "kind": "expr",
+        "body": [
+            "and",
+            ["and", _iff(["var", "x0"], ["var", "x4"]), _iff(["var", "x1"], ["var", "x5"])],
+            ["and", _iff(["var", "x2"], ["var", "x6"]), _iff(["var", "x3"], ["var", "x7"])],
+        ],
+    }
+    net = {
+        "inputs": vs,
+        "nodes": [
+            {"id": "h0", "in": vs, "w": [8, 4, 2, 1, -8, -4, -2, -1], "t": 0},
+            {"id": "h1", "in": vs, "w": [8, 4, 2, 1, -8, -4, -2, -1], "t": 1},
+            {"id": "out", "in": ["h0", "h1"], "w": [1, -1], "t": 1},
+        ],
+        "output": "out",
+    }
+    status, lrat_steps, _ = sat.prove_tnet_equivalence_lrat(net, expr, vs, pb=True)
+    assert status == "unsat"
+    r, _ = lean_bridge.verify_threshold_net_equiv(
+        net, expr, vs, lrat_steps=lrat_steps, name="t_tnet_n8_1h_eq4", native=False, pb=True
+    )
+    assert r.ok and set(r.axioms) <= set(lean_bridge.ALLOWED_AXIOMS)
