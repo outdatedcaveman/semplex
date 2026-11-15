@@ -81,7 +81,7 @@ Progress counts a closed gap as 1 and a partial one as ½. It measures the gap l
 
 ### Spike 48: Does the pull toward the minimum circuit hold at 8 and 10 inputs?
 
-2026-11-15 · commit `pending` · overall **NEITHER** · report `experiments/SPIKE_48_REPORT.md` · claims P172
+2026-11-15 · commit `24f68c2` · overall **NEITHER** · report `experiments/SPIKE_48_REPORT.md` · claims P172
 
 | Hypothesis | Verdict | Measured | Criterion |
 |---|---|---|---|
