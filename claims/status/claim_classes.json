@@ -20,16 +20,16 @@
   "claims": 6
  },
  {
+  "class": "Refuted",
+  "claims": 5
+ },
+ {
   "class": "Conjecture",
   "claims": 5
  },
  {
   "class": "Method note",
   "claims": 5
- },
- {
-  "class": "Refuted",
-  "claims": 4
  },
  {
   "class": "Computed",

@@ -79,7 +79,7 @@
    "title": "Mechanism: why feature learning finds small circuits",
    "status": "OPEN",
    "leverage": "HIGH",
-   "have": "Correlation (73–81%), one causal arm (lazy regime moves nets back to the kernel), and timing (kernel first, Occam from step ~30).",
+   "have": "Correlation (73–81%), one causal arm (lazy regime moves nets back to the kernel), and timing (kernel first, Occam from step ~30). Spike 47 removes one candidate mechanism: the representation does not become the minimum circuit.",
    "claims": [
     "P129",
     "P152"
@@ -299,16 +299,17 @@
    "id": "A9",
    "pillar": "Theory",
    "serves": "E2",
-   "title": "Meaning as the canonical quotient",
+   "title": "What the hidden layer represents",
    "status": "OPEN",
    "leverage": "HIGH",
-   "have": "Exact frames and minimal determining sets (THEORY §2). Gemini's exploratory Spike 37: 86–89% of units are members or coarsenings of minimal determining sets. Belief-state geometry is established for sequence models (Shai et al. 2024). Prior art (P165): the canonical quotient as *the* minimal sufficient representation is already established (Sevetlidis 2606.04045; Shalizi & Crutchfield), including bottleneck experiments.",
+   "have": "Ruled out (Spike 47): the layer does not collapse onto a minimum circuit's cells (0.08% of nets) nor onto the class. Minimum circuits are over-represented 700-fold but explain only 56% of the variance; the layer uses more than two directions. Prior art covers the canonical quotient itself.",
    "claims": [
-    "P132"
+    "P132",
+    "P171"
    ],
-   "missing": "What is not in the prior work: the dynamics (which partition a trained hidden layer converges to, and when) and the link to certified minimum circuits. A pre-registered test of that.",
-   "closes_when": "Pre-registered at n = 5, 6: decodability of the canonical class from hidden activations ≥ 0.9, and convergence to one minimum-circuit partition in ≥ 70% of runs, or the reverse reported.",
-   "next": "Spike 47 (next)"
+   "missing": "A positive account: how many hyperplanes the layer effectively uses and whether that number falls toward the minimum with weight decay, training time or width.",
+   "closes_when": "Pre-registered dose–response: the effective number of hyperplanes is predicted within ±1 from weight decay and width on fresh targets, or shown not to depend on them.",
+   "next": "Unscheduled; decide against Spike 48 (scale)"
   },
   {
    "id": "A10",
@@ -324,7 +325,7 @@
    ],
    "missing": "Whether training's choice among orbits follows the Curie law on the full census, and uniqueness up to symmetry proved in Lean for cost-1 functions.",
    "closes_when": "Pre-registered: orbit chosen by training predicted from orbit size on the census; Lean uniqueness for cost 1.",
-   "next": "Spike 47 reports the one-orbit vs several-orbit split; Lean part for Gemini"
+   "next": "Spike 47 found less collapse for one-orbit targets (exploratory; confounded by the number of candidate circuits)"
   },
   {
    "id": "D3",

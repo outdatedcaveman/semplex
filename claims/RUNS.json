@@ -195,6 +195,51 @@
     "P158",
     "P159"
    ]
+  },
+  {
+   "spike": "47",
+   "date": "2026-11-15",
+   "commit": "pending",
+   "question": "Does the hidden layer collapse onto the cells of a minimum circuit? (C21)",
+   "overall": "BROKEN",
+   "verdicts": [
+    {
+     "id": "H47.1",
+     "verdict": "BROKEN",
+     "measured": "0.08% of nets have CR_min ≥ 0.90 (median 0.56)",
+     "bar": "held if ≥ 70% of nets; broken if < 40%"
+    },
+    {
+     "id": "H47.2",
+     "verdict": "BROKEN",
+     "measured": "top partition is a minimum circuit in 5.9% of nets (chance 0.009%)",
+     "bar": "held if ≥ 60%; broken if < 30%"
+    },
+    {
+     "id": "H47.3",
+     "verdict": "NEITHER",
+     "measured": "median CR_min rises +0.035 from step 100 to 3,000",
+     "bar": "held if ≥ +0.10; broken if ≤ +0.02"
+    }
+   ],
+   "learned": "A width-8 hidden layer does not reduce to a minimum circuit: the best one explains 56% of the representation, and even the best two-hyperplane partition of any kind explains 73%. Minimum circuits are strongly over-represented but sit inside a richer representation. The function-level pull toward the minimum circuit does not come from the representation becoming that circuit.",
+   "gaps_moved": [
+    {
+     "gap": "A9",
+     "from": "OPEN",
+     "to": "OPEN",
+     "why": "One account ruled out; the question becomes how many directions the layer uses"
+    },
+    {
+     "gap": "A3",
+     "from": "OPEN",
+     "to": "OPEN",
+     "why": "One candidate mechanism removed"
+    }
+   ],
+   "claims": [
+    "P171"
+   ]
   }
  ]
 }

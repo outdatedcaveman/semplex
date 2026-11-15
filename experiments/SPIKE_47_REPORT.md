@@ -1,6 +1,6 @@
 # Spike 47: Does the hidden layer collapse onto the cells of a minimum circuit?
 
-**Date:** 2026-11-15 · **Status:** pre-registered (no runs yet) · **Follows:** Spike 36 (C19′ on clean targets) and Gemini's census G9 (all minimum circuits of every 4-input function, with their symmetry orbits). **Gaps:** A9 (what the hidden layer represents), A3 (mechanism), A10 (identifiability). **Direction:** R1 in `charter/PRIOR_ART.md`, restricted to what prior work does not cover.
+**Date:** 2026-11-15 · **Status:** complete (pre-registered in the merge commit before training; results below) · **Follows:** Spike 36 (C19′ on clean targets) and Gemini's census G9 (all minimum circuits of every 4-input function, with their symmetry orbits). **Gaps:** A9 (what the hidden layer represents), A3 (mechanism), A10 (identifiability). **Direction:** R1 in `charter/PRIOR_ART.md`, restricted to what prior work does not cover.
 
 ## Idea
 
@@ -48,4 +48,33 @@ python -m experiments.spike47 analyse
 
 ## Results
 
-(To be filled after the runs.)
+`experiments/results/spike47.json`; per-net rows in `spike47_raw/rows.json`. All 1,280 nets fit. My independent enumeration of minimum circuits agrees with G9's count for all 128 targets, so both guards pass.
+
+| Measure (step 3,000, contribution-weighted representation) | Value |
+|---|---|
+| Nets with CR_min ≥ 0.90 | 0.08% (1 of 1,280) |
+| Median CR_min (best minimum circuit) | 0.555 |
+| Median CR_best (best of all 441,330 two-hyperplane partitions) | 0.732 |
+| Median CR_class (two cells by f) | 0.242 |
+| Top-ranked partition is a minimum circuit of the target | 5.9% of nets (chance 0.0086%) |
+| Median rank of the best minimum circuit among all partitions | 1302 of 441,330 |
+| Median CR_min at steps 30 / 100 / 300 / 1,000 / 3,000 | 0.509 / 0.520 / 0.524 / 0.537 / 0.555 |
+
+### Verdicts
+
+- **H47.1: broken.** The hidden layer is a function of a minimum circuit's cell (CR_min ≥ 0.90) in 0.08% of nets; the bar for "broken" was below 40%.
+- **H47.2: broken.** The best two-hyperplane partition is a minimum circuit of the target in 5.9% of nets (bar for "broken": below 30%). That is about 700 times chance, so minimum circuits are over-represented, but they are not what the layer settles on.
+- **H47.3: neither.** CR_min rises by +0.035 from step 100 to step 3,000 (bars: ≥ +0.10 held, ≤ +0.02 broken).
+- **C21: refuted.**
+
+### Reading
+
+1. **A width-8 hidden layer does not reduce to a minimum circuit.** The best minimum circuit explains 56% of the representation's variance. Even the best of all two-hyperplane partitions explains only 73%: the layer uses more than two directions.
+2. **It does not collapse to the class either** (24%), as the argument in the Idea section requires.
+3. **Minimum circuits are present but not dominant.** Their median rank is about 1,300 of 441,330 (top 0.3%). This agrees with Spikes 9 and 12: a minimum circuit sits inside the net as a core, and the remaining units do not vanish under this training recipe.
+4. **Exploratory.** Targets with a single orbit of minimum circuits show *less* collapse (median 0.41) than targets with several (0.63), and the top partition is never a minimum circuit for them (0 of 500 nets, against 9.7%). More minimum circuits to choose from means a better best match, so this split mostly reflects the number of candidates, not identifiability.
+5. Raw activations give the same picture (median 0.52; 6.0% top-is-minimum).
+
+**What this rules out.** "The hidden layer represents the coarsest realizable sufficient partition" is false for over-wide nets under weight decay 0.03 and 3,000 steps. Function-level agreement with the minimum circuit on held-out inputs (C19′) therefore does not come from the representation becoming that circuit.
+
+**Next.** The open question for gap A9 is the opposite one: how many hyperplanes does the layer effectively use, and does that number fall toward the minimum as weight decay, training time or width change? That is a dose–response, not a yes/no collapse.

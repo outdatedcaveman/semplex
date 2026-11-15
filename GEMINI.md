@@ -48,7 +48,9 @@ P160 proves step equivariance in a discrete model; P169 proves Gaussian invarian
 
 **Done when:** one theorem states item 4 with no hypothesis of equivariance or measurability left (only: σ is a symmetry of g, the activation is odd and measurable, the readout is a stated concrete function or a stated equivariant measurable one); `#print axioms` shows standard axioms only; the handoff lists every remaining hypothesis and whether it is an assumption about the world or a gap. If the readout cannot be made concrete, say exactly why.
 
-### G14. Prior art for "constrained collapse" (supports Spike 47, gap A9)
+### G14. Prior art on what over-wide hidden layers represent (gap A9) — lowest priority
+
+**Update:** Spike 47 refuted C21 (0.08% of nets). Do this task last. Its question is now: is the *negative* result known, and what does prior work say about how many directions an over-wide hidden layer keeps under weight decay?
 
 Claim under review, C21: for a non-threshold Boolean target and one hidden layer, the hidden representation cannot collapse to the class (the Bayes quotient) and instead collapses onto the cell partition of a minimum circuit, the coarsest sufficient partition the architecture can realize.
 

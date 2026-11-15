@@ -124,5 +124,11 @@
   "title": "under label noise nets follow a simpler circuit plus memorized exceptions",
   "state": "Not supported",
   "note": "NOT SUPPORTED, Spike 46; not refuted"
+ },
+ {
+  "id": "C21",
+  "title": "constrained collapse",
+  "state": "Refuted",
+  "note": "REFUTED by Spike 47"
  }
 ]

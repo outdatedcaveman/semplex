@@ -23,10 +23,10 @@ Progress counts a closed gap as 1 and a partial one as ½. It measures the gap l
 | **A3** Mechanism: why feature learning finds small circuits | HIGH | OPEN | A derivation. The unit-level selection law (volume × information tilt) is not shown to produce the Occam pull (C18 not supported). | A stated law that predicts the Occam-sides fraction or S(t) from measurable quantities, confirmed in a prospective test. | After A8: the mechanism must also explain why noise removes the pull |
 | **A6** Scale: n ≥ 8 | HIGH | OPEN | The Spike 36 protocol run at n = 8. | The Spike 36 protocol at n ≥ 8 with certified or bounded Occam completions. | Unblocked for two-unit targets: Spike 48 candidate |
 | **A8** Label noise: where the Occam pull breaks | HIGH | PARTIAL | An account of what noisy-label nets do on held-out inputs: they agree with their best circuit only 0.75 of the time, about as much as with the kernel. Untested: nets that are not forced to fit every label. | Pre-registered: with early stopping or stronger weight decay chosen without the test labels, the pull toward the clean rule's circuit returns to ≥ 0.65 at 5 and 8 flips; or a predictor agrees with noisy-label nets ≥ 0.85. | Unscheduled; lower priority than A9 |
-| **A9** Meaning as the canonical quotient | HIGH | OPEN | What is not in the prior work: the dynamics (which partition a trained hidden layer converges to, and when) and the link to certified minimum circuits. A pre-registered test of that. | Pre-registered at n = 5, 6: decodability of the canonical class from hidden activations ≥ 0.9, and convergence to one minimum-circuit partition in ≥ 70% of runs, or the reverse reported. | Spike 47 (next) |
+| **A9** What the hidden layer represents | HIGH | OPEN | A positive account: how many hyperplanes the layer effectively uses and whether that number falls toward the minimum with weight decay, training time or width. | Pre-registered dose–response: the effective number of hyperplanes is predicted within ±1 from weight decay and width on fresh targets, or shown not to depend on them. | Unscheduled; decide against Spike 48 (scale) |
 | **B2** Care-set compilation at scale | HIGH | PARTIAL | A stated convention for the weight bound in future spikes (use 16 or a certificate). Certified minimality at cost ≥ 5. | Every reported minimum cost carries a weight-independent certificate or its weight bound; cost-5 certificates at n = 8. | Convention adopted from Spike 48 on; cost 5 unscheduled |
 | **C1** Theorem 15 in Lean | HIGH | PARTIAL | The bridge between them: the scalar structure instantiated on ℝ, measurability of the GD and AdamW steps and of the readout, and AdamW's moment state. Until then the 20 dependent claims stay flagged. | One theorem in the Mathlib project states Theorem 15 for the concrete AdamW step on ℝⁿ with no equivariance or measurability hypothesis left. | Gemini G13 |
-| **A10** Identifiability of mechanisms | MEDIUM | PARTIAL | Whether training's choice among orbits follows the Curie law on the full census, and uniqueness up to symmetry proved in Lean for cost-1 functions. | Pre-registered: orbit chosen by training predicted from orbit size on the census; Lean uniqueness for cost 1. | Spike 47 reports the one-orbit vs several-orbit split; Lean part for Gemini |
+| **A10** Identifiability of mechanisms | MEDIUM | PARTIAL | Whether training's choice among orbits follows the Curie law on the full census, and uniqueness up to symmetry proved in Lean for cost-1 functions. | Pre-registered: orbit chosen by training predicted from orbit size on the census; Lean uniqueness for cost 1. | Spike 47 found less collapse for one-orbit targets (exploratory; confounded by the number of candidate circuits) |
 | **A4** One predictor for the net's held-out outputs | MEDIUM | OPEN | A single rule combining kernel and circuit cost that predicts each held-out output, and explains where nets beat Occam. | Pre-registered: per-input agreement with trained nets ≥ 0.93 at n = 6 on fresh tasks. | Unscheduled |
 | **A7** Depth on targets that need it | MEDIUM | PARTIAL | Targets that need three layers (e.g. parity5). | The Spike 44 protocol on depth-requiring targets. | Unscheduled |
 | **B3** Minimality certificates | MEDIUM | PARTIAL | Lower bounds for Ur-Compiler outputs. | Ur-Compiler outputs carry a certified lower bound. | Unscheduled |
@@ -44,12 +44,12 @@ Progress counts a closed gap as 1 and a partial one as ½. It measures the gap l
 | **A1** Other target classes | E1 | CLOSED | The Occam pull holds on three further clean classes at n = 6: cost-4 targets 0.72, symmetric functions 0.90, DNF 0.67 (Spike 45). The class where it weakens is characterized: label noise (0.58). | P128, P154 |
 | **A2** Real data: the theory currently fails there | E1 | OPEN | Pre-registered test on four real datasets (Spike 45): the Occam pull holds only on Wine (0.74); it is broken on Breast Cancer (0.29) and Diabetes (0.45). The kernel predicts the net better than Occam on 3 of 4, and beats the trained net on 3 of 4. Spike 46: the simpler-circuit predictor beats the kernel on Wine only. | P155, P156 |
 | **A8** Label noise: where the Occam pull breaks | E1 | PARTIAL | Dose–response measured (Spike 46): the pull is 0.83 with no flipped labels, 0.66 with 2 of 48, 0.57 with 5 or 8. The exact cost–error frontier is computed and certified. The 'one level simpler plus exceptions' predictor (C20′) is not supported. | P157, P158, P159 |
-| **A3** Mechanism: why feature learning finds small circuits | E2 | OPEN | Correlation (73–81%), one causal arm (lazy regime moves nets back to the kernel), and timing (kernel first, Occam from step ~30). | P129, P152 |
+| **A3** Mechanism: why feature learning finds small circuits | E2 | OPEN | Correlation (73–81%), one causal arm (lazy regime moves nets back to the kernel), and timing (kernel first, Occam from step ~30). Spike 47 removes one candidate mechanism: the representation does not become the minimum circuit. | P129, P152 |
 | **A4** One predictor for the net's held-out outputs | E1 | OPEN | Three separate predictors at n = 6: kernel 0.80 agreement, Occam 0.90; at n = 5 nets beat Occam on accuracy. | P126, P130 |
 | **A5** Two-phase timing replicated | E2 | PARTIAL | One cell (n = 6, tanh, width 8); the first-step criterion fell short (0.77 vs 0.80). | P152 |
 | **A6** Scale: n ≥ 8 | E3 | OPEN | Everything is at n ≤ 6. The compiler now handles care sets at n = 8 and 10 for two-unit targets (P163), which is the class Spike 36 used. | P129 |
 | **A7** Depth on targets that need it | E1 | PARTIAL | Depth adds no Occam pull when two layers can represent the target (H-K refuted). | P153 |
-| **A9** Meaning as the canonical quotient | E2 | OPEN | Exact frames and minimal determining sets (THEORY §2). Gemini's exploratory Spike 37: 86–89% of units are members or coarsenings of minimal determining sets. Belief-state geometry is established for sequence models (Shai et al. 2024). Prior art (P165): the canonical quotient as *the* minimal sufficient representation is already established (Sevetlidis 2606.04045; Shalizi & Crutchfield), including bottleneck experiments. | P132 |
+| **A9** What the hidden layer represents | E2 | OPEN | Ruled out (Spike 47): the layer does not collapse onto a minimum circuit's cells (0.08% of nets) nor onto the class. Minimum circuits are over-represented 700-fold but explain only 56% of the variance; the layer uses more than two directions. Prior art covers the canonical quotient itself. | P132, P171 |
 | **A10** Identifiability of mechanisms | E2 | PARTIAL | Census done (P167): at 4 inputs, 50 of 128 cost-3 classes have a single orbit of minimum circuits and no class of cost ≥ 4 does. So for most functions the function does not fix its mechanism. | P069, P167 |
 
 ### Compiler
@@ -78,6 +78,21 @@ Progress counts a closed gap as 1 and a partial one as ½. It measures the gap l
 | **D3** Prior-art reading queue | E4 | CLOSED | Gemini G7 worked through the queue and eight further areas: 53 works, 24 read in full, 9 metadata only (paywalled). Verdicts per claim are in `charter/PRIOR_ART.md`. | P165 |
 
 ## 4. Run reports, newest first
+
+### Spike 47: Does the hidden layer collapse onto the cells of a minimum circuit? (C21)
+
+2026-11-15 · commit `pending` · overall **BROKEN** · report `experiments/SPIKE_47_REPORT.md` · claims P171
+
+| Hypothesis | Verdict | Measured | Criterion |
+|---|---|---|---|
+| H47.1 | **BROKEN** | 0.08% of nets have CR_min ≥ 0.90 (median 0.56) | held if ≥ 70% of nets; broken if < 40% |
+| H47.2 | **BROKEN** | top partition is a minimum circuit in 5.9% of nets (chance 0.009%) | held if ≥ 60%; broken if < 30% |
+| H47.3 | **NEITHER** | median CR_min rises +0.035 from step 100 to 3,000 | held if ≥ +0.10; broken if ≤ +0.02 |
+
+**Learned.** A width-8 hidden layer does not reduce to a minimum circuit: the best one explains 56% of the representation, and even the best two-hyperplane partition of any kind explains 73%. Minimum circuits are strongly over-represented but sit inside a richer representation. The function-level pull toward the minimum circuit does not come from the representation becoming that circuit.
+
+- Gap A9: OPEN → OPEN. One account ruled out; the question becomes how many directions the layer uses.
+- Gap A3: OPEN → OPEN. One candidate mechanism removed.
 
 ### Spike 46: Under label noise, do nets follow a simpler circuit plus memorized exceptions? (C20′, exact cost–error frontier)
 
@@ -166,12 +181,13 @@ Progress counts a closed gap as 1 and a partial one as ½. It measures the gap l
 | C19 | Occam (minimum circuit cost) as the missing prior | Not supported | NOT SUPPORTED at n = 4, Spike 34 |
 | C19′ | feature learning as approximate minimum-circuit search | Partly | PARTLY SUPPORTED: holds and replicates on clean targets, fails on real data in Spike 45; Spike 36: departures from the kernel go toward Occam in 73–81% of cases in all 4 fresh cells; partly causal: widening toward the lazy regime raises kernel agreement +0.048, lowers Occam agreement −0.038 and lowers held-out accuracy −0.033 |
 | C20′ | under label noise nets follow a simpler circuit plus memorized exceptions | Not supported | NOT SUPPORTED, Spike 46; not refuted |
+| C21 | constrained collapse | Refuted | REFUTED by Spike 47 |
 
 ## 6. Ledger health
 
-- Claims: 170. Empirical: 90; Proved in Lean: 31; Exploratory: 14; Proved on paper: 11; Kernel-checked: 6; Conjecture: 5; Method note: 5; Refuted: 4; Computed: 4.
+- Claims: 171. Empirical: 90; Proved in Lean: 31; Exploratory: 14; Proved on paper: 11; Kernel-checked: 6; Refuted: 5; Conjecture: 5; Method note: 5; Computed: 4.
 - Problems: 0. Claims stated stronger than their support: 34.
-- Frozen spike files (rule 2): 108.
+- Frozen spike files (rule 2): 110.
 
 Weakest links (fixing one lifts every note that rests on it):
 

@@ -30,7 +30,7 @@ Each node is a spike. A child builds on what its parent established; siblings ar
               │                           ├ 44  depth: do three-layer nets side with Occam more? (H-K)   frozen: H-K refuted at matched params
               │                           └ 45  external validity: 4 other target classes + 4 real datasets   frozen: holds on clean classes; refuted on real data
               │                             └ 46  exact cost–error frontier under label noise (C20′)   frozen: dose–response held; C20′ not supported
-              │                           ├ 47  constrained collapse: hidden layer onto a minimum circuit's cells (C21; uses census G9)   pre-registered
+              │                           ├ 47  constrained collapse: hidden layer onto a minimum circuit's cells (C21; uses census G9)   frozen: C21 refuted
               ├ 23  distance-matched choice test (from 19 arm 1)     frozen: symmetry and information both steer single steps
               ├ 25  less strict CSP at low labels (from 19 arm 2)    frozen: certificates fail at power; anisotropic smoothness
               └ 26  lawful completion of algebra; Curie transfer (C8(c), from 14 and 20)   frozen: Curie transfers (β = −1.85); lawful 9.6× chance

@@ -110,5 +110,29 @@
   "verdict": "NEITHER",
   "measured": "accuracy of simpler minus exact: +0.042 at 5 flips, +0.014 at 8",
   "bar": "held if ≥ +0.02 at both; broken if ≤ 0 at both"
+ },
+ {
+  "key": "47:H47.1",
+  "spike": "47",
+  "id": "H47.1",
+  "verdict": "BROKEN",
+  "measured": "0.08% of nets have CR_min ≥ 0.90 (median 0.56)",
+  "bar": "held if ≥ 70% of nets; broken if < 40%"
+ },
+ {
+  "key": "47:H47.2",
+  "spike": "47",
+  "id": "H47.2",
+  "verdict": "BROKEN",
+  "measured": "top partition is a minimum circuit in 5.9% of nets (chance 0.009%)",
+  "bar": "held if ≥ 60%; broken if < 30%"
+ },
+ {
+  "key": "47:H47.3",
+  "spike": "47",
+  "id": "H47.3",
+  "verdict": "NEITHER",
+  "measured": "median CR_min rises +0.035 from step 100 to 3,000",
+  "bar": "held if ≥ +0.10; broken if ≤ +0.02"
  }
 ]
