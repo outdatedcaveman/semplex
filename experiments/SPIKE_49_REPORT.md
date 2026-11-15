@@ -50,6 +50,8 @@ Anything else is *neither*. C22 is supported if H49.1, H49.3 and H49.4 hold; ref
 
 **Scope stated in advance.** "Every minimum circuit" means every layered threshold net of the minimum cost with |w| ≤ 4. P170 found that raising the cap to 16 changes the minimum cost in about 2% of such tasks.
 
+**Deviation recorded before any verdict (2026-11-15).** The cell `n8_s144` has only 112 held-out inputs, fewer than the 120 the design samples, and its forcing run stopped with an error before producing any output. The code now samples min(120, number held out), so that cell uses all 112. No other cell is affected and no criterion changed.
+
 ## Commands
 
 ```

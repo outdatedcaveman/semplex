@@ -43,7 +43,7 @@ def ev(art, P, xs):
 def run_forced(cell):
     n, seen, _ = CELLS[cell]; K = 1 << n; P = S36.pts(n); ci = list(CELLS).index(cell); rng = np.random.default_rng(4_990 + ci); res = []
     for ti, (f, care) in enumerate(tasks(cell)):
-        held = [x for x in range(K) if not (care >> x) & 1]; q = sorted(int(x) for x in rng.choice(held, NQ, replace=False))
+        held = [x for x in range(K) if not (care >> x) & 1]; q = sorted(int(x) for x in rng.choice(held, min(NQ, len(held)), replace=False))   # n8_s144 has only 112 held-out inputs
         r = netsolve.compile_partial(f, n, care, W=4, time_limit=60)
         if r["status"] != "sat":
             res.append({"cost": None, "q": q}); continue
