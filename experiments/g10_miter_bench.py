@@ -13,6 +13,7 @@ from __future__ import annotations
 import json
 import os
 import pathlib
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -254,6 +255,8 @@ def _profile_lean_stages(net, expr_d, vs, lrat_steps, timeout_s=TIMEOUT_SEC):
     header = "\n".join([
         "import Cerp",
         "open Cerp",
+        "set_option maxRecDepth 200000",
+        "set_option maxHeartbeats 0",
         f"def tns : List TNode := {tns_s}",
         f"def eSpec : Expr := {expr_s}",
         f"def Ls : List (Clause × List Nat) := {Ls}",
@@ -268,6 +271,9 @@ def _profile_lean_stages(net, expr_d, vs, lrat_steps, timeout_s=TIMEOUT_SEC):
     lean_bin = lean_bridge.lean_binary()
     with tempfile.TemporaryDirectory() as tmp:
         d = pathlib.Path(tmp)
+        tc = lean_bridge.LEAN_DIR / "lean-toolchain"
+        if tc.exists():
+            shutil.copyfile(tc, d / "lean-toolchain")
         env = {**os.environ, "LEAN_PATH": str(lean_bridge._library(d))}
         for sname, src in stages.items():
             f = d / f"{sname}.lean"
@@ -290,7 +296,22 @@ def main():
 
     lean_bridge._run = _capped_run
 
+    out_path = ROOT / "experiments" / "results" / "g10_miter_timings.json"
+    profile_only = "--profile-only" in sys.argv[1:]
     benchmarks = _build_benchmarks()
+
+    if profile_only and out_path.exists():
+        data = json.loads(out_path.read_text(encoding="utf-8"))
+        by_name = {b["name"]: b for b in benchmarks}
+        for rec in data["results"]:
+            item = by_name.get(rec["name"])
+            if item and item["profile"]:
+                _, lrat_steps, _ = sat.prove_tnet_equivalence_lrat(item["net"], item["expr"], item["vars"], pb=True)
+                rec["kernel_breakdown"] = _profile_lean_stages(item["net"], item["expr"], item["vars"], lrat_steps)
+                print(f"profile {rec['name']}: {rec['kernel_breakdown']}", flush=True)
+        out_path.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
+        print(f"Updated kernel_breakdown in {out_path}")
+        return
     results = []
     for item in benchmarks:
         name = item["name"]
