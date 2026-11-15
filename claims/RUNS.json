@@ -199,7 +199,7 @@
   {
    "spike": "47",
    "date": "2026-11-15",
-   "commit": "pending",
+   "commit": "72078bc",
    "question": "Does the hidden layer collapse onto the cells of a minimum circuit? (C21)",
    "overall": "BROKEN",
    "verdicts": [

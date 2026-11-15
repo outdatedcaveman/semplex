@@ -81,7 +81,7 @@ Progress counts a closed gap as 1 and a partial one as ½. It measures the gap l
 
 ### Spike 47: Does the hidden layer collapse onto the cells of a minimum circuit? (C21)
 
-2026-11-15 · commit `pending` · overall **BROKEN** · report `experiments/SPIKE_47_REPORT.md` · claims P171
+2026-11-15 · commit `72078bc` · overall **BROKEN** · report `experiments/SPIKE_47_REPORT.md` · claims P171
 
 | Hypothesis | Verdict | Measured | Criterion |
 |---|---|---|---|
