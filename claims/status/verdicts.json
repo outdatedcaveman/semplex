@@ -190,5 +190,37 @@
   "verdict": "NEITHER",
   "measured": "net minus kernel adherence: +0.029, +0.059, +0.119, +0.020",
   "bar": "held if ≥ +0.05 in every cell; broken if ≤ 0 in any"
+ },
+ {
+  "key": "50:H50.1",
+  "spike": "50",
+  "id": "H50.1",
+  "verdict": "NEITHER",
+  "measured": "agreement with a single net 0.908, 0.933, 0.908",
+  "bar": "held if ≥ 0.93 in every cell; broken if < 0.88 in any"
+ },
+ {
+  "key": "50:H50.2",
+  "spike": "50",
+  "id": "H50.2",
+  "verdict": "NEITHER",
+  "measured": "minus kernel: +0.051, +0.084, +0.028",
+  "bar": "held if ≥ +0.03 in every cell; broken if ≤ 0 in any"
+ },
+ {
+  "key": "50:H50.3",
+  "spike": "50",
+  "id": "H50.3",
+  "verdict": "HELD",
+  "measured": "Spearman 0.770, 0.762, 0.794",
+  "bar": "held if ≥ 0.40 in every cell; broken if ≤ 0.10 in any"
+ },
+ {
+  "key": "50:H50.4",
+  "spike": "50",
+  "id": "H50.4",
+  "verdict": "HELD",
+  "measured": "seed split 0.15–0.18 where circuits split evenly vs 0.014–0.019 where they agree",
+  "bar": "held if difference ≥ 0.10 in every cell; broken if ≤ 0 in any"
  }
 ]

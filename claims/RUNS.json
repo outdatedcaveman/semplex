@@ -330,6 +330,51 @@
    "claims": [
     "P173"
    ]
+  },
+  {
+   "spike": "50",
+   "date": "2026-11-16",
+   "commit": "pending",
+   "question": "Does the share of minimum circuits predict the net on all held-out inputs? (C23, graded consensus)",
+   "overall": "NEITHER",
+   "verdicts": [
+    {
+     "id": "H50.1",
+     "verdict": "NEITHER",
+     "measured": "agreement with a single net 0.908, 0.933, 0.908",
+     "bar": "held if ≥ 0.93 in every cell; broken if < 0.88 in any"
+    },
+    {
+     "id": "H50.2",
+     "verdict": "NEITHER",
+     "measured": "minus kernel: +0.051, +0.084, +0.028",
+     "bar": "held if ≥ +0.03 in every cell; broken if ≤ 0 in any"
+    },
+    {
+     "id": "H50.3",
+     "verdict": "HELD",
+     "measured": "Spearman 0.770, 0.762, 0.794",
+     "bar": "held if ≥ 0.40 in every cell; broken if ≤ 0.10 in any"
+    },
+    {
+     "id": "H50.4",
+     "verdict": "HELD",
+     "measured": "seed split 0.15–0.18 where circuits split evenly vs 0.014–0.019 where they agree",
+     "bar": "held if difference ≥ 0.10 in every cell; broken if ≤ 0 in any"
+    }
+   ],
+   "learned": "Where minimum circuits disagree is where independently trained nets disagree: training noise resolves the ambiguity the minimum circuits leave. The majority of minimum circuits predicts a single net at 0.91–0.93 and generalizes better than any one net.",
+   "gaps_moved": [
+    {
+     "gap": "A4",
+     "from": "PARTIAL",
+     "to": "PARTIAL",
+     "why": "Graded law holds; the single-net 0.93 bar is met in one of three cells"
+    }
+   ],
+   "claims": [
+    "P174"
+   ]
   }
  ]
 }

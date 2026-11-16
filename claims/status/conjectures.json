@@ -136,5 +136,11 @@
   "title": "consensus law",
   "state": "Partly",
   "note": "PARTLY SUPPORTED, Spike 49"
+ },
+ {
+  "id": "C23",
+  "title": "graded consensus",
+  "state": "Partly",
+  "note": "PARTLY SUPPORTED, Spike 50"
  }
 ]

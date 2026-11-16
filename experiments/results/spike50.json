@@ -1,0 +1,84 @@
+{
+ "cells": {
+  "n8_s64": {
+   "n": 8,
+   "seen": 64,
+   "compiled": 1.0,
+   "mean_samples": 20.0,
+   "fit": 1.0,
+   "agree_graded": 0.9082864583333333,
+   "agree_kernel": 0.8574947916666666,
+   "n_mixed_inputs": 8003,
+   "rho": 0.7697579476460472,
+   "split_seed_rate_mid": 0.1521770164168451,
+   "split_seed_rate_ext": 0.014405644369027418,
+   "n_mid": 1401,
+   "bal_graded": 0.8891629986603804,
+   "bal_kernel": 0.8257289618817307,
+   "bal_net_seed0": 0.8782005167104507,
+   "guard_ok": true
+  },
+  "n8_s96": {
+   "n": 8,
+   "seen": 96,
+   "compiled": 1.0,
+   "mean_samples": 20.0,
+   "fit": 1.0,
+   "agree_graded": 0.93284375,
+   "agree_kernel": 0.84888125,
+   "n_mixed_inputs": 3865,
+   "rho": 0.762412844585749,
+   "split_seed_rate_mid": 0.17945402298850577,
+   "split_seed_rate_ext": 0.01934899052327977,
+   "n_mid": 696,
+   "bal_graded": 0.9447831624359888,
+   "bal_kernel": 0.8326780858241106,
+   "bal_net_seed0": 0.916852303720643,
+   "guard_ok": true
+  },
+  "n10_s80": {
+   "n": 10,
+   "seen": 80,
+   "compiled": 1.0,
+   "mean_samples": 20.0,
+   "fit": 1.0,
+   "agree_graded": 0.9079036016949152,
+   "agree_kernel": 0.880051906779661,
+   "n_mixed_inputs": 41795,
+   "rho": 0.793633307058435,
+   "split_seed_rate_mid": 0.17853868967376652,
+   "split_seed_rate_ext": 0.015405379716756961,
+   "n_mid": 7418,
+   "bal_graded": 0.9034775998943505,
+   "bal_kernel": 0.8421421469347934,
+   "bal_net_seed0": 0.8776989519767562,
+   "guard_ok": true
+  }
+ },
+ "H50.1": "NEITHER",
+ "H50.2": "NEITHER",
+ "H50.3": "HELD",
+ "H50.4": "HELD",
+ "measured": {
+  "agree_graded": {
+   "n8_s64": 0.9082864583333333,
+   "n8_s96": 0.93284375,
+   "n10_s80": 0.9079036016949152
+  },
+  "graded_minus_kernel": {
+   "n8_s64": 0.05079166666666668,
+   "n8_s96": 0.08396249999999994,
+   "n10_s80": 0.027851694915254188
+  },
+  "rho": {
+   "n8_s64": 0.7697579476460472,
+   "n8_s96": 0.762412844585749,
+   "n10_s80": 0.793633307058435
+  },
+  "split_mid_minus_ext": {
+   "n8_s64": 0.1377713720478177,
+   "n8_s96": 0.160105032465226,
+   "n10_s80": 0.16313330995700956
+  }
+ }
+}
