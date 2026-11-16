@@ -40,5 +40,11 @@
   "notes": 1,
   "status": "REFUTED (C19′ on real data; pre-registered, H45.2 and H45.3 broken)",
   "statement": "The Occam pull does not hold on real data (C19′ REFUTED outside clean targets): on four real datasets binarized to 6 fea"
+ },
+ {
+  "claim": "P175",
+  "notes": 1,
+  "status": "~ φ iff every least-cost function agreeing with D satisfies φ\") is a rational nonmonotonic consequence relation: it satisfies Cut, Cautious Monotony and Rational Monotony and fails classical Monotony. Exhaustively at n = 3 over 6,561 partial labellings: 0 violations of the three rules, 3,888 of 14,816 Monotony instances fail",
+  "statement": "Minimum-circuit forcing (\"D"
  }
 ]
