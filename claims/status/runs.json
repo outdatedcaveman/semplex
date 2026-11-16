@@ -92,7 +92,7 @@
  {
   "spike": "52",
   "date": "2026-11-16",
-  "commit": "pending",
+  "commit": "e33c8d7",
   "question": "What is the canonical form of a moral verdict concept? (Moral Machine pilot)",
   "overall": "NO VERDICT",
   "learned": "The machinery runs on 5.45 million real moral judgments and returns definite answers: the population's verdict over the observed situations is a single weighted rule, the same in three cultural clusters, which agree on 87.5% of situations. The hypotheses could not be tested because the experiment's design leaves only 24 feature combinations observed.",

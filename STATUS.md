@@ -81,7 +81,7 @@ Progress counts a closed gap as 1 and a partial one as ½. It measures the gap l
 
 ### Spike 52: What is the canonical form of a moral verdict concept? (Moral Machine pilot)
 
-2026-11-16 · commit `pending` · overall **NO VERDICT** · report `experiments/SPIKE_52_REPORT.md` · claims P178
+2026-11-16 · commit `e33c8d7` · overall **NO VERDICT** · report `experiments/SPIKE_52_REPORT.md` · claims P178
 
 | Hypothesis | Verdict | Measured | Criterion |
 |---|---|---|---|
