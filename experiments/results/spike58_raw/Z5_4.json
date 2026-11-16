@@ -1,0 +1,19 @@
+{
+ "automaton": "Z5",
+ "seed": 5804,
+ "first99": 100,
+ "fit": 1.0,
+ "probe_acc": 1.0,
+ "determinism": 1.0,
+ "intervene_diff": 1.0,
+ "intervene_same": 1.0,
+ "char_scores": {
+  "k=1": 0.8898984166292194,
+  "k=2": -0.8263342440128466
+ },
+ "char_best": "k=1",
+ "char_hit": true,
+ "h1_top": 0.2118673324584961,
+ "h1_second": 0.17895042896270752,
+ "h1_ratio": 1.1839442558846747
+}
