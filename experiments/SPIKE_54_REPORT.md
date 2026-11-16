@@ -1,6 +1,6 @@
 # Spike 54: Do semantic product concepts compose as tensor products in model activations?
 
-**Date:** 2026-11-16 · **Status:** pre-registered (no analysis run) · **Follows:** Spike 53, which refuted C29's tensor row for *lexical* composition (P180: in static embeddings, month × form and weekday × form are additive). **Conjecture:** C29, product row.
+**Date:** 2026-11-16 · **Status:** complete (pre-registered in 7d45a9b; results below) · **Follows:** Spike 53, which refuted C29's tensor row for *lexical* composition (P180: in static embeddings, month × form and weekday × form are additive). **Conjecture:** C29, product row.
 
 ## Question
 
@@ -70,4 +70,44 @@ python -m experiments.spike54 analyse
 
 ## Results
 
-(Not run.)
+`experiments/results/spike54.json`; raw API responses in `spike54_raw/`. All 21 cases (7 sources × 3 families) passed the token rule.
+
+**Changes before any run, recorded:**
+- the cache key was made deterministic;
+- requests were split into batches of 4 texts, the API's maximum (the first attempt returned "Batch size 28 exceeds maximum of 4").
+
+Neither change touches a measurement.
+
+| ID | Measured | Criterion | Verdict |
+|---|---|---|---|
+| H54.1 | additive part cyclic (p < 0.01) in 52.4% of cases | ≥ 75% held, < 50% broken | **NEITHER** |
+| H54.2 | interaction carries the cycle (p < 0.01) in 33.3% of cases | ≥ 50% held, ≤ 20% broken | **NEITHER** |
+| H54.3 | median relative interaction 0.054 | ≥ 0.643 held, ≤ 0.543 broken | **BROKEN** |
+
+**By family:**
+
+| Family | Additive cyclic | Interaction cyclic | Median relative interaction |
+|---|---|---|---|
+| month × part | 7/7 | 4/7 | 0.05 |
+| weekday × time | 2/7 | 2/7 | 0.07 |
+| weekday × direction | 2/7 | 1/7 | 0.06 |
+
+At p < 0.05 the interaction carries the cycle in 71% of cases (5% expected by chance). In every case the additive part's lowest Fourier mode is the largest.
+
+**Exploratory decomposition** (computed after the verdicts; not a criterion). These are median shares of the representation's variance at the last token:
+
+| Family | Cyclic factor | Other factor | Interaction |
+|---|---|---|---|
+| month × part (last word = month) | 0.93 | 0.05 | 0.03 |
+| weekday × direction (last word = weekday) | 0.76 | 0.22 | 0.03 |
+| weekday × time (last word = time) | 0.03 | 0.93 | 0.05 |
+
+**Reading:**
+- In the published sparse codes, the representation of a two-word product at its last token is dominated by **the last word itself**. The other word enters mostly as an additive term, and the interaction is small, so composition is again closer to a direct sum than a tensor product.
+- The tensor component is not absent, though:
+  - it carries the cyclic factor's structure in 71% of cases at p < 0.05;
+  - where the cyclic word is *not* the last word (weekday × time), the weekday's contribution at "morning" is as large in the interaction as in the additive part (median ratio 1.46).
+- So when the weekday is not the token being represented, the model represents it partly through conjunction.
+- **H54.3 is broken partly by construction.** The registered measure divides by total variance, which the last word dominates. A tensor-dominated composition would need the conjunction to outweigh the word itself, and it does not.
+
+**For C29:** the product row stays refuted as a description of how these codes compose: mainly a sum, with a weak, structured tensor residue. Spike 53 (lexical) and Spike 54 (contextual, sparse codes) agree on this. The circle row holds again in context: in all 21 cases the lowest Fourier mode of the additive part is the largest.

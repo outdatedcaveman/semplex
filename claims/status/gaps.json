@@ -286,11 +286,11 @@
   "title": "Concept geometry from symmetry (C29) across models and brains",
   "status": "OPEN",
   "leverage": "HIGH",
-  "have": "Spike 53: circles for cyclic families in 14 models' static weights; category block structure and shared brain–model geometry (THINGS-fMRI, 3 subjects); the tensor-product row refuted for lexical composition (additive instead); shared structure finer than the 17-category skeleton.",
-  "missing": "Activations (contextual representations) and semantic product concepts (weekday × time of day), which need multi-token phrases; a symmetry group that accounts for the residual brain–model agreement; C30 (justice as person-permutation invariance) untested.",
+  "have": "Spike 53: circles for cyclic families in 14 models' static weights; category block structure and shared brain–model geometry (THINGS-fMRI, 3 subjects); the tensor-product row refuted for lexical composition (additive instead); shared structure finer than the 17-category skeleton. Spike 54: semantic products in Neuronpedia sparse codes are also mainly additive (tensor residue carries the cycle at p < 0.05 in 71%). Spike 55: fairness verdict readable in only 2 of 7 sources, so C30 untested.",
+  "missing": "A symmetry group that accounts for the residual brain–model agreement; an account of composition (sum plus structured residue) derived from statistics; C30 needs the models' own verdicts (next-token probabilities).",
   "closes_when": "A pre-registered test predicts a family's geometry from its measured co-occurrence symmetry before looking, in activations and cortex, including a product family.",
-  "next": "Spike 54: semantic product families in activations of small open models (CPU), or public SAE feature atlases (Neuronpedia), with the same statistics",
+  "next": "Justice test with verdict probabilities (needs running a small model on CPU or a logits endpoint); derive the additive-plus-residue composition from co-occurrence statistics",
   "blocked_by": "",
-  "claims": "P179 P180 P181"
+  "claims": "P179 P180 P181 P182 P183"
  }
 ]

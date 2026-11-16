@@ -19,7 +19,7 @@ Progress counts a closed gap as 1 and a partial one as ½. It measures the gap l
 
 | Gap | Leverage | State | What is missing | Closes when | Next |
 |---|---|---|---|---|---|
-| **A11** Concept geometry from symmetry (C29) across models and brains | HIGH | OPEN | Activations (contextual representations) and semantic product concepts (weekday × time of day), which need multi-token phrases; a symmetry group that accounts for the residual brain–model agreement; C30 (justice as person-permutation invariance) untested. | A pre-registered test predicts a family's geometry from its measured co-occurrence symmetry before looking, in activations and cortex, including a product family. | Spike 54: semantic product families in activations of small open models (CPU), or public SAE feature atlases (Neuronpedia), with the same statistics |
+| **A11** Concept geometry from symmetry (C29) across models and brains | HIGH | OPEN | A symmetry group that accounts for the residual brain–model agreement; an account of composition (sum plus structured residue) derived from statistics; C30 needs the models' own verdicts (next-token probabilities). | A pre-registered test predicts a family's geometry from its measured co-occurrence symmetry before looking, in activations and cortex, including a product family. | Justice test with verdict probabilities (needs running a small model on CPU or a logits endpoint); derive the additive-plus-residue composition from co-occurrence statistics |
 | **A2** Real data: the theory currently fails there | HIGH | OPEN | A version of the theory that predicts trained nets on noisy real tasks better than the kernel does. | Pre-registered on the same four datasets plus two new ones: a stated predictor agrees with trained nets more than the kernel does in at least 4 of 6. | Blocked on A8: no predictor yet beats the kernel on these datasets |
 | **A3** Mechanism: why feature learning finds small circuits | HIGH | OPEN | A derivation. The unit-level selection law (volume × information tilt) is not shown to produce the Occam pull (C18 not supported). | A stated law that predicts the Occam-sides fraction or S(t) from measurable quantities, confirmed in a prospective test. | After A8: the mechanism must also explain why noise removes the pull |
 | **A6** Scale: n ≥ 8 | HIGH | PARTIAL | Widths beyond 8 in the feature-learning regime, and target classes other than two-unit ones at n ≥ 8. | The consensus law re-measured at width ≥ 32 and on cost-4 targets at n = 8. | Unscheduled |
@@ -52,7 +52,7 @@ Progress counts a closed gap as 1 and a partial one as ½. It measures the gap l
 | **A7** Depth on targets that need it | E1 | PARTIAL | Depth adds no Occam pull when two layers can represent the target (H-K refuted). | P153 |
 | **A9** What the hidden layer represents | E2 | OPEN | Ruled out (Spike 47): the layer does not collapse onto a minimum circuit's cells (0.08% of nets) nor onto the class. Minimum circuits are over-represented 700-fold but explain only 56% of the variance; the layer uses more than two directions. Prior art covers the canonical quotient itself. | P132, P171 |
 | **A10** Identifiability of mechanisms | E2 | PARTIAL | Census done (P167): at 4 inputs, 50 of 128 cost-3 classes have a single orbit of minimum circuits and no class of cost ≥ 4 does. So for most functions the function does not fix its mechanism. | P069, P167 |
-| **A11** Concept geometry from symmetry (C29) across models and brains | E1 | OPEN | Spike 53: circles for cyclic families in 14 models' static weights; category block structure and shared brain–model geometry (THINGS-fMRI, 3 subjects); the tensor-product row refuted for lexical composition (additive instead); shared structure finer than the 17-category skeleton. | P179, P180, P181 |
+| **A11** Concept geometry from symmetry (C29) across models and brains | E1 | OPEN | Spike 53: circles for cyclic families in 14 models' static weights; category block structure and shared brain–model geometry (THINGS-fMRI, 3 subjects); the tensor-product row refuted for lexical composition (additive instead); shared structure finer than the 17-category skeleton. Spike 54: semantic products in Neuronpedia sparse codes are also mainly additive (tensor residue carries the cycle at p < 0.05 in 71%). Spike 55: fairness verdict readable in only 2 of 7 sources, so C30 untested. | P179, P180, P181, P182, P183 |
 
 ### Compiler
 
@@ -80,6 +80,34 @@ Progress counts a closed gap as 1 and a partial one as ½. It measures the gap l
 | **D3** Prior-art reading queue | E4 | CLOSED | Gemini G7 worked through the queue and eight further areas: 53 works, 24 read in full, 9 metadata only (paywalled). Verdicts per claim are in `charter/PRIOR_ART.md`. | P165 |
 
 ## 4. Run reports, newest first
+
+### Spike 55: Does a model's fairness verdict factor through the quotient by persons? (C30)
+
+2026-11-16 · commit `17b75ab` · overall **BROKEN** · report `experiments/SPIKE_55_REPORT.md` · claims P183
+
+| Hypothesis | Verdict | Measured | Criterion |
+|---|---|---|---|
+| H55.1 | **BROKEN** | accuracy >= 0.80 in 2 of 7 sources | held >= 5, broken <= 2 |
+| H55.2 | **NO VERDICT** | 3 usable sources < 4 | guard |
+| H55.3 | **NO VERDICT** | 3 usable sources < 4 | guard |
+
+**Learned.** A fairness verdict is not generally readable from sparse codes right after a case is stated (2 of 7 sources), so impartiality could not be tested. Where it is readable, it depends on names less than the state does, the direction C30 predicts.
+
+- Gap A11: OPEN → OPEN. C30 attempted; needs the models' own verdicts.
+
+### Spike 54: Do semantic product concepts compose as tensor products in model activations? (C29 product row, Neuronpedia)
+
+2026-11-16 · commit `7d45a9b` · overall **MIXED** · report `experiments/SPIKE_54_REPORT.md` · claims P182
+
+| Hypothesis | Verdict | Measured | Criterion |
+|---|---|---|---|
+| H54.1 | **NEITHER** | 0.524 of cases | held >= 0.75, broken < 0.5 |
+| H54.2 | **NEITHER** | 0.333 of cases | held >= 0.5, broken <= 0.2 |
+| H54.3 | **BROKEN** | median relative interaction 0.054 | held >= 0.643, broken <= 0.543 |
+
+**Learned.** In published sparse codes, a two-word product at its last token is mostly that word plus an additive trace of the other; the tensor part is small but carries the cyclic structure more often than chance. Composition is a sum with a structured residue, in context as in the lexicon.
+
+- Gap A11: OPEN → OPEN. Tensor row refuted in context as well; semantic products tested.
 
 ### Spike 53: Does a concept family's symmetry group fix its geometry, in open-model weights and human object cortex? (C29)
 
@@ -280,12 +308,13 @@ Progress counts a closed gap as 1 and a partial one as ½. It measures the gap l
 | C23 | graded consensus | Partly | PARTLY SUPPORTED, Spike 50 |
 | C24 | trained nets reason like a rational nonmonotonic logic | Open | NEITHER, Spike 51 |
 | C29 | symmetry determines concept geometry | Refuted | PARTLY SUPPORTED; tensor row REFUTED for lexical composition; Spike 53 |
+| C30 | justice as invariance under permuting persons | Open | UNTESTED; Spike 55 gave no verdict |
 
 ## 6. Ledger health
 
-- Claims: 181. Empirical: 96; Proved in Lean: 32; Exploratory: 15; Proved on paper: 11; Refuted: 6; Kernel-checked: 6; Conjecture: 5; Method note: 5; Computed: 4; Other: 1.
+- Claims: 183. Empirical: 97; Proved in Lean: 32; Exploratory: 15; Proved on paper: 11; Refuted: 7; Kernel-checked: 6; Conjecture: 5; Method note: 5; Computed: 4; Other: 1.
 - Problems: 0. Claims stated stronger than their support: 39.
-- Frozen spike files (rule 2): 125.
+- Frozen spike files (rule 2): 129.
 
 Weakest links (fixing one lifts every note that rests on it):
 

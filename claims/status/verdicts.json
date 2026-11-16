@@ -342,5 +342,53 @@
   "verdict": "BROKEN",
   "measured": "residual significant in 0.810 of pairs",
   "bar": "held: residual non-significant in >= 0.5; broken: significant in >= 0.75"
+ },
+ {
+  "key": "54:H54.1",
+  "spike": "54",
+  "id": "H54.1",
+  "verdict": "NEITHER",
+  "measured": "0.524 of cases",
+  "bar": "held >= 0.75, broken < 0.5"
+ },
+ {
+  "key": "54:H54.2",
+  "spike": "54",
+  "id": "H54.2",
+  "verdict": "NEITHER",
+  "measured": "0.333 of cases",
+  "bar": "held >= 0.5, broken <= 0.2"
+ },
+ {
+  "key": "54:H54.3",
+  "spike": "54",
+  "id": "H54.3",
+  "verdict": "BROKEN",
+  "measured": "median relative interaction 0.054",
+  "bar": "held >= 0.643, broken <= 0.543"
+ },
+ {
+  "key": "55:H55.1",
+  "spike": "55",
+  "id": "H55.1",
+  "verdict": "BROKEN",
+  "measured": "accuracy >= 0.80 in 2 of 7 sources",
+  "bar": "held >= 5, broken <= 2"
+ },
+ {
+  "key": "55:H55.2",
+  "spike": "55",
+  "id": "H55.2",
+  "verdict": "NO VERDICT",
+  "measured": "3 usable sources < 4",
+  "bar": "guard"
+ },
+ {
+  "key": "55:H55.3",
+  "spike": "55",
+  "id": "H55.3",
+  "verdict": "NO VERDICT",
+  "measured": "3 usable sources < 4",
+  "bar": "guard"
  }
 ]

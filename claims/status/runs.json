@@ -108,5 +108,25 @@
   "learned": "Weekdays and months are circles already in the static weights of 14 open models, and object cortex and model weights share category geometry and finer structure beyond it. But composition of two factors in the lexicon is additive (a direct sum), not the tensor product C29 predicted.",
   "moved": "A11: new → OPEN (Spike 53 opens the concept-geometry front: cyclic and taxonomic rows supported, tensor row refuted, shared brain–model grain finer than the taxonomy)",
   "claims": "P179 P180 P181"
+ },
+ {
+  "spike": "54",
+  "date": "2026-11-16",
+  "commit": "7d45a9b",
+  "question": "Do semantic product concepts compose as tensor products in model activations? (C29 product row, Neuronpedia)",
+  "overall": "MIXED",
+  "learned": "In published sparse codes, a two-word product at its last token is mostly that word plus an additive trace of the other; the tensor part is small but carries the cyclic structure more often than chance. Composition is a sum with a structured residue, in context as in the lexicon.",
+  "moved": "A11: OPEN → OPEN (Tensor row refuted in context as well; semantic products tested)",
+  "claims": "P182"
+ },
+ {
+  "spike": "55",
+  "date": "2026-11-16",
+  "commit": "17b75ab",
+  "question": "Does a model's fairness verdict factor through the quotient by persons? (C30)",
+  "overall": "BROKEN",
+  "learned": "A fairness verdict is not generally readable from sparse codes right after a case is stated (2 of 7 sources), so impartiality could not be tested. Where it is readable, it depends on names less than the state does, the direction C30 predicts.",
+  "moved": "A11: OPEN → OPEN (C30 attempted; needs the models' own verdicts)",
+  "claims": "P183"
  }
 ]

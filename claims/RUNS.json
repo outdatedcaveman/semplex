@@ -523,6 +523,84 @@
     "P180",
     "P181"
    ]
+  },
+  {
+   "spike": "54",
+   "date": "2026-11-16",
+   "commit": "7d45a9b",
+   "question": "Do semantic product concepts compose as tensor products in model activations? (C29 product row, Neuronpedia)",
+   "overall": "MIXED",
+   "verdicts": [
+    {
+     "id": "H54.1",
+     "verdict": "NEITHER",
+     "measured": "0.524 of cases",
+     "bar": "held >= 0.75, broken < 0.5"
+    },
+    {
+     "id": "H54.2",
+     "verdict": "NEITHER",
+     "measured": "0.333 of cases",
+     "bar": "held >= 0.5, broken <= 0.2"
+    },
+    {
+     "id": "H54.3",
+     "verdict": "BROKEN",
+     "measured": "median relative interaction 0.054",
+     "bar": "held >= 0.643, broken <= 0.543"
+    }
+   ],
+   "learned": "In published sparse codes, a two-word product at its last token is mostly that word plus an additive trace of the other; the tensor part is small but carries the cyclic structure more often than chance. Composition is a sum with a structured residue, in context as in the lexicon.",
+   "gaps_moved": [
+    {
+     "gap": "A11",
+     "from": "OPEN",
+     "to": "OPEN",
+     "why": "Tensor row refuted in context as well; semantic products tested"
+    }
+   ],
+   "claims": [
+    "P182"
+   ]
+  },
+  {
+   "spike": "55",
+   "date": "2026-11-16",
+   "commit": "17b75ab",
+   "question": "Does a model's fairness verdict factor through the quotient by persons? (C30)",
+   "overall": "BROKEN",
+   "verdicts": [
+    {
+     "id": "H55.1",
+     "verdict": "BROKEN",
+     "measured": "accuracy >= 0.80 in 2 of 7 sources",
+     "bar": "held >= 5, broken <= 2"
+    },
+    {
+     "id": "H55.2",
+     "verdict": "NO VERDICT",
+     "measured": "3 usable sources < 4",
+     "bar": "guard"
+    },
+    {
+     "id": "H55.3",
+     "verdict": "NO VERDICT",
+     "measured": "3 usable sources < 4",
+     "bar": "guard"
+    }
+   ],
+   "learned": "A fairness verdict is not generally readable from sparse codes right after a case is stated (2 of 7 sources), so impartiality could not be tested. Where it is readable, it depends on names less than the state does, the direction C30 predicts.",
+   "gaps_moved": [
+    {
+     "gap": "A11",
+     "from": "OPEN",
+     "to": "OPEN",
+     "why": "C30 attempted; needs the models' own verdicts"
+    }
+   ],
+   "claims": [
+    "P183"
+   ]
   }
  ]
 }

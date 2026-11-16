@@ -63,6 +63,8 @@
  "experiments/results/spike53_2subjects.json": "ec58285ef5184c290e41bef7700f5432b7617a67ac66cb16ea0dd60130d79813",
  "experiments/results/spike53_raw/run.json": "878918de376714c75e939d71c37acdb19947b5d2c4b35fa664af1cbbe037323b",
  "experiments/results/spike53_raw/run_2subjects.json": "e794d8e9d8919c0ee55ed9cfa1188ec0d4ec19b51fd0b9fb8381dbd72fd6f4bd",
+ "experiments/results/spike54.json": "a3a521de2dbaa50eadc4bb832bdcfcf8ac7fe0e221ebf18d5aa9c349b7ae505f",
+ "experiments/results/spike55.json": "894136cf7fa7d3838770ea59c7f364cbbcee96dd45ba8b24857912e9440232a8",
  "experiments/spike01.py": "105ad901e24b58b2a58d425436345546f79e159d9cd49a8a33335ad98006c8ca",
  "experiments/spike02.py": "0841215acf72e5258b9ff7b1d95bbf300a9a76972500df9b37022e7162f13e9e",
  "experiments/spike02b.py": "3ea67d1c825de192583dffb0d8efc3825fb5133ae554a086a7d613bda157f923",
@@ -123,5 +125,7 @@
  "experiments/spike50.py": "f88a3309786998d0b95f1b173838880b440f36aae72773641b344d2c159ae0a3",
  "experiments/spike51.py": "79e612915e71e76afcd003c77d14a256a9eddb6de22603ada8f49774f9dd57cb",
  "experiments/spike52.py": "d76deeafc3367a8f72bef96d4bff153f73b5091c1880559b760c4b0e154d96f7",
- "experiments/spike53.py": "872bf7450cd9262410ab36a593fe79737f92115d6f7277a20398829698e5b705"
+ "experiments/spike53.py": "872bf7450cd9262410ab36a593fe79737f92115d6f7277a20398829698e5b705",
+ "experiments/spike54.py": "fb9c59fe9a01d0adaf0c1cbc288405aa67f55b38e42818e0ba1eaf45607b46f2",
+ "experiments/spike55.py": "74689c2f6d8d3e7d51b9b75b6a6144aa1b3011e29fee4fdb677abf5c52661ea7"
 }

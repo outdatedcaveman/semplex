@@ -154,5 +154,11 @@
   "title": "symmetry determines concept geometry",
   "state": "Refuted",
   "note": "PARTLY SUPPORTED; tensor row REFUTED for lexical composition; Spike 53"
+ },
+ {
+  "id": "C30",
+  "title": "justice as invariance under permuting persons",
+  "state": "Open",
+  "note": "UNTESTED; Spike 55 gave no verdict"
  }
 ]

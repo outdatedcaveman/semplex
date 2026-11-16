@@ -1,7 +1,7 @@
 [
  {
   "class": "Empirical",
-  "claims": 96
+  "claims": 97
  },
  {
   "class": "Proved in Lean",
@@ -17,7 +17,7 @@
  },
  {
   "class": "Refuted",
-  "claims": 6
+  "claims": 7
  },
  {
   "class": "Kernel-checked",
