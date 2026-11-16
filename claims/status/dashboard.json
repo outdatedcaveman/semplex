@@ -2,14 +2,14 @@
  "url": "https://claude.ai/code/artifact/b6a1d94a-72c4-41f9-9002-b2f3b744580b",
  "page": "claims/status/dashboard.html",
  "datasets": {
-  "criteria": "a4597f8455bacc20b5a9df2c6187cf71",
-  "gaps": "1e6ed084d5466fca0e7e93f113f953e2",
-  "runs": "97e86c03ab6d117aa01624b9bc361182",
-  "verdicts": "c0dea247157c733b4f5c79ab7506bcea",
-  "conjectures": "2b64056ab0aa5b2a1a85e3fa7e1e6311",
-  "claim_classes": "d17c6a198f7e370bea759afae61b7bb3",
-  "weak_links": "f0ca6000d05ab6d03352ce5ba30d5fcc",
-  "ledger": "07a58f1ee7a190de0fcd03cffec76216"
+  "criteria": "ad59f86c20c3dd1161fdf1eaf8fa2072",
+  "gaps": "32552ac6a57f5636e71d240a9600e499",
+  "runs": "c07ac67d8bafad3981d79a26a0af341b",
+  "verdicts": "b32d3bcb68885877c96d83e9c4dcacdf",
+  "conjectures": "62869e92e66b987fd5e9933174443ed7",
+  "claim_classes": "23cee2cb1b0aeb324359a2f5674ace62",
+  "weak_links": "1bd22c85ecfcedf1ad02a2dfc7c3f4c0",
+  "ledger": "648dbe18654cdf327ad1258d85add5fb"
  },
  "note": "Asset ids of the uploaded copies. After a run: upload the new JSON, point datasets/<id>.source.url at it, delete the old asset."
 }
