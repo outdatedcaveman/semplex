@@ -181,3 +181,38 @@ The theory adds a sharp distinction:
 2. **Census at cost 4, 5 inputs.** Test C28. Gemini task G15 already covers this.
 3. **A concept-judgment pilot.** One verdict concept with real human judgments over a few features: its forms, orbits and forced core (§6.5).
 4. **Theory.** Attempt C27 (meaning in the limit) and C26 (hardness of meaning) as paper proofs.
+
+## 8. The grain of a concept: its symmetry group (atlas programme)
+
+**Prior art (checked 2026-11-16).** Concept geometry in language models is now well mapped:
+- **Circles for cyclic concepts** (months, weekdays) are established (Engels et al.; many replications) and *derived*. Karkada, Korchinski, Nava, Wyart & Bahri (2602.15029, structured report read) show that translation symmetry in pairwise co-occurrence statistics makes the co-occurrence matrix circulant, so representations are its Fourier modes: closed loops for periodic concepts, rippled open curves for sequences, linear decodability of coordinates.
+- **Categorical concepts form simplices and hierarchies are orthogonal** (Park et al. 2406.01506, abstract only).
+- **Emotion geometry mirrors human affect psychology** (Sofroniew et al. 2604.07729, Anthropic, on Claude Sonnet 4.5; replicated across 19 open models; abstracts only).
+- **Not settled:** cross-model convergence (the "Platonic representation hypothesis", Huh et al. 2405.07987) is disputed on its metrics (2602.14486, 2609.27252), and the weekday "ring" is disputed (2610.37796, "spokes, not a ring").
+- **Karkada et al. name the open problem themselves:** categorical and hierarchical structure lack a unifying account.
+
+**Conjecture C29 (symmetry determines geometry).** The geometry of a family of concepts is the *representation theory of its statistical symmetry group*. The data's co-occurrence statistics are invariant under a group G acting on the family, so the co-occurrence matrix commutes with G and its eigenspaces are G's irreducible representations. Hence:
+
+| Symmetry of the family | Group | Predicted geometry |
+|---|---|---|
+| cyclic (months, hours, hues) | ℤ/n | circle and higher Fourier modes (Karkada et al., derived) |
+| exchangeable (unordered categories) | Sₙ | regular simplex: Gram matrix aI + b11ᵀ (matches Park et al.) |
+| hierarchy (taxonomy) | wreath products Sₙ ≀ Sₘ | nested simplices in orthogonal subspaces (matches Park et al.) |
+| **product of independent factors** ("Monday morning") | G₁ × G₂ | **tensor product**: Gram matrix ≈ Kronecker product of the factors' Gram matrices; for two cycles, a torus |
+| reflection plus rotation (compass with mirror symmetry) | dihedral Dₙ | Dₙ's irreps: paired Fourier modes, mirror-symmetric |
+
+Only the first row is derived. The others are predictions. The product row is the sharpest, and I found no prior test of it. It says that **compositional meaning is the tensor product of the parts' representations**: compositionality as a theorem of representation theory, not a design choice.
+
+**The topological reading.** In homotopy type theory the circle is the delooping of ℤ (S¹ ≃ Bℤ), and a type whose loops form a group G is BG. On C29, the grain of a concept family is its type of symmetries, BG. Its observed shape is what the shape modality ʃ of cohesive HoTT extracts from a continuous representation. Concretely:
+- a circle for ℤ/n;
+- contractible clusters (a simplex) for Sₙ, whose delooping is not a circle;
+- a torus for ℤ/n × ℤ/m.
+
+Persistent homology of the representations measures this shape. This is where modal HoTT enters as the right language: the theory is stated as a statement about BG, and the measurement as one about its shape.
+
+**Justice as symmetry (conjecture C30).** A fairness verdict is impartial exactly when it is invariant under permuting the persons involved, the symmetric group on agents (Rawls's veil; Harsanyi). On C29, an impartial concept's representation should factor through the quotient by that permutation group: verdict representations invariant to swapping who is who. This is testable in models by swapping names and roles in otherwise identical cases. It also gives a definition: the canonical form of justice is the verdict function modulo the group of person-permutations.
+
+**Spike 53 (proposed).** Test the product row on small open models runnable here (GPT-2, Pythia-410M, Qwen2.5-0.5B, SmolLM2-360M; CPU):
+- phrases "<weekday> <time of day>" (7 × 4) and "<month> <year>" (12 × several);
+- measure whether the family's Gram matrix is better fitted by a Kronecker product of the factor Gram matrices than by unconstrained low-rank or additive models;
+- measure whether persistent homology shows two independent loops (torus) for weekday × hour.
