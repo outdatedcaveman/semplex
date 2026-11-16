@@ -102,7 +102,7 @@
    ],
    "missing": "The 0.93 bar is met in one of three cells. Because seeds disagree on split inputs, the right target is the seed distribution q(x), not one net.",
    "closes_when": "Pre-registered: p̂ predicts q(x) with mean absolute error ≤ 0.10 over held-out inputs at n = 8 and 10, beating every kernel-based predictor of q.",
-   "next": "Unscheduled"
+   "next": "Report C23's circuit share p(x) under three counting rules (weight vectors, circuits up to symmetry, distinct completions); the census in arXiv:2611.17583 shows outcome shares can change with the counting rule"
   },
   {
    "id": "A5",

@@ -65,7 +65,7 @@
   "have": "Graded consensus (Spike 50): the majority of minimum circuits agrees with a single net on 0.91–0.93 of held-out inputs (kernel 0.85–0.88), and the share of circuits per value tracks the share of seeds (ρ 0.76–0.79). Seeds themselves split on 15–18% of runs where circuits split evenly.",
   "missing": "The 0.93 bar is met in one of three cells. Because seeds disagree on split inputs, the right target is the seed distribution q(x), not one net.",
   "closes_when": "Pre-registered: p̂ predicts q(x) with mean absolute error ≤ 0.10 over held-out inputs at n = 8 and 10, beating every kernel-based predictor of q.",
-  "next": "Unscheduled",
+  "next": "Report C23's circuit share p(x) under three counting rules (weight vectors, circuits up to symmetry, distinct completions); the census in arXiv:2611.17583 shows outcome shares can change with the counting rule",
   "blocked_by": "",
   "claims": "P173 P174"
  },
