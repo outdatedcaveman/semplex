@@ -1,6 +1,6 @@
 # Spike 53: Does a concept family's symmetry group fix its geometry, in model weights and in human cortex?
 
-**Date:** 2026-11-16 · **Status:** pre-registered (no analysis run) · **Follows:** `charter/FOUNDATIONS.md` §8 (conjecture C29, symmetry determines geometry). Third track, concepts outside the Boolean atlas (`experiments/TREE.md`). **Conjecture:** C29.
+**Date:** 2026-11-16 · **Status:** complete (pre-registered in a754694; results below) · **Follows:** `charter/FOUNDATIONS.md` §8 (conjecture C29, symmetry determines geometry). Third track, concepts outside the Boolean atlas (`experiments/TREE.md`). **Conjecture:** C29.
 
 ## Question
 
@@ -160,4 +160,34 @@ python -m experiments.spike53 analyse
 
 ## Results
 
-(Not run.)
+`experiments/results/spike53.json`; raw `spike53_raw/run.json`.
+
+**Cases:**
+- 72 family cases and 45 product cases over 24 matrices;
+- 3 subjects, 370 concepts in 17 categories each;
+- 63 (subject, matrix) pairs with ≥ 100 common concepts (62–158).
+
+All three subjects passed the alignment guard (same versus different image: 0.360/0.239, 0.426/0.321, 0.332/0.240).
+
+**Execution error, recorded.** The first run read only subjects 1 and 2: subject 3's patterns had been written to the default data folder, because the shell's `export` applied to only one of two parallel jobs. Its outputs are kept as `spike53_2subjects.json` and `spike53_raw/run_2subjects.json`. The run was repeated on all three subjects as registered. **Every verdict is the same in both runs.** The figures below are from the three-subject run.
+
+| ID | Measured | Criterion | Verdict |
+|---|---|---|---|
+| H53.1 | cyclic R² significant in 84.7% of cases (weekdays 96%, months 100%, abbreviations 62%) | ≥ 75% | **HELD** |
+| H53.2 | lowest Fourier mode largest in 100% of cases | ≥ 75% | **HELD** |
+| H53.3 | interaction carries the cycle (p < 0.01) in 13.3% of product cases | ≥ 50% held, ≤ 20% broken | **BROKEN** |
+| H53.4 | block R² 0.125, 0.259, 0.091, all p = 0.0005 (the floor) | p < 0.001 in all subjects | **HELD** |
+| H53.5 | block R² p < 0.001 in 100% of matrices (median R² 0.31) | ≥ 75% | **HELD** |
+| H53.6a | brain–model Mantel ρ > 0, p < 0.01 in 100% of pairs (median ρ 0.122) | ≥ 75% | **HELD** |
+| H53.6b | residual (beyond the 17-category skeleton) still significant in 81.0% of pairs (median ρ 0.040) | ≥ 75% breaks | **BROKEN** |
+
+**Reading:**
+- **Cyclic geometry (C29's derived row) holds in static weights of 14 models.** Weekday and month embeddings are circles: the lowest Fourier mode dominates in every case, so there are no "spokes" here. This is a replication on a new substrate. Engels et al. found it in activations; here it is already in the lexicon.
+- **The tensor row is refuted for lexical composition.** In month × form and weekday × form, the additive part carries the cycle (significant in 89% of cases, median cyclic R² 0.76). The interaction share is 0.25 against a no-structure value of 0.46–0.48, and the interaction carries the cycle in only 13%. Composition of these factors in embedding space is mainly a **direct sum** (x ≈ a_month + b_form), not a tensor product.
+  - **Exploratory:** 51% of product cases have interaction p < 0.05, against 5% expected by chance. So a weak tensor component is present but secondary.
+  - Output embeddings show it less than input embeddings (0% against 23% at p < 0.01).
+- **Taxonomy geometry is shared by cortex and weights.**
+  - Ventral object cortex (from images) and the lexical embeddings of 14 models both have the category block structure.
+  - Their concept geometries correlate in every pair (median ρ 0.12).
+  - **The shared geometry is not exhausted by the category skeleton:** after removing each side's 17-category block structure, 81% of pairs still correlate. The residual is about 31% of the full correlation (median ratio).
+  - So the "grain" that brains and models share is finer than the labelled taxonomy. In C29's terms, the symmetry group that would fix it is not the one the category labels give.

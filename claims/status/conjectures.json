@@ -148,5 +148,11 @@
   "title": "trained nets reason like a rational nonmonotonic logic",
   "state": "Open",
   "note": "NEITHER, Spike 51"
+ },
+ {
+  "id": "C29",
+  "title": "symmetry determines concept geometry",
+  "state": "Refuted",
+  "note": "PARTLY SUPPORTED; tensor row REFUTED for lexical composition; Spike 53"
  }
 ]

@@ -458,6 +458,71 @@
    "claims": [
     "P178"
    ]
+  },
+  {
+   "spike": "53",
+   "date": "2026-11-16",
+   "commit": "a754694",
+   "question": "Does a concept family's symmetry group fix its geometry, in open-model weights and human object cortex? (C29)",
+   "overall": "MIXED",
+   "verdicts": [
+    {
+     "id": "H53.1",
+     "verdict": "HELD",
+     "measured": "0.847 of cases",
+     "bar": "held >= 0.75, broken < 0.5"
+    },
+    {
+     "id": "H53.2",
+     "verdict": "HELD",
+     "measured": "1.000 of cases",
+     "bar": "held >= 0.75, broken < 0.5"
+    },
+    {
+     "id": "H53.3",
+     "verdict": "BROKEN",
+     "measured": "0.133 of product cases",
+     "bar": "held >= 0.5, broken <= 0.2"
+    },
+    {
+     "id": "H53.4",
+     "verdict": "HELD",
+     "measured": "p = 0.0005 in 3/3 subjects",
+     "bar": "held p < 0.001 in all"
+    },
+    {
+     "id": "H53.5",
+     "verdict": "HELD",
+     "measured": "1.000 of matrices",
+     "bar": "held >= 0.75"
+    },
+    {
+     "id": "H53.6a",
+     "verdict": "HELD",
+     "measured": "1.000 of pairs",
+     "bar": "held >= 0.75"
+    },
+    {
+     "id": "H53.6b",
+     "verdict": "BROKEN",
+     "measured": "residual significant in 0.810 of pairs",
+     "bar": "held: residual non-significant in >= 0.5; broken: significant in >= 0.75"
+    }
+   ],
+   "learned": "Weekdays and months are circles already in the static weights of 14 open models, and object cortex and model weights share category geometry and finer structure beyond it. But composition of two factors in the lexicon is additive (a direct sum), not the tensor product C29 predicted.",
+   "gaps_moved": [
+    {
+     "gap": "A11",
+     "from": "new",
+     "to": "OPEN",
+     "why": "Spike 53 opens the concept-geometry front: cyclic and taxonomic rows supported, tensor row refuted, shared brain–model grain finer than the taxonomy"
+    }
+   ],
+   "claims": [
+    "P179",
+    "P180",
+    "P181"
+   ]
   }
  ]
 }

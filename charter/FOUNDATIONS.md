@@ -212,7 +212,9 @@ Persistent homology of the representations measures this shape. This is where mo
 
 **Justice as symmetry (conjecture C30).** A fairness verdict is impartial exactly when it is invariant under permuting the persons involved, the symmetric group on agents (Rawls's veil; Harsanyi). On C29, an impartial concept's representation should factor through the quotient by that permutation group: verdict representations invariant to swapping who is who. This is testable in models by swapping names and roles in otherwise identical cases. It also gives a definition: the canonical form of justice is the verdict function modulo the group of person-permutations.
 
-**Spike 53 (proposed).** Test the product row on small open models runnable here (GPT-2, Pythia-410M, Qwen2.5-0.5B, SmolLM2-360M; CPU):
+**Spike 53 (run; see `experiments/SPIKE_53_REPORT.md`, P179–P181).** Outcome: the cyclic and taxonomic rows hold in 14 models' static weights and in object cortex. The product row is refuted for lexical composition, which is additive (a direct sum). The geometry brains and models share is finer than the labelled taxonomy. The original proposal follows.
+
+**Spike 53 (as proposed).** Test the product row on small open models runnable here (GPT-2, Pythia-410M, Qwen2.5-0.5B, SmolLM2-360M; CPU):
 - phrases "<weekday> <time of day>" (7 × 4) and "<month> <year>" (12 × several);
 - measure whether the family's Gram matrix is better fitted by a Kronecker product of the factor Gram matrices than by unconstrained low-rank or additive models;
 - measure whether persistent homology shows two independent loops (torus) for weekday × hour.

@@ -1,0 +1,82 @@
+{
+ "n_cases": {
+  "families": 72,
+  "products": 45,
+  "brain_subjects": 2,
+  "matrices": 24,
+  "mantel_pairs": 42
+ },
+ "H53.1_frac_sig": 0.8611111111111112,
+ "H53.2_frac_circle": 1.0,
+ "H53.3_frac_sig": 0.13333333333333333,
+ "H53.5_frac_sig": 1.0,
+ "H53.6a_frac_sig": 1.0,
+ "H53.6b_frac_resid_nonsig": 0.023809523809523808,
+ "H53.6b_frac_resid_sig": 0.9761904761904762,
+ "median_full_rho": 0.13148159588091507,
+ "median_resid_rho": 0.04591748820017161,
+ "verdicts": {
+  "H53.1": "HELD",
+  "H53.2": "HELD",
+  "H53.3": "BROKEN",
+  "H53.4": "HELD",
+  "H53.5": "HELD",
+  "H53.6a": "HELD",
+  "H53.6b": "BROKEN"
+ },
+ "by_family": {
+  "weekdays": {
+   "n": 24,
+   "frac_sig": 0.9583333333333334,
+   "frac_circle": 1.0,
+   "median_r2": 0.7813945273722954
+  },
+  "months": {
+   "n": 24,
+   "frac_sig": 1.0,
+   "frac_circle": 1.0,
+   "median_r2": 0.8797755281722355
+  },
+  "month_abbr": {
+   "n": 24,
+   "frac_sig": 0.625,
+   "frac_circle": 1.0,
+   "median_r2": 0.36078027548867625
+  }
+ },
+ "by_side": {
+  "in": {
+   "families_frac_sig": 0.8095238095238095,
+   "products_frac_sig": 0.23076923076923078
+  },
+  "out": {
+   "families_frac_sig": 0.9333333333333333,
+   "products_frac_sig": 0.0
+  }
+ },
+ "products_summary": {
+  "median_interaction_share": 0.25074875354766846,
+  "null_share": [
+   0.46153846153846156,
+   0.4782608695652174
+  ],
+  "frac_additive_sig": 0.8888888888888888,
+  "median_interaction_r2": 0.2230342495729658,
+  "median_additive_r2": 0.758327976099583
+ },
+ "hier_brain": [
+  {
+   "subject": "01",
+   "n": 370,
+   "r2": 0.12481886567754874,
+   "p": 0.0004997501249375312
+  },
+  {
+   "subject": "02",
+   "n": 370,
+   "r2": 0.2587057389480364,
+   "p": 0.0004997501249375312
+  }
+ ],
+ "hier_models_median_r2": 0.31065648704044535
+}

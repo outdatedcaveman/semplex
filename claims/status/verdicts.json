@@ -286,5 +286,61 @@
   "verdict": "NO VERDICT",
   "measured": "no verdict: 24 observed cells, guard required 40",
   "bar": "see report"
+ },
+ {
+  "key": "53:H53.1",
+  "spike": "53",
+  "id": "H53.1",
+  "verdict": "HELD",
+  "measured": "0.847 of cases",
+  "bar": "held >= 0.75, broken < 0.5"
+ },
+ {
+  "key": "53:H53.2",
+  "spike": "53",
+  "id": "H53.2",
+  "verdict": "HELD",
+  "measured": "1.000 of cases",
+  "bar": "held >= 0.75, broken < 0.5"
+ },
+ {
+  "key": "53:H53.3",
+  "spike": "53",
+  "id": "H53.3",
+  "verdict": "BROKEN",
+  "measured": "0.133 of product cases",
+  "bar": "held >= 0.5, broken <= 0.2"
+ },
+ {
+  "key": "53:H53.4",
+  "spike": "53",
+  "id": "H53.4",
+  "verdict": "HELD",
+  "measured": "p = 0.0005 in 3/3 subjects",
+  "bar": "held p < 0.001 in all"
+ },
+ {
+  "key": "53:H53.5",
+  "spike": "53",
+  "id": "H53.5",
+  "verdict": "HELD",
+  "measured": "1.000 of matrices",
+  "bar": "held >= 0.75"
+ },
+ {
+  "key": "53:H53.6a",
+  "spike": "53",
+  "id": "H53.6a",
+  "verdict": "HELD",
+  "measured": "1.000 of pairs",
+  "bar": "held >= 0.75"
+ },
+ {
+  "key": "53:H53.6b",
+  "spike": "53",
+  "id": "H53.6b",
+  "verdict": "BROKEN",
+  "measured": "residual significant in 0.810 of pairs",
+  "bar": "held: residual non-significant in >= 0.5; broken: significant in >= 0.75"
  }
 ]

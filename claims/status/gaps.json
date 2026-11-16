@@ -278,5 +278,19 @@
   "next": "Closed; spot-checks as needed",
   "blocked_by": "",
   "claims": "P165"
+ },
+ {
+  "id": "A11",
+  "pillar": "Theory",
+  "serves": "E1",
+  "title": "Concept geometry from symmetry (C29) across models and brains",
+  "status": "OPEN",
+  "leverage": "HIGH",
+  "have": "Spike 53: circles for cyclic families in 14 models' static weights; category block structure and shared brain–model geometry (THINGS-fMRI, 3 subjects); the tensor-product row refuted for lexical composition (additive instead); shared structure finer than the 17-category skeleton.",
+  "missing": "Activations (contextual representations) and semantic product concepts (weekday × time of day), which need multi-token phrases; a symmetry group that accounts for the residual brain–model agreement; C30 (justice as person-permutation invariance) untested.",
+  "closes_when": "A pre-registered test predicts a family's geometry from its measured co-occurrence symmetry before looking, in activations and cortex, including a product family.",
+  "next": "Spike 54: semantic product families in activations of small open models (CPU), or public SAE feature atlases (Neuronpedia), with the same statistics",
+  "blocked_by": "",
+  "claims": "P179 P180 P181"
  }
 ]
