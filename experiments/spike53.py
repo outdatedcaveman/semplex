@@ -178,7 +178,6 @@ def fetch_meta():
             open(p, "wb").write(urllib.request.urlopen(url).read())
 
 
-TAIL = 2568          # bytes after the response array (sub-01 HDF5 metadata, measured)
 N_TRIALS = 9840
 
 
@@ -187,7 +186,7 @@ def fetch_brain(s):
     the rows of the selected voxels; the 15 GB file is never written to disk.
     Layout (read from sub-01's HDF5 metadata, pandas fixed format): block0_values
     is a contiguous row-major float32 array (voxels x 9840 trials), rows in
-    voxel_id order, ending TAIL bytes before end of file."""
+    voxel_id order, located per subject from its own HDF5 metadata while streaming."""
     import pandas as pd
     fetch_meta()
     out = os.path.join(DATA, f"sub-{s}_concepts.npz")
@@ -206,23 +205,48 @@ def fetch_brain(s):
     vid = vox.loc[keep, "voxel_id"].to_numpy()
     info = z.getinfo(f"betas_csv/sub-{s}_ResponseData.h5")
     RB = N_TRIALS * 4
-    off = info.file_size - TAIL - len(vox) * RB
-    starts = off + vid * RB
+    skel = os.path.join(DATA, f"sub-{s}_skel.h5")      # sparse: only metadata bytes are written
+    with open(skel, "wb") as f:
+        f.truncate(info.file_size)
     buf = bytearray(len(vid) * RB)
-    pos = 0
-    with z.open(info) as src:
+    pos, starts, hdr, pend = 0, None, None, []
+    with z.open(info) as src, open(skel, "r+b") as sk:
         while True:
             b = src.read(64 << 20)
             if not b:
                 break
             lo, hi = pos, pos + len(b)
-            i0 = max(0, np.searchsorted(starts, lo - RB, "right"))
-            i1 = np.searchsorted(starts, hi, "left")
-            for j in range(i0, i1):
-                a0, a1 = max(lo, starts[j]), min(hi, starts[j] + RB)
-                if a0 < a1:
-                    buf[j * RB + a0 - starts[j]: j * RB + a1 - starts[j]] = b[a0 - lo: a1 - lo]
+            if starts is None:
+                if lo == 0:
+                    sk.seek(0); sk.write(b[:1 << 20]); sk.flush()
+                    hdr = _h5_addr(skel, None)
+                pend.append((lo, b))
+                if hdr is not None and hi >= hdr + (8 << 20):
+                    for plo, pb in pend:              # write the window around the dataset header
+                        a0, a1 = max(plo, hdr - (1 << 20)), min(plo + len(pb), hdr + (8 << 20))
+                        if a0 < a1:
+                            sk.seek(a0); sk.write(pb[a0 - plo:a1 - plo])
+                    sk.flush()
+                    off, shape = _h5_addr(skel, "block0_values")
+                    assert shape == (len(vox), N_TRIALS), shape
+                    starts = off + vid * RB
+                    chunks, pend = pend, []
+                else:
+                    pend = pend[-2:]
+                    pos = hi
+                    continue
+            else:
+                chunks = [(lo, b)]
+            for clo, cb in chunks:
+                chi = clo + len(cb)
+                i0 = max(0, np.searchsorted(starts, clo - RB, "right"))
+                i1 = np.searchsorted(starts, chi, "left")
+                for j in range(i0, i1):
+                    a0, a1 = max(clo, starts[j]), min(chi, starts[j] + RB)
+                    if a0 < a1:
+                        buf[j * RB + a0 - starts[j]: j * RB + a1 - starts[j]] = cb[a0 - clo: a1 - clo]
             pos = hi
+    os.remove(skel)
     R = np.frombuffer(bytes(buf), np.float32).reshape(len(vid), N_TRIALS).T.copy()   # trials x voxels
     check = alignment_check(R, stim)
     tr = (stim["trial_type"] == "train").to_numpy()
@@ -234,6 +258,17 @@ def fetch_brain(s):
     np.savez_compressed(out, names=names, patterns=M.astype(np.float32), voxel_ids=vid,
                         check=np.array([check["same"], check["diff"]]))
     print("sub", s, "voxels", len(vid), "concepts", len(names), "check", check, flush=True)
+
+
+def _h5_addr(path, name):
+    """None: address of the ResponseData object header (from the root symbol table);
+    name: (byte offset, shape) of that contiguous dataset"""
+    import h5py
+    with h5py.File(path, "r") as f:
+        if name is None:
+            return f.id.links.get_info(b"ResponseData").u
+        d = f["ResponseData"][name]
+        return d.id.get_offset(), d.shape
 
 
 def alignment_check(R, stim):

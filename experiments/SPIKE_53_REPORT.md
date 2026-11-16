@@ -144,6 +144,10 @@ Storing a 15 GB file per subject would use the whole disk. The brain data are th
 
 **New guard (applies to every subject).** Before any analysis, odd and even repeats of the 100 test images must correlate more with the same image than with different images by at least 0.05. Otherwise the subject is excluded as misaligned.
 
+**Second fix, also before any analysis.** Subject 2 failed the guard: same 0.396 against different 0.395. The guessed offset was wrong; subject 2's array does not end at the same distance from the end of the file.
+- The extractor now reads each subject's own offset during the stream. The root symbol table in the first MB gives the address of the dataset's object header, and that window is captured before the array begins.
+- On subject 1 this gives the same offset, so subject 1's extraction (guard: same 0.360, different 0.239) stands.
+
 No hypothesis or criterion changed.
 
 ## Commands
