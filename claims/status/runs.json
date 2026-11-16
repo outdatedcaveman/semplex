@@ -72,7 +72,7 @@
  {
   "spike": "50",
   "date": "2026-11-16",
-  "commit": "pending",
+  "commit": "2f8329e",
   "question": "Does the share of minimum circuits predict the net on all held-out inputs? (C23, graded consensus)",
   "overall": "NEITHER",
   "learned": "Where minimum circuits disagree is where independently trained nets disagree: training noise resolves the ambiguity the minimum circuits leave. The majority of minimum circuits predicts a single net at 0.91–0.93 and generalizes better than any one net.",

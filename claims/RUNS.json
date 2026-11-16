@@ -334,7 +334,7 @@
   {
    "spike": "50",
    "date": "2026-11-16",
-   "commit": "pending",
+   "commit": "2f8329e",
    "question": "Does the share of minimum circuits predict the net on all held-out inputs? (C23, graded consensus)",
    "overall": "NEITHER",
    "verdicts": [

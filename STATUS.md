@@ -81,7 +81,7 @@ Progress counts a closed gap as 1 and a partial one as ½. It measures the gap l
 
 ### Spike 50: Does the share of minimum circuits predict the net on all held-out inputs? (C23, graded consensus)
 
-2026-11-16 · commit `pending` · overall **NEITHER** · report `experiments/SPIKE_50_REPORT.md` · claims P174
+2026-11-16 · commit `2f8329e` · overall **NEITHER** · report `experiments/SPIKE_50_REPORT.md` · claims P174
 
 | Hypothesis | Verdict | Measured | Criterion |
 |---|---|---|---|
