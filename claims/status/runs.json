@@ -128,5 +128,15 @@
   "learned": "A fairness verdict is not generally readable from sparse codes right after a case is stated (2 of 7 sources), so impartiality could not be tested. Where it is readable, it depends on names less than the state does, the direction C30 predicts.",
   "moved": "A11: OPEN → OPEN (C30 attempted; needs the models' own verdicts)",
   "claims": "P183"
+ },
+ {
+  "spike": "56",
+  "date": "2026-11-16",
+  "commit": "a3b20d4",
+  "question": "Is a model's own fairness verdict invariant under permuting persons? (C30)",
+  "overall": "HELD",
+  "learned": "Where small models judge fairness correctly, their verdict is nearly invariant under swapping who is who, although their internal state carries the names: impartiality appears as an approximate symmetry of the verdict. Small residual name effects are real and measure bias; weaker models are more name-driven.",
+  "moved": "A11: OPEN → PARTIAL (C30 supported in behaviour (approximate invariance); C29 cyclic and taxonomic rows supported; tensor row refuted)",
+  "claims": "P184"
  }
 ]

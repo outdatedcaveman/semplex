@@ -62,5 +62,6 @@ Run in parallel by Gemini from the Spike 10c state; renumbered at the merge (ori
 52  canonical form of a moral concept (Moral Machine pilot)   frozen: no verdict (24 cells < 40); exploratory: single weighted rule
 53  symmetry group → concept geometry (C29): 14 models' weights + THINGS-fMRI   frozen: circles held; tensor row broken (additive); shared grain finer than taxonomy
 ├ 54  semantic products in Neuronpedia sparse codes                        frozen: H54.3 broken (additive, structured residue); H54.1–2 neither
-└ 55  justice as person-permutation invariance (C30)                         frozen: H55.1 broken (verdict readable in 2/7); C30 untested
+├ 55  justice as person-permutation invariance (C30)                         frozen: H55.1 broken (verdict readable in 2/7); C30 untested
+│ └ 56  C30 with the models' own verdicts (6 small models, CPU)           frozen: H56.2–4 held (names 3–5% of verdict variance); H56.1 neither
 ```

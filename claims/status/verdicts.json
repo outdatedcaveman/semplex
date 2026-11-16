@@ -390,5 +390,37 @@
   "verdict": "NO VERDICT",
   "measured": "3 usable sources < 4",
   "bar": "guard"
+ },
+ {
+  "key": "56:H56.1",
+  "spike": "56",
+  "id": "H56.1",
+  "verdict": "NEITHER",
+  "measured": "accuracy >= 0.80 in 3 of 6 models",
+  "bar": "held >= 4, broken <= 1"
+ },
+ {
+  "key": "56:H56.2",
+  "spike": "56",
+  "id": "H56.2",
+  "verdict": "HELD",
+  "measured": "median s_v 0.038 in 3 usable models",
+  "bar": "s_v <= 0.10 in >= 75% of usable"
+ },
+ {
+  "key": "56:H56.3",
+  "spike": "56",
+  "id": "H56.3",
+  "verdict": "HELD",
+  "measured": "s_v < s_x in 3 of 3 (median s_x 0.379)",
+  "bar": ">= 75%"
+ },
+ {
+  "key": "56:H56.4",
+  "spike": "56",
+  "id": "H56.4",
+  "verdict": "HELD",
+  "measured": "largest name effect 0.15-0.21 act-SD",
+  "bar": "<= 0.25 act-SD in >= 75% of usable"
  }
 ]

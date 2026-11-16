@@ -349,19 +349,20 @@
    "pillar": "Theory",
    "serves": "E1",
    "title": "Concept geometry from symmetry (C29) across models and brains",
-   "status": "OPEN",
+   "status": "PARTIAL",
    "leverage": "HIGH",
-   "have": "Spike 53: circles for cyclic families in 14 models' static weights; category block structure and shared brain–model geometry (THINGS-fMRI, 3 subjects); the tensor-product row refuted for lexical composition (additive instead); shared structure finer than the 17-category skeleton. Spike 54: semantic products in Neuronpedia sparse codes are also mainly additive (tensor residue carries the cycle at p < 0.05 in 71%). Spike 55: fairness verdict readable in only 2 of 7 sources, so C30 untested.",
+   "have": "Spike 53: circles for cyclic families in 14 models' static weights; category block structure and shared brain–model geometry (THINGS-fMRI, 3 subjects); the tensor-product row refuted for lexical composition (additive instead); shared structure finer than the 17-category skeleton. Spike 54: semantic products in Neuronpedia sparse codes are also mainly additive (tensor residue carries the cycle at p < 0.05 in 71%). Spike 55: fairness verdict readable in only 2 of 7 sources, so C30 untested. Spike 56: small models' own fairness verdicts are nearly invariant under permuting persons (names 3–5% of verdict variance vs 33–40% of state; C30 supported approximately).",
    "claims": [
     "P179",
     "P180",
     "P181",
     "P182",
-    "P183"
+    "P183",
+    "P184"
    ],
-   "missing": "A symmetry group that accounts for the residual brain–model agreement; an account of composition (sum plus structured residue) derived from statistics; C30 needs the models' own verdicts (next-token probabilities).",
+   "missing": "A symmetry group that accounts for the residual brain–model agreement; an account of composition (sum plus structured residue) derived from statistics; C30 in larger models and contested cases; a predictive test of geometry from measured co-occurrence symmetry.",
    "closes_when": "A pre-registered test predicts a family's geometry from its measured co-occurrence symmetry before looking, in activations and cortex, including a product family.",
-   "next": "Justice test with verdict probabilities (needs running a small model on CPU or a logits endpoint); derive the additive-plus-residue composition from co-occurrence statistics"
+   "next": "C30 at scale (larger models, more frames, contested cases); derive additive-plus-residue composition from co-occurrence statistics"
   }
  ]
 }
