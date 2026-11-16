@@ -34,7 +34,7 @@ Each node is a spike. A child builds on what its parent established; siblings ar
               │                           ├ 48  scale: the Occam pull at n = 8 and 10 (uses compile_partial, G3)   frozen: persists, shrinks with n at fixed labels per dimension; 0.94 with more data
               │                           │ └ 49  consensus law: nets output what every minimum circuit agrees on (C22)   frozen: adherence 0.98–0.99, invariant; kernel edge small in sparse cells
               │                           │   └ 50  graded consensus: share of minimum circuits vs share of seeds (C23)   frozen: graded part held; single-net prediction 0.91–0.93
-              │                           │     └ 51  nets as rational nonmonotonic logic: Cut, Cautious and Rational Monotony (C24)   pre-registered
+              │                           │     └ 51  nets as rational nonmonotonic logic: Cut, Cautious and Rational Monotony (C24)   frozen: cumulative ≈95%, Rational Monotony 85%, stubborn
               ├ 23  distance-matched choice test (from 19 arm 1)     frozen: symmetry and information both steer single steps
               ├ 25  less strict CSP at low labels (from 19 arm 2)    frozen: certificates fail at power; anisotropic smoothness
               └ 26  lawful completion of algebra; Curie transfer (C8(c), from 14 and 20)   frozen: Curie transfers (β = −1.85); lawful 9.6× chance

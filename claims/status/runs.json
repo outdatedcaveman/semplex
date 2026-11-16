@@ -78,5 +78,15 @@
   "learned": "Where minimum circuits disagree is where independently trained nets disagree: training noise resolves the ambiguity the minimum circuits leave. The majority of minimum circuits predicts a single net at 0.91–0.93 and generalizes better than any one net.",
   "moved": "A4: PARTIAL → PARTIAL (Graded law holds; the single-net 0.93 bar is met in one of three cells)",
   "claims": "P174"
+ },
+ {
+  "spike": "51",
+  "date": "2026-11-16",
+  "commit": "pending",
+  "question": "Do trained nets reason like a rational nonmonotonic logic? (C24)",
+  "overall": "NEITHER",
+  "learned": "Nets are approximately cumulative but not rational, and stubborn: under counter-evidence they retract in the logic's direction but only about half as much. The kernel reasons as lawfully, so rationality is not what separates nets from kernels; which conclusions they draw is.",
+  "moved": "A3: OPEN → OPEN (The nets' logic is characterized: cumulative, not rational, stubborn)",
+  "claims": "P177"
  }
 ]

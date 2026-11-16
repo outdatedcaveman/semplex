@@ -375,6 +375,51 @@
    "claims": [
     "P174"
    ]
+  },
+  {
+   "spike": "51",
+   "date": "2026-11-16",
+   "commit": "pending",
+   "question": "Do trained nets reason like a rational nonmonotonic logic? (C24)",
+   "overall": "NEITHER",
+   "verdicts": [
+    {
+     "id": "H51.1",
+     "verdict": "HELD",
+     "measured": "Cautious Monotony violated in 4.3% (93 of 2,159)",
+     "bar": "held if ≤ 0.05; broken if > 0.15"
+    },
+    {
+     "id": "H51.2",
+     "verdict": "NEITHER",
+     "measured": "Cut violated in 5.9% (130 of 2,196)",
+     "bar": "held if ≤ 0.05; broken if > 0.15"
+    },
+    {
+     "id": "H51.3",
+     "verdict": "NEITHER",
+     "measured": "Rational Monotony violated in 15.0% (124 of 824)",
+     "bar": "held if ≤ 0.10; broken if > 0.25"
+    },
+    {
+     "id": "H51.4",
+     "verdict": "NEITHER",
+     "measured": "retraction 35%; recall of the logic's retractions 48%, precision 96%",
+     "bar": "held if retraction ≥ 0.10 and recall ≥ 0.50; broken if retraction < 0.03"
+    }
+   ],
+   "learned": "Nets are approximately cumulative but not rational, and stubborn: under counter-evidence they retract in the logic's direction but only about half as much. The kernel reasons as lawfully, so rationality is not what separates nets from kernels; which conclusions they draw is.",
+   "gaps_moved": [
+    {
+     "gap": "A3",
+     "from": "OPEN",
+     "to": "OPEN",
+     "why": "The nets' logic is characterized: cumulative, not rational, stubborn"
+    }
+   ],
+   "claims": [
+    "P177"
+   ]
   }
  ]
 }

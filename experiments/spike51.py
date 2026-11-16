@@ -171,7 +171,7 @@ def analyse():
     out["H51.3"] = nv if not ok else "HELD" if C["rm"]["rate"] <= 0.10 else "BROKEN" if C["rm"]["rate"] > 0.25 else "NEITHER"
     rr = C["counter"]["rate"]; rec = out["retraction_overlap"]["recall_of_mm_retractions"]
     out["H51.4"] = nv if not ok else "HELD" if (rr >= 0.10 and rec >= 0.5) else "BROKEN" if rr < 0.03 else "NEITHER"
-    OUT.write_text(json.dumps(out, indent=1)); print(json.dumps(out, indent=1))
+    OUT.write_text(json.dumps(out, indent=1, default=int)); print(json.dumps(out, indent=1, default=int))
 
 
 if __name__ == "__main__":

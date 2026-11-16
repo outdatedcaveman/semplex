@@ -222,5 +222,37 @@
   "verdict": "HELD",
   "measured": "seed split 0.15–0.18 where circuits split evenly vs 0.014–0.019 where they agree",
   "bar": "held if difference ≥ 0.10 in every cell; broken if ≤ 0 in any"
+ },
+ {
+  "key": "51:H51.1",
+  "spike": "51",
+  "id": "H51.1",
+  "verdict": "HELD",
+  "measured": "Cautious Monotony violated in 4.3% (93 of 2,159)",
+  "bar": "held if ≤ 0.05; broken if > 0.15"
+ },
+ {
+  "key": "51:H51.2",
+  "spike": "51",
+  "id": "H51.2",
+  "verdict": "NEITHER",
+  "measured": "Cut violated in 5.9% (130 of 2,196)",
+  "bar": "held if ≤ 0.05; broken if > 0.15"
+ },
+ {
+  "key": "51:H51.3",
+  "spike": "51",
+  "id": "H51.3",
+  "verdict": "NEITHER",
+  "measured": "Rational Monotony violated in 15.0% (124 of 824)",
+  "bar": "held if ≤ 0.10; broken if > 0.25"
+ },
+ {
+  "key": "51:H51.4",
+  "spike": "51",
+  "id": "H51.4",
+  "verdict": "NEITHER",
+  "measured": "retraction 35%; recall of the logic's retractions 48%, precision 96%",
+  "bar": "held if retraction ≥ 0.10 and recall ≥ 0.50; broken if retraction < 0.03"
  }
 ]

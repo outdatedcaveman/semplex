@@ -44,7 +44,7 @@ Progress counts a closed gap as 1 and a partial one as ½. It measures the gap l
 | **A1** Other target classes | E1 | CLOSED | The Occam pull holds on three further clean classes at n = 6: cost-4 targets 0.72, symmetric functions 0.90, DNF 0.67 (Spike 45). The class where it weakens is characterized: label noise (0.58). | P128, P154 |
 | **A2** Real data: the theory currently fails there | E1 | OPEN | Pre-registered test on four real datasets (Spike 45): the Occam pull holds only on Wine (0.74); it is broken on Breast Cancer (0.29) and Diabetes (0.45). The kernel predicts the net better than Occam on 3 of 4, and beats the trained net on 3 of 4. Spike 46: the simpler-circuit predictor beats the kernel on Wine only. | P155, P156 |
 | **A8** Label noise: where the Occam pull breaks | E1 | PARTIAL | Dose–response measured (Spike 46): the pull is 0.83 with no flipped labels, 0.66 with 2 of 48, 0.57 with 5 or 8. The exact cost–error frontier is computed and certified. The 'one level simpler plus exceptions' predictor (C20′) is not supported. | P157, P158, P159 |
-| **A3** Mechanism: why feature learning finds small circuits | E2 | OPEN | Correlation (73–81%), one causal arm (lazy regime moves nets back to the kernel), and timing (kernel first, Occam from step ~30). Spike 47 removes one candidate mechanism: the representation does not become the minimum circuit. Spike 49: what nets follow is the consensus of minimum circuits, at a rate independent of n and sample size. Spike 50: training noise resolves exactly the ambiguity minimum circuits leave (seed disagreement tracks circuit disagreement, ρ ≈ 0.78). | P129, P152 |
+| **A3** Mechanism: why feature learning finds small circuits | E2 | OPEN | Correlation (73–81%), one causal arm (lazy regime moves nets back to the kernel), and timing (kernel first, Occam from step ~30). Spike 47 removes one candidate mechanism: the representation does not become the minimum circuit. Spike 49: what nets follow is the consensus of minimum circuits, at a rate independent of n and sample size. Spike 50: training noise resolves exactly the ambiguity minimum circuits leave (seed disagreement tracks circuit disagreement, ρ ≈ 0.78). Spike 51: the nets' own consequence relation is approximately cumulative (≈95%) but violates Rational Monotony 15% of the time and is stubborn under counter-evidence. | P129, P152 |
 | **A4** One predictor for the net's held-out outputs | E1 | PARTIAL | Graded consensus (Spike 50): the majority of minimum circuits agrees with a single net on 0.91–0.93 of held-out inputs (kernel 0.85–0.88), and the share of circuits per value tracks the share of seeds (ρ 0.76–0.79). Seeds themselves split on 15–18% of runs where circuits split evenly. | P173, P174 |
 | **A5** Two-phase timing replicated | E2 | PARTIAL | One cell (n = 6, tanh, width 8); the first-step criterion fell short (0.77 vs 0.80). | P152 |
 | **A6** Scale: n ≥ 8 | E3 | PARTIAL | Run at n = 8 and 10 (Spike 48): the pull is 0.72 and 0.65 at 8 labels per dimension (0.80 at n = 6) and 0.94 with 75% of inputs seen at n = 8. Nets beat their kernel at both sizes. Spike 49 explains the decline: nets follow forced values at a constant 0.98–0.99, and the fraction of forced inputs is what falls (17–28% in sparse cells, 81% with 144 seen). | P129, P172, P173 |
@@ -78,6 +78,21 @@ Progress counts a closed gap as 1 and a partial one as ½. It measures the gap l
 | **D3** Prior-art reading queue | E4 | CLOSED | Gemini G7 worked through the queue and eight further areas: 53 works, 24 read in full, 9 metadata only (paywalled). Verdicts per claim are in `charter/PRIOR_ART.md`. | P165 |
 
 ## 4. Run reports, newest first
+
+### Spike 51: Do trained nets reason like a rational nonmonotonic logic? (C24)
+
+2026-11-16 · commit `pending` · overall **NEITHER** · report `experiments/SPIKE_51_REPORT.md` · claims P177
+
+| Hypothesis | Verdict | Measured | Criterion |
+|---|---|---|---|
+| H51.1 | **HELD** | Cautious Monotony violated in 4.3% (93 of 2,159) | held if ≤ 0.05; broken if > 0.15 |
+| H51.2 | **NEITHER** | Cut violated in 5.9% (130 of 2,196) | held if ≤ 0.05; broken if > 0.15 |
+| H51.3 | **NEITHER** | Rational Monotony violated in 15.0% (124 of 824) | held if ≤ 0.10; broken if > 0.25 |
+| H51.4 | **NEITHER** | retraction 35%; recall of the logic's retractions 48%, precision 96% | held if retraction ≥ 0.10 and recall ≥ 0.50; broken if retraction < 0.03 |
+
+**Learned.** Nets are approximately cumulative but not rational, and stubborn: under counter-evidence they retract in the logic's direction but only about half as much. The kernel reasons as lawfully, so rationality is not what separates nets from kernels; which conclusions they draw is.
+
+- Gap A3: OPEN → OPEN. The nets' logic is characterized: cumulative, not rational, stubborn.
 
 ### Spike 50: Does the share of minimum circuits predict the net on all held-out inputs? (C23, graded consensus)
 
@@ -229,20 +244,21 @@ Progress counts a closed gap as 1 and a partial one as ½. It measures the gap l
 | C21 | constrained collapse | Refuted | REFUTED by Spike 47 |
 | C22 | consensus law | Partly | PARTLY SUPPORTED, Spike 49 |
 | C23 | graded consensus | Partly | PARTLY SUPPORTED, Spike 50 |
+| C24 | trained nets reason like a rational nonmonotonic logic | Open | NEITHER, Spike 51 |
 
 ## 6. Ledger health
 
-- Claims: 176. Empirical: 93; Proved in Lean: 32; Exploratory: 14; Proved on paper: 11; Kernel-checked: 6; Refuted: 5; Conjecture: 5; Method note: 5; Computed: 4; Other: 1.
-- Problems: 0. Claims stated stronger than their support: 38.
-- Frozen spike files (rule 2): 116.
+- Claims: 177. Empirical: 94; Proved in Lean: 32; Exploratory: 14; Proved on paper: 11; Kernel-checked: 6; Refuted: 5; Conjecture: 5; Method note: 5; Computed: 4; Other: 1.
+- Problems: 0. Claims stated stronger than their support: 39.
+- Frozen spike files (rule 2): 118.
 
 Weakest links (fixing one lifts every note that rests on it):
 
 | Claim | Notes resting on it | Its status | Statement |
 |---|---|---|---|
 | P069 | 21 | PROVED (paper proof) + PARTLY MECHANIZED (P160) + EMPIRICALLY-CONFIRMED (H14.1) | Theorem 15: under task-symmetric initialization and equivariant training, circuit probability is constant on task-symmet |
-| P127 | 10 | EXPLORATORY (post hoc) | Feature learning moves nets from the NTK toward the Occam completion: 91% agreement with Occam vs 81–83% with the NTK; w |
+| P127 | 11 | EXPLORATORY (post hoc) | Feature learning moves nets from the NTK toward the Occam completion: 91% agreement with Occam vs 81–83% with the NTK; w |
 | P133 | 2 | EXPLORATORY (demonstrated, tested) | A causal Bayes net's Bayes-optimal decision rule can be distilled to a canonical F0 expr + circuit in CSIR with a kernel |
 | P141 | 2 | EXPLORATORY + PARTLY MECHANIZED | Profile-factor compilation (`profile_factor_compile` in Lean; `cerp/ur_compiler.py`, H-G) factors low-rank partitions `f |
+| P175 | 2 | ~ φ iff every least-cost function agreeing with D satisfies φ") is a rational nonmonotonic consequence relation: it satisfies Cut, Cautious Monotony and Rational Monotony and fails classical Monotony. Exhaustively at n = 3 over 6,561 partial labellings: 0 violations of the three rules, 3,888 of 14,816 Monotony instances fail | Minimum-circuit forcing ("D |
 | P001 | 1 | PROVED (literature) | ROBDD under a fixed order is a normal form for F0 (idempotent; equal iff extensionally equivalent) |
-| P003 | 1 | PROVED (informal sketch) | With full care, the minimal sufficient variable set is unique and equals support(f) |

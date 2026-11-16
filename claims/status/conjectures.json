@@ -142,5 +142,11 @@
   "title": "graded consensus",
   "state": "Partly",
   "note": "PARTLY SUPPORTED, Spike 50"
+ },
+ {
+  "id": "C24",
+  "title": "trained nets reason like a rational nonmonotonic logic",
+  "state": "Open",
+  "note": "NEITHER, Spike 51"
  }
 ]
