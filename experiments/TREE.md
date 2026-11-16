@@ -55,3 +55,9 @@ Run in parallel by Gemini from the Spike 10c state; renumbered at the merge (ori
 └ 41 ("15")  Ur-Compiler benchmarks                                           exploratory: 0.23–0.66× flat-BDD gates
   └ 42 ("16")  scaling: n=16 SAT-CEGAR, width coarsening at n=8, XOR6, LRAT net checker   exploratory; Lean wall at pbToExpr O(2^d)
 ```
+
+## Third track: concepts from human judgment
+
+```
+52  canonical form of a moral concept (Moral Machine pilot)   pre-registered
+```
