@@ -379,7 +379,7 @@
   {
    "spike": "51",
    "date": "2026-11-16",
-   "commit": "pending",
+   "commit": "16c77ac",
    "question": "Do trained nets reason like a rational nonmonotonic logic? (C24)",
    "overall": "NEITHER",
    "verdicts": [

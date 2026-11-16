@@ -82,7 +82,7 @@
  {
   "spike": "51",
   "date": "2026-11-16",
-  "commit": "pending",
+  "commit": "16c77ac",
   "question": "Do trained nets reason like a rational nonmonotonic logic? (C24)",
   "overall": "NEITHER",
   "learned": "Nets are approximately cumulative but not rational, and stubborn: under counter-evidence they retract in the logic's direction but only about half as much. The kernel reasons as lawfully, so rationality is not what separates nets from kernels; which conclusions they draw is.",

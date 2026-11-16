@@ -81,7 +81,7 @@ Progress counts a closed gap as 1 and a partial one as ½. It measures the gap l
 
 ### Spike 51: Do trained nets reason like a rational nonmonotonic logic? (C24)
 
-2026-11-16 · commit `pending` · overall **NEITHER** · report `experiments/SPIKE_51_REPORT.md` · claims P177
+2026-11-16 · commit `16c77ac` · overall **NEITHER** · report `experiments/SPIKE_51_REPORT.md` · claims P177
 
 | Hypothesis | Verdict | Measured | Criterion |
 |---|---|---|---|
