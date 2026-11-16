@@ -35,18 +35,20 @@ def query(model, source, texts):
     p = os.path.join(RAW, key)
     if os.path.exists(p):
         return json.load(open(p))
-    body = json.dumps({"modelId": model, "source": source, "text": texts, "numResults": 20}).encode()
-    for t in range(6):
-        try:
-            req = urllib.request.Request(API, body, {"Content-Type": "application/json", "User-Agent": "semplex-np/0.1"})
-            d = json.load(urllib.request.urlopen(req, timeout=300))
-            break
-        except Exception as e:
-            if t == 5:
-                raise
-            time.sleep(10 * (t + 1))
-    out = [[{"token": x["token"], "f": [[f["featureIndex"], f["activationValue"]] for f in x["topFeatures"]]}
-            for x in r["results"]] for r in d["results"]]
+    out = []
+    for k in range(0, len(texts), 4):          # the API accepts at most 4 texts per call
+        body = json.dumps({"modelId": model, "source": source, "text": texts[k:k + 4], "numResults": 20}).encode()
+        for t in range(6):
+            try:
+                req = urllib.request.Request(API, body, {"Content-Type": "application/json", "User-Agent": "semplex-np/0.1"})
+                d = json.load(urllib.request.urlopen(req, timeout=300))
+                break
+            except Exception:
+                if t == 5:
+                    raise
+                time.sleep(10 * (t + 1))
+        out += [[{"token": x["token"], "f": [[f["featureIndex"], f["activationValue"]] for f in x["topFeatures"]]}
+                 for x in r["results"]] for r in d["results"]]
     json.dump({"model": model, "source": source, "texts": texts, "results": out}, open(p, "w"))
     return json.load(open(p))
 
