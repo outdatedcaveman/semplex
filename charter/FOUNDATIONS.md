@@ -288,3 +288,87 @@ Spikes 53–54 fit the product row, but post hoc. The prospective test is the co
 - C31 (economy) and C32 (closure);
 - a construction-cost law: learning time and data grow with the Krohn–Rhodes complexity of the target, as minimum circuit cost governs it in the static atlas;
 - retroconstruction: the cascade is recoverable from a trained system's macro-dynamics.
+
+## 10. Primes of meaning: semantic, semiotic, algebraic. Their algebra, the syntax–semantics bridge, and Peirce's law (2026-11-16)
+
+Results in Lean are in `proofs/lean/Closure.lean` (audited: standard axioms only; most theorems use none).
+
+Classical results cited **from memory and not re-read** for this section are marked †. Each must be read before it supports a registered claim:
+- Barrington 1989 †; Barrington–Thérien 1988 †;
+- Schützenberger 1965 † and McNaughton–Papert 1971 † (star-free = aperiodic = FO[<]);
+- Straubing 1994, *Finite Automata, Formal Logic, and Circuit Complexity* †;
+- Griffin 1990 † (call/cc has the type of Peirce's law);
+- Herzberger 1981 † and Burch 1991 † (Peirce's reduction thesis);
+- Wierzbicka and Goddard † (Natural Semantic Metalanguage);
+- Berardi, Coquand, Hayashi † (limit-computable mathematics).
+
+### 10.1 Three candidate "primes", and what each is
+
+| Candidate | What the primes are | Composition | Status |
+|---|---|---|---|
+| **Semantic primes** (NSM; Wierzbicka, Goddard †) | About 65 word-meanings claimed to be lexicalised in every language and undefinable: I, YOU, SOMEONE, SOMETHING, THIS, GOOD, BAD, BIG, SMALL, THINK, KNOW, WANT, FEEL, SAY, DO, HAPPEN, BEFORE, AFTER, NOT, MAYBE, CAN, BECAUSE, IF, LIKE… | Reductive paraphrase in a small universal grammar (each prime has a few valency frames). There is no formal algebra: it is a free term language over the primes. | An empirical linguistic hypothesis, contested (universality, undefinability). **Testable in our setting** (Spike 59 plan): do model embeddings of ordinary concepts lie in the sparse span of the primes' embeddings better than of matched random words? |
+| **Semiotic primes** (Peirce's categories †) | Firstness, Secondness, Thirdness, i.e. monadic, dyadic and triadic relations. **Peirce's reduction thesis** (proved in algebraic form by Herzberger 1981 †, Burch 1991 †): every relation of any arity is composable from monads, dyads and triads, while triads are not composable from monads and dyads alone. | Relative product plus *teridentity* (the 3-way identity). In category theory: string diagrams in which every wire may split, i.e. special commutative Frobenius algebras (hypergraph categories). Peirce's existential graphs are such diagrams for regular logic. | A theorem, given the operations. **The sign relation is irreducibly triadic**: no composition of dyadic "stands-for" links produces interpretation. |
+| **Computational primes** (Krohn–Rhodes) | The flip-flop (resettable memory, irreversible) and the finite simple groups (reversible counting). | Cascade (wreath) product. Decompositions are **not unique** (unlike integers); the invariant is the *group complexity* (minimal number of group levels interleaved with aperiodic ones). Its decidability in general is a long-open problem. | A theorem (§9.2). Spike 57: trained nets build each prime in a recognisable geometry. |
+
+### 10.2 How they connect: logic, circuits, complexity
+
+The algebraic theory of regular languages turns the computational primes into logic and complexity. A language's *syntactic monoid* is the transformation monoid of its minimal automaton, the Myhill–Nerode object of §9.1 (`MN_coarsest`). Then:
+- **No group content (aperiodic)** ⇔ star-free ⇔ definable in first-order logic FO[<] (Schützenberger †, McNaughton–Papert †) ⇔ in AC⁰ (constant-depth circuits). Flip-flops only: logic without counting.
+- **Solvable groups only** ⇔ FO plus modular-counting quantifiers ⇔ in ACC⁰ (Barrington–Thérien †). Cyclic primes ℤ/p are mod-p counting quantifiers.
+- **A non-solvable simple group (A₅)** ⇔ NC¹-complete (Barrington's theorem †: width-5 branching programs over A₅ compute all of NC¹).
+
+So the periodic table is **graded by circuit complexity and by logical expressiveness at once**: flip-flop → FO/AC⁰, cyclic → MOD/ACC⁰, non-solvable simple → NC¹. Two links follow:
+- Liu et al. (2210.10749, abstract read) use exactly this split to explain which automata shallow transformers simulate.
+- Yang et al. (2608.13433) show the transformer's own elements are counters over ℤ, so the table is substrate-relative.
+
+**Logic coding (Curry–Howard).** Proofs are programs and propositions are types. The construction calculus of a concept (its cascade) is a program; its type is the concept's specification.
+
+**HoTT.** A group G is a pointed connected 1-type BG (§8). A composition series 1 ◁ N ◁ G becomes a fibration BN → BG → B(G/N), and a cascade is an iterated dependent sum (Σ) of such fibres. **Simple groups are exactly the BG admitting no nontrivial such fibration:** the prime types. A flip-flop is *not invertible* and has no place in an ∞-groupoid. HoTT captures the reversible half of the table (symmetry, Plato); the irreversible half (memory, erasure) needs directed or modal/linear structure.
+
+### 10.3 The thermodynamic reading (conjecture C33)
+
+The two kinds of prime split exactly along reversibility:
+- groups are bijections;
+- the flip-flop's reset erases a bit (Landauer: at least kT ln 2 of heat).
+
+**C33.** The Aristotelian (thermodynamic) side of abstraction is carried by the aperiodic, erasing primes, and the Platonic (symmetric, invariant) side by the group primes. Every abstraction is a cascade of forgetting (resets, which create macrostates by discarding distinctions, at a thermodynamic cost) and of symmetry (groups, which act on what remains without loss).
+
+Spike 57 is consistent with this: the reset's macrostates were tight (2% within-state variance), while group states kept 20–27% micro-detail.
+
+### 10.4 Syntax and semantics: how close is the unification?
+
+For the finite-state fragment it is **already one object**. The syntactic congruence of a language identifies two expressions iff they are interchangeable in every context. That is Frege's and Leibniz's substitutivity and Harris's distributional hypothesis made exact. It is simultaneously:
+- its *semantics*: the coarsest closed macrostate deciding meaning (`MN_coarsest`);
+- its *syntax*: the syntactic monoid presented by the words;
+- its *logic*: the fragment of FO/MSO that defines it (Büchi–Elgot–Trakhtenbrot †, Schützenberger †);
+- its *complexity*: the circuit class above;
+- its *geometry*: C31's minimal faithful representations of its primes (Spike 57).
+
+**What is not unified:**
+1. **Beyond finite state.** Natural language needs at least context-free structure. The algebraic tools (profinite monoids, Eilenberg–Reiterman varieties †) extend only partly.
+2. **Approximation.** Real systems are only approximately lumpable. A metric version of closure, with error bounds, is open; Rosas et al. treat the stochastic case.
+3. **Grounding.** The monoid is substrate-free. Which observations the outputs o are made of is the grounding problem (C27, meaning in the limit), not solved by algebra.
+4. **Scale.** Whether a large model's concepts are the syntactic congruence of its training language is an empirical question that the lexical spikes can begin to answer.
+
+**My assessment:** the unifying structure is identified and theorem-level for finite-state meaning. For natural language it is a research programme, not a result.
+
+### 10.5 Peirce's law in our intuitionistic and linear setting
+
+Lean (`Closure.lean`):
+- `peirce_iff_em` (no axioms): over intuitionistic logic, Peirce's law ((P → Q) → P) → P is interderivable with excluded middle.
+- `peirce_decidable` (no axioms): it holds constructively for every decidable proposition, hence for every proposition about our finite atlas.
+- `not_not_peirce` (no axioms): it is never refutable (Glivenko).
+
+**In linear logic** it fails for a second, independent reason (sequent argument, on paper). In one-sided form, ⊢ ((A⊥ ⅋ B) ⊗ A⊥), A, and the ⊗ rule must split the single A:
+- giving A to the right premise leaves ⊢ A⊥ ⅋ B, i.e. ⊢ A⊥, B, which is unprovable;
+- giving it to the left leaves ⊢ A⊥ alone, which is unprovable.
+
+A proof exists only if A is first **duplicated** (contraction: ⊢ …, A, A) and then B is **discarded** (weakening: ⊢ A⊥, B, A from ⊢ A⊥, A). So Peirce's law needs a classical multiple-conclusion structure *and both* structural rules. It fails intuitionistically (single conclusion), in linear logic (neither rule), and in affine logic (no contraction).
+
+**Computationally**, Peirce's law is the type of call/cc (Griffin †). call/cc **copies** a continuation (contraction) and later **abandons** the current one (weakening). The abandoning half is the logical form of the reset prime (§10.3): Peirce's law is the law of jumping back, paid for by copying and erasing.
+
+**What it tells us:**
+1. **Finite meaning is classical.** On a finite atlas every proposition is decidable, so Peirce's law and excluded middle hold constructively. The classical/intuitionistic gap opens only at infinity.
+2. **At infinity, classical principles are realised in the limit.** Excluded middle for Σ⁰₁ statements is realised by limit-computable (learning-in-the-limit) procedures (Berardi, Coquand, Hayashi †). That is our C27 (meaning in the limit, Δ⁰₂).
+3. **This is Peirce's own theory of truth.** For Peirce, truth is the opinion inquiry is fated to converge on: truth *in the limit*. **The logical law that bears his name holds exactly where his theory of truth operates.** It holds constructively on finite decidable matters, and is realised by convergent inquiry (learning in the limit) on infinite ones, without a modulus of convergence (fallibilism: you never know you have arrived).
+4. **The price is resources.** Linearly, Peirce's law costs copying and erasure. Classical reasoning about the infinite is paid for by duplicating hypotheses and forgetting, as abstraction is paid for by forgetting (C33).

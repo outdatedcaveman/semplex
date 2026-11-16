@@ -76,11 +76,11 @@ def test_proof_files_compile_and_use_only_standard_axioms(tmp_path):
     import subprocess
     lean = lean_bridge.lean_binary()
     d = lean_bridge.LEAN_DIR
-    for f in ("Cerp", "Theory", "Bounds", "Inference"):
+    for f in ("Cerp", "Theory", "Bounds", "Inference", "Closure"):
         r = subprocess.run([lean, f"--root={d}", "-o", str(tmp_path / f"{f}.olean"), str(d / f"{f}.lean")],
                            cwd=d, capture_output=True, text=True, timeout=LEAN_FILE_TIMEOUT)
         assert r.returncode == 0, r.stdout + r.stderr
-    for audit in ("Audit.lean", "AuditTheory.lean", "AuditBounds.lean", "AuditInference.lean"):
+    for audit in ("Audit.lean", "AuditTheory.lean", "AuditBounds.lean", "AuditInference.lean", "AuditClosure.lean"):
         r = subprocess.run([lean, str(d / audit)], cwd=d, capture_output=True, text=True, timeout=LEAN_FILE_TIMEOUT,
                            env={**__import__("os").environ, "LEAN_PATH": str(tmp_path)})
         assert r.returncode == 0, r.stdout + r.stderr
