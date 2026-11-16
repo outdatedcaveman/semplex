@@ -20,7 +20,7 @@ Progress counts a closed gap as 1 and a partial one as ½. It measures the gap l
 | Gap | Leverage | State | What is missing | Closes when | Next |
 |---|---|---|---|---|---|
 | **A11** Concept geometry from symmetry (C29) across models and brains | HIGH | PARTIAL | A symmetry group that accounts for the residual brain–model agreement; an account of composition (sum plus structured residue) derived from statistics; C30 in larger models and contested cases; a predictive test of geometry from measured co-occurrence symmetry. | A pre-registered test predicts a family's geometry from its measured co-occurrence symmetry before looking, in activations and cortex, including a product family. | C30 at scale (larger models, more frames, contested cases); derive additive-plus-residue composition from co-occurrence statistics |
-| **A12** Atlas and periodic table of concepts: closure (C32), economy (C31), construction cost | HIGH | OPEN | A pre-registered probe-based closure test across architectures (GRU, transformer); a derivation of the economy law from training dynamics; the lexical-scale periodic table (reconstruction of concepts from primitives); retroconstruction of a cascade from a trained net; the construction-cost law tested prospectively. | For automata sampled from a stated distribution, the minimal automaton, its Krohn–Rhodes cascade and the geometry of each part are predicted before training and recovered from trained nets of two architectures, and the same calculus predicts held-out lexical concepts from their parts. | Spike 58: confirmatory closure (probe form) and retroconstruction across GRU and transformer on sampled automata; then the lexical periodic table |
+| **A12** Atlas and periodic table of concepts: closure (C32), economy (C31), construction cost | HIGH | OPEN | A pre-registered probe-based closure test across architectures (GRU, transformer); a derivation of the economy law from training dynamics; the lexical-scale periodic table (reconstruction of concepts from primitives); retroconstruction of a cascade from a trained net; the construction-cost law tested prospectively. | For automata sampled from a stated distribution, the minimal automaton, its Krohn–Rhodes cascade and the geometry of each part are predicted before training and recovered from trained nets of two architectures, and the same calculus predicts held-out lexical concepts from their parts. | Spike 58 analysis (in progress); then data-driven universal atoms for the lexicon (shared dictionary learning across models), and a transformer arm for the automaton scale |
 | **A2** Real data: the theory currently fails there | HIGH | OPEN | A version of the theory that predicts trained nets on noisy real tasks better than the kernel does. | Pre-registered on the same four datasets plus two new ones: a stated predictor agrees with trained nets more than the kernel does in at least 4 of 6. | Blocked on A8: no predictor yet beats the kernel on these datasets |
 | **A3** Mechanism: why feature learning finds small circuits | HIGH | OPEN | A derivation. The unit-level selection law (volume × information tilt) is not shown to produce the Occam pull (C18 not supported). | A stated law that predicts the Occam-sides fraction or S(t) from measurable quantities, confirmed in a prospective test. | After A8: the mechanism must also explain why noise removes the pull |
 | **A6** Scale: n ≥ 8 | HIGH | PARTIAL | Widths beyond 8 in the feature-learning regime, and target classes other than two-unit ones at n ≥ 8. | The consensus law re-measured at width ≥ 32 and on cost-4 targets at n = 8. | Unscheduled |
@@ -54,7 +54,7 @@ Progress counts a closed gap as 1 and a partial one as ½. It measures the gap l
 | **A9** What the hidden layer represents | E2 | OPEN | Ruled out (Spike 47): the layer does not collapse onto a minimum circuit's cells (0.08% of nets) nor onto the class. Minimum circuits are over-represented 700-fold but explain only 56% of the variance; the layer uses more than two directions. Prior art covers the canonical quotient itself. | P132, P171 |
 | **A10** Identifiability of mechanisms | E2 | PARTIAL | Census done (P167): at 4 inputs, 50 of 128 cost-3 classes have a single orbit of minimum circuits and no class of cost ≥ 4 does. So for most functions the function does not fix its mechanism. | P069, P167 |
 | **A11** Concept geometry from symmetry (C29) across models and brains | E1 | PARTIAL | Spike 53: circles for cyclic families in 14 models' static weights; category block structure and shared brain–model geometry (THINGS-fMRI, 3 subjects); the tensor-product row refuted for lexical composition (additive instead); shared structure finer than the 17-category skeleton. Spike 54: semantic products in Neuronpedia sparse codes are also mainly additive (tensor residue carries the cycle at p < 0.05 in 71%). Spike 55: fairness verdict readable in only 2 of 7 sources, so C30 untested. Spike 56: small models' own fairness verdicts are nearly invariant under permuting persons (names 3–5% of verdict variance vs 33–40% of state; C30 supported approximately). | P179, P180, P181, P182, P183, P184 |
-| **A12** Atlas and periodic table of concepts: closure (C32), economy (C31), construction cost | E2 | OPEN | FOUNDATIONS §9: abstraction as closed coarse-graining (Rosas et al. 2024: closure ⇔ strong lumpability), Krohn–Rhodes primes as the periodic table (substrate-relative). Spike 57: recurrent nets build reset → simplex, S3 → 2-D, ℤ/n → ordered circle, product → sum, cascade → more interaction than product; the minimal automaton is present as an exact linear, lumpable coarse-graining (exploratory). Construction cost rises with composition (exploratory). | P185, P186 |
+| **A12** Atlas and periodic table of concepts: closure (C32), economy (C31), construction cost | E2 | OPEN | FOUNDATIONS §9: abstraction as closed coarse-graining (Rosas et al. 2024: closure ⇔ strong lumpability), Krohn–Rhodes primes as the periodic table (substrate-relative). Spike 57: recurrent nets build reset → simplex, S3 → 2-D, ℤ/n → ordered circle, product → sum, cascade → more interaction than product; the minimal automaton is present as an exact linear, lumpable coarse-graining (exploratory). Construction cost rises with composition (exploratory). Spike 59: the NSM semantic primes are not a privileged basis of 14 models' lexicons (worse spanning than frequency-matched words; universality non-specific). | P185, P186, P187 |
 
 ### Compiler
 
@@ -82,6 +82,20 @@ Progress counts a closed gap as 1 and a partial one as ½. It measures the gap l
 | **D3** Prior-art reading queue | E4 | CLOSED | Gemini G7 worked through the queue and eight further areas: 53 works, 24 read in full, 9 metadata only (paywalled). Verdicts per claim are in `charter/PRIOR_ART.md`. | P165 |
 
 ## 4. Run reports, newest first
+
+### Spike 59: Are semantic primes the elements of the lexicon? (spanning and universality in 14 models' embedding weights)
+
+2026-11-16 · commit `a465bfd` · overall **BROKEN** · report `experiments/SPIKE_59_REPORT.md` · claims P187
+
+| Hypothesis | Verdict | Measured | Criterion |
+|---|---|---|---|
+| H59.1 | **BROKEN** | p<=0.05 in 0/24; below random median in 24/24 (median z -3.83) | held p<=0.05 in >=75%; broken below median in >=50% |
+| H59.2 | **BROKEN** | p<=0.05 in 0/24; below random median in 17/24 (median z -0.39) | as H59.1 |
+| H59.3 | **HELD** | shared primes 1.71 (null max 0.97) concrete, 2.63 (null max 0.99) abstract | above all 1,000 shuffles for both |
+
+**Learned.** Semantic primes are not a privileged basis of model lexicons: they span concrete nouns worse than ordinary words of the same frequency and abstract words no better. Decompositions agree across models, but any common dictionary agrees as much (exploratory control), so the agreement is shared geometry. The lexicon's elements, if any, must be learned from data.
+
+- Gap A12: OPEN → OPEN. Lexical scale opened: the NSM prime list is not the element set; data-driven elements next.
 
 ### Spike 57: Do trained networks build the minimal automaton, in the geometry of its Krohn–Rhodes parts? (C31 economy, C32 closure)
 
@@ -347,9 +361,9 @@ Progress counts a closed gap as 1 and a partial one as ½. It measures the gap l
 
 ## 6. Ledger health
 
-- Claims: 186. Empirical: 99; Proved in Lean: 32; Exploratory: 16; Proved on paper: 11; Refuted: 7; Kernel-checked: 6; Conjecture: 5; Method note: 5; Computed: 4; Other: 1.
+- Claims: 187. Empirical: 99; Proved in Lean: 32; Exploratory: 16; Proved on paper: 11; Refuted: 8; Kernel-checked: 6; Conjecture: 5; Method note: 5; Computed: 4; Other: 1.
 - Problems: 0. Claims stated stronger than their support: 39.
-- Frozen spike files (rule 2): 133.
+- Frozen spike files (rule 2): 137.
 
 Weakest links (fixing one lifts every note that rests on it):
 

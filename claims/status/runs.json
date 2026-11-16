@@ -148,5 +148,15 @@
   "learned": "Recurrent nets build each Krohn–Rhodes part in a recognisable geometry (simplex for a reset, a 2-D representation for S3, ordered circles for cyclic groups) and keep a product as a sum. Every cascade carries more interaction than its product, but far less than a linear fibred representation needs. The minimal automaton is present exactly, as a linearly readable, deterministic coarse-graining of a richer microstate, not as clusters: Plato's form as Aristotle's macrostate.",
   "moved": "A12: new → OPEN (Atlas and periodic table of concepts opened: first exact dynamic-scale test)",
   "claims": "P185 P186"
+ },
+ {
+  "spike": "59",
+  "date": "2026-11-16",
+  "commit": "a465bfd",
+  "question": "Are semantic primes the elements of the lexicon? (spanning and universality in 14 models' embedding weights)",
+  "overall": "BROKEN",
+  "learned": "Semantic primes are not a privileged basis of model lexicons: they span concrete nouns worse than ordinary words of the same frequency and abstract words no better. Decompositions agree across models, but any common dictionary agrees as much (exploratory control), so the agreement is shared geometry. The lexicon's elements, if any, must be learned from data.",
+  "moved": "A12: OPEN → OPEN (Lexical scale opened: the NSM prime list is not the element set; data-driven elements next)",
+  "claims": "P187"
  }
 ]

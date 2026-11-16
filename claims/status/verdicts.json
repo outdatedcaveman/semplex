@@ -462,5 +462,29 @@
   "verdict": "NEITHER",
   "measured": "PROD median 0.033, CASC median 0.142",
   "bar": "PROD <= 0.30 and CASC >= 0.60 in >= 80%; broken if CASC median <= PROD median"
+ },
+ {
+  "key": "59:H59.1",
+  "spike": "59",
+  "id": "H59.1",
+  "verdict": "BROKEN",
+  "measured": "p<=0.05 in 0/24; below random median in 24/24 (median z -3.83)",
+  "bar": "held p<=0.05 in >=75%; broken below median in >=50%"
+ },
+ {
+  "key": "59:H59.2",
+  "spike": "59",
+  "id": "H59.2",
+  "verdict": "BROKEN",
+  "measured": "p<=0.05 in 0/24; below random median in 17/24 (median z -0.39)",
+  "bar": "as H59.1"
+ },
+ {
+  "key": "59:H59.3",
+  "spike": "59",
+  "id": "H59.3",
+  "verdict": "HELD",
+  "measured": "shared primes 1.71 (null max 0.97) concrete, 2.63 (null max 0.99) abstract",
+  "bar": "above all 1,000 shuffles for both"
  }
 ]

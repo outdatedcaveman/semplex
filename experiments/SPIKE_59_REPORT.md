@@ -1,6 +1,6 @@
 # Spike 59: Are semantic primes the elements of the lexicon? A lexical periodic-table test in model weights
 
-**Date:** 2026-11-16 · **Status:** pre-registered (no run) · **Follows:** `charter/FOUNDATIONS.md` §9.4 (the lexical scale of the atlas) and §10.1 (semantic primes). The weight-reading method is Spike 53's (`cerp/hfrows.py`): rows read from published safetensors files, no model run.
+**Date:** 2026-11-16 · **Status:** complete (pre-registered in a465bfd; results below) · **Follows:** `charter/FOUNDATIONS.md` §9.4 (the lexical scale of the atlas) and §10.1 (semantic primes). The weight-reading method is Spike 53's (`cerp/hfrows.py`): rows read from published safetensors files, no model run.
 
 ## Question
 
@@ -71,4 +71,31 @@ python -m experiments.spike59 analyse
 
 ## Results
 
-(Not run.)
+`experiments/results/spike59.json`; rows in `spike59_raw/` (239 MB, git-ignored; `run` regenerates them from the published weights). All 24 matrices passed the guard: 67 primes in every tokenizer; 435–758 concrete and 59–60 abstract targets.
+
+**Recorded caveat.** Falcon-7B's input and output matrices give identical numbers, so they are stored separately but are equal (tied). The 24 matrices therefore include one duplicated pair.
+
+| ID | Measured | Criterion | Verdict |
+|---|---|---|---|
+| H59.1 | primes beat matched words (p ≤ 0.05) in 0/24 matrices; primes **below** the random median in 24/24; median z = -3.83 | ≥ 75% held; below median in ≥ 50% broken | **BROKEN** |
+| H59.2 | p ≤ 0.05 in 0/24; below the random median in 17/24; median z = -0.39 | as H59.1 | **BROKEN** |
+| H59.3 | mean shared primes per pair of models: concrete 1.71 (null max 0.97), abstract 2.63 (null max 0.99); p = 0.001 both | p < 0.001 both | **HELD** |
+
+**Reading:**
+- **Spanning fails.** Semantic primes reconstruct concrete nouns *worse* than frequency-matched real words in every matrix, and abstract words no better. All reconstructions are weak: 8 atoms explain 1–10% of a centred static embedding's variance.
+- **Universality holds as registered,** and the abstract words' most-used primes are NSM-like: want, good, time, bad, true, move, feel, moment, think.
+
+**Exploratory control, after the verdicts** (`experiments/spike59_control.py`, `results/spike59_control.json`):
+
+The same universality statistic, recomputed in one pipeline for the primes and for 5 random dictionaries of frequency-matched words that are single tokens in all 14 models:
+
+| Dictionary | Concrete | Abstract |
+|---|---|---|
+| primes | 1.84 | 2.93 |
+| random (5 draws) | 2.07–2.18 | 2.95–3.15 |
+
+**The universality in H59.3 is not specific to the primes.** Any common dictionary gets cross-model agreement at least as large, because the models share geometry (P181). The registered null (shuffling prime identities) controlled for chance overlap, not for that shared geometry. The verdict stands as registered; its meaning is narrower than the hypothesis.
+
+**Conclusion.** In the static lexicons of 14 language models, Wierzbicka's semantic primes are not a privileged basis: they neither span the lexicon better than ordinary words nor decompose it more universally. This does not test NSM's claim about paraphrase, which is not linear reconstruction. It does mean the lexical periodic table, if there is one, is not made of these words in these spaces.
+
+**Next:** derive the elements from data instead of from a list. Use dictionary learning shared across models, with atoms required to be universal, and ask whether the learned atoms are words, features, or Krohn–Rhodes-like operations.

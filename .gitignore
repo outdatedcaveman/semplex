@@ -5,3 +5,4 @@ atlas/jobs/n5.jsonl
 atlas/.cache/
 proofs/lean-mathlib/.lake/
 experiments/results/spike57_raw/*.npz
+experiments/results/spike59_raw/

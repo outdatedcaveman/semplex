@@ -69,5 +69,7 @@ Run in parallel by Gemini from the Spike 10c state; renumbered at the merge (ori
 
 ```
 57  closure (C32) and economy (C31) on Krohn–Rhodes automata (GRUs)        frozen: H57.3–4 held; H57.1, H57.2 broken; H57.5 neither; probe: minimal automaton exact
+├ 58  causal power (interventions), characters, topology, cost incl. A5     running
+└ 59  semantic primes as lexical elements (14 models' weights)              frozen: H59.1–2 broken; H59.3 held but non-specific (control)
 ```
 ```

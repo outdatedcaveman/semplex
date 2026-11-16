@@ -11,12 +11,19 @@ CACHE = os.environ.get("SEMPLEX_HF_CACHE", os.path.expanduser("~/.cache/semplex-
 DT = {"F32": (np.float32, 4), "F16": (np.float16, 2), "BF16": (None, 2)}
 
 
-def _get(url, rng=None):
+def _get(url, rng=None, tries=6):
+    import time
     h = dict(UA)
     if rng:
         h["Range"] = "bytes=%d-%d" % rng
-    with urllib.request.urlopen(urllib.request.Request(url, headers=h), timeout=120) as r:
-        return r.read()
+    for t in range(tries):
+        try:
+            with urllib.request.urlopen(urllib.request.Request(url, headers=h), timeout=120) as r:
+                return r.read()
+        except Exception:
+            if t == tries - 1:
+                raise
+            time.sleep(3 * (t + 1))
 
 
 def _file(repo, name):

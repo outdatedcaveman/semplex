@@ -300,11 +300,11 @@
   "title": "Atlas and periodic table of concepts: closure (C32), economy (C31), construction cost",
   "status": "OPEN",
   "leverage": "HIGH",
-  "have": "FOUNDATIONS §9: abstraction as closed coarse-graining (Rosas et al. 2024: closure ⇔ strong lumpability), Krohn–Rhodes primes as the periodic table (substrate-relative). Spike 57: recurrent nets build reset → simplex, S3 → 2-D, ℤ/n → ordered circle, product → sum, cascade → more interaction than product; the minimal automaton is present as an exact linear, lumpable coarse-graining (exploratory). Construction cost rises with composition (exploratory).",
+  "have": "FOUNDATIONS §9: abstraction as closed coarse-graining (Rosas et al. 2024: closure ⇔ strong lumpability), Krohn–Rhodes primes as the periodic table (substrate-relative). Spike 57: recurrent nets build reset → simplex, S3 → 2-D, ℤ/n → ordered circle, product → sum, cascade → more interaction than product; the minimal automaton is present as an exact linear, lumpable coarse-graining (exploratory). Construction cost rises with composition (exploratory). Spike 59: the NSM semantic primes are not a privileged basis of 14 models' lexicons (worse spanning than frequency-matched words; universality non-specific).",
   "missing": "A pre-registered probe-based closure test across architectures (GRU, transformer); a derivation of the economy law from training dynamics; the lexical-scale periodic table (reconstruction of concepts from primitives); retroconstruction of a cascade from a trained net; the construction-cost law tested prospectively.",
   "closes_when": "For automata sampled from a stated distribution, the minimal automaton, its Krohn–Rhodes cascade and the geometry of each part are predicted before training and recovered from trained nets of two architectures, and the same calculus predicts held-out lexical concepts from their parts.",
-  "next": "Spike 58: confirmatory closure (probe form) and retroconstruction across GRU and transformer on sampled automata; then the lexical periodic table",
+  "next": "Spike 58 analysis (in progress); then data-driven universal atoms for the lexicon (shared dictionary learning across models), and a transformer arm for the automaton scale",
   "blocked_by": "",
-  "claims": "P185 P186"
+  "claims": "P185 P186 P187"
  }
 ]

@@ -698,6 +698,45 @@
     "P185",
     "P186"
    ]
+  },
+  {
+   "spike": "59",
+   "date": "2026-11-16",
+   "commit": "a465bfd",
+   "question": "Are semantic primes the elements of the lexicon? (spanning and universality in 14 models' embedding weights)",
+   "overall": "BROKEN",
+   "verdicts": [
+    {
+     "id": "H59.1",
+     "verdict": "BROKEN",
+     "measured": "p<=0.05 in 0/24; below random median in 24/24 (median z -3.83)",
+     "bar": "held p<=0.05 in >=75%; broken below median in >=50%"
+    },
+    {
+     "id": "H59.2",
+     "verdict": "BROKEN",
+     "measured": "p<=0.05 in 0/24; below random median in 17/24 (median z -0.39)",
+     "bar": "as H59.1"
+    },
+    {
+     "id": "H59.3",
+     "verdict": "HELD",
+     "measured": "shared primes 1.71 (null max 0.97) concrete, 2.63 (null max 0.99) abstract",
+     "bar": "above all 1,000 shuffles for both"
+    }
+   ],
+   "learned": "Semantic primes are not a privileged basis of model lexicons: they span concrete nouns worse than ordinary words of the same frequency and abstract words no better. Decompositions agree across models, but any common dictionary agrees as much (exploratory control), so the agreement is shared geometry. The lexicon's elements, if any, must be learned from data.",
+   "gaps_moved": [
+    {
+     "gap": "A12",
+     "from": "OPEN",
+     "to": "OPEN",
+     "why": "Lexical scale opened: the NSM prime list is not the element set; data-driven elements next"
+    }
+   ],
+   "claims": [
+    "P187"
+   ]
   }
  ]
 }
