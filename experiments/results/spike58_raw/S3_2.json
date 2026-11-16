@@ -1,0 +1,16 @@
+{
+ "automaton": "S3",
+ "seed": 5832,
+ "first99": 150,
+ "fit": 1.0,
+ "probe_acc": 1.0,
+ "determinism": 1.0,
+ "intervene_diff": 1.0,
+ "intervene_same": 1.0,
+ "char_scores": {
+  "sign": -0.6929348671835831,
+  "std": 0.6929348671835831
+ },
+ "char_best": "std",
+ "char_hit": true
+}
