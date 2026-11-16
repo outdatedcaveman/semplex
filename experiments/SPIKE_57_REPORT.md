@@ -1,6 +1,6 @@
 # Spike 57: Do trained networks build the minimal automaton, in the geometry of its Krohn–Rhodes parts?
 
-**Date:** 2026-11-16 · **Status:** pre-registered (no run) · **Follows:** `charter/FOUNDATIONS.md` §9. This is the first test of the dynamic, exact scale of the atlas programme. It follows Spikes 53–54, whose refutation of C29's tensor row C31 explains post hoc; here the prediction is prospective. **Conjectures:** C31 (economy law), C32 (closure law).
+**Date:** 2026-11-16 · **Status:** complete (pre-registered in 48984fb; results below) · **Follows:** `charter/FOUNDATIONS.md` §9. This is the first test of the dynamic, exact scale of the atlas programme. It follows Spikes 53–54, whose refutation of C29's tensor row C31 explains post hoc; here the prediction is prospective. **Conjectures:** C31 (economy law), C32 (closure law).
 
 ## Question
 
@@ -85,4 +85,41 @@ python -m experiments.spike57 analyse
 
 ## Results
 
-(Not run.)
+`experiments/results/spike57.json`. The hidden-state dumps (2.5 MB per run, 75 MB in all) are not committed: `run` regenerates them deterministically from the seeds, and they are listed in `.gitignore`. 29 of 30 runs fit; PROD seed 3 reached 0.986 and is excluded by the guard.
+
+| ID | Measured | Criterion | Verdict |
+|---|---|---|---|
+| H57.1 | k-means clusters match the minimal states (ARI ≥ 0.95, determinism ≥ 0.99) in 20.7% of runs (only RESET3 and one Z5 seed) | ≥ 80% held, < 50% broken | **BROKEN** |
+| H57.2 | Z5/Z7: top-2 share 0.91–0.95 in 10/10, but step SD ≤ 0.35 in 3/10 (0.34–0.47) | both, ≥ 80% | **BROKEN** |
+| H57.3 | RESET3 distance CV ≤ 0.15 in 4/5 (0.12–0.16) | ≥ 80% | **HELD** |
+| H57.4 | S3 top-2 share ≥ 0.80 in 5/5 (0.82–0.86) | ≥ 80% | **HELD** |
+| H57.5 | PROD relative interaction ≤ 0.30 in 4/4 (median 0.033); CASC ≥ 0.60 in 0/5 (median 0.142) | both ≥ 80% held; CASC median ≤ PROD median broken | **NEITHER** |
+
+**Reading of the registered tests:**
+- **Circles:** every cyclic counter lies on a 2-dimensional circle in its group order, with the lowest Fourier mode (k = 1 in all 10 runs). But the states are not evenly spaced, so the strict circle criterion is broken.
+- **Reset and S₃:** the reset is a near-regular simplex. S₃ lives mostly in 2 dimensions, its standard representation (a third dimension holds the rest: 90% needs 3 dimensions).
+- **Product versus cascade:** the direction C31 predicts holds without exception. Every cascade network carries more interaction than every product network (0.10–0.19 against 0.015–0.067; medians 0.142 against 0.033, ratio 4.3). But the cascade is not the fully fibred geometry a linear representation needs: the nonlinear network implements the mode-dependent count with a small interaction term.
+
+**Exploratory, after the verdicts.** Linear probe, trained on half the hidden states and tested on the other half:
+
+| Automaton | Probe accuracy | Macro-determinism of probe states | Within-state variance share |
+|---|---|---|---|
+| Z5 | 1.000 | 1.000 | 0.20 |
+| Z7 | 1.000 | 1.000 | 0.27 |
+| RESET3 | 1.000 | 1.000 | 0.02 |
+| S3 | 1.000 | 1.000 | 0.26 |
+| PROD | 1.000 | 1.000 | 0.21 |
+| CASC | 1.000 | 1.000 | 0.26 |
+
+**This reverses the reading of H57.1.**
+- The minimal automaton is present exactly in every network, as a linearly readable coarse-graining whose macro-dynamics are exactly deterministic (lumpable).
+- What fails is the operationalisation: the macrostates are not tight clusters. 20–27% of hidden-state variance is extra within-state detail, which a reset erases (2%) and a group action preserves.
+- The closure law in the form C32 states it (macrostates that are the minimal automaton's, with lumpable dynamics) is supported by this exploratory analysis, not by the registered test. A confirmatory spike must register the probe version.
+
+**Exploratory: construction cost.** Steps to reach 0.99 training accuracy (median):
+
+| RESET3 | Z5 | Z7 | S3 | PROD | CASC |
+|---|---|---|---|---|---|
+| 50 | 150 | 225 | 300 | 338 | 500 |
+
+Cost rises with the composition: memory alone, then larger cyclic groups, then a non-abelian group, then a direct product, then a cascade. This is a first trace of the construction-cost law of §9.4. It is not a registered test.

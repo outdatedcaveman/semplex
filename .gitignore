@@ -4,3 +4,4 @@ __pycache__/
 atlas/jobs/n5.jsonl
 atlas/.cache/
 proofs/lean-mathlib/.lake/
+experiments/results/spike57_raw/*.npz

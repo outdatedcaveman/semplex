@@ -646,6 +646,58 @@
    "claims": [
     "P184"
    ]
+  },
+  {
+   "spike": "57",
+   "date": "2026-11-16",
+   "commit": "48984fb",
+   "question": "Do trained networks build the minimal automaton, in the geometry of its Krohn–Rhodes parts? (C31 economy, C32 closure)",
+   "overall": "MIXED",
+   "verdicts": [
+    {
+     "id": "H57.1",
+     "verdict": "BROKEN",
+     "measured": "0.207 of runs (k-means)",
+     "bar": "held >= 0.8, broken < 0.5"
+    },
+    {
+     "id": "H57.2",
+     "verdict": "BROKEN",
+     "measured": "0.300 of runs (top-2 >= 0.8 in all; spacing fails)",
+     "bar": "held >= 0.8, broken < 0.5"
+    },
+    {
+     "id": "H57.3",
+     "verdict": "HELD",
+     "measured": "0.800 of runs",
+     "bar": "held >= 0.8, broken < 0.5"
+    },
+    {
+     "id": "H57.4",
+     "verdict": "HELD",
+     "measured": "1.000 of runs",
+     "bar": "held >= 0.8, broken < 0.5"
+    },
+    {
+     "id": "H57.5",
+     "verdict": "NEITHER",
+     "measured": "PROD median 0.033, CASC median 0.142",
+     "bar": "PROD <= 0.30 and CASC >= 0.60 in >= 80%; broken if CASC median <= PROD median"
+    }
+   ],
+   "learned": "Recurrent nets build each Krohn–Rhodes part in a recognisable geometry (simplex for a reset, a 2-D representation for S3, ordered circles for cyclic groups) and keep a product as a sum. Every cascade carries more interaction than its product, but far less than a linear fibred representation needs. The minimal automaton is present exactly, as a linearly readable, deterministic coarse-graining of a richer microstate, not as clusters: Plato's form as Aristotle's macrostate.",
+   "gaps_moved": [
+    {
+     "gap": "A12",
+     "from": "new",
+     "to": "OPEN",
+     "why": "Atlas and periodic table of concepts opened: first exact dynamic-scale test"
+    }
+   ],
+   "claims": [
+    "P185",
+    "P186"
+   ]
   }
  ]
 }

@@ -160,5 +160,17 @@
   "title": "justice as invariance under permuting persons",
   "state": "Supported",
   "note": "SUPPORTED, approximately; Spike 56"
+ },
+ {
+  "id": "C31",
+  "title": "economy law for concept geometry",
+  "state": "Partly",
+  "note": "PARTLY SUPPORTED; Spike 57"
+ },
+ {
+  "id": "C32",
+  "title": "closure law",
+  "state": "Open",
+  "note": "registered test BROKEN; exploratory analysis SUPPORTS it; Spike 57"
  }
 ]

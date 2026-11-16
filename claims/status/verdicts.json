@@ -422,5 +422,45 @@
   "verdict": "HELD",
   "measured": "largest name effect 0.15-0.21 act-SD",
   "bar": "<= 0.25 act-SD in >= 75% of usable"
+ },
+ {
+  "key": "57:H57.1",
+  "spike": "57",
+  "id": "H57.1",
+  "verdict": "BROKEN",
+  "measured": "0.207 of runs (k-means)",
+  "bar": "held >= 0.8, broken < 0.5"
+ },
+ {
+  "key": "57:H57.2",
+  "spike": "57",
+  "id": "H57.2",
+  "verdict": "BROKEN",
+  "measured": "0.300 of runs (top-2 >= 0.8 in all; spacing fails)",
+  "bar": "held >= 0.8, broken < 0.5"
+ },
+ {
+  "key": "57:H57.3",
+  "spike": "57",
+  "id": "H57.3",
+  "verdict": "HELD",
+  "measured": "0.800 of runs",
+  "bar": "held >= 0.8, broken < 0.5"
+ },
+ {
+  "key": "57:H57.4",
+  "spike": "57",
+  "id": "H57.4",
+  "verdict": "HELD",
+  "measured": "1.000 of runs",
+  "bar": "held >= 0.8, broken < 0.5"
+ },
+ {
+  "key": "57:H57.5",
+  "spike": "57",
+  "id": "H57.5",
+  "verdict": "NEITHER",
+  "measured": "PROD median 0.033, CASC median 0.142",
+  "bar": "PROD <= 0.30 and CASC >= 0.60 in >= 80%; broken if CASC median <= PROD median"
  }
 ]

@@ -64,4 +64,10 @@ Run in parallel by Gemini from the Spike 10c state; renumbered at the merge (ori
 ├ 54  semantic products in Neuronpedia sparse codes                        frozen: H54.3 broken (additive, structured residue); H54.1–2 neither
 ├ 55  justice as person-permutation invariance (C30)                         frozen: H55.1 broken (verdict readable in 2/7); C30 untested
 │ └ 56  C30 with the models' own verdicts (6 small models, CPU)           frozen: H56.2–4 held (names 3–5% of verdict variance); H56.1 neither
+
+## Fourth track: the atlas and periodic table of concepts (FOUNDATIONS §9)
+
+```
+57  closure (C32) and economy (C31) on Krohn–Rhodes automata (GRUs)        frozen: H57.3–4 held; H57.1, H57.2 broken; H57.5 neither; probe: minimal automaton exact
+```
 ```

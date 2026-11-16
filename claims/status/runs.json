@@ -138,5 +138,15 @@
   "learned": "Where small models judge fairness correctly, their verdict is nearly invariant under swapping who is who, although their internal state carries the names: impartiality appears as an approximate symmetry of the verdict. Small residual name effects are real and measure bias; weaker models are more name-driven.",
   "moved": "A11: OPEN → PARTIAL (C30 supported in behaviour (approximate invariance); C29 cyclic and taxonomic rows supported; tensor row refuted)",
   "claims": "P184"
+ },
+ {
+  "spike": "57",
+  "date": "2026-11-16",
+  "commit": "48984fb",
+  "question": "Do trained networks build the minimal automaton, in the geometry of its Krohn–Rhodes parts? (C31 economy, C32 closure)",
+  "overall": "MIXED",
+  "learned": "Recurrent nets build each Krohn–Rhodes part in a recognisable geometry (simplex for a reset, a 2-D representation for S3, ordered circles for cyclic groups) and keep a product as a sum. Every cascade carries more interaction than its product, but far less than a linear fibred representation needs. The minimal automaton is present exactly, as a linearly readable, deterministic coarse-graining of a richer microstate, not as clusters: Plato's form as Aristotle's macrostate.",
+  "moved": "A12: new → OPEN (Atlas and periodic table of concepts opened: first exact dynamic-scale test)",
+  "claims": "P185 P186"
  }
 ]

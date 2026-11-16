@@ -224,6 +224,13 @@ So: **volume decides what is available; tanh gradient training adds an informati
   - no name moves a verdict by more than 0.21 act-SD (H56.4 held).
   The invariance is approximate: name effects are small but statistically real (permutation p ≤ 0.0002), and they measure residual bias. Weaker models are both less accurate and more name-driven (TinyLlama: 44% name share).
 
+- **C31, economy law for concept geometry (PARTLY SUPPORTED; Spike 57).** Trained recurrent nets on automata built from known Krohn–Rhodes parts represent:
+  - a reset as a near-regular simplex (H57.3 held);
+  - S₃ mostly in its 2-dimensional standard representation (H57.4 held);
+  - cyclic groups as 2-dimensional circles in group order with the lowest Fourier mode, but unevenly spaced (H57.2 broken on spacing).
+  A direct product is a near-pure sum (interaction 0.03). A cascade carries 4.3 times more interaction than the matching product in every run, yet far less than a linear (fibred) representation needs (0.14 vs ≥ 0.60; H57.5 neither). The product half of the law holds; the cascade half holds in direction, not magnitude.
+- **C32, closure law (registered test BROKEN; exploratory analysis SUPPORTS it; Spike 57).** Nets trained only on outputs do not form tight clusters at the minimal automaton's states (k-means ARI ≥ 0.95 in 21% of runs; H57.1 broken). But a linear probe recovers the minimal state with 100% accuracy in all 29 fitted nets, and the probe-state macro-dynamics are 100% deterministic, i.e. exactly lumpable. The minimal automaton (the Platonic form) is present as an exact closed coarse-graining of a richer microstate that keeps 20–27% within-state variance (Aristotle's macrostate). A confirmatory test must register the probe version.
+
 - **C5, trust-indexed escalation (PROVED in an assumed linear-gain model; Lean, P139).** Given per-claim cost and impact, the threshold policy `0 < impact − ratio·cost` maximizes total net benefit over all escalation policies on any finite claim list and is unique on non-tie claims (`threshold_escalation_optimal`). The proof is pointwise maximization summed. The open part is whether escalation gains are additive across claims that share dependencies (the ledger's `affected_by` sets overlap).
 
 ## 6. What this does *not* claim, and what is already known
