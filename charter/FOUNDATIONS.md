@@ -218,3 +218,73 @@ Persistent homology of the representations measures this shape. This is where mo
 - phrases "<weekday> <time of day>" (7 × 4) and "<month> <year>" (12 × several);
 - measure whether the family's Gram matrix is better fitted by a Kronecker product of the factor Gram matrices than by unconstrained low-rank or additive models;
 - measure whether persistent homology shows two independent loops (torus) for weekday × hour.
+
+## 9. An atlas and a periodic table of concepts (programme, 2026-11-16)
+
+**Aim.** Two objects:
+- an *atlas*: every concept on a substrate, placed in a geometry that says how it relates to every other;
+- a *calculus*: an exact account of how a concept is built from elementary parts. The calculus should predict a concept's construction and recover it from a trained system, the way a program reduces to branches and loops and those to bits.
+
+The aim also includes testing at every scale which laws govern both.
+
+### 9.1 Plato and Aristotle are both right, and this is a theorem (not ours)
+
+"Abstractions have causal power" and "abstractions are macrostates" are compatible. Exactly the macrostates that are **closed under the dynamics** carry causal power.
+
+- Every abstraction is a coarse-graining, a partition of microstates (Aristotle; the thermodynamic reading).
+- A coarse-graining has causal power of its own (interventions on the macro level have well-defined macro effects, and micro detail adds no predictive power) iff it is *closed*.
+- For a stochastic process, closure holds iff the coarse-graining of its causal states is *strongly lumpable*. The closed coarse-grainings form a lattice.
+
+This is proved by Rosas, Geiger, Luppi, Seth, Polani et al., "Software in the natural world" (arXiv:2402.09090; Theorems 1–3, read in the parts cited). In the deterministic case it is classical: the Myhill–Nerode congruence of a language is the coarsest closed macrostate that still decides the language, and its classes are the states of the unique minimal automaton.
+
+So the *Platonic form* of a behaviour is its minimal closed coarse-graining: canonical, unique up to isomorphism, and causally efficacious. Its *Aristotelian* status is that it is a macrostate of some substrate. The form is substrate-independent because many micro-dynamics share it.
+
+For a static concept (no dynamics), the closed coarse-grainings that decide a target f are the partitions refining the level sets of f. The coarsest is the minimal sufficient partition of our atlas (P003, P004). Our Boolean atlas is the static slice of this picture.
+
+### 9.2 The periodic table: Krohn–Rhodes primes
+
+The **Krohn–Rhodes theorem** gives the elementary parts of any finite deterministic process: every finite automaton divides a cascade (wreath product) of
+- **flip-flops**: resettable memory, the "if/assign" element;
+- **finite simple groups** dividing its semigroup: the reversible "loop/count" elements, of which cyclic groups of prime order are the simplest.
+
+This is the user's analogy made exact. A program is a cascade of branches and loops, and the cascade is the construction calculus. The table's elements are the simple groups together with the flip-flop, with the classification of finite simple groups as the literal periodic table of the reversible part.
+
+Prior use for neural networks: Liu et al., "Transformers learn shortcuts to automata" (arXiv:2210.10749, abstract read), use Krohn–Rhodes theory to explain shallow transformer solutions.
+
+**Caveat: the table is substrate-relative.** Yang et al. (arXiv:2608.13433, abstract read) show that the length-generalizing fragment of transformers is built from unbounded counting (ℤ) and its iterated wreath products, not from flip-flops and finite simple groups. What counts as an element depends on the substrate's primitive operations, as in chemistry versus nuclear physics.
+
+### 9.3 Conjecture C31: the economy law for concept geometry
+
+C29 said a concept family's geometry is set by its symmetry group. Spikes 53–54 refuted its tensor-product row. Composition is mainly a direct sum with a structured residue.
+
+Representation theory explains that refutation:
+- the smallest faithful linear representation of a product G₁ × G₂ is ρ₁ ⊕ ρ₂ (dimension d₁ + d₂), not ρ₁ ⊗ ρ₂ (d₁·d₂);
+- the tensor (interaction) part is needed only when the task reads out a function of the factors that does not separate.
+
+**C31 (economy law).** A trained system represents a concept by a near-minimal faithful representation of the transformation semigroup of its closed macrostate, built cascade by cascade from its Krohn–Rhodes elements:
+
+| Element or composition | Predicted geometry |
+|---|---|
+| cyclic group ℤ/n | a circle, with one Fourier mode coprime to n |
+| flip-flop / reset on k values | k points in general position (a simplex) |
+| non-abelian simple group, or S₃ | its smallest faithful irreducible (for S₃, the 2-dimensional standard representation: states on a circle with dihedral symmetry) |
+| direct product | direct sum, small interaction |
+| cascade (the second component's action depends on the first's state) | fibred geometry, carried by the interaction term |
+
+Spikes 53–54 fit the product row, but post hoc. The prospective test is the contrast between a direct product and a cascade on the same factors.
+
+**C32 (closure law).** A system trained only on a behaviour's outputs settles on the behaviour's Myhill–Nerode congruence. Its internal macrostates are the minimal automaton's states, and its macro-transitions are deterministic (lumpable). Learning builds the Platonic form as an Aristotelian macrostate.
+
+### 9.4 Programme by scale
+
+| Scale | Atlas | Construction | First test |
+|---|---|---|---|
+| Exact, static | Boolean functions and minimal threshold circuits (existing atlas, n ≤ 4 complete) | circuit composition | done (Spikes 01–52) |
+| Exact, dynamic | small automata: minimal DFAs and their Krohn–Rhodes cascades | cascade products | **Spike 57**: trained recurrent nets on prime and composite automata (C31, C32) |
+| Model lexicon | concept embeddings of open models (weights) | sparse composition from candidate primitives (Wierzbicka's semantic primes; WordNet genus + differentia) | Spike 58 (planned): reconstruct concepts from primitives, predict and recover their definitional construction |
+| Brain | THINGS-fMRI concept geometry | as above | after Spike 58 |
+
+**Laws to test across scales:**
+- C31 (economy) and C32 (closure);
+- a construction-cost law: learning time and data grow with the Krohn–Rhodes complexity of the target, as minimum circuit cost governs it in the static atlas;
+- retroconstruction: the cascade is recoverable from a trained system's macro-dynamics.
