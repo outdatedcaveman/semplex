@@ -829,6 +829,65 @@
    "claims": [
     "P191"
    ]
+  },
+  {
+   "spike": "60",
+   "date": "2026-11-16",
+   "commit": "5b097d0",
+   "question": "Is a learned group concept shaped by what its readout distinguishes? (C31' prospective, GRU and transformer)",
+   "overall": "MIXED",
+   "verdicts": [
+    {
+     "id": "H60.1",
+     "verdict": "BROKEN",
+     "measured": "0.375 of discriminating runs (A5_6 3/3, S4_6 0/5)",
+     "bar": "held >= 0.8, broken < 0.5"
+    },
+    {
+     "id": "H60.2",
+     "verdict": "HELD",
+     "measured": "chi5 best in 3/3 fitted A5_6 runs",
+     "bar": "held >= 0.8"
+    },
+    {
+     "id": "H60.3",
+     "verdict": "NEITHER",
+     "measured": "0.556 of fitted GRU runs with rho_readout >= 0.5",
+     "bar": "held >= 0.8, broken < 0.5"
+    },
+    {
+     "id": "H60.4",
+     "verdict": "NO VERDICT",
+     "measured": "no fitted transformer runs",
+     "bar": "guard"
+    },
+    {
+     "id": "H60.5",
+     "verdict": "BROKEN",
+     "measured": "transformer fit rate S4 0.0, A5 0.0",
+     "bar": "held S4 >= 0.6 and A5 <= 0.2; broken A5 >= S4"
+    },
+    {
+     "id": "H60.6",
+     "verdict": "HELD",
+     "measured": "0.944 of fitted GRU runs",
+     "bar": "held >= 0.8"
+    }
+   ],
+   "learned": "The sharp prediction held: A5 read out through 6 points is represented by chi5, the readout's representation, and the minimal faithful characters are anti-correlated. But S4 through 6 points keeps only the faithful standard part of the readout's representation, dropping the unfaithful chi2. The geometry appears to be the faithful constituents of the readout's permutation representation (C31'', post hoc). A small transformer learned neither group, so the substrate and Barrington tests stay open.",
+   "gaps_moved": [
+    {
+     "gap": "A12",
+     "from": "PARTIAL",
+     "to": "PARTIAL",
+     "why": "Economy law refined to C31'' (faithful constituents of the readout representation); transformer arm failed to train"
+    }
+   ],
+   "claims": [
+    "P192",
+    "P193",
+    "P194"
+   ]
   }
  ]
 }

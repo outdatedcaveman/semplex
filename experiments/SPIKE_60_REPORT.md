@@ -1,6 +1,6 @@
 # Spike 60: Is a learned group concept shaped by what its readout distinguishes? (C31′ prospective, with a transformer arm)
 
-**Date:** 2026-11-16 · **Status:** pre-registered (no run) · **Follows:** Spike 58 (P190). There, A₅ read out through 5 points gave χ₄ in 5/5 runs, not the minimal faithful 3-dimensional characters. The post-hoc reformulation C31′ is tested here on new readouts. **Conjectures:** C31 versus C31′; the substrate-relative table (§9.2); the Barrington grading (§10.2).
+**Date:** 2026-11-16 · **Status:** complete (pre-registered in 5b097d0; results below) · **Follows:** Spike 58 (P190). There, A₅ read out through 5 points gave χ₄ in 5/5 runs, not the minimal faithful 3-dimensional characters. The post-hoc reformulation C31′ is tested here on new readouts. **Conjectures:** C31 versus C31′; the substrate-relative table (§9.2); the Barrington grading (§10.2).
 
 ## Hypotheses being contrasted
 
@@ -84,4 +84,39 @@ python -m experiments.spike60 analyse
 
 ## Results
 
-(Not run.)
+`experiments/results/spike60.json`; per-run outputs in `spike60_raw/`.
+
+**Fitted runs.**
+- GRU: A5_5 5/5, A5_6 3/5 (the other two reached 0.885 and 0.98), S4_4 5/5, S4_6 5/5. The cosine schedule removed Spike 58's late-training collapse.
+- Transformer: **0/20** fit at the training length (0.87–0.91 accuracy for both groups); its probes decode the group element at only 0.08–0.27.
+
+| ID | Measured | Criterion | Verdict |
+|---|---|---|---|
+| H60.1 | ρ_readout > ρ_minfaith in 3/8 runs on the discriminating cases (A5_6: 3/3; S4_6: 0/5) | ≥ 80% held, < 50% broken | **BROKEN** |
+| H60.2 | A5_6: χ₅ best in 3/3 fitted runs (and in 5/5 including unfitted); χ₃ and χ₃′ best in 0 | ≥ 80% held | **HELD** |
+| H60.3 | ρ_readout ≥ 0.50 in 10/18 fitted GRU runs | ≥ 80% held, < 50% broken | **NEITHER** |
+| H60.4 | no fitted transformer runs | guard | **NO VERDICT** |
+| H60.5 | transformer fit rate S₄ 0.0, A₅ 0.0 | S₄ ≥ 0.6 and A₅ ≤ 0.2 held; A₅ ≥ S₄ broken | **BROKEN** |
+| H60.6 | probe, determinism and intervention criteria met in 17/18 fitted GRU runs | ≥ 80% | **HELD** |
+
+**Median Spearman, readout vs minimal faithful (GRU):**
+
+| Case | Readout | Minimal faithful |
+|---|---|---|
+| A5_5 | 0.58 | -0.02 |
+| A5_6 | 0.35 | -0.21 |
+| S4_4 | 0.63 | 0.63 (identical by construction) |
+| S4_6 | 0.38 | **0.54** |
+
+**Reading:**
+- **The sharp prospective prediction of C31′ held.** A₅ read out through 6 points gives χ₅, the readout's representation. The minimal faithful 3-dimensional characters are *anti*-correlated (−0.16 to −0.25). Together with A5_5 (χ₄, 5/5 here and 5/5 in Spike 58), the minimal-faithful economy law (C31) is refuted for A₅ under two independent readouts.
+- **C31′ as stated is also refuted, by S4_6.** There the readout's representation is standard ⊕ χ₂, but every network uses the standard representation alone: standard 0.47–0.59, χ₂ ≈ 0, composite 0.36–0.41.
+- **χ₂ is the unfaithful constituent:** its kernel is the Klein group V₄, so it cannot distinguish elements of V₄.
+- **Synthesis, exploratory and post hoc (conjecture C31″).** The learned geometry is the *faithful part of the readout's permutation representation*: the irreducible constituents of G's permutation action on what the output distinguishes, keeping those that are faithful. It fits all 18 fitted GRU runs:
+  - A5_5: χ₄;
+  - A5_6: χ₅;
+  - S4_4 and S4_6: standard (χ₂ dropped).
+
+  Both earlier laws are special cases. It must be tested prospectively on readouts whose permutation representation contains several faithful constituents.
+- **Transformers.** A 2-layer transformer learned neither group within 6,000 steps at length 30, so the Barrington contrast (solvable versus non-solvable) did not appear: both failed. This agrees with Liu et al. that constant-depth shortcuts are hard to *find* by training even when they exist for solvable groups. It is not evidence for the grading.
+- **Construction cost** (GRU median steps to 0.99): S4_4 300 < S4_6 500 < A5_5 700 < A5_6 3150. The non-solvable group costs more under both readouts, and the 6-point readouts cost more than the point-stabiliser ones. Exploratory.

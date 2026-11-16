@@ -178,5 +178,15 @@
   "learned": "Models' lexicons share their shape (CKA about 0.6) but no preferred axes: neither sparse atoms nor principal directions line up across models, and no atom is universal. The elements of meaning, if any, are operations on representations, not a basis of word directions.",
   "moved": "A12: PARTIAL → PARTIAL (Lexical scale: no word-level elements; redirect to operations)",
   "claims": "P191"
+ },
+ {
+  "spike": "60",
+  "date": "2026-11-16",
+  "commit": "5b097d0",
+  "question": "Is a learned group concept shaped by what its readout distinguishes? (C31' prospective, GRU and transformer)",
+  "overall": "MIXED",
+  "learned": "The sharp prediction held: A5 read out through 6 points is represented by chi5, the readout's representation, and the minimal faithful characters are anti-correlated. But S4 through 6 points keeps only the faithful standard part of the readout's representation, dropping the unfaithful chi2. The geometry appears to be the faithful constituents of the readout's permutation representation (C31'', post hoc). A small transformer learned neither group, so the substrate and Barrington tests stay open.",
+  "moved": "A12: PARTIAL → PARTIAL (Economy law refined to C31'' (faithful constituents of the readout representation); transformer arm failed to train)",
+  "claims": "P192 P193 P194"
  }
 ]

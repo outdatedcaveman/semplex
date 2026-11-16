@@ -550,5 +550,53 @@
   "verdict": "BROKEN",
   "measured": "0/256 universal atoms",
   "bar": "held >= 25%; broken < 5%"
+ },
+ {
+  "key": "60:H60.1",
+  "spike": "60",
+  "id": "H60.1",
+  "verdict": "BROKEN",
+  "measured": "0.375 of discriminating runs (A5_6 3/3, S4_6 0/5)",
+  "bar": "held >= 0.8, broken < 0.5"
+ },
+ {
+  "key": "60:H60.2",
+  "spike": "60",
+  "id": "H60.2",
+  "verdict": "HELD",
+  "measured": "chi5 best in 3/3 fitted A5_6 runs",
+  "bar": "held >= 0.8"
+ },
+ {
+  "key": "60:H60.3",
+  "spike": "60",
+  "id": "H60.3",
+  "verdict": "NEITHER",
+  "measured": "0.556 of fitted GRU runs with rho_readout >= 0.5",
+  "bar": "held >= 0.8, broken < 0.5"
+ },
+ {
+  "key": "60:H60.4",
+  "spike": "60",
+  "id": "H60.4",
+  "verdict": "NO VERDICT",
+  "measured": "no fitted transformer runs",
+  "bar": "guard"
+ },
+ {
+  "key": "60:H60.5",
+  "spike": "60",
+  "id": "H60.5",
+  "verdict": "BROKEN",
+  "measured": "transformer fit rate S4 0.0, A5 0.0",
+  "bar": "held S4 >= 0.6 and A5 <= 0.2; broken A5 >= S4"
+ },
+ {
+  "key": "60:H60.6",
+  "spike": "60",
+  "id": "H60.6",
+  "verdict": "HELD",
+  "measured": "0.944 of fitted GRU runs",
+  "bar": "held >= 0.8"
  }
 ]
