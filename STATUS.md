@@ -79,6 +79,20 @@ Progress counts a closed gap as 1 and a partial one as ½. It measures the gap l
 
 ## 4. Run reports, newest first
 
+### Spike 52: What is the canonical form of a moral verdict concept? (Moral Machine pilot)
+
+2026-11-16 · commit `pending` · overall **NO VERDICT** · report `experiments/SPIKE_52_REPORT.md` · claims P178
+
+| Hypothesis | Verdict | Measured | Criterion |
+|---|---|---|---|
+| H52.1 | **NO VERDICT** | no verdict: 24 observed cells, guard required 40 | see report |
+| H52.2 | **NO VERDICT** | no verdict: 24 observed cells, guard required 40 | see report |
+| H52.3 | **NO VERDICT** | no verdict: 24 observed cells, guard required 40 | see report |
+| H52.4 | **NO VERDICT** | no verdict: 24 observed cells, guard required 40 | see report |
+
+**Learned.** The machinery runs on 5.45 million real moral judgments and returns definite answers: the population's verdict over the observed situations is a single weighted rule, the same in three cultural clusters, which agree on 87.5% of situations. The hypotheses could not be tested because the experiment's design leaves only 24 feature combinations observed.
+
+
 ### Spike 51: Do trained nets reason like a rational nonmonotonic logic? (C24)
 
 2026-11-16 · commit `16c77ac` · overall **NEITHER** · report `experiments/SPIKE_51_REPORT.md` · claims P177
@@ -248,9 +262,9 @@ Progress counts a closed gap as 1 and a partial one as ½. It measures the gap l
 
 ## 6. Ledger health
 
-- Claims: 177. Empirical: 94; Proved in Lean: 32; Exploratory: 14; Proved on paper: 11; Kernel-checked: 6; Refuted: 5; Conjecture: 5; Method note: 5; Computed: 4; Other: 1.
+- Claims: 178. Empirical: 94; Proved in Lean: 32; Exploratory: 15; Proved on paper: 11; Kernel-checked: 6; Refuted: 5; Conjecture: 5; Method note: 5; Computed: 4; Other: 1.
 - Problems: 0. Claims stated stronger than their support: 39.
-- Frozen spike files (rule 2): 118.
+- Frozen spike files (rule 2): 120.
 
 Weakest links (fixing one lifts every note that rests on it):
 

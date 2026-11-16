@@ -59,5 +59,5 @@ Run in parallel by Gemini from the Spike 10c state; renumbered at the merge (ori
 ## Third track: concepts from human judgment
 
 ```
-52  canonical form of a moral concept (Moral Machine pilot)   pre-registered
+52  canonical form of a moral concept (Moral Machine pilot)   frozen: no verdict (24 cells < 40); exploratory: single weighted rule
 ```

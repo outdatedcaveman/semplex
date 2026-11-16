@@ -28,7 +28,7 @@ CSVDIR = ROOT / "claims" / "status"
 STATES = ("OPEN", "PARTIAL", "CLOSED")
 MOVES = STATES + ("new",)
 LEVER = {"HIGH": 0, "MEDIUM": 1, "LOW": 2}
-VERDICTS = ("HELD", "BROKEN", "NEITHER")
+VERDICTS = ("HELD", "BROKEN", "NEITHER", "NO VERDICT")
 CONJ = re.compile(r"^- \*\*(C\d+′?), (.+?)\*\*", re.M)
 
 

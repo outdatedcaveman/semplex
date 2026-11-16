@@ -254,5 +254,37 @@
   "verdict": "NEITHER",
   "measured": "retraction 35%; recall of the logic's retractions 48%, precision 96%",
   "bar": "held if retraction ≥ 0.10 and recall ≥ 0.50; broken if retraction < 0.03"
+ },
+ {
+  "key": "52:H52.1",
+  "spike": "52",
+  "id": "H52.1",
+  "verdict": "NO VERDICT",
+  "measured": "no verdict: 24 observed cells, guard required 40",
+  "bar": "see report"
+ },
+ {
+  "key": "52:H52.2",
+  "spike": "52",
+  "id": "H52.2",
+  "verdict": "NO VERDICT",
+  "measured": "no verdict: 24 observed cells, guard required 40",
+  "bar": "see report"
+ },
+ {
+  "key": "52:H52.3",
+  "spike": "52",
+  "id": "H52.3",
+  "verdict": "NO VERDICT",
+  "measured": "no verdict: 24 observed cells, guard required 40",
+  "bar": "see report"
+ },
+ {
+  "key": "52:H52.4",
+  "spike": "52",
+  "id": "H52.4",
+  "verdict": "NO VERDICT",
+  "measured": "no verdict: 24 observed cells, guard required 40",
+  "bar": "see report"
  }
 ]

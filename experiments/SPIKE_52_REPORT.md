@@ -1,6 +1,6 @@
 # Spike 52: The canonical form of a moral concept (pilot on the Moral Machine)
 
-**Date:** 2026-11-16 · **Status:** pre-registered (no outcome data read) · **Follows:** `charter/FOUNDATIONS.md` §6 (canonical forms, forced cores, meaning as enactive power) and Spikes 45, 49, 50. **First step of** the "justice" programme (§6.5).
+**Date:** 2026-11-16 · **Status:** complete — no verdict (guard failed; pre-registered in 5b8624d) · **Follows:** `charter/FOUNDATIONS.md` §6 (canonical forms, forced cores, meaning as enactive power) and Spikes 45, 49, 50. **First step of** the "justice" programme (§6.5).
 
 ## Question
 
@@ -71,4 +71,23 @@ python -m experiments.spike52 analyse
 
 ## Results
 
-(To be filled after the runs.)
+`experiments/results/spike52.json`; aggregated counts in `spike52_raw/cells.json`. 5,449,620 dilemmas from 11,286,141 rows.
+
+### Verdicts
+
+**All four: no verdict.** The guard needed at least 40 observed cells; there are **24**. The cause is the Moral Machine's design: each dilemma varies one attribute type (age, species, number, …), so most combinations of my eight features never occur together. I should have checked the design's reachable cells before setting the guard. Everything below is exploratory.
+
+### Exploratory observations
+
+1. **The aggregate verdict is a single weighted rule on the 24 cells.** It has minimum cost 1, certified, and a single threshold unit fits all 24 cells with no error. This is consistent with the additive effect-size model of Awad et al., but 24 cells across 8 features is weak evidence of linearity, since many functions fit few points.
+2. **Inference from partial evidence.** With 60% of cells shown (about 14), only 6.5% of hidden cells are forced. Those forced values are always right (100%), but they are few. The majority of minimal forms is right on 82.5% of hidden cells, against 95.8% for weighted logistic regression. With this little structure, a threshold rule fitted to counts beats one fitted to binary verdicts, as expected, since the logistic model uses the vote shares and the circuits only their signs.
+3. **Cultures.** All three clusters (Western, Eastern, Southern) observe the same 24 cells, each verdict function has cost 1, and they agree on 87.5% of cells (the bar for H52.4 would have been 85%). The three disagreements are cells near a 50% split: passengers (saved shares 0.51 / 0.47 / 0.51); lawful+fewer (saved shares 0.39 / 0.51 / 0.42); unlawful+younger (saved shares 0.55 / 0.50 / 0.58).
+
+### What this does and does not show
+
+- It shows that the machinery runs on real moral data and gives definite, checkable answers: a minimal form, a certificate, a forced core, cultural agreement.
+- It does not test the hypotheses. The Moral Machine is too sparse in feature combinations for the forcing analysis to bite: few cells means few forced cells.
+
+**Next.** Two designs would work:
+- choose features along the axes the experiment actually crosses (structural bits × one attribute at a time, analysed per scenario type);
+- use a dataset designed as a full factorial over justice-relevant features (desert, need, equality, procedure), which would need to be found or collected.
