@@ -34,5 +34,9 @@
  {
   "class": "Computed",
   "claims": 4
+ },
+ {
+  "class": "Other",
+  "claims": 1
  }
 ]
