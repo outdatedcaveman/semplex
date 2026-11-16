@@ -737,6 +737,65 @@
    "claims": [
     "P187"
    ]
+  },
+  {
+   "spike": "58",
+   "date": "2026-11-16",
+   "commit": "bf117b6",
+   "question": "Does the learned abstraction have causal power, and is its geometry the character of the minimal faithful representation?",
+   "overall": "MIXED",
+   "verdicts": [
+    {
+     "id": "H58.1",
+     "verdict": "HELD",
+     "measured": "31/31 runs",
+     "bar": ">= 80%"
+    },
+    {
+     "id": "H58.2",
+     "verdict": "HELD",
+     "measured": "31/31 runs, success 1.000",
+     "bar": ">= 80% with >= 0.98"
+    },
+    {
+     "id": "H58.3",
+     "verdict": "HELD",
+     "measured": "31/31 runs, success 1.000",
+     "bar": ">= 80% with >= 0.99"
+    },
+    {
+     "id": "H58.4",
+     "verdict": "NEITHER",
+     "measured": "14/19 group runs (A5 0/5: chi4)",
+     "bar": "held >= 0.8, broken < 0.5"
+    },
+    {
+     "id": "H58.5",
+     "verdict": "BROKEN",
+     "measured": "0/4 Z5 runs with H1 ratio >= 3",
+     "bar": ">= 80%"
+    },
+    {
+     "id": "H58.6",
+     "verdict": "HELD",
+     "measured": "Spearman 1.0; CASC 300 > PROD 250",
+     "bar": "Spearman >= 0.9 and CASC > PROD"
+    }
+   ],
+   "learned": "Abstractions learned by recurrent nets are closed macrostates with causal power: writing a macrostate sets the future exactly, and micro-detail within it is inert. Learning cost follows the periodic table, with the non-solvable A5 costliest. The geometry is not the minimal faithful representation but, in all non-abelian cases, the permutation representation on what the readout distinguishes (exploratory).",
+   "gaps_moved": [
+    {
+     "gap": "A12",
+     "from": "OPEN",
+     "to": "PARTIAL",
+     "why": "Closure, causal power and the cost law confirmed prospectively; economy law revised to C31'"
+    }
+   ],
+   "claims": [
+    "P188",
+    "P189",
+    "P190"
+   ]
   }
  ]
 }

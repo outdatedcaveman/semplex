@@ -486,5 +486,53 @@
   "verdict": "HELD",
   "measured": "shared primes 1.71 (null max 0.97) concrete, 2.63 (null max 0.99) abstract",
   "bar": "above all 1,000 shuffles for both"
+ },
+ {
+  "key": "58:H58.1",
+  "spike": "58",
+  "id": "H58.1",
+  "verdict": "HELD",
+  "measured": "31/31 runs",
+  "bar": ">= 80%"
+ },
+ {
+  "key": "58:H58.2",
+  "spike": "58",
+  "id": "H58.2",
+  "verdict": "HELD",
+  "measured": "31/31 runs, success 1.000",
+  "bar": ">= 80% with >= 0.98"
+ },
+ {
+  "key": "58:H58.3",
+  "spike": "58",
+  "id": "H58.3",
+  "verdict": "HELD",
+  "measured": "31/31 runs, success 1.000",
+  "bar": ">= 80% with >= 0.99"
+ },
+ {
+  "key": "58:H58.4",
+  "spike": "58",
+  "id": "H58.4",
+  "verdict": "NEITHER",
+  "measured": "14/19 group runs (A5 0/5: chi4)",
+  "bar": "held >= 0.8, broken < 0.5"
+ },
+ {
+  "key": "58:H58.5",
+  "spike": "58",
+  "id": "H58.5",
+  "verdict": "BROKEN",
+  "measured": "0/4 Z5 runs with H1 ratio >= 3",
+  "bar": ">= 80%"
+ },
+ {
+  "key": "58:H58.6",
+  "spike": "58",
+  "id": "H58.6",
+  "verdict": "HELD",
+  "measured": "Spearman 1.0; CASC 300 > PROD 250",
+  "bar": "Spearman >= 0.9 and CASC > PROD"
  }
 ]

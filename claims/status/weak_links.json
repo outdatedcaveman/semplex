@@ -30,6 +30,12 @@
   "statement": "Minimum-circuit forcing (\"D"
  },
  {
+  "claim": "P186",
+  "notes": 2,
+  "status": "EXPLORATORY (the registered cluster-based closure test H57.1 is BROKEN; the probe analysis was run after the verdicts)",
+  "statement": "The minimal automaton is present in trained recurrent nets as an exact closed coarse-graining, not as clusters: a linear"
+ },
+ {
   "claim": "P001",
   "notes": 1,
   "status": "PROVED (literature)",
@@ -40,11 +46,5 @@
   "notes": 1,
   "status": "PROVED (informal sketch)",
   "statement": "With full care, the minimal sufficient variable set is unique and equals support(f)"
- },
- {
-  "claim": "P155",
-  "notes": 1,
-  "status": "REFUTED (C19′ on real data; pre-registered, H45.2 and H45.3 broken)",
-  "statement": "The Occam pull does not hold on real data (C19′ REFUTED outside clean targets): on four real datasets binarized to 6 fea"
  }
 ]

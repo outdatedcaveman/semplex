@@ -1,6 +1,6 @@
 # Spike 58: Does the learned abstraction have causal power, and is its geometry the character of the minimal faithful representation?
 
-**Date:** 2026-11-16 · **Status:** pre-registered (no run) · **Follows:** Spike 57. That spike's registered closure test (clusters) broke, while an exploratory linear probe found the minimal automaton exactly (P186); this spike confirms that prospectively. Also follows `charter/FOUNDATIONS.md` §9–§10. **Conjectures:** C31, C32; Plato and Aristotle (§9.1) as an experiment.
+**Date:** 2026-11-16 · **Status:** complete (pre-registered in bf117b6; results below) · **Follows:** Spike 57. That spike's registered closure test (clusters) broke, while an exploratory linear probe found the minimal automaton exactly (P186); this spike confirms that prospectively. Also follows `charter/FOUNDATIONS.md` §9–§10. **Conjectures:** C31, C32; Plato and Aristotle (§9.1) as an experiment.
 
 **Tools applied** (shared by the user and evaluated in `charter/LITERATURE_REVIEW.md`):
 - **Interchange interventions on hidden states:** the reading/writing idea of weight-space programming (2611.18114, AHA, auto-WSP) applied to activations. This tests causal power directly.
@@ -94,4 +94,37 @@ python -m experiments.spike58 analyse
 
 ## Results
 
-(Not run.)
+`experiments/results/spike58.json`; per-run outputs in `spike58_raw/`.
+
+**Fits.** 36 of 40 runs fit. Four counter networks (Z5 seed 1; Z7 seeds 1, 3, 4) reached 0.99 training accuracy by step 100–150 and then **degraded** during the long 8,000-step schedule, ending at 0.86–0.91. This is an instability of the recipe (constant learning rate 0.003 over a long horizon), not evidence about the hypotheses. Z7 has only 2 fitted seeds and is excluded by the guard. The 7 qualifying automata give 31 fitted runs.
+
+| ID | Measured | Criterion | Verdict |
+|---|---|---|---|
+| H58.1 | probe accuracy ≥ 0.99 and determinism ≥ 0.99 in 31/31 runs (all exactly 1.000) | ≥ 80% | **HELD** |
+| H58.2 | interchange-intervention success ≥ 0.98 in 31/31 (all 1.000) | ≥ 80% | **HELD** |
+| H58.3 | same-state swap success ≥ 0.99 in 31/31 (all 1.000) | ≥ 80% | **HELD** |
+| H58.4 | predicted character best in 14/19 group runs (Z5 4/4 k = 1, S3 5/5 standard, A4 5/5 χ₃, **A5 0/5: χ₄ in all**) = 0.74 | ≥ 0.80 held, < 0.50 broken | **NEITHER** |
+| H58.5 | Z5 largest/second H₁ persistence ≥ 3 in 0/4 (1.18–2.16) | ≥ 80% | **BROKEN** |
+| H58.6 | median steps to 0.99: RESET3 50 < Z5 100 < Z7 125 < S3 175 < A4 425 < A5 650 (Spearman 1.0); CASC 300 > PROD 250 | Spearman ≥ 0.90 and CASC > PROD | **HELD** |
+
+**Reading:**
+- **Plato and Aristotle together, as an experiment.** In every fitted network:
+  - the minimal automaton is a closed, exactly lumpable, linearly readable coarse-graining (H58.1);
+  - writing a different macrostate into the network makes its whole future follow the automaton from that macrostate, every time (H58.2): the abstraction has causal power;
+  - swapping in the micro-detail of another history with the same macrostate changes nothing (H58.3): the 20–27% of within-state variance (P186) is causally inert.
+
+  Abstractions are macrostates, and the closed ones are causes.
+- **Construction cost follows the periodic table** exactly. Learning time rises from the aperiodic reset through cyclic groups to the solvable S₃ and A₄, and is largest for the non-solvable simple group A₅. A cascade costs more than the matching product.
+- **Topology.** The cyclic counters have k = 1 circles in their centroids (H58.4), but persistent homology of the raw hidden-state cloud does not show one dominant loop. The within-state spread produces several H₁ features of similar size. The registered criterion is broken. The circle is a property of the macrostates, not of the micro cloud.
+
+**Exploratory, after the verdicts: the economy law fails where it can be told apart from an alternative.** For A5 the best character is χ₄ in all 5 runs (Spearman ≈ 0.58–0.62; both 3-dimensional icosahedral characters ≈ −0.03; χ₅ ≈ −0.32).
+
+χ₄ is the permutation character of A₅ on the 5 points minus the trivial one, and the output reports one of those 5 points. The same description fits every non-abelian case:
+- S₃ on 3 points: permutation − trivial = the standard character;
+- A₄ on 4 points: permutation − trivial = χ₃.
+
+So 15/15 non-abelian runs are fitted by the **representation induced by the readout**: the permutation action on the classes the output distinguishes. The minimal faithful representation fits only where it coincides with it.
+
+**Conjecture C31′** (replaces C31's minimal-faithful clause): a trained network's state geometry for a group concept is the permutation representation of the group on the cosets its outputs distinguish (G/H, H the stabiliser of what is read out), minus the trivial part.
+
+**Prospective test (next spike):** the same A₅, read out through its action on 6 points (A₅ ≅ PSL(2, 5) on the projective line). C31′ predicts χ₅ (permutation = 1 + χ₅). C31 predicts a 3-dimensional icosahedral character.

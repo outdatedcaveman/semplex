@@ -158,5 +158,15 @@
   "learned": "Semantic primes are not a privileged basis of model lexicons: they span concrete nouns worse than ordinary words of the same frequency and abstract words no better. Decompositions agree across models, but any common dictionary agrees as much (exploratory control), so the agreement is shared geometry. The lexicon's elements, if any, must be learned from data.",
   "moved": "A12: OPEN → OPEN (Lexical scale opened: the NSM prime list is not the element set; data-driven elements next)",
   "claims": "P187"
+ },
+ {
+  "spike": "58",
+  "date": "2026-11-16",
+  "commit": "bf117b6",
+  "question": "Does the learned abstraction have causal power, and is its geometry the character of the minimal faithful representation?",
+  "overall": "MIXED",
+  "learned": "Abstractions learned by recurrent nets are closed macrostates with causal power: writing a macrostate sets the future exactly, and micro-detail within it is inert. Learning cost follows the periodic table, with the non-solvable A5 costliest. The geometry is not the minimal faithful representation but, in all non-abelian cases, the permutation representation on what the readout distinguishes (exploratory).",
+  "moved": "A12: OPEN → PARTIAL (Closure, causal power and the cost law confirmed prospectively; economy law revised to C31')",
+  "claims": "P188 P189 P190"
  }
 ]

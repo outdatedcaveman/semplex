@@ -1,0 +1,11 @@
+{
+ "automaton": "PROD",
+ "seed": 5860,
+ "first99": 225,
+ "fit": 1.0,
+ "probe_acc": 1.0,
+ "determinism": 1.0,
+ "intervene_diff": 1.0,
+ "intervene_same": 1.0,
+ "relative_interaction": 0.028033480048179626
+}

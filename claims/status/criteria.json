@@ -14,10 +14,10 @@
   "name": "Explains",
   "test": "The pull toward the minimum circuit is derived from the training dynamics (a theorem or a quantitative law verified prospectively), not only observed.",
   "gaps": 5,
-  "OPEN": 3,
-  "PARTIAL": 2,
+  "OPEN": 2,
+  "PARTIAL": 3,
   "CLOSED": 0,
-  "progress_pct": 20
+  "progress_pct": 30
  },
  {
   "id": "E3",
