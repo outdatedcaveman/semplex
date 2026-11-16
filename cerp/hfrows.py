@@ -68,23 +68,27 @@ def matrices(repo):
     return pick(EMB), pick(UNEMB), h
 
 
-def rows(repo, tensor, ids):
+def _row(url, off, d, sz, dt, i, cp):
+    if os.path.exists(cp):
+        return np.load(cp)
+    b = _get(url, (off + i * d * sz, off + (i + 1) * d * sz - 1))
+    if dt == "BF16":
+        v = (np.frombuffer(b, np.uint16).astype(np.uint32) << 16).view(np.float32)
+    else:
+        v = np.frombuffer(b, DT[dt][0]).astype(np.float32)
+    np.save(cp, v)
+    return v
+
+
+def rows(repo, tensor, ids, workers=16):
+    from concurrent.futures import ThreadPoolExecutor
     h = _headers(repo)
     f, dt, shape, off = h[tensor]
-    np_dt, sz = DT[dt]
+    sz = DT[dt][1]
     d = shape[1]
     url = f"{HF}/{repo}/resolve/main/{f}"
-    out = []
-    for i in ids:
-        cp = os.path.join(CACHE, repo.replace("/", "__"), "rows", f"{tensor}.{i}.npy")
-        if os.path.exists(cp):
-            out.append(np.load(cp)); continue
-        b = _get(url, (off + i * d * sz, off + (i + 1) * d * sz - 1))
-        if dt == "BF16":
-            v = (np.frombuffer(b, np.uint16).astype(np.uint32) << 16).view(np.float32)
-        else:
-            v = np.frombuffer(b, np_dt).astype(np.float32)
-        os.makedirs(os.path.dirname(cp), exist_ok=True)
-        np.save(cp, v)
-        out.append(v)
+    base = os.path.join(CACHE, repo.replace("/", "__"), "rows")
+    os.makedirs(base, exist_ok=True)
+    with ThreadPoolExecutor(workers) as ex:
+        out = list(ex.map(lambda i: _row(url, off, d, sz, dt, i, os.path.join(base, f"{tensor}.{i}.npy")), ids))
     return np.stack(out)

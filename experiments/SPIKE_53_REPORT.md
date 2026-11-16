@@ -130,10 +130,26 @@ Anything else is *neither*.
 
 Static embeddings are the model's lexicon, not its contextual representations. The circles Engels et al. found are in activations. A failure here is a failure in weights only. Brain patterns are from images, not words. The cross-substrate test compares visual-object cortex with lexical weights.
 
+## Procedure change before any brain analysis (recorded)
+
+Storing a 15 GB file per subject would use the whole disk. The brain data are therefore streamed instead.
+
+1. Two metadata-only passes over subject 1's file located its HDF5 layout (pandas fixed format):
+   - `block0_values` is one contiguous row-major float32 array, 211,339 voxels × 9,840 trials, at byte 7,392,223,744;
+   - it ends 2,568 bytes before the end of the file;
+   - rows are in `voxel_id` order (checked equal to row number).
+2. One pass per subject then keeps only the selected voxels' rows (about 130 MB). The file is never written to disk.
+   - Subjects 2 and 3 are assumed to share the layout, with the offset computed from file size and voxel count.
+   - Trial columns are assumed to be in `StimulusMetadata` order, because the column labels are pickled and not readable from the metadata alone.
+
+**New guard (applies to every subject).** Before any analysis, odd and even repeats of the 100 test images must correlate more with the same image than with different images by at least 0.05. Otherwise the subject is excluded as misaligned.
+
+No hypothesis or criterion changed.
+
 ## Commands
 
 ```
-python -m experiments.spike53 fetch-brain 01   # likewise 02, 03; needs about 15 GB of free disk at a time
+python -m experiments.spike53 fetch-brain 01   # likewise 02, 03; streams, about 130 MB of disk per subject
 python -m experiments.spike53 run
 python -m experiments.spike53 analyse
 ```

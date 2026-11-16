@@ -178,9 +178,17 @@ def fetch_meta():
             open(p, "wb").write(urllib.request.urlopen(url).read())
 
 
+TAIL = 2568          # bytes after the response array (sub-01 HDF5 metadata, measured)
+N_TRIALS = 9840
+
+
 def fetch_brain(s):
-    """stream sub-s's members out of the 43 GB zip, reduce to concept means, delete the h5"""
-    import h5py, pandas as pd, shutil
+    """One streaming pass over sub-s's ResponseData.h5 inside the zip: keep only
+    the rows of the selected voxels; the 15 GB file is never written to disk.
+    Layout (read from sub-01's HDF5 metadata, pandas fixed format): block0_values
+    is a contiguous row-major float32 array (voxels x 9840 trials), rows in
+    voxel_id order, ending TAIL bytes before end of file."""
+    import pandas as pd
     fetch_meta()
     out = os.path.join(DATA, f"sub-{s}_concepts.npz")
     if os.path.exists(out):
@@ -190,36 +198,56 @@ def fetch_brain(s):
         p = os.path.join(DATA, f"sub-{s}_{k}.csv")
         if not os.path.exists(p):
             open(p, "wb").write(z.read(f"betas_csv/sub-{s}_{k}.csv"))
-    h5 = os.path.join(DATA, f"sub-{s}_ResponseData.h5")
-    if not os.path.exists(h5 + ".done"):
-        with z.open(f"betas_csv/sub-{s}_ResponseData.h5") as src, open(h5, "wb") as dst:
-            shutil.copyfileobj(src, dst, 64 << 20)
-        open(h5 + ".done", "w").write("ok")
     vox = pd.read_csv(os.path.join(DATA, f"sub-{s}_VoxelMetadata.csv"))
     stim = pd.read_csv(os.path.join(DATA, f"sub-{s}_StimulusMetadata.csv"))
+    assert (vox["voxel_id"].to_numpy() == np.arange(len(vox))).all()
+    assert (stim["trial_id"].to_numpy() == np.arange(N_TRIALS)).all()
     keep = (vox[ROIS].sum(axis=1) > 0) & (vox["nc_testset"] > NC_MIN)
     vid = vox.loc[keep, "voxel_id"].to_numpy()
-    with h5py.File(h5, "r") as f:
-        R = read_responses(f, vid)          # trials x voxels
+    info = z.getinfo(f"betas_csv/sub-{s}_ResponseData.h5")
+    RB = N_TRIALS * 4
+    off = info.file_size - TAIL - len(vox) * RB
+    starts = off + vid * RB
+    buf = bytearray(len(vid) * RB)
+    pos = 0
+    with z.open(info) as src:
+        while True:
+            b = src.read(64 << 20)
+            if not b:
+                break
+            lo, hi = pos, pos + len(b)
+            i0 = max(0, np.searchsorted(starts, lo - RB, "right"))
+            i1 = np.searchsorted(starts, hi, "left")
+            for j in range(i0, i1):
+                a0, a1 = max(lo, starts[j]), min(hi, starts[j] + RB)
+                if a0 < a1:
+                    buf[j * RB + a0 - starts[j]: j * RB + a1 - starts[j]] = b[a0 - lo: a1 - lo]
+            pos = hi
+    R = np.frombuffer(bytes(buf), np.float32).reshape(len(vid), N_TRIALS).T.copy()   # trials x voxels
+    check = alignment_check(R, stim)
     tr = (stim["trial_type"] == "train").to_numpy()
-    R = R[tr]
-    R = (R - R.mean(0)) / R.std(0)
+    T = R[tr]
+    T = (T - T.mean(0)) / T.std(0)
     con = stim.loc[tr, "concept"].to_numpy()
     names = np.array(sorted(set(con)))
-    M = np.stack([R[con == c].mean(0) for c in names])
-    np.savez_compressed(out, names=names, patterns=M.astype(np.float32), voxel_ids=vid)
-    os.remove(h5)
+    M = np.stack([T[con == c].mean(0) for c in names])
+    np.savez_compressed(out, names=names, patterns=M.astype(np.float32), voxel_ids=vid,
+                        check=np.array([check["same"], check["diff"]]))
+    print("sub", s, "voxels", len(vid), "concepts", len(names), "check", check, flush=True)
 
 
-def read_responses(f, vid):
-    """THINGS ResponseData.h5 (pandas HDFStore 'ResponseData'): rows = voxels
-    (voxel_id column), columns = trial ids. Returns trials x selected voxels."""
-    import pandas as pd
-    path = f.filename
-    f.close()
-    df = pd.read_hdf(path, "ResponseData")
-    df = df.set_index("voxel_id").loc[vid]
-    return df.to_numpy(dtype=np.float32).T
+def alignment_check(R, stim):
+    """guard: odd/even repeats of the same test image must correlate more than different images"""
+    te = (stim["trial_type"] == "test").to_numpy()
+    st = stim.loc[te, "stimulus"].to_numpy(); X = R[te]
+    ims = sorted(set(st))
+    odd = np.stack([X[st == m][0::2].mean(0) for m in ims]); even = np.stack([X[st == m][1::2].mean(0) for m in ims])
+    z = lambda A: (A - A.mean(1, keepdims=True)) / A.std(1, keepdims=True)
+    C = z(odd) @ z(even).T / X.shape[1]
+    same = float(np.diag(C).mean()); diff = float(C[~np.eye(len(ims), dtype=bool)].mean())
+    if not same > diff + 0.05:
+        raise SystemExit(f"alignment check failed: same {same:.3f} diff {diff:.3f}")
+    return {"same": same, "diff": diff}
 
 
 def brain_concepts():
