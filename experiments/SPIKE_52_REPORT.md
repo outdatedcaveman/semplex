@@ -60,6 +60,8 @@ Anything else is *neither*.
 
 **What this pilot cannot show.** The Moral Machine measures quick choices in stylized dilemmas, not considered judgments of justice. Its features are the experimenters' choices. Aggregating over millions of people gives the verdict function of a population, not of anyone's concept. The pilot tests whether the machinery yields a definite, checkable answer on real moral data; it does not settle what justice is.
 
+**Deviation recorded before any outcome was read.** The first build paired the two outcomes of a dilemma within streamed chunks and found none, because the file is sorted by `Intervention`. The build now loads the needed columns whole and joins on `ResponseID`. No definition or criterion changed.
+
 ## Commands
 
 ```

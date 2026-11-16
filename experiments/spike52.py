@@ -39,36 +39,31 @@ def clusters():
 
 
 def build():
+    """The file is ordered by Intervention, so the two outcomes of a dilemma are far apart: load the
+    needed columns whole and join the stay side to the swerve side on ResponseID."""
     import pandas as pd
-    cl = clusters(); agg = {}                               # (cluster or "all", pattern) -> [n, saved]
-    tf = tarfile.open(DATA / "survey.csv.tar.gz", "r:gz"); member = tf.next(); fh = tf.extractfile(member)
-    carry = None; dropped = 0; pairs = 0
-    for chunk in pd.read_csv(fh, usecols=COLS, chunksize=2_000_000, dtype={"ResponseID": str, "AttributeLevel": str, "ScenarioType": str, "UserCountry3": str}):
-        if carry is not None:
-            chunk = pd.concat([carry, chunk], ignore_index=True)
-        last = chunk["ResponseID"].iloc[-1]; carry = chunk[chunk["ResponseID"] == last]; chunk = chunk[chunk["ResponseID"] != last]
-        g = chunk.groupby("ResponseID", sort=False)
-        sz = g["Intervention"].transform("size"); chunk = chunk[sz == 2]
-        chunk = chunk.dropna(subset=["Intervention", "Barrier", "CrossingSignal", "NumberOfCharacters", "Saved"])
-        chunk = chunk[chunk.groupby("ResponseID")["Intervention"].transform("size") == 2]
-        S = chunk[chunk["Intervention"] == 0].set_index("ResponseID"); O = chunk[chunk["Intervention"] == 1].set_index("ResponseID")
-        common = S.index.intersection(O.index); S = S.loc[common]; O = O.loc[common]
-        S = S[~S.index.duplicated()]; O = O.loc[S.index]; O = O[~O.index.duplicated()]
-        pairs += len(S)
-        st = S["ScenarioType"].fillna(""); al = S["AttributeLevel"].fillna("")
-        bits = np.stack([(S["CrossingSignal"] == 1).values, (S["CrossingSignal"] == 2).values, (S["Barrier"] == 1).values,
-                         (S["NumberOfCharacters"].values > O["NumberOfCharacters"].values), (S["NumberOfCharacters"].values < O["NumberOfCharacters"].values),
-                         ((st == "Age") & (al == "Young")).values, ((st == "Age") & (al == "Old")).values,
-                         ((st == "Species") & (al == "Pets")).values], 1).astype(int)
-        pat = bits @ (1 << np.arange(n)); saved = S["Saved"].values.astype(int)
-        cc = np.array([cl.get(c, -1) for c in S["UserCountry3"].fillna("")])
-        for key, mask in (("all", np.ones(len(pat), bool)), ("0", cc == 0), ("1", cc == 1), ("2", cc == 2)):
-            cnt = np.bincount(pat[mask], minlength=K); sv = np.bincount(pat[mask], weights=saved[mask], minlength=K)
-            a = agg.setdefault(key, [np.zeros(K), np.zeros(K)]); a[0] += cnt; a[1] += sv
-        print("pairs so far", pairs, flush=True)
+    cl = clusters(); agg = {}
+    tf = tarfile.open(DATA / "survey.csv.tar.gz", "r:gz"); fh = tf.extractfile(tf.next())
+    d = pd.read_csv(fh, usecols=COLS, dtype={"ResponseID": str, "AttributeLevel": "category", "ScenarioType": "category", "UserCountry3": "category"})
+    rows = len(d)
+    d = d.dropna(subset=["Intervention", "Barrier", "CrossingSignal", "NumberOfCharacters", "Saved"])
+    d = d[d.groupby("ResponseID")["Intervention"].transform("size") == 2]
+    S = d[d["Intervention"] == 0].drop_duplicates("ResponseID").set_index("ResponseID")
+    O = d[d["Intervention"] == 1].drop_duplicates("ResponseID").set_index("ResponseID")[["NumberOfCharacters"]]
+    S = S.join(O, rsuffix="_other", how="inner"); del d, O
+    st = S["ScenarioType"].astype(str); al = S["AttributeLevel"].astype(str)
+    bits = np.stack([(S["CrossingSignal"] == 1).values, (S["CrossingSignal"] == 2).values, (S["Barrier"] == 1).values,
+                     (S["NumberOfCharacters"].values > S["NumberOfCharacters_other"].values),
+                     (S["NumberOfCharacters"].values < S["NumberOfCharacters_other"].values),
+                     ((st == "Age") & (al == "Young")).values, ((st == "Age") & (al == "Old")).values,
+                     ((st == "Species") & (al == "Pets")).values], 1).astype(int)
+    pat = bits @ (1 << np.arange(n)); saved = S["Saved"].values.astype(int)
+    cc = np.array([cl.get(str(c), -1) for c in S["UserCountry3"].astype(str)])
+    for key, mask in (("all", np.ones(len(pat), bool)), ("0", cc == 0), ("1", cc == 1), ("2", cc == 2)):
+        agg[key] = [np.bincount(pat[mask], minlength=K).tolist(), np.bincount(pat[mask], weights=saved[mask], minlength=K).tolist()]
     RAW.mkdir(parents=True, exist_ok=True)
-    (RAW / "cells.json").write_text(json.dumps({"features": FEATURES, "pairs": pairs, "agg": {k: [v[0].tolist(), v[1].tolist()] for k, v in agg.items()}}))
-    print("built", pairs, "dilemmas", flush=True)
+    (RAW / "cells.json").write_text(json.dumps({"features": FEATURES, "rows": int(rows), "pairs": int(len(S)), "agg": agg}))
+    print("built", len(S), "dilemmas from", rows, "rows", flush=True)
 
 
 def verdicts(key):
