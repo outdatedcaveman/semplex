@@ -30,7 +30,8 @@ SEED = 5400
 
 def query(model, source, texts):
     os.makedirs(RAW, exist_ok=True)
-    key = f"{model}__{source}__{abs(hash(tuple(texts))) % 10**12}.json"
+    import hashlib
+    key = f"{model}__{source}__{hashlib.sha1(json.dumps(texts).encode()).hexdigest()[:12]}.json"
     p = os.path.join(RAW, key)
     if os.path.exists(p):
         return json.load(open(p))
