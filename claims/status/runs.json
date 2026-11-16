@@ -168,5 +168,15 @@
   "learned": "Abstractions learned by recurrent nets are closed macrostates with causal power: writing a macrostate sets the future exactly, and micro-detail within it is inert. Learning cost follows the periodic table, with the non-solvable A5 costliest. The geometry is not the minimal faithful representation but, in all non-abelian cases, the permutation representation on what the readout distinguishes (exploratory).",
   "moved": "A12: OPEN → PARTIAL (Closure, causal power and the cost law confirmed prospectively; economy law revised to C31')",
   "claims": "P188 P189 P190"
+ },
+ {
+  "spike": "61",
+  "date": "2026-11-16",
+  "commit": "5a79341",
+  "question": "Do language models share a discrete set of lexical elements? (data-driven atoms across 14 models)",
+  "overall": "BROKEN",
+  "learned": "Models' lexicons share their shape (CKA about 0.6) but no preferred axes: neither sparse atoms nor principal directions line up across models, and no atom is universal. The elements of meaning, if any, are operations on representations, not a basis of word directions.",
+  "moved": "A12: PARTIAL → PARTIAL (Lexical scale: no word-level elements; redirect to operations)",
+  "claims": "P191"
  }
 ]

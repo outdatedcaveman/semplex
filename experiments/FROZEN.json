@@ -70,6 +70,8 @@
  "experiments/results/spike58.json": "7d2ad564567f1ff6d174e86ebe4c6151d98a003f2ba84b1bcd5ce6e4530b2af4",
  "experiments/results/spike59.json": "7f5e63efeaa02d06fc208928973e47f42b227b23983501e07f2bfae316901313",
  "experiments/results/spike59_control.json": "83db559124edf0c0de0bcea48f2f23d84a51899216fad41cbef4e14f2fc37af8",
+ "experiments/results/spike61.json": "b1b62877c69b66b775cf3f932d34fd368681f1c8a80e8a15966f24665814b113",
+ "experiments/results/spike61_control.json": "1839332a559e25d451e3041e2f0111e853b2001efc9ce95450c0032da087397e",
  "experiments/spike01.py": "105ad901e24b58b2a58d425436345546f79e159d9cd49a8a33335ad98006c8ca",
  "experiments/spike02.py": "0841215acf72e5258b9ff7b1d95bbf300a9a76972500df9b37022e7162f13e9e",
  "experiments/spike02b.py": "3ea67d1c825de192583dffb0d8efc3825fb5133ae554a086a7d613bda157f923",
@@ -137,5 +139,7 @@
  "experiments/spike57.py": "9d9808c158dc0a93eec61753e2c84794b8650e25a202de0bd38c23dd7ea39414",
  "experiments/spike58.py": "1fb8a06bbbd655f656b8c3767d582bf129ed04392c062e54bf5f44c75727f814",
  "experiments/spike59.py": "4a8fee08508bb00c06855a0c9bc70012348ce7c32f53558e43d4341e672a8704",
- "experiments/spike59_control.py": "61c8a73a39640a2f2777d8626bf3e514c62d64951fecbad4406740698e6db587"
+ "experiments/spike59_control.py": "61c8a73a39640a2f2777d8626bf3e514c62d64951fecbad4406740698e6db587",
+ "experiments/spike61.py": "5beab8c98e06938257b27d0fce1f37a914eebb2c0bab87f6968539780c880338",
+ "experiments/spike61_control.py": "23c9bfd7df9f77e1fb08fb2ad9b7da1a9674a43d81e49119550bd30676669988"
 }

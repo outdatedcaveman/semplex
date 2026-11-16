@@ -54,7 +54,7 @@ Progress counts a closed gap as 1 and a partial one as ½. It measures the gap l
 | **A9** What the hidden layer represents | E2 | OPEN | Ruled out (Spike 47): the layer does not collapse onto a minimum circuit's cells (0.08% of nets) nor onto the class. Minimum circuits are over-represented 700-fold but explain only 56% of the variance; the layer uses more than two directions. Prior art covers the canonical quotient itself. | P132, P171 |
 | **A10** Identifiability of mechanisms | E2 | PARTIAL | Census done (P167): at 4 inputs, 50 of 128 cost-3 classes have a single orbit of minimum circuits and no class of cost ≥ 4 does. So for most functions the function does not fix its mechanism. | P069, P167 |
 | **A11** Concept geometry from symmetry (C29) across models and brains | E1 | PARTIAL | Spike 53: circles for cyclic families in 14 models' static weights; category block structure and shared brain–model geometry (THINGS-fMRI, 3 subjects); the tensor-product row refuted for lexical composition (additive instead); shared structure finer than the 17-category skeleton. Spike 54: semantic products in Neuronpedia sparse codes are also mainly additive (tensor residue carries the cycle at p < 0.05 in 71%). Spike 55: fairness verdict readable in only 2 of 7 sources, so C30 untested. Spike 56: small models' own fairness verdicts are nearly invariant under permuting persons (names 3–5% of verdict variance vs 33–40% of state; C30 supported approximately). | P179, P180, P181, P182, P183, P184 |
-| **A12** Atlas and periodic table of concepts: closure (C32), economy (C31), construction cost | E2 | PARTIAL | FOUNDATIONS §9: abstraction as closed coarse-graining (Rosas et al. 2024: closure ⇔ strong lumpability), Krohn–Rhodes primes as the periodic table (substrate-relative). Spike 57: recurrent nets build reset → simplex, S3 → 2-D, ℤ/n → ordered circle, product → sum, cascade → more interaction than product; the minimal automaton is present as an exact linear, lumpable coarse-graining (exploratory). Construction cost rises with composition (exploratory). Spike 59: the NSM semantic primes are not a privileged basis of 14 models' lexicons (worse spanning than frequency-matched words; universality non-specific). Spike 58: closure, causal power (interventions 100%) and micro-inertness confirmed in all 31 fitted nets; learning cost follows the table (A5 costliest); minimal-faithful geometry refuted for A5, replaced by the readout-induced permutation representation (C31', exploratory). | P185, P186, P187, P188, P189, P190 |
+| **A12** Atlas and periodic table of concepts: closure (C32), economy (C31), construction cost | E2 | PARTIAL | FOUNDATIONS §9: abstraction as closed coarse-graining (Rosas et al. 2024: closure ⇔ strong lumpability), Krohn–Rhodes primes as the periodic table (substrate-relative). Spike 57: recurrent nets build reset → simplex, S3 → 2-D, ℤ/n → ordered circle, product → sum, cascade → more interaction than product; the minimal automaton is present as an exact linear, lumpable coarse-graining (exploratory). Construction cost rises with composition (exploratory). Spike 59: the NSM semantic primes are not a privileged basis of 14 models' lexicons (worse spanning than frequency-matched words; universality non-specific). Spike 58: closure, causal power (interventions 100%) and micro-inertness confirmed in all 31 fitted nets; learning cost follows the table (A5 costliest); minimal-faithful geometry refuted for A5, replaced by the readout-induced permutation representation (C31', exploratory). Spike 61: no data-driven word-level elements shared across 14 models (shape shared, CKA 0.59; axes not). | P185, P186, P187, P188, P189, P190, P191 |
 
 ### Compiler
 
@@ -82,6 +82,19 @@ Progress counts a closed gap as 1 and a partial one as ½. It measures the gap l
 | **D3** Prior-art reading queue | E4 | CLOSED | Gemini G7 worked through the queue and eight further areas: 53 works, 24 read in full, 9 metadata only (paywalled). Verdicts per claim are in `charter/PRIOR_ART.md`. | P165 |
 
 ## 4. Run reports, newest first
+
+### Spike 61: Do language models share a discrete set of lexical elements? (data-driven atoms across 14 models)
+
+2026-11-16 · commit `5a79341` · overall **BROKEN** · report `experiments/SPIKE_61_REPORT.md` · claims P191
+
+| Hypothesis | Verdict | Measured | Criterion |
+|---|---|---|---|
+| H61.1 | **NEITHER** | sparse beats dense by >=0.05 in 0.121 of pairs; medians 0.148 vs 0.146 | held >= 0.75; broken if sparse <= dense in >= 0.5 |
+| H61.2 | **BROKEN** | 0/256 universal atoms | held >= 25%; broken < 5% |
+
+**Learned.** Models' lexicons share their shape (CKA about 0.6) but no preferred axes: neither sparse atoms nor principal directions line up across models, and no atom is universal. The elements of meaning, if any, are operations on representations, not a basis of word directions.
+
+- Gap A12: PARTIAL → PARTIAL. Lexical scale: no word-level elements; redirect to operations.
 
 ### Spike 58: Does the learned abstraction have causal power, and is its geometry the character of the minimal faithful representation?
 
@@ -378,9 +391,9 @@ Progress counts a closed gap as 1 and a partial one as ½. It measures the gap l
 
 ## 6. Ledger health
 
-- Claims: 190. Empirical: 101; Proved in Lean: 32; Exploratory: 16; Proved on paper: 11; Refuted: 9; Kernel-checked: 6; Conjecture: 5; Method note: 5; Computed: 4; Other: 1.
+- Claims: 191. Empirical: 101; Proved in Lean: 32; Exploratory: 16; Proved on paper: 11; Refuted: 9; Kernel-checked: 6; Conjecture: 5; Method note: 5; Computed: 4; Other: 2.
 - Problems: 0. Claims stated stronger than their support: 41.
-- Frozen spike files (rule 2): 139.
+- Frozen spike files (rule 2): 143.
 
 Weakest links (fixing one lifts every note that rests on it):
 

@@ -1,6 +1,6 @@
 # Spike 61: Do language models share a discrete set of lexical elements? Data-driven atoms across 14 models
 
-**Date:** 2026-11-16 · **Status:** pre-registered (no run) · **Follows:** Spike 59, where Wierzbicka's primes were not a privileged basis (P187) and the next step named was to learn universal atoms from data. Also follows Spike 53 (models share concept geometry, P181). Part of the lexical scale of the atlas programme (`charter/FOUNDATIONS.md` §9.4). **Gap:** A12.
+**Date:** 2026-11-16 · **Status:** complete (pre-registered in 5a79341; results below) · **Follows:** Spike 59, where Wierzbicka's primes were not a privileged basis (P187) and the next step named was to learn universal atoms from data. Also follows Spike 53 (models share concept geometry, P181). Part of the lexical scale of the atlas programme (`charter/FOUNDATIONS.md` §9.4). **Gap:** A12.
 
 ## Question
 
@@ -65,4 +65,19 @@ python -m experiments.spike61 analyse
 
 ## Results
 
-(Not run.)
+`experiments/results/spike61.json`; embedding rows in `spike61_raw/` (495 MB, git-ignored; `run` regenerates them). 6,163 shared words.
+
+| ID | Measured | Criterion | Verdict |
+|---|---|---|---|
+| H61.1 | sparse beats dense by ≥ 0.05 in 12.1% of 91 pairs; sparse ≤ dense in 34.1%; median matched correlation sparse 0.148, dense 0.146 (shuffle floor 0.078) | ≥ 75% held; ≤ in ≥ 50% broken | **NEITHER** |
+| H61.2 | 0 of 256 GPT-2 atoms match at r ≥ 0.5 in ≥ 10 other models | ≥ 25% held; < 5% broken | **BROKEN** |
+
+**Exploratory control, after the verdicts** (`experiments/spike61_control.py`, `results/spike61_control.json`):
+- **Shape is shared.** Rotation-invariant geometry is strongly shared: linear CKA between models is 0.42–0.79 (median 0.59), against 0.06 with words shuffled.
+- **Axes are not.** Between GPT-2 and Qwen2.5-7B, the best atom matches are: maximum 0.65, 90th percentile 0.25, median 0.11. Only 2 atoms reach 0.5 and 15 reach 0.3.
+
+**Reading.** The models' lexicons share their *shape* strongly but share *no preferred axes*, neither sparse atoms nor principal directions. At the level of word embeddings there is no discrete, model-independent set of elements: the shared structure is a continuous geometry, defined up to rotation.
+
+This fits the automaton results (Spikes 57–58). There the invariant is not a basis but the *representation* (characters are basis-free), and the elements are operations (Krohn–Rhodes primes), not directions. **The lexical periodic table, if it exists, should be sought in the operations models apply to word representations, not in a basis for the words.**
+
+**Sample formulas** (GPT-2 codes; atoms by index, none universal): "three" ≈ atom 7 (0.71) + small terms; "justice" = a single atom (102, weight 1.0), so the dictionary spends an atom on one word. Codes are idiosyncratic. Other examples are in the results file.

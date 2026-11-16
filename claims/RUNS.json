@@ -796,6 +796,39 @@
     "P189",
     "P190"
    ]
+  },
+  {
+   "spike": "61",
+   "date": "2026-11-16",
+   "commit": "5a79341",
+   "question": "Do language models share a discrete set of lexical elements? (data-driven atoms across 14 models)",
+   "overall": "BROKEN",
+   "verdicts": [
+    {
+     "id": "H61.1",
+     "verdict": "NEITHER",
+     "measured": "sparse beats dense by >=0.05 in 0.121 of pairs; medians 0.148 vs 0.146",
+     "bar": "held >= 0.75; broken if sparse <= dense in >= 0.5"
+    },
+    {
+     "id": "H61.2",
+     "verdict": "BROKEN",
+     "measured": "0/256 universal atoms",
+     "bar": "held >= 25%; broken < 5%"
+    }
+   ],
+   "learned": "Models' lexicons share their shape (CKA about 0.6) but no preferred axes: neither sparse atoms nor principal directions line up across models, and no atom is universal. The elements of meaning, if any, are operations on representations, not a basis of word directions.",
+   "gaps_moved": [
+    {
+     "gap": "A12",
+     "from": "PARTIAL",
+     "to": "PARTIAL",
+     "why": "Lexical scale: no word-level elements; redirect to operations"
+    }
+   ],
+   "claims": [
+    "P191"
+   ]
   }
  ]
 }

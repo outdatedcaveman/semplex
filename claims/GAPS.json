@@ -371,14 +371,15 @@
    "title": "Atlas and periodic table of concepts: closure (C32), economy (C31), construction cost",
    "status": "PARTIAL",
    "leverage": "HIGH",
-   "have": "FOUNDATIONS §9: abstraction as closed coarse-graining (Rosas et al. 2024: closure ⇔ strong lumpability), Krohn–Rhodes primes as the periodic table (substrate-relative). Spike 57: recurrent nets build reset → simplex, S3 → 2-D, ℤ/n → ordered circle, product → sum, cascade → more interaction than product; the minimal automaton is present as an exact linear, lumpable coarse-graining (exploratory). Construction cost rises with composition (exploratory). Spike 59: the NSM semantic primes are not a privileged basis of 14 models' lexicons (worse spanning than frequency-matched words; universality non-specific). Spike 58: closure, causal power (interventions 100%) and micro-inertness confirmed in all 31 fitted nets; learning cost follows the table (A5 costliest); minimal-faithful geometry refuted for A5, replaced by the readout-induced permutation representation (C31', exploratory).",
+   "have": "FOUNDATIONS §9: abstraction as closed coarse-graining (Rosas et al. 2024: closure ⇔ strong lumpability), Krohn–Rhodes primes as the periodic table (substrate-relative). Spike 57: recurrent nets build reset → simplex, S3 → 2-D, ℤ/n → ordered circle, product → sum, cascade → more interaction than product; the minimal automaton is present as an exact linear, lumpable coarse-graining (exploratory). Construction cost rises with composition (exploratory). Spike 59: the NSM semantic primes are not a privileged basis of 14 models' lexicons (worse spanning than frequency-matched words; universality non-specific). Spike 58: closure, causal power (interventions 100%) and micro-inertness confirmed in all 31 fitted nets; learning cost follows the table (A5 costliest); minimal-faithful geometry refuted for A5, replaced by the readout-induced permutation representation (C31', exploratory). Spike 61: no data-driven word-level elements shared across 14 models (shape shared, CKA 0.59; axes not).",
    "claims": [
     "P185",
     "P186",
     "P187",
     "P188",
     "P189",
-    "P190"
+    "P190",
+    "P191"
    ],
    "missing": "C31' tested prospectively (A5 on 6 points → χ5); transformers (substrate-relative table); equal-order solvable vs non-solvable groups for the cost law; the lexical scale needs data-driven elements; a derivation of C31' from training dynamics.",
    "closes_when": "For automata sampled from a stated distribution, the minimal automaton, its Krohn–Rhodes cascade and the geometry of each part are predicted before training and recovered from trained nets of two architectures, and the same calculus predicts held-out lexical concepts from their parts.",

@@ -534,5 +534,21 @@
   "verdict": "HELD",
   "measured": "Spearman 1.0; CASC 300 > PROD 250",
   "bar": "Spearman >= 0.9 and CASC > PROD"
+ },
+ {
+  "key": "61:H61.1",
+  "spike": "61",
+  "id": "H61.1",
+  "verdict": "NEITHER",
+  "measured": "sparse beats dense by >=0.05 in 0.121 of pairs; medians 0.148 vs 0.146",
+  "bar": "held >= 0.75; broken if sparse <= dense in >= 0.5"
+ },
+ {
+  "key": "61:H61.2",
+  "spike": "61",
+  "id": "H61.2",
+  "verdict": "BROKEN",
+  "measured": "0/256 universal atoms",
+  "bar": "held >= 25%; broken < 5%"
  }
 ]
