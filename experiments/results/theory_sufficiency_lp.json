@@ -1,0 +1,334 @@
+{
+ "A5_5": {
+  "candidates": {
+   "chi3": {
+    "faithful": true,
+    "readout_separable": false,
+    "dim": 3
+   },
+   "chi3'": {
+    "faithful": true,
+    "readout_separable": false,
+    "dim": 3
+   },
+   "chi4": {
+    "faithful": true,
+    "readout_separable": true,
+    "dim": 4
+   },
+   "chi5": {
+    "faithful": true,
+    "readout_separable": false,
+    "dim": 5
+   },
+   "chi3+chi3'": {
+    "faithful": true,
+    "readout_separable": false,
+    "dim": 6
+   },
+   "chi3+chi4": {
+    "faithful": true,
+    "readout_separable": true,
+    "dim": 7
+   },
+   "chi3+chi5": {
+    "faithful": true,
+    "readout_separable": false,
+    "dim": 8
+   },
+   "chi3'+chi4": {
+    "faithful": true,
+    "readout_separable": true,
+    "dim": 7
+   },
+   "chi3'+chi5": {
+    "faithful": true,
+    "readout_separable": false,
+    "dim": 8
+   },
+   "chi4+chi5": {
+    "faithful": true,
+    "readout_separable": true,
+    "dim": 9
+   },
+   "chi3+chi3'+chi4": {
+    "faithful": true,
+    "readout_separable": true,
+    "dim": 10
+   },
+   "chi3+chi3'+chi5": {
+    "faithful": true,
+    "readout_separable": false,
+    "dim": 11
+   },
+   "chi3+chi4+chi5": {
+    "faithful": true,
+    "readout_separable": true,
+    "dim": 12
+   },
+   "chi3'+chi4+chi5": {
+    "faithful": true,
+    "readout_separable": true,
+    "dim": 12
+   },
+   "chi3+chi3'+chi4+chi5": {
+    "faithful": true,
+    "readout_separable": true,
+    "dim": 15
+   }
+  },
+  "C31'''_prediction_any_irreps": "chi4",
+  "minimal_ok_all": [
+   "chi4"
+  ]
+ },
+ "A5_6": {
+  "candidates": {
+   "chi3": {
+    "faithful": true,
+    "readout_separable": false,
+    "dim": 3
+   },
+   "chi3'": {
+    "faithful": true,
+    "readout_separable": false,
+    "dim": 3
+   },
+   "chi4": {
+    "faithful": true,
+    "readout_separable": false,
+    "dim": 4
+   },
+   "chi5": {
+    "faithful": true,
+    "readout_separable": true,
+    "dim": 5
+   },
+   "chi3+chi3'": {
+    "faithful": true,
+    "readout_separable": false,
+    "dim": 6
+   },
+   "chi3+chi4": {
+    "faithful": true,
+    "readout_separable": false,
+    "dim": 7
+   },
+   "chi3+chi5": {
+    "faithful": true,
+    "readout_separable": true,
+    "dim": 8
+   },
+   "chi3'+chi4": {
+    "faithful": true,
+    "readout_separable": false,
+    "dim": 7
+   },
+   "chi3'+chi5": {
+    "faithful": true,
+    "readout_separable": true,
+    "dim": 8
+   },
+   "chi4+chi5": {
+    "faithful": true,
+    "readout_separable": true,
+    "dim": 9
+   },
+   "chi3+chi3'+chi4": {
+    "faithful": true,
+    "readout_separable": false,
+    "dim": 10
+   },
+   "chi3+chi3'+chi5": {
+    "faithful": true,
+    "readout_separable": true,
+    "dim": 11
+   },
+   "chi3+chi4+chi5": {
+    "faithful": true,
+    "readout_separable": true,
+    "dim": 12
+   },
+   "chi3'+chi4+chi5": {
+    "faithful": true,
+    "readout_separable": true,
+    "dim": 12
+   },
+   "chi3+chi3'+chi4+chi5": {
+    "faithful": true,
+    "readout_separable": true,
+    "dim": 15
+   }
+  },
+  "C31'''_prediction_any_irreps": "chi5",
+  "minimal_ok_all": [
+   "chi5"
+  ]
+ },
+ "S4_4": {
+  "candidates": {
+   "sign": {
+    "faithful": false,
+    "readout_separable": false,
+    "dim": 1
+   },
+   "chi2": {
+    "faithful": false,
+    "readout_separable": false,
+    "dim": 2
+   },
+   "std": {
+    "faithful": true,
+    "readout_separable": true,
+    "dim": 3
+   },
+   "std_sign": {
+    "faithful": true,
+    "readout_separable": false,
+    "dim": 3
+   },
+   "sign+chi2": {
+    "faithful": false,
+    "readout_separable": false,
+    "dim": 3
+   },
+   "sign+std": {
+    "faithful": true,
+    "readout_separable": true,
+    "dim": 4
+   },
+   "sign+std_sign": {
+    "faithful": true,
+    "readout_separable": false,
+    "dim": 4
+   },
+   "chi2+std": {
+    "faithful": true,
+    "readout_separable": true,
+    "dim": 5
+   },
+   "chi2+std_sign": {
+    "faithful": true,
+    "readout_separable": false,
+    "dim": 5
+   },
+   "std+std_sign": {
+    "faithful": true,
+    "readout_separable": true,
+    "dim": 6
+   },
+   "sign+chi2+std": {
+    "faithful": true,
+    "readout_separable": true,
+    "dim": 6
+   },
+   "sign+chi2+std_sign": {
+    "faithful": true,
+    "readout_separable": false,
+    "dim": 6
+   },
+   "sign+std+std_sign": {
+    "faithful": true,
+    "readout_separable": true,
+    "dim": 7
+   },
+   "chi2+std+std_sign": {
+    "faithful": true,
+    "readout_separable": true,
+    "dim": 8
+   },
+   "sign+chi2+std+std_sign": {
+    "faithful": true,
+    "readout_separable": true,
+    "dim": 9
+   }
+  },
+  "C31'''_prediction_any_irreps": "std",
+  "minimal_ok_all": [
+   "std"
+  ]
+ },
+ "S4_6": {
+  "candidates": {
+   "sign": {
+    "faithful": false,
+    "readout_separable": false,
+    "dim": 1
+   },
+   "chi2": {
+    "faithful": false,
+    "readout_separable": false,
+    "dim": 2
+   },
+   "std": {
+    "faithful": true,
+    "readout_separable": true,
+    "dim": 3
+   },
+   "std_sign": {
+    "faithful": true,
+    "readout_separable": false,
+    "dim": 3
+   },
+   "sign+chi2": {
+    "faithful": false,
+    "readout_separable": false,
+    "dim": 3
+   },
+   "sign+std": {
+    "faithful": true,
+    "readout_separable": true,
+    "dim": 4
+   },
+   "sign+std_sign": {
+    "faithful": true,
+    "readout_separable": false,
+    "dim": 4
+   },
+   "chi2+std": {
+    "faithful": true,
+    "readout_separable": true,
+    "dim": 5
+   },
+   "chi2+std_sign": {
+    "faithful": true,
+    "readout_separable": false,
+    "dim": 5
+   },
+   "std+std_sign": {
+    "faithful": true,
+    "readout_separable": true,
+    "dim": 6
+   },
+   "sign+chi2+std": {
+    "faithful": true,
+    "readout_separable": true,
+    "dim": 6
+   },
+   "sign+chi2+std_sign": {
+    "faithful": true,
+    "readout_separable": false,
+    "dim": 6
+   },
+   "sign+std+std_sign": {
+    "faithful": true,
+    "readout_separable": true,
+    "dim": 7
+   },
+   "chi2+std+std_sign": {
+    "faithful": true,
+    "readout_separable": true,
+    "dim": 8
+   },
+   "sign+chi2+std+std_sign": {
+    "faithful": true,
+    "readout_separable": true,
+    "dim": 9
+   }
+  },
+  "C31'''_prediction_any_irreps": "std",
+  "minimal_ok_all": [
+   "std"
+  ]
+ }
+}
