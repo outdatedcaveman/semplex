@@ -33,16 +33,19 @@ from .ledger import Ledger, Warrant
 
 CSIR_VERSION = "0.1"
 
+# every artifact kind the trusted kernel can evaluate (cerp.kernel._EVAL)
+F0_KINDS = {"expr", "circuit", "dfa", "bdd", "table", "tnet", "dnet"}
+
 # relation -> (artifact kinds it applies to, relations it is finer than)
 RELATIONS = {
-    "extensional": ({"expr", "circuit", "dfa", "bdd"}, {"task"}),
-    "task": ({"expr", "circuit", "dfa", "bdd"}, set()),
+    "extensional": (F0_KINDS, {"task"}),
+    "task": (F0_KINDS, set()),
     "bisimulation": ({"lts"}, {"completed-trace", "trace"}),
     "completed-trace": ({"lts"}, {"trace"}),
     "trace": ({"lts"}, set()),
     "interventional": ({"causal-model", "world"}, set()),
     "adequate-to": ({"causal-model", "world"}, set()),
-    "distills": ({"causal-model", "lts", "expr", "circuit"}, set()),
+    "distills": ({"causal-model", "lts"} | F0_KINDS, set()),
 }
 
 

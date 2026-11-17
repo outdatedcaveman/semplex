@@ -42,7 +42,7 @@ from . import kernel
 # ------------------------------------------------------------------ methods
 
 class Method(Enum):
-    PROOF_ASSISTANT = "proof-assistant"      # checked by a proof assistant kernel (none yet)
+    PROOF_ASSISTANT = "proof-assistant"      # checked by the Lean 4 kernel via cerp.lean_bridge
     KERNEL_CHECKED = "kernel-checked"        # decided or certificate-checked by cerp.kernel
     WITNESS_CHECKED = "witness-checked"      # existence witness re-checked numerically, outside kernel
     EXACT_UNCERTIFIED = "exact-uncertified"  # exact algorithm, unverified code, no certificate

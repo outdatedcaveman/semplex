@@ -251,8 +251,16 @@ def build(m, tables):
 _CACHE_DIR = pathlib.Path(__file__).resolve().parent.parent / "atlas" / ".cache"
 
 
+def _source_tag():
+    """Hash of this file: the cache is valid only for the code that built it."""
+    import hashlib
+    return hashlib.sha256(pathlib.Path(__file__).read_bytes()).hexdigest()[:12]
+
+
 def build_all(m_max=4, *, use_cache=True):
-    cache_path = _CACHE_DIR / f"tables_m{m_max}.pkl"
+    """Exact tables for 1..m_max inputs. Cached under atlas/.cache, keyed by m_max AND
+    by the hash of atlas.py, so editing the builder can never serve stale tables."""
+    cache_path = _CACHE_DIR / f"tables_m{m_max}_{_source_tag()}.pkl"
     if use_cache and cache_path.exists():
         try:
             with cache_path.open("rb") as fh:
@@ -269,6 +277,9 @@ def build_all(m_max=4, *, use_cache=True):
             with tmp_path.open("wb") as fh:
                 pickle.dump(tables, fh, protocol=pickle.HIGHEST_PROTOCOL)
             tmp_path.replace(cache_path)
+            for old in _CACHE_DIR.glob(f"tables_m{m_max}*.pkl"):
+                if old != cache_path:
+                    old.unlink()
         except Exception:
             pass
     return tables

@@ -76,5 +76,22 @@ def test_search_keeps_a_working_rule_working():
     warm = np.zeros(len(monos), dtype=np.float32)
     warm[labels.index("Y[a]*E*V[a]")] = 1.0                      # backpropagation in natural units
     a, hist = L.cem_search(tr, units, X, T, C, 8, 4, rng, gens=4, pop=8, elite=3, start=warm)
-    assert hist[-1][1] >= 0.9                                     # fit rate of the incumbent
     assert a[labels.index("Y[a]*E*V[a]")] > 0.3
+
+    # Compare the returned rule with backprop on the SAME fresh networks. A single draw's
+    # fit rate is noisy even for backprop (P076: min 0.875 over 20 draws), so the old
+    # absolute threshold on hist[-1] tested the draw, not the search (audit B1).
+    run = tr["run"](200)
+    Xn = np.asarray(X, dtype=np.float64)
+
+    def fit_rate(coef, st):
+        W, v, c = (np.asarray(x, dtype=np.float64) for x in run(jnp.asarray(coef * units), st, X, T, C))
+        z = np.einsum("bxh,bh->bx", np.tanh(np.einsum("bhm,xm->bxh", W, Xn)), v) + c[:, None]
+        return float(((z >= 0) == (T > 0.5)).all(1).mean())
+
+    eval_rng = np.random.default_rng(12345)
+    draws = [tuple(map(jnp.asarray, L.init_states(len(T), 8, 4, eval_rng))) for _ in range(4)]
+    found = np.mean([fit_rate(a, st) for st in draws])
+    backprop = np.mean([fit_rate(warm, st) for st in draws])
+    assert backprop >= 0.85                                       # the reference itself works
+    assert found >= backprop - 0.05                               # the search did not destroy it

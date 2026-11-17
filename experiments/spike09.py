@@ -13,7 +13,7 @@ import json
 import pathlib
 import random
 import time
-from collections import Counter, defaultdict
+from collections import defaultdict
 
 import numpy as np
 

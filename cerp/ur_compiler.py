@@ -220,41 +220,33 @@ def _leaf_compile_table(vars_list: list[str], table_arr: np.ndarray, atlas_table
     }
 
 
-def _fn_from_expr(vars_list: list[str], expr_art: dict[str, Any]) -> Callable[[dict[str, int]], int]:
-    body = expr_art["body"]
-
-    def _f(env: dict[str, int]) -> int:
-        benv = {k: bool(v) for k, v in env.items()}
-        return int(bool(kernel._eval_expr(body, benv)))
-
-    return _f
-
-
 def _leaf_compile(vars_list: list[str], fn: Callable[[dict[str, int]], int], atlas_tables=None) -> dict[str, Any]:
     tt = TruthTable.from_function(vars_list, fn)
     bdd_art = truthtable_to_bdd(tt)
     expr_art = bdd_to_expr(bdd_art)
     circ_art = bdd_to_circuit(bdd_art, vars_list)
-    n = len(vars_list)
-    atlas_neurons = None
-    if n <= 4:
-        tb = (atlas_tables or atlas.build_all(4))[n]
-        bits = 0
-        for i in range(1 << n):
-            env = {vars_list[j]: (i >> j) & 1 for j in range(n)}
-            if fn(env):
-                bits |= (1 << i)
-        atlas_neurons = int(tb.hi[bits])
+    if len(vars_list) <= 4:
+        return _leaf_compile_table(vars_list, _table_from_fn(vars_list, fn), atlas_tables=atlas_tables)
     return {
         "vars": list(vars_list),
         "expr": expr_art,
         "circuit": circ_art,
+        "threshold_net": None,
         "circuit_cost": circuit_cost(circ_art),
-        "atlas_min_neurons": atlas_neurons,
+        "atlas_min_neurons": None,
         "decomposed": False,
         "profile_rank": None,
         "children": [],
     }
+
+
+def _combine_soundness(labels) -> str:
+    """Weakest label wins: any sampled(k) < cegar-sat < exact."""
+    labels = [str(x) for x in labels]
+    sampled = [x for x in labels if x.startswith("sampled")]
+    if sampled:
+        return sampled[0]
+    return "cegar-sat" if "cegar-sat" in labels else "exact"
 
 
 def _sample_s2_envs(s2: list[str], max_s2_sample: int) -> tuple[list[dict[str, int]], bool]:
@@ -305,7 +297,9 @@ def _sat_cegar_refine_split(
     expr_ast: dict[str, Any],
 ) -> dict[str, int] | None:
     """Use SAT to check if two `s1` inputs in the same equivalence class behave
-    differently under `expr_ast` for some `s2`. Returns a counterexample `s2` env or None."""
+    differently under `expr_ast` for some `s2`. Returns a counterexample `s2` env,
+    None when every class is PROVED uniform (all SAT calls unsat), or the string
+    "unknown" when any SAT call timed out (no claim may then be made)."""
     from . import sat
 
     body = expr_ast["body"]
@@ -324,6 +318,8 @@ def _sat_cegar_refine_split(
         status, model, _ = sat.prove_equivalence({"vars": s2, "left": lhs, "right": rhs})
         if status == "sat" and isinstance(model, dict):
             return {v: int(bool(model.get(v, False))) for v in s2}
+        if status != "unsat":
+            return "unknown"
     return None
 
 
@@ -348,7 +344,7 @@ def _best_profile_split(
     for s1 in candidates:
         s1_set = set(s1)
         s2 = [v for v in vars_list if v not in s1_set]
-        n1, n2 = len(s1), len(s2)
+        n1 = len(s1)
         eff_samples = max(max_s2_sample, 8 * n)
         s2_envs, exact_s2 = _sample_s2_envs(s2, eff_samples)
         soundness = "exact" if exact_s2 else f"sampled({len(s2_envs)})"
@@ -371,16 +367,13 @@ def _best_profile_split(
             if rank >= n1:
                 break
 
-            if not exact_s2 and (1 << (n1 + n2)) <= 4096:
-                s2_envs, exact_s2 = _sample_s2_envs(s2, 1 << n2)
-                soundness = "exact"
-                continue
             if not exact_s2 and expr_ast is not None:
                 cex = _sat_cegar_refine_split(vars_list, s1, s2, x1_to_code, expr_ast)
-                if cex is not None:
+                if isinstance(cex, dict):
                     s2_envs.append(cex)
                     continue
-                soundness = "cegar-sat"
+                if cex is None:
+                    soundness = "cegar-sat"
             break
         else:
             rank = n1
@@ -600,13 +593,8 @@ def compile_profile_factored(
         vars_list, enc_vars, [e.get("threshold_net") for e in encoders], dec_res.get("threshold_net")
     )
 
-    sounds = [split_soundness, dec_res.get("soundness", "exact")] + [e.get("soundness", "exact") for e in encoders]
-    if any(str(s).startswith("sampled") for s in sounds):
-        overall_sound = next(s for s in sounds if str(s).startswith("sampled"))
-    elif "cegar-sat" in sounds:
-        overall_sound = "cegar-sat"
-    else:
-        overall_sound = "exact"
+    overall_sound = _combine_soundness(
+        [split_soundness, dec_res.get("soundness", "exact")] + [e.get("soundness", "exact") for e in encoders])
 
     return {
         "vars": list(vars_list),
@@ -640,12 +628,6 @@ def compile_multi_profile_factored(
         return {"shared_encoder": False, "profile_rank": None, "outputs": outputs, "encoders": []}
 
     k = min(max_leaf, max(2, n // 2))
-    candidates: list[list[str]] = []
-    for start in range(0, n - k + 1):
-        candidates.append(vars_list[start:start + k])
-    if n >= 2 * k:
-        candidates.append([vars_list[i] for i in range(0, n, 2)][:k])
-
     best = None
     if n <= 12:
         tables = {nm: _table_from_fn(vars_list, fns[nm]).reshape((2,) * n) for nm in names}
@@ -664,8 +646,7 @@ def compile_multi_profile_factored(
                 continue
             s1 = [vars_list[i] for i in s1_pos]
             s2 = [vars_list[i] for i in s2_pos]
-            x1_to_code = {tuple((m1 >> j) & 1 for j in range(n1)): int(inverse[m1]) for m1 in range(1 << n1)}
-            # note inverse is in C order over s1_pos: row m1 has MSB first! Convert consistently:
+            # rows of joint_mat are in C order over s1_pos (s1[0] is the most significant bit)
             x1_to_code = {
                 tuple((m1 >> (n1 - 1 - j)) & 1 for j in range(n1)): int(inverse[m1])
                 for m1 in range(1 << n1)
@@ -675,6 +656,9 @@ def compile_multi_profile_factored(
                 if rank <= 1:
                     break
     else:
+        candidates = [vars_list[start:start + k] for start in range(0, n - k + 1)]
+        if n >= 2 * k:
+            candidates.append([vars_list[i] for i in range(0, n, 2)][:k])
         for s1 in candidates:
             s1_set = set(s1)
             s2 = [v for v in vars_list if v not in s1_set]
@@ -748,7 +732,8 @@ def compile_multi_profile_factored(
             "atlas_min_neurons": neuron_ub,
             "decomposed": True,
             "shared_encoder": True,
-            "soundness": sound_str,
+            "soundness": _combine_soundness(
+                [sound_str, dec_res.get("soundness", "exact")] + [e.get("soundness", "exact") for e in encoders]),
             "profile_rank": rank,
             "split": {"s1": s1, "s2": s2},
             "children": encoders + [dec_res],
@@ -770,16 +755,24 @@ def _lean_certify_equiv(
     name: str = "ur_cert",
     threshold_net: dict[str, Any] | None = None,
     verify_net: bool = True,
+    spec_fn: Callable[[dict[str, int]], int] | None = None,
 ) -> dict[str, Any]:
-    """Certify `expr_art ≡ ref_expr` (and optional `threshold_net ≡ expr_art`) via LRAT + Lean 4.12."""
+    """Certify `expr_art ≡ spec` (and optional `threshold_net ≡ expr_art`) via LRAT + Lean 4.12.
+
+    The specification is `ref_expr` if given, else the canonical BDD expression of
+    `spec_fn` (only for n <= 12). The reference is never derived from `expr_art`
+    itself: that would certify the compiled expression against its own normal form.
+    Without a specification the result is `ok: False, status: "no-reference"`; the
+    net check (if requested) still runs and is reported separately."""
     from . import lean_bridge, sat
 
-    res: dict[str, Any] = {"ok": True, "status": "unsat", "axioms": (), "theorem": name}
-    if ref_expr is None and len(vars_list) <= 12:
-        tt = TruthTable.from_function(vars_list, _fn_from_expr(vars_list, expr_art))
+    if ref_expr is None and spec_fn is not None and len(vars_list) <= 12:
+        tt = TruthTable.from_function(vars_list, spec_fn)
         ref_expr = bdd_to_expr(truthtable_to_bdd(tt))
 
-    if ref_expr is not None:
+    if ref_expr is None:
+        res: dict[str, Any] = {"ok": False, "status": "no-reference", "axioms": (), "theorem": name}
+    else:
         status, lrat_steps, _ = sat.prove_equivalence_lrat({"vars": vars_list, "left": expr_art, "right": ref_expr})
         if status != "unsat":
             return {"ok": False, "status": status, "axioms": (), "theorem": name}
@@ -805,6 +798,116 @@ def _lean_certify_equiv(
             "net_source_sha256": n_chk.source_sha256,
         })
     return res
+
+
+def threshold_net_to_dnet(net: dict[str, Any]) -> dict[str, Any]:
+    """Re-express an Ur-Compiler threshold net as a kernel `dnet` artifact
+    (step neurons, integer weights, bias = -t), so the trusted Python kernel can
+    check it. Raises KeyError if a node reads a wire that is not defined earlier."""
+    idx = {v: i for i, v in enumerate(net["inputs"])}
+    neurons = []
+    for nd in net["nodes"]:
+        neurons.append({"in": [idx[src] for src in nd["in"]], "w": [int(w) for w in nd["w"]],
+                        "b": -int(nd["t"]), "act": "step"})
+        idx[nd["id"]] = len(idx)
+    if not neurons or idx[net["output"]] != len(idx) - 1:
+        neurons.append({"in": [idx[net["output"]]], "w": [1], "b": -1, "act": "step"})
+    return {"kind": "dnet", "body": {"inputs": list(net["inputs"]), "neurons": neurons}}
+
+
+def _table_artifact(vars_list: list[str], fn: Callable[[dict[str, int]], int]) -> dict[str, Any]:
+    """Kernel `table` artifact: bit number sum(x_j << j) (order = vars_list) is fn(x)."""
+    bits = 0
+    n = len(vars_list)
+    for m in range(1 << n):
+        if fn({vars_list[j]: (m >> j) & 1 for j in range(n)}):
+            bits |= 1 << m
+    return {"kind": "table", "body": {"order": list(vars_list), "bits": bits}}
+
+
+def _kernel_link(frm: str, to: str, left: dict, right: dict, vars_list: list[str]) -> dict[str, Any]:
+    """Run the trusted kernel NOW and emit an extensional link that csir.recheck can
+    re-verify from the bundle alone. Raises if the kernel refutes the claim."""
+    if len(vars_list) > kernel.MAX_VARS:
+        return csir.link(frm, to, "extensional", {"vars": vars_list},
+                         warrant={"basis": ["exact-uncertified"], "trusted_base": ["cerp/ur_compiler.py"],
+                                  "conditions": [f"not kernel-checked: {len(vars_list)} > {kernel.MAX_VARS} vars"]})
+    v = kernel.check({"relation": "extensional", "vars": list(vars_list), "left": left, "right": right})
+    if not v.ok:
+        raise ValueError(f"kernel refuted {frm} ≡ {to}: {v}")
+    return csir.link(frm, to, "extensional", {"vars": list(vars_list)}, certificate={"method": "exhaustive"},
+                     warrant={"basis": ["kernel-checked"], "trusted_base": ["cerp/kernel.py"], "conditions": []})
+
+
+def _compile_lts_steps(states, actions, det_trans, *, spec_id, spec_art, spec_resources, produced_by,
+                       shared, distill_cert, distill_conditions, extra_res):
+    """Shared back end for `lts` and `stochastic_lts`: compile every next-state bit and
+    the output bit of the (determinized) step function, and export a CSIR bundle in
+    which each claim is backed by what was actually checked:
+
+      spec --distills (exact-uncertified: binary encoding)--> <out>_table
+      <out>_table --extensional (kernel-checked)--> <out>              (compiled expr)
+      <out> --extensional (kernel-checked)--> <out>_net                (threshold net as dnet)
+    """
+    s_bits = max(1, math.ceil(math.log2(max(2, len(states)))))
+    a_bits = max(1, math.ceil(math.log2(max(2, len(actions)))))
+    s_vars = [f"s{i}" for i in range(s_bits)]
+    a_vars = [f"a{i}" for i in range(a_bits)]
+    step_vars = s_vars + a_vars
+    s_index = {st: i for i, st in enumerate(states)}
+
+    getters = ([(f"next_s{b}", lambda ns, ob, bit=b: (s_index[ns] >> bit) & 1) for b in range(s_bits)]
+               + [("out", lambda ns, ob: int(bool(ob)))])
+
+    def _make_step_fn(g):
+        def _step(env: dict[str, int]) -> int:
+            si = sum((env[s_vars[j]] << j) for j in range(s_bits))
+            ai = sum((env[a_vars[j]] << j) for j in range(a_bits))
+            if si >= len(states) or ai >= len(actions):
+                return 0  # unused codes: fixed to 0
+            ns, ob = det_trans[(states[si], actions[ai])]
+            return g(ns, ob)
+        return _step
+
+    step_fns = {name: _make_step_fn(g) for name, g in getters}
+    if shared and len(step_vars) >= 2 and len(step_fns) >= 2:
+        multi = compile_multi_profile_factored(step_vars, step_fns)
+        compiled = multi["outputs"]
+        shared_used, shared_rank = bool(multi.get("shared_encoder", False)), multi.get("profile_rank")
+    else:
+        compiled = {name: compile_profile_factored(step_vars, fn) for name, fn in step_fns.items()}
+        shared_used, shared_rank = False, None
+
+    nodes = [csir.node(spec_id, spec_art, {"actions": actions}, resources=spec_resources,
+                       provenance={"produced_by": spec_id})]
+    links = []
+    encoding = (f"state i -> bits {s_vars} (LSB first), action i -> bits {a_vars}; "
+                "unused codes map to 0")
+    for name, _ in getters:
+        comp = compiled[name]
+        t_id = f"{name}_table"
+        table = _table_artifact(step_vars, step_fns[name])
+        nodes.append(csir.node(t_id, table, {"vars": step_vars}, provenance={"produced_by": produced_by,
+                                                                            "parents": [spec_id]}))
+        nodes.append(csir.node(
+            name, comp["expr"], {"vars": step_vars},
+            resources={"cost": comp["circuit_cost"], "atlas_neuron_ub": comp["atlas_min_neurons"],
+                       "cost_model": "F0/compositional", **extra_res},
+            provenance={"produced_by": produced_by, "parents": [t_id], "shared_encoder": shared_used,
+                        "profile_rank": shared_rank, "soundness": comp.get("soundness", "exact")}))
+        links.append(csir.link(spec_id, t_id, "distills", {"vars": step_vars, "target": name},
+                               certificate=distill_cert,
+                               warrant={"basis": ["exact-uncertified"], "trusted_base": ["cerp/ur_compiler.py"],
+                                        "conditions": [encoding] + list(distill_conditions)}))
+        links.append(_kernel_link(t_id, name, table, comp["expr"], step_vars))
+        if comp.get("threshold_net") is not None:
+            n_id = f"{name}_net"
+            nodes.append(csir.node(n_id, threshold_net_to_dnet(comp["threshold_net"]), {"vars": step_vars},
+                                   provenance={"produced_by": produced_by, "parents": [name]}))
+            links.append(_kernel_link(name, n_id, comp["expr"], nodes[-1]["artifact"], step_vars))
+    b = csir.bundle(nodes, links)
+    return {"shared_encoder": shared_used, "profile_rank": shared_rank, "compiled_outputs": compiled,
+            "csir": b, "validation_errors": csir.validate(b)}
 
 
 def compile_unified(spec: dict[str, Any]) -> dict[str, Any]:
@@ -840,6 +943,7 @@ def compile_unified(spec: dict[str, Any]) -> dict[str, Any]:
                 name=f"{n_id}_lean",
                 threshold_net=res.get("threshold_net"),
                 verify_net=bool(spec.get("verify_net", True)),
+                spec_fn=fn,
             )
         prov = {"produced_by": "ur_compiler.compile_profile_factored",
                 "decomposed": res["decomposed"], "profile_rank": res["profile_rank"],
@@ -864,184 +968,47 @@ def compile_unified(spec: dict[str, Any]) -> dict[str, Any]:
         }
 
     if kind == "lts":
-        states = list(spec["states"])
-        actions = list(spec["actions"])
-        transitions = spec["transitions"]  # (s, a) -> (s_next, out_bit)
-        s_bits = max(1, math.ceil(math.log2(max(2, len(states)))))
-        a_bits = max(1, math.ceil(math.log2(max(2, len(actions)))))
-        s_vars = [f"s{i}" for i in range(s_bits)]
-        a_vars = [f"a{i}" for i in range(a_bits)]
-        step_vars = s_vars + a_vars
-        s_index = {s: i for i, s in enumerate(states)}
-
-        nodes = [
-            csir.node(
-                "lts_spec",
-                {"kind": "lts", "body": {"states": states, "actions": actions}},
-                {"actions": actions},
-                provenance={"produced_by": "lts_spec"},
-            )
-        ]
-        links = []
-        compiled_outputs = {}
-
-        # Compile each next-state bit and the output bit into F0 expressions
-        output_getters = (
-            [(f"next_s{b}", lambda ns, ob, bit=b: (s_index[ns] >> bit) & 1) for b in range(s_bits)]
-            + [("out", lambda ns, ob: int(bool(ob)))]
-        )
-        def _make_step_fn(g):
-            def _step(env: dict[str, int]) -> int:
-                si = sum((env[s_vars[j]] << j) for j in range(s_bits))
-                ai = sum((env[a_vars[j]] << j) for j in range(a_bits))
-                if si >= len(states) or ai >= len(actions):
-                    return 0
-                ns, ob = transitions[(states[si], actions[ai])]
-                return g(ns, ob)
-            return _step
-
-        step_fns = {out_name: _make_step_fn(getter) for out_name, getter in output_getters}
-        use_shared = bool(spec.get("shared_encoder", True)) and len(step_vars) >= 2 and len(step_fns) >= 2
-        if use_shared:
-            multi = compile_multi_profile_factored(step_vars, step_fns)
-            compiled_outputs = multi["outputs"]
-            shared_enc_used = bool(multi.get("shared_encoder", False))
-            shared_rank = multi.get("profile_rank")
-        else:
-            compiled_outputs = {out_name: compile_profile_factored(step_vars, fn) for out_name, fn in step_fns.items()}
-            shared_enc_used = False
-            shared_rank = None
-
-        for out_name, _ in output_getters:
-            comp = compiled_outputs[out_name]
-            nodes.append(
-                csir.node(
-                    out_name,
-                    comp["expr"],
-                    {"vars": step_vars},
-                    resources={"cost": comp["circuit_cost"], "atlas_neuron_ub": comp["atlas_min_neurons"],
-                               "cost_model": "F0/compositional"},
-                    provenance={"produced_by": "ur_compiler.lts_step", "parents": ["lts_spec"],
-                                "shared_encoder": shared_enc_used, "profile_rank": shared_rank},
-                )
-            )
-            links.append(
-                csir.link(
-                    "lts_spec", out_name, "distills",
-                    {"vars": step_vars, "target": out_name},
-                    certificate={"method": "exhaustive"},
-                    warrant={"basis": ["kernel-checked"], "trusted_base": ["cerp/ur_compiler.py"], "conditions": []},
-                )
-            )
-        b = csir.bundle(nodes, links)
-        return {
-            "kind": "lts",
-            "shared_encoder": shared_enc_used,
-            "profile_rank": shared_rank,
-            "compiled_outputs": compiled_outputs,
-            "csir": b,
-            "validation_errors": csir.validate(b),
-        }
+        states, actions = list(spec["states"]), list(spec["actions"])
+        det_trans = {(st, a): (spec["transitions"][(st, a)][0], int(bool(spec["transitions"][(st, a)][1])))
+                     for st in states for a in actions}
+        spec_art = {"kind": "lts", "body": {
+            "states": states, "actions": actions,
+            "transitions": [[st, a, ns, ob] for (st, a), (ns, ob) in det_trans.items()]}}
+        out = _compile_lts_steps(
+            states, actions, det_trans, spec_id="lts_spec", spec_art=spec_art, spec_resources=None,
+            produced_by="ur_compiler.lts_step", shared=bool(spec.get("shared_encoder", True)),
+            distill_cert={"method": "binary-encoding"}, distill_conditions=[], extra_res={})
+        return {"kind": "lts", **out}
 
     if kind == "stochastic_lts":
-        states = list(spec["states"])
-        actions = list(spec["actions"])
+        states, actions = list(spec["states"]), list(spec["actions"])
         transitions = spec["transitions"]  # (s, a) -> dict[(ns, ob), prob] or list[(ns, ob, prob)]
-        s_bits = max(1, math.ceil(math.log2(max(2, len(states)))))
-        a_bits = max(1, math.ceil(math.log2(max(2, len(actions)))))
-        s_vars = [f"s{i}" for i in range(s_bits)]
-        a_vars = [f"a{i}" for i in range(a_bits)]
-        step_vars = s_vars + a_vars
-        s_index = {s: i for i, s in enumerate(states)}
-
         det_trans: dict[tuple[Any, Any], tuple[Any, int]] = {}
+        dist_rows = []
         eps_bound = 0.0
-        for s in states:
+        for st in states:
             for a in actions:
-                dist = transitions[(s, a)]
+                dist = transitions[(st, a)]
                 items = list(dist.items()) if isinstance(dist, dict) else [((ns, ob), p) for ns, ob, p in dist]
+                dist_rows.extend([st, a, ns, ob, float(pr)] for (ns, ob), pr in items)
                 best_pair, best_p = max(items, key=lambda kv: kv[1])
-                det_trans[(s, a)] = (best_pair[0], int(bool(best_pair[1])))
+                det_trans[(st, a)] = (best_pair[0], int(bool(best_pair[1])))
+                # TV distance between the point mass at the argmax and the true distribution
                 eps_bound = max(eps_bound, max(0.0, 1.0 - float(best_p)))
-
         horizon = max(1, int(spec.get("horizon", 1)))
-        horizon_eps_bound = min(1.0, horizon * eps_bound)
-
-        nodes = [
-            csir.node(
-                "stochastic_lts_spec",
-                {"kind": "lts", "body": {"states": states, "actions": actions, "stochastic": True,
-                                         "eps_bound": eps_bound, "horizon": horizon,
-                                         "horizon_eps_bound": horizon_eps_bound}},
-                {"actions": actions},
-                resources={"eps_bound": eps_bound, "horizon": horizon,
-                           "horizon_eps_bound": horizon_eps_bound, "cost_model": "T-step-TV"},
-                provenance={"produced_by": "stochastic_lts_spec"},
-            )
-        ]
-        links = []
-        compiled_outputs = {}
-        output_getters = (
-            [(f"next_s{b}", lambda ns, ob, bit=b: (s_index[ns] >> bit) & 1) for b in range(s_bits)]
-            + [("out", lambda ns, ob: int(bool(ob)))]
-        )
-        def _make_sstep_fn(g):
-            def _step(env: dict[str, int]) -> int:
-                si = sum((env[s_vars[j]] << j) for j in range(s_bits))
-                ai = sum((env[a_vars[j]] << j) for j in range(a_bits))
-                if si >= len(states) or ai >= len(actions):
-                    return 0
-                ns, ob = det_trans[(states[si], actions[ai])]
-                return g(ns, ob)
-            return _step
-
-        sstep_fns = {out_name: _make_sstep_fn(getter) for out_name, getter in output_getters}
-        use_shared = bool(spec.get("shared_encoder", True)) and len(step_vars) >= 2 and len(sstep_fns) >= 2
-        if use_shared:
-            multi = compile_multi_profile_factored(step_vars, sstep_fns)
-            compiled_outputs = multi["outputs"]
-            shared_enc_used = bool(multi.get("shared_encoder", False))
-            shared_rank = multi.get("profile_rank")
-        else:
-            compiled_outputs = {out_name: compile_profile_factored(step_vars, fn) for out_name, fn in sstep_fns.items()}
-            shared_enc_used = False
-            shared_rank = None
-
-        for out_name, _ in output_getters:
-            comp = compiled_outputs[out_name]
-            nodes.append(
-                csir.node(
-                    out_name,
-                    comp["expr"],
-                    {"vars": step_vars},
-                    resources={"cost": comp["circuit_cost"], "atlas_neuron_ub": comp["atlas_min_neurons"],
-                               "eps_bound": eps_bound, "cost_model": "F0/compositional"},
-                    provenance={"produced_by": "ur_compiler.stochastic_lts_step", "parents": ["stochastic_lts_spec"],
-                                "eps_bound": eps_bound, "shared_encoder": shared_enc_used, "profile_rank": shared_rank},
-                )
-            )
-            links.append(
-                csir.link(
-                    "stochastic_lts_spec", out_name, "distills",
-                    {"vars": step_vars, "target": out_name},
-                    certificate={"method": "argmax-determinization", "eps_bound": eps_bound},
-                    warrant={"basis": ["kernel-checked", "1-step-TV-bound"],
-                             "trusted_base": ["cerp/ur_compiler.py"],
-                             "conditions": [f"1-step TV error <= {eps_bound:.6g}"]},
-                )
-            )
-        b = csir.bundle(nodes, links)
-        return {
-            "kind": "stochastic_lts",
-            "eps_bound": eps_bound,
-            "horizon": horizon,
-            "horizon_eps_bound": horizon_eps_bound,
-            "shared_encoder": shared_enc_used,
-            "profile_rank": shared_rank,
-            "compiled_outputs": compiled_outputs,
-            "csir": b,
-            "validation_errors": csir.validate(b),
-        }
+        horizon_eps_bound = min(1.0, horizon * eps_bound)  # union bound over T steps
+        spec_art = {"kind": "lts", "body": {"states": states, "actions": actions, "stochastic": True,
+                                            "transitions": dist_rows, "eps_bound": eps_bound,
+                                            "horizon": horizon, "horizon_eps_bound": horizon_eps_bound}}
+        out = _compile_lts_steps(
+            states, actions, det_trans, spec_id="stochastic_lts_spec", spec_art=spec_art,
+            spec_resources={"eps_bound": eps_bound, "horizon": horizon,
+                            "horizon_eps_bound": horizon_eps_bound, "cost_model": "T-step-TV"},
+            produced_by="ur_compiler.stochastic_lts_step", shared=bool(spec.get("shared_encoder", True)),
+            distill_cert={"method": "argmax-determinization", "eps_bound": eps_bound},
+            distill_conditions=[f"1-step TV error <= {eps_bound:.6g}"], extra_res={"eps_bound": eps_bound})
+        return {"kind": "stochastic_lts", "eps_bound": eps_bound, "horizon": horizon,
+                "horizon_eps_bound": horizon_eps_bound, **out}
 
     if kind == "continuous":
         # Quantized continuous function f: [0, 1]^d -> {0, 1} (or R -> bool via threshold)
@@ -1112,6 +1079,7 @@ def compile_unified(spec: dict[str, Any]) -> dict[str, Any]:
                 return 1 if float(val) >= threshold else 0
 
         comp = compile_profile_factored(vars_list, _quantized_fn)
+        fn_evals = eval_count
         n_id = spec.get("name", "continuous_compiled")
         c_id = f"{n_id}_circuit"
         lean_cert = None
@@ -1122,7 +1090,9 @@ def compile_unified(spec: dict[str, Any]) -> dict[str, Any]:
                 name=f"{n_id}_lean",
                 threshold_net=comp.get("threshold_net"),
                 verify_net=bool(spec.get("verify_net", True)),
+                spec_fn=_quantized_fn,
             )
+        eval_count = fn_evals
         expr_node = csir.node(
             n_id,
             comp["expr"],
@@ -1143,16 +1113,9 @@ def compile_unified(spec: dict[str, Any]) -> dict[str, Any]:
                        "cost_model": "circuit/DAG"},
             provenance={"produced_by": "ur_compiler.continuous_quantized", "parents": [n_id]},
         )
-        warrant = {"basis": ["structural-sharing"], "trusted_base": ["cerp/ur_compiler.py"],
-                   "conditions": [f"quantization resolution <= {coord_eps:.6g}"]}
+        link = _kernel_link(n_id, c_id, comp["expr"], comp["circuit"], vars_list)
         if lean_cert is not None:
-            warrant["lean_cert"] = lean_cert
-        link = csir.link(
-            n_id, c_id, "extensional",
-            {"vars": vars_list},
-            certificate={"method": "hash-consed-dag-translation"},
-            warrant=warrant,
-        )
+            link["warrant"]["lean_cert"] = lean_cert
         b = csir.bundle([expr_node, circ_node], [link])
         return {
             "kind": "continuous",

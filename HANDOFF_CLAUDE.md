@@ -26,10 +26,10 @@ All theorems below were compiled directly with `Lean 4.12.0` (`proofs/lean/Theor
 
 ## 2. What Is Built & Verified in the Ur-Compiler (`cerp/`)
 
-- **Python $\leftrightarrow$ Lean `ThresholdNet` LRAT Bridge ([sat.py](file:///C:/Users/bruno/Claude%20Code/semplex/cerp/sat.py), [lean_bridge.py](file:///C:/Users/bruno/Claude%20Code/semplex/cerp/lean_bridge.py)):**
+- **Python $\leftrightarrow$ Lean `ThresholdNet` LRAT Bridge ([sat.py](cerp/sat.py), [lean_bridge.py](cerp/lean_bridge.py)):**
   - `_tnet_to_indexed_nodes`, `_pb_to_expr_indexed`, `_lean_tnet_miter`, `prove_tnet_equivalence_lrat`, `tnet_to_lean`, `verify_threshold_net_equiv`.
   - Wired into `ur_compiler._lean_certify_equiv` (`verify_net=True` default when `certify_lean=True`).
-- **Scaled Factored Ur-Compiler ([ur_compiler.py](file:///C:/Users/bruno/Claude%20Code/semplex/cerp/ur_compiler.py)):**
+- **Scaled Factored Ur-Compiler ([ur_compiler.py](cerp/ur_compiler.py)):**
   - Replaced the broken strided `S2` sampler (which froze low-order bits at `0` for `n > 14`) with unbiased structured + SplitMix64 probes (`_sample_s2_envs`) and optional symbolic SAT-CEGAR equivalence checking (`_sat_cegar_refine_split`), tracked explicitly via `soundness` (`"exact" | "cegar-sat" | "sampled(k)"`).
   - Added joint multi-output factored compiler `compile_multi_profile_factored` and wired it (`shared_encoder=True` default) into `compile_unified` for `"lts"` and `"stochastic_lts"`.
   - Measured on `n = 16` (`expr_ast` SAT-CEGAR): `0.132s`, `profile_rank=1`, `soundness="cegar-sat"`.
@@ -68,9 +68,9 @@ Do **not** overclaim around these measured limits:
 - **Acceptance:** `test_tnet_lean_exhaustive_and_lrat_equiv` passes on `xor4` with `native=False` (`'Lean.ofReduceBool'` absent) under 30s.
 
 ### Work Package B (Formal Theory Unification): Connect Sequential Epistemics & Continuous DPI (`Q-OptStop-Connect`)
-- **Problem:** `Theory.lean` §§18–19 proves `markov_kernel_dpi` (`Fin n`) and `ville_anytime_valid_bound` cleanly, and `cerp/epistemics.py` runs empirical tests, but the sequential `epistemics.py` / `QueryTree` estimators are not yet instantiated as verified `Nat`/`Fin` supermartingales nor bridged to Mathlib measure theory.
+- **Problem:** `Theory.lean` §§18–19 proves `markov_kernel_dpi` (`Fin n`) and `ville_anytime_valid_bound` cleanly, and `cerp/epistemics/` runs empirical tests, but the sequential `cerp/epistemics/` / `QueryTree` estimators are not yet instantiated as verified `Nat`/`Fin` supermartingales nor bridged to Mathlib measure theory.
 - **Targets:**
-  1. Instantiate a concrete sequential likelihood-ratio / e-value test process (`cerp/epistemics.py` $\leftrightarrow$ `proofs/lean/Theory.lean`) proving its rejection rule satisfies `ville_anytime_valid_bound` at finite horizon `T`.
+  1. Instantiate a concrete sequential likelihood-ratio / e-value test process (`cerp/epistemics/` $\leftrightarrow$ `proofs/lean/Theory.lean`) proving its rejection rule satisfies `ville_anytime_valid_bound` at finite horizon `T`.
   2. Explore Mathlib `MeasureTheory.Kernel` optional sub-package or finite-refinement projective limit for `Theory.lean` §18 DPI.
   3. Formalize `lossy_composition_obstruction` into an algebraic **obstruction invariant** (e.g., conditional profile entropy / sheaf gluing defect across overlapping $\Omega$-covers).
 

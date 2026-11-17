@@ -1,5 +1,6 @@
 # Lean (version 4.12.0, x86_64-unknown-linux-gnu, commit dc2533473114, Release)
-# Theory.lean compiled with no errors; grep for sorry in source: 0 occurrences
+# Theory.lean compiled with no errors; AuditTheory.lean exit 0; occurrences of the word 'sorry' in Theory.lean: 0
+# regenerated 2026-11-17 by the project audit
 'PFT.indist_antitone' does not depend on any axioms
 'PFT.galois' does not depend on any axioms
 'PFT.duality' depends on axioms: [propext, Classical.choice, Quot.sound]
@@ -18,3 +19,39 @@
 'PFT.no_minimal_representation' depends on axioms: [propext, Classical.choice, Quot.sound]
 'PFT.finitary_least' depends on axioms: [propext, Classical.choice, Quot.sound]
 'PFT.eventuallyOn_upd' depends on axioms: [propext, Quot.sound]
+'PFT.task_blind' depends on axioms: [propext]
+'PFT.even_span_excludes_odd' depends on axioms: [propext, Quot.sound]
+'PFT.multi_unit_symmetry_gap' depends on axioms: [propext, Quot.sound]
+'PFT.prod_indist' does not depend on any axioms
+'PFT.prod_determines' does not depend on any axioms
+'PFT.prod_decisive_left' does not depend on any axioms
+'PFT.eps_determines_mono' does not depend on any axioms
+'PFT.eventuallyOn_stabilized' depends on axioms: [propext]
+'PFT.prefix_determines_stabilized' depends on axioms: [propext]
+'PFT.adaptive_uses_determining' does not depend on any axioms
+'PFT.statistical_gated_sound' does not depend on any axioms
+'PFT.union_bound_sum' depends on axioms: [propext, Quot.sound]
+'PFT.err_le_sumBudget' depends on axioms: [propext, Quot.sound]
+'PFT.metric_eps_limit' does not depend on any axioms
+'PFT.metric_eps_limit_determines' does not depend on any axioms
+'PFT.adaptive_min_protocols_lb' does not depend on any axioms
+'PFT.threshold_escalation_optimal' depends on axioms: [propext, Quot.sound]
+'PFT.threshold_escalation_unique_strict' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PFT.profile_factor_compile' does not depend on any axioms
+'PFT.adaptive_trace_discriminates' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PFT.adaptive_local_hitting_lb' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PFT.uniform_budget_bound' depends on axioms: [propext, Quot.sound]
+'PFT.frameHom_indist' does not depend on any axioms
+'PFT.frameHom_determines_pullback' does not depend on any axioms
+'PFT.queryApprox_comp' does not depend on any axioms
+'PFT.frameHom_eps_determines_pullback' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PFT.frameHom_eps_metric_pullback' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PFT.lossy_composition_obstruction' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PFT.tv_deterministic_dpi' depends on axioms: [propext]
+'PFT.markov_kernel_dpi' depends on axioms: [propext, Quot.sound]
+'PFT.markov_kernel_dpi_comp' depends on axioms: [propext, Quot.sound]
+'PFT.indist_implies_pragEquiv' does not depend on any axioms
+'PFT.peirce_pragmatic_maxim' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PFT.applyStop_preserves_supermartingale' depends on axioms: [propext]
+'PFT.optional_stopping_supermartingale' depends on axioms: [propext, Quot.sound]
+'PFT.ville_anytime_valid_bound' depends on axioms: [propext, Quot.sound]

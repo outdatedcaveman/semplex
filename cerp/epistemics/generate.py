@@ -26,7 +26,7 @@ import math
 import random
 from itertools import permutations
 
-from .bayesnet import Structure, em_fit, loglik
+from .bayesnet import Structure, em_fit
 from .stats import chi2_sf
 
 

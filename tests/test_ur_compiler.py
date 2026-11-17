@@ -216,3 +216,55 @@ def test_multi_output_shared_encoder_and_lts():
     assert out["profile_rank"] == 1
     assert ur_compiler.eval_threshold_net(out["compiled_outputs"]["out"]["threshold_net"],
                                          {"s0": 1, "s1": 0, "s2": 0, "a0": 1, "a1": 0}) == 1
+
+
+# ------------------------------------------------------------ audit regressions (2026-11-17)
+
+def _mod3_counter():
+    states, actions = ["S0", "S1", "S2"], ["stay", "inc"]
+    t = {("S0", "stay"): ("S0", 1), ("S0", "inc"): ("S1", 0), ("S1", "stay"): ("S1", 0),
+         ("S1", "inc"): ("S2", 0), ("S2", "stay"): ("S2", 0), ("S2", "inc"): ("S0", 1)}
+    return {"kind": "lts", "states": states, "actions": actions, "transitions": t}
+
+
+def test_lts_bundle_claims_only_what_the_kernel_rechecks():
+    """Audit B5: every link marked kernel-checked must re-verify from the bundle alone,
+    and tampering with the extracted step table must be caught."""
+    import copy
+    from cerp import csir
+    out = ur_compiler.compile_unified(_mod3_counter())
+    assert out["validation_errors"] == []
+    res = csir.recheck(out["csir"])
+    assert all(st == "verified" or st.startswith("not kernel-checkable") for _, st in res)
+    assert sum(st == "verified" for _, st in res) >= 6       # table≡expr and expr≡net per output
+    bad = copy.deepcopy(out["csir"])
+    next(n for n in bad["nodes"] if n["id"] == "out_table")["artifact"]["body"]["bits"] ^= 1
+    assert any(st == "FAILED" for _, st in csir.recheck(bad))
+
+
+def test_threshold_net_is_checked_by_the_python_kernel():
+    vars8 = [f"x{i}" for i in range(8)]
+    res = ur_compiler.compile_profile_factored(vars8, lambda e: sum(e[v] for v in vars8) & 1)
+    dnet = ur_compiler.threshold_net_to_dnet(res["threshold_net"])
+    assert kernel.check({"relation": "extensional", "vars": vars8, "left": res["expr"], "right": dnet}).ok
+
+
+def test_lean_certificate_needs_a_specification():
+    """Audit B2/B3: without a reference or spec function nothing is certified."""
+    vs = ["a", "b", "c"]
+    e = {"kind": "expr", "body": ["xor", ["var", "a"], ["var", "b"]]}
+    r = ur_compiler._lean_certify_equiv(vs, e, None, verify_net=False)
+    assert r["ok"] is False and r["status"] == "no-reference"
+
+
+def test_cegar_timeout_is_not_a_proof(monkeypatch):
+    """Audit B4: a SAT timeout must leave the split labelled sampled, never cegar-sat."""
+    from cerp import sat
+    vs = [f"x{i}" for i in range(16)]
+    body = ["var", "x0"]
+    for v in vs[1:]:
+        body = ["xor", body, ["var", v]]
+    monkeypatch.setattr(sat, "prove_equivalence", lambda claim, time_limit=60.0: ("timeout", None, None))
+    comp = ur_compiler.compile_profile_factored(vs, lambda e: sum(e.values()) & 1,
+                                                expr_ast={"kind": "expr", "body": body})
+    assert comp["soundness"] != "cegar-sat" and comp["soundness"].startswith("sampled")

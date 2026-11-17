@@ -14,7 +14,7 @@ import statistics
 import time
 
 from cerp import kernel
-from cerp.bdd import BDD, normal_form
+from cerp.bdd import normal_form
 from cerp.semantics import TruthTable
 from cerp.substrates import cost, random_expr, semantics
 from cerp.sufficiency import minimal_sufficient_sets, project

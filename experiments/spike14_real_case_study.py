@@ -16,8 +16,8 @@ import pathlib
 import random
 from collections import Counter
 
-from cerp import atlas, csir, substrates
-from cerp.epistemics.bayesnet import Structure, em_fit, loglik
+from cerp import atlas, csir
+from cerp.epistemics.bayesnet import Structure, em_fit
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 OUT = ROOT / "experiments" / "results" / "spike14_real_case_study.json"

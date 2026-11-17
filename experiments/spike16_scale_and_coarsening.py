@@ -362,7 +362,7 @@ def run_part_d_ur_benchmark() -> dict[str, Any]:
 
 
 def main() -> None:
-    out_path = ROOT / "experiments" / "spike16_results.json"
+    out_path = ROOT / "experiments" / "results" / "spike16_scale_and_coarsening.json"
     report: dict[str, Any] = {}
     for key, fn in [
         ("part_a_hd_n8", run_part_a_hd_n8),

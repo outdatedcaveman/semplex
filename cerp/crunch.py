@@ -46,10 +46,15 @@ def _verify(n, f, art, care=None):
 
 # ------------------------------------------------------------ families
 
+def _netsolve():
+    from . import netsolve  # optional dependency (ortools); imported only when a family job runs
+    return netsolve
+
+
 FAMILY_SPECS = {
-    "skip": lambda n, k: __import__("cerp.netsolve", fromlist=["x"]).chain(n, k),
-    "relu": lambda n, k: __import__("cerp.netsolve", fromlist=["x"]).layered(n, [k - 1], act="relu"),
-    "relu_skip": lambda n, k: __import__("cerp.netsolve", fromlist=["x"]).layered(n, [k - 1], act="relu", skip=True),
+    "skip": lambda n, k: _netsolve().chain(n, k),
+    "relu": lambda n, k: _netsolve().layered(n, [k - 1], act="relu"),
+    "relu_skip": lambda n, k: _netsolve().layered(n, [k - 1], act="relu", skip=True),
 }
 FAMILY_W = {"skip": 3, "relu": 3, "relu_skip": 3}
 

@@ -5,13 +5,12 @@ import json
 
 import pytest
 
-from cerp import csir, kernel
+from cerp import csir
 from cerp.benchmarks import carry_prefix, carry_ripple
 from cerp.demo import ALARM, SENSORS_AGREE
 from cerp.epistemics.inquiry import inquire
 from cerp.epistemics.ontologies import CANDIDATES
 from cerp.epistemics.world import ALL_ACTIONS, Interface
-from cerp.ledger import Ledger
 from cerp.lts import bisim_quotient, bisimulation, lts, random_lts, trace_equivalence
 from cerp.pipeline import analyze
 from cerp.sat import prove_equivalence

@@ -1,3 +1,12 @@
 # Lean (version 4.12.0, x86_64-unknown-linux-gnu, commit dc2533473114, Release)
+# Bounds.lean compiled with no errors; AuditBounds.lean exit 0; occurrences of the word 'sorry' in Bounds.lean: 0
+# regenerated 2026-11-17 by the project audit
 'CerpBounds.not_threshold_cert_sound' depends on axioms: [propext, Quot.sound]
 'CerpBounds.sdot_eq' depends on axioms: [propext, Quot.sound]
+'CerpBounds.not_two_halfspaces_cert_sound' depends on axioms: [propext, Quot.sound]
+'CerpBounds.ptDot_ge_iff' depends on axioms: [propext, Quot.sound]
+'CerpBounds.one_bit_flip_add_point_neuron' depends on axioms: [propext, Quot.sound]
+'CerpBounds.parity3_not_threshold' depends on axioms: [propext, Quot.sound]
+'CerpBounds.depth2_or_flip_adds_one' depends on axioms: [propext, Quot.sound]
+'CerpBounds.parity4_not_two_halfspaces' depends on axioms: [propext, Quot.sound]
+'CerpBounds.depth2_or_flip_true_to_false' depends on axioms: [propext, Quot.sound]

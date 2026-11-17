@@ -98,7 +98,7 @@ def analyse(n, h, W, canon=None, cost=None):
            "border_pairs_by_hamming_distance": {int(k): v for k, v in sorted(ham.items())},
            "distinct_touching_function_pairs": len(pairs)}
     if canon is not None:
-        cv, cc = {}, {}
+        cv = {}
         for f, v in vol.items():
             c = int(canon[f])
             cv[c] = cv.get(c, 0) + v
