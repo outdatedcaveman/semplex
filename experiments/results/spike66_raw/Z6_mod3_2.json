@@ -1,0 +1,10 @@
+{
+ "automaton": "Z6_mod3",
+ "seed": 6662,
+ "fit": 1.0,
+ "rho_predictive": -0.5,
+ "rho_onestep": 0.8660254037844387,
+ "n_macro": 3,
+ "probe_macro": 1.0,
+ "probe_mod2": 0.5342
+}

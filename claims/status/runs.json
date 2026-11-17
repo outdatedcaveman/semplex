@@ -238,5 +238,15 @@
   "learned": "No verdict (fit guard). Exploratory: signed tracking is a degree-1 sphere as predicted; unsigned tracking does not collapse to the projective plane: networks keep the signed direction (the double cover), where the rotation acts linearly, and fit worse. Learners appear to prefer the simplest linear representation of the dynamics over the minimal quotient (conjecture C36).",
   "moved": "A12: PARTIAL → PARTIAL (Continuous scale opened; linearising-cover conjecture C36)",
   "claims": ""
+ },
+ {
+  "spike": "66",
+  "date": "2026-11-17",
+  "commit": "52a41f6",
+  "question": "Formal test of the predictive-state law (extension pairs, p-primary readout, S4_6 anomaly)",
+  "overall": "MIXED",
+  "learned": "The predictive-state law is not universal: for identity-only readouts it predicts equidistant states, but networks build compact structured geometry. Closure discards the unobservable part exactly: a mod-3 readout of a mod-6 counter leaves no trace of the 2-part. The S4 6-point anomaly replicates.",
+  "moved": "A12: PARTIAL → PARTIAL (Geometry law: two regimes (C37); closure confirmed arithmetically)",
+  "claims": "P199 P200"
  }
 ]

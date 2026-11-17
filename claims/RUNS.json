@@ -1075,6 +1075,46 @@
     }
    ],
    "claims": []
+  },
+  {
+   "spike": "66",
+   "date": "2026-11-17",
+   "commit": "52a41f6",
+   "question": "Formal test of the predictive-state law (extension pairs, p-primary readout, S4_6 anomaly)",
+   "overall": "MIXED",
+   "verdicts": [
+    {
+     "id": "H66.1",
+     "verdict": "BROKEN",
+     "measured": "0% of fitted runs with rho_predictive >= 0.6",
+     "bar": "held >= 0.8"
+    },
+    {
+     "id": "H66.2",
+     "verdict": "BROKEN",
+     "measured": "0%",
+     "bar": "held >= 0.8"
+    },
+    {
+     "id": "H66.3",
+     "verdict": "HELD",
+     "measured": "probe c mod 2 = 0.54",
+     "bar": "<= 0.60"
+    }
+   ],
+   "learned": "The predictive-state law is not universal: for identity-only readouts it predicts equidistant states, but networks build compact structured geometry. Closure discards the unobservable part exactly: a mod-3 readout of a mod-6 counter leaves no trace of the 2-part. The S4 6-point anomaly replicates.",
+   "gaps_moved": [
+    {
+     "gap": "A12",
+     "from": "PARTIAL",
+     "to": "PARTIAL",
+     "why": "Geometry law: two regimes (C37); closure confirmed arithmetically"
+    }
+   ],
+   "claims": [
+    "P199",
+    "P200"
+   ]
   }
  ]
 }

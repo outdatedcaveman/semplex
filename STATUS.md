@@ -83,6 +83,20 @@ Progress counts a closed gap as 1 and a partial one as ½. It measures the gap l
 
 ## 4. Run reports, newest first
 
+### Spike 66: Formal test of the predictive-state law (extension pairs, p-primary readout, S4_6 anomaly)
+
+2026-11-17 · commit `52a41f6` · overall **MIXED** · report `experiments/SPIKE_66_REPORT.md` · claims P199, P200
+
+| Hypothesis | Verdict | Measured | Criterion |
+|---|---|---|---|
+| H66.1 | **BROKEN** | 0% of fitted runs with rho_predictive >= 0.6 | held >= 0.8 |
+| H66.2 | **BROKEN** | 0% | held >= 0.8 |
+| H66.3 | **HELD** | probe c mod 2 = 0.54 | <= 0.60 |
+
+**Learned.** The predictive-state law is not universal: for identity-only readouts it predicts equidistant states, but networks build compact structured geometry. Closure discards the unobservable part exactly: a mod-3 readout of a mod-6 counter leaves no trace of the 2-part. The S4 6-point anomaly replicates.
+
+- Gap A12: PARTIAL → PARTIAL. Geometry law: two regimes (C37); closure confirmed arithmetically.
+
 ### Spike 65: Continuous sufficiency: is a tracked direction a sphere and a tracked axis a projective plane?
 
 2026-11-17 · commit `49242c1` · overall **NO VERDICT** · report `experiments/SPIKE_65_REPORT.md` · claims none
@@ -479,9 +493,9 @@ Progress counts a closed gap as 1 and a partial one as ½. It measures the gap l
 
 ## 6. Ledger health
 
-- Claims: 198. Empirical: 106; Proved in Lean: 32; Exploratory: 16; Proved on paper: 11; Refuted: 11; Kernel-checked: 6; Conjecture: 5; Method note: 5; Computed: 4; Other: 2.
-- Problems: 0. Claims stated stronger than their support: 43.
-- Frozen spike files (rule 2): 156.
+- Claims: 200. Empirical: 107; Proved in Lean: 32; Exploratory: 16; Refuted: 12; Proved on paper: 11; Kernel-checked: 6; Conjecture: 5; Method note: 5; Computed: 4; Other: 2.
+- Problems: 0. Claims stated stronger than their support: 44.
+- Frozen spike files (rule 2): 159.
 
 Weakest links (fixing one lifts every note that rests on it):
 
@@ -489,7 +503,7 @@ Weakest links (fixing one lifts every note that rests on it):
 |---|---|---|---|
 | P069 | 21 | PROVED (paper proof) + PARTLY MECHANIZED (P160) + EMPIRICALLY-CONFIRMED (H14.1) | Theorem 15: under task-symmetric initialization and equivariant training, circuit probability is constant on task-symmet |
 | P127 | 11 | EXPLORATORY (post hoc) | Feature learning moves nets from the NTK toward the Occam completion: 91% agreement with Occam vs 81–83% with the NTK; w |
+| P186 | 3 | EXPLORATORY (the registered cluster-based closure test H57.1 is BROKEN; the probe analysis was run after the verdicts) | The minimal automaton is present in trained recurrent nets as an exact closed coarse-graining, not as clusters: a linear |
 | P133 | 2 | EXPLORATORY (demonstrated, tested) | A causal Bayes net's Bayes-optimal decision rule can be distilled to a canonical F0 expr + circuit in CSIR with a kernel |
 | P141 | 2 | EXPLORATORY + PARTLY MECHANIZED | Profile-factor compilation (`profile_factor_compile` in Lean; `cerp/ur_compiler.py`, H-G) factors low-rank partitions `f |
 | P175 | 2 | ~ φ iff every least-cost function agreeing with D satisfies φ") is a rational nonmonotonic consequence relation: it satisfies Cut, Cautious Monotony and Rational Monotony and fails classical Monotony. Exhaustively at n = 3 over 6,561 partial labellings: 0 violations of the three rules, 3,888 of 14,816 Monotony instances fail | Minimum-circuit forcing ("D |
-| P186 | 2 | EXPLORATORY (the registered cluster-based closure test H57.1 is BROKEN; the probe analysis was run after the verdicts) | The minimal automaton is present in trained recurrent nets as an exact closed coarse-graining, not as clusters: a linear |

@@ -77,7 +77,7 @@ Run in parallel by Gemini from the Spike 10c state; renumbered at the merge (ori
 ├ 63  4-layer transformer + curriculum on S4, A5                             frozen: H63.3 held (same geometry); H63.1 neither; H63.2 broken
 ├ 64  holonomy of model-to-model alignments (sheaf reading)                  frozen: H64.1 broken (no obstruction; common frame); H64.2 held
 ├ 65  continuous: S^2 vs RP^2 tracking                                       frozen: no verdict (fit); exploratory C36 (double cover)
-├ 66  predictive-state law, formal (extension pairs, Z6 mod 3, S4_6)        running
+├ 66  predictive-state law, formal (extension pairs, Z6 mod 3, S4_6)        frozen: H66.1–2 broken (degenerate readout); H66.3 held (2-part discarded)
 └ 68  C34 in context with tied control                                       frozen: H68.1–3 held
 ```
 ```

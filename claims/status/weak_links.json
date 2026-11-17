@@ -12,6 +12,12 @@
   "statement": "Feature learning moves nets from the NTK toward the Occam completion: 91% agreement with Occam vs 81–83% with the NTK; w"
  },
  {
+  "claim": "P186",
+  "notes": 3,
+  "status": "EXPLORATORY (the registered cluster-based closure test H57.1 is BROKEN; the probe analysis was run after the verdicts)",
+  "statement": "The minimal automaton is present in trained recurrent nets as an exact closed coarse-graining, not as clusters: a linear"
+ },
+ {
   "claim": "P133",
   "notes": 2,
   "status": "EXPLORATORY (demonstrated, tested)",
@@ -28,12 +34,6 @@
   "notes": 2,
   "status": "~ φ iff every least-cost function agreeing with D satisfies φ\") is a rational nonmonotonic consequence relation: it satisfies Cut, Cautious Monotony and Rational Monotony and fails classical Monotony. Exhaustively at n = 3 over 6,561 partial labellings: 0 violations of the three rules, 3,888 of 14,816 Monotony instances fail",
   "statement": "Minimum-circuit forcing (\"D"
- },
- {
-  "claim": "P186",
-  "notes": 2,
-  "status": "EXPLORATORY (the registered cluster-based closure test H57.1 is BROKEN; the probe analysis was run after the verdicts)",
-  "statement": "The minimal automaton is present in trained recurrent nets as an exact closed coarse-graining, not as clusters: a linear"
  },
  {
   "claim": "P191",

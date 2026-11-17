@@ -710,5 +710,29 @@
   "verdict": "NO VERDICT",
   "measured": "fitted SIGN 1/5, AXIS 0/5 (< 3)",
   "bar": "guard"
+ },
+ {
+  "key": "66:H66.1",
+  "spike": "66",
+  "id": "H66.1",
+  "verdict": "BROKEN",
+  "measured": "0% of fitted runs with rho_predictive >= 0.6",
+  "bar": "held >= 0.8"
+ },
+ {
+  "key": "66:H66.2",
+  "spike": "66",
+  "id": "H66.2",
+  "verdict": "BROKEN",
+  "measured": "0%",
+  "bar": "held >= 0.8"
+ },
+ {
+  "key": "66:H66.3",
+  "spike": "66",
+  "id": "H66.3",
+  "verdict": "HELD",
+  "measured": "probe c mod 2 = 0.54",
+  "bar": "<= 0.60"
  }
 ]
