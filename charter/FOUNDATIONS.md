@@ -455,3 +455,100 @@ For S4_6 it is the composite: permutation − 1 at 0.97, with χ₂ (0.65) above
 - **Conjecture C31‴ (sufficiency).** A network keeps the smallest set of constituents of the predictive state that is (i) faithful, so its macrostates are the minimal automaton's (closure), and (ii) sufficient for its readout: the outputs remain threshold-separable from it.
 
   This predicts the A₅ results too, provided the minimal faithful 3-dimensional representations fail (ii) for those readouts while χ₄ and χ₅ pass. That is decidable by linear programming, and it is the next step.
+
+## 12. Toward the continuous and higher-algebraic side: coalgebra, sheaves, harmonic analysis, higher categories, arithmetic (2026-11-17)
+
+**Working hypothesis (user's).** Semantic space = logical space = mathematical space = phase space.
+
+This section states, for each mathematical thread, (a) the exact known result that bears on the hypothesis, (b) what it means here, and (c) a test.
+
+Marks used:
+- † a classical result cited from memory and not re-read;
+- **[S]** speculative: an analogy without a theorem behind it yet.
+
+### 12.1 Coalgebra: semantic space is the final coalgebra, and the hypothesis is a theorem in the image-finite case
+
+**(a) Known results.**
+- A Moore machine (input alphabet Σ, outputs O) is a coalgebra X → O × X^Σ for the functor F(X) = O × X^Σ.
+- Every system has a unique coalgebra morphism into the **final coalgebra** O^(Σ*), the space of all behaviours (Rutten, universal coalgebra †). Its kernel is bisimilarity, which here is Myhill–Nerode, and its image is the minimal machine.
+- For image-finite labelled transition systems, two states satisfy the same Hennessy–Milner modal formulas iff they are bisimilar (Hennessy–Milner theorem †; generalised by coalgebraic modal logic, Moss, Pattinson, Schröder †).
+
+**(b) What it means here.**
+- *Phase space* (the system's state space with its dynamics) is a coalgebra.
+- *Semantic space* is the final coalgebra.
+- *Logical space* is the space of modal theories, which coincides with the final coalgebra up to bisimilarity in the image-finite case.
+
+So **"semantic space = logical space = phase space modulo bisimulation" is a theorem for image-finite coalgebras.** The hypothesis is true in this precise form; its extension beyond image-finiteness is open.
+
+Our experiments sit inside this picture:
+- §11.4's predictive state is the map into the final coalgebra;
+- Spike 58's closure and causal power say trained networks implement that map and factor through its image;
+- C31‴ says how the image is linearised: which irreducibles of the behaviour space a network keeps.
+
+**(c) Test.** For stochastic systems the final coalgebra is a space of measures (Giry-type functors †), so the predictive state is a probability-valued behaviour. Extend Spike 58 to probabilistic automata and check that the learned Gram matrix equals the kernel of predictive distributions.
+
+### 12.2 Sheaves: no shared basis is a gluing obstruction; invariants are the global sections
+
+**(a) Known results.**
+- Local data on a cover glue to a global section iff the Čech cocycle condition holds. Torsors (bundles of frames) are classified by H¹ with coefficients in the structure group †.
+- Contextuality in quantum mechanics is exactly the non-existence of a global section of a presheaf of local distributions (Abramsky and Brandenburger, sheaf-theoretic contextuality †).
+
+**(b) What it means here.**
+- Treat each model as a local chart of semantic space: a frame for the shared shape, determined only up to O(d).
+- The pairwise alignments are transition functions. A shared basis would be a global section of the frame bundle.
+- Spike 61 says there is none. If alignments around triangles of models do not compose to the identity, the obstruction is a nontrivial "holonomy". What does glue globally is the invariants (Gram, characters): the global sections of the quotient sheaf. That is C34 restated sheaf-theoretically.
+- Contextuality has a lexical counterpart. A word whose in-context meanings admit no global section is contextual (polysemy in the strict sense).
+
+**(c) Tests.**
+- **Spike 64**, on Spike 61's data: holonomy of orthogonal-Procrustes alignments around model triangles, against bootstrap alignment noise.
+- **Later:** contextuality of word meaning across contexts in LLM activations.
+
+### 12.3 Representation theory and harmonic analysis: the continuous version of the sufficiency law
+
+**(a) Known results.** For a compact group K, L²(K) decomposes into irreducibles (Peter–Weyl †). On the sphere S² = SO(3)/SO(2), the irreducibles are the spherical harmonics of degree ℓ. Functions on the real projective plane RP² (unsigned axes) use only **even** ℓ.
+
+**(b) What it means here.** The discrete law C31‴ (smallest faithful, readout-sufficient set of irreducibles) has a continuous analogue for concepts with continuous symmetry, predicted before any test:
+- if the readout is a *signed direction*, the learned geometry is ℓ = 1, the 3-dimensional vector representation: the sphere;
+- if the readout is an *unsigned axis* (a line, not an arrow), ℓ = 1 cannot separate antipodes as the readout requires, so the geometry is ℓ = 2, the 5-dimensional Veronese embedding of RP².
+
+The same group, with a different readout, gives a different shape, forced by sufficiency.
+
+**(c) Test, Spike 65.** A recurrent network receives a sequence of small 3-D rotations and outputs either the current direction of a body axis (signed) or its unsigned axis. Prediction: the hidden geometry is degree 1 for the signed readout and degree 2 (even harmonics only) for the unsigned one.
+
+### 12.4 Higher categories and group cohomology: cascades as extensions
+
+**(a) Known results.**
+- Group extensions 1 → A → E → G → 1 with abelian A are classified by H²(G; A) †. Split extensions are semidirect products; the zero class is the direct product when the action is trivial.
+- Crossed modules and 2-groups model "symmetries of symmetries" †.
+- Our cascade and product (Spikes 57–58) are a split extension and a direct product of the flip-flop and ℤ/3.
+
+**(b) What it means here.**
+- §11.2's synonymy (same composition factors, different stacking) is classified by extension data. Two constructions with the same factors differ by their extension class: isomers.
+- Higher-categorically, analogies between concepts are 1-morphisms, and analogies between analogies are 2-morphisms. A concept's higher structure is its 2-group of symmetries.
+
+**(c) Test, Spike 66.** For groups with the same composition factors but different extension classes (ℤ/4 vs ℤ/2 × ℤ/2, a non-split vs a split extension; ℤ/9 vs ℤ/3 × ℤ/3; Q₈ vs D₄), the learned geometries differ as C31‴ predicts. Non-split extensions cannot be represented as sums of the factors' representations and must carry interaction (fibred) structure.
+
+### 12.5 Arithmetic: profinite meaning, p-primary decomposition, and the field with one element
+
+**(a) Known results.**
+- Regular languages correspond to the clopen subsets of the free profinite monoid (Stone duality for regular languages; Almeida, Pin, Gehrke †).
+- The profinite integers Ẑ = lim ℤ/n = ∏_p ℤ_p collect every cyclic group at once, and ℤ/n ≅ ∏ ℤ/p^k by the Chinese remainder theorem.
+- Over 𝔽₁ (the "field with one element"), linear algebra is the combinatorics of finite sets: vector spaces are pointed sets, GL_n(𝔽₁) = S_n, and representations are permutation representations (Tits; Connes–Consani †).
+
+**(b) What it means here.**
+- The space of all finite-state meanings is a profinite (Stone) space; the infinitary model of §5 lives there.
+- Cyclic concepts split into p-primary parts.
+- **Precise link to Synesism's P0 (𝔽₁ + univalence).** By §11.4 the learned geometry starts from the readout's **permutation representation**, which is a representation over 𝔽₁. The network's state space is its base change to ℝ, compressed to the faithful, readout-sufficient constituents (C31‴). So the learned geometry of a group concept is "𝔽₁-representation ⊗ ℝ, minimised". This is an interpretation of established mathematics, not a new theorem, but it puts 𝔽₁ at the root of the observed geometry rather than as an analogy.
+- **[S] Perfectoid spaces and tilting.** These relate mixed and positive characteristic via limits. A possible model for the relation between the continuous (real-valued nets) and the discrete (finite automata, profinite meaning) is a limit equivalence of that kind. No theorem is claimed; it is listed so it is not lost.
+
+**(c) Test, Spike 67.** A counter mod n with composite n (n = 6, 12) and a readout that reveals only c mod p. C31‴ and the Chinese remainder theorem predict that the learned geometry is the p-primary circle alone. With a readout of c mod n, it is the faithful circle (k coprime to n), not the product of the prime circles.
+
+### 12.6 Summary of where the threads already touch our data
+
+| Thread | Already supported by our results | Next test |
+|---|---|---|
+| Final coalgebra | closure and causal power (P188); predictive-state derivation (§11.4) | probabilistic automata |
+| Sheaves | shape shared, no basis (P191) | Spike 64: holonomy |
+| Harmonic analysis | circles (k = 1), characters (P185, P192) | Spike 65: SO(3), signed vs unsigned |
+| Extensions, higher structure | product vs cascade interaction (P185, P188) | Spike 66: extension classes |
+| Arithmetic, 𝔽₁ | permutation (𝔽₁) representations at the root of C31‴ | Spike 67: p-primary parts |
