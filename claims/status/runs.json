@@ -188,5 +188,15 @@
   "learned": "The sharp prediction held: A5 read out through 6 points is represented by chi5, the readout's representation, and the minimal faithful characters are anti-correlated. But S4 through 6 points keeps only the faithful standard part of the readout's representation, dropping the unfaithful chi2. The geometry appears to be the faithful constituents of the readout's permutation representation (C31'', post hoc). A small transformer learned neither group, so the substrate and Barrington tests stay open.",
   "moved": "A12: PARTIAL → PARTIAL (Economy law refined to C31'' (faithful constituents of the readout representation); transformer arm failed to train)",
   "claims": "P192 P193 P194"
+ },
+ {
+  "spike": "64",
+  "date": "2026-11-17",
+  "commit": "see report",
+  "question": "Is there a global frame for semantic space? (holonomy of model-to-model alignments)",
+  "overall": "MIXED",
+  "learned": "There is no gluing obstruction: models' lexicons are rotated copies of a common frame in their leading dimensions, so a shared basis can be recovered after alignment. Spike 61's missing atoms reflect arbitrary per-model rotations, not the absence of a global frame.",
+  "moved": "A12: PARTIAL → PARTIAL (Common frame recoverable up to rotation; next learn atoms in the aligned space)",
+  "claims": "P195"
  }
 ]

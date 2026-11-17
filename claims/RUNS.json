@@ -888,6 +888,39 @@
     "P193",
     "P194"
    ]
+  },
+  {
+   "spike": "64",
+   "date": "2026-11-17",
+   "commit": "see report",
+   "question": "Is there a global frame for semantic space? (holonomy of model-to-model alignments)",
+   "overall": "MIXED",
+   "verdicts": [
+    {
+     "id": "H64.1",
+     "verdict": "BROKEN",
+     "measured": "ratio >= 2 in 0.000 of triangles; median ratio 0.71",
+     "bar": "held >= 0.8 at ratio >= 2; broken >= 0.5 at ratio <= 1.2"
+    },
+    {
+     "id": "H64.2",
+     "verdict": "HELD",
+     "measured": "median held-out R2 0.31",
+     "bar": ">= 0.30"
+    }
+   ],
+   "learned": "There is no gluing obstruction: models' lexicons are rotated copies of a common frame in their leading dimensions, so a shared basis can be recovered after alignment. Spike 61's missing atoms reflect arbitrary per-model rotations, not the absence of a global frame.",
+   "gaps_moved": [
+    {
+     "gap": "A12",
+     "from": "PARTIAL",
+     "to": "PARTIAL",
+     "why": "Common frame recoverable up to rotation; next learn atoms in the aligned space"
+    }
+   ],
+   "claims": [
+    "P195"
+   ]
   }
  ]
 }

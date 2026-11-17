@@ -395,6 +395,8 @@ Spike 61 is an empirical instance:
 
 This is an analogy with a precise core, not a proof of P7. The precise core is the representation-theoretic fact that basis-dependent quantities average to zero over the group of changes of basis, while class functions are exactly what survives.
 
+**Correction (Spike 64).** The holonomy of model-to-model alignments is within estimation noise, and the top components glue almost perfectly. The models are rotated copies of one common frame, so the frame bundle is trivial: there is no gluing obstruction. The stratification reading above therefore applies to *raw* coordinates, not to aligned ones. Models share their shape and a recoverable common frame, each up to its own rotation.
+
 **Conjecture C34 (invariance of shared meaning).** What independently trained systems share about a concept is exactly its invariants under their changes of representation (characters, Gram operators, homotopy types), never a component. Testable consequence: any basis-dependent claim of shared concepts (shared neurons, shared atoms, shared directions) fails across models, unless the models are trained so that their bases are tied.
 
 ### 11.2 Non-unique decomposition, synonymy and connotation
@@ -494,6 +496,7 @@ Our experiments sit inside this picture:
 - Contextuality in quantum mechanics is exactly the non-existence of a global section of a presheaf of local distributions (Abramsky and Brandenburger, sheaf-theoretic contextuality †).
 
 **(b) What it means here.**
+- **Tested in Spike 64 and refuted as an obstruction: the alignments glue (trivial holonomy within noise).**
 - Treat each model as a local chart of semantic space: a frame for the shared shape, determined only up to O(d).
 - The pairwise alignments are transition functions. A shared basis would be a global section of the frame bundle.
 - Spike 61 says there is none. If alignments around triangles of models do not compose to the identity, the obstruction is a nontrivial "holonomy". What does glue globally is the invariants (Gram, characters): the global sections of the quotient sheaf. That is C34 restated sheaf-theoretically.

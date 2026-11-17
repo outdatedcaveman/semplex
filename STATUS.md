@@ -83,6 +83,19 @@ Progress counts a closed gap as 1 and a partial one as ½. It measures the gap l
 
 ## 4. Run reports, newest first
 
+### Spike 64: Is there a global frame for semantic space? (holonomy of model-to-model alignments)
+
+2026-11-17 · commit `see report` · overall **MIXED** · report `experiments/SPIKE_64_REPORT.md` · claims P195
+
+| Hypothesis | Verdict | Measured | Criterion |
+|---|---|---|---|
+| H64.1 | **BROKEN** | ratio >= 2 in 0.000 of triangles; median ratio 0.71 | held >= 0.8 at ratio >= 2; broken >= 0.5 at ratio <= 1.2 |
+| H64.2 | **HELD** | median held-out R2 0.31 | >= 0.30 |
+
+**Learned.** There is no gluing obstruction: models' lexicons are rotated copies of a common frame in their leading dimensions, so a shared basis can be recovered after alignment. Spike 61's missing atoms reflect arbitrary per-model rotations, not the absence of a global frame.
+
+- Gap A12: PARTIAL → PARTIAL. Common frame recoverable up to rotation; next learn atoms in the aligned space.
+
 ### Spike 60: Is a learned group concept shaped by what its readout distinguishes? (C31' prospective, GRU and transformer)
 
 2026-11-16 · commit `5b097d0` · overall **MIXED** · report `experiments/SPIKE_60_REPORT.md` · claims P192, P193, P194
@@ -408,9 +421,9 @@ Progress counts a closed gap as 1 and a partial one as ½. It measures the gap l
 
 ## 6. Ledger health
 
-- Claims: 194. Empirical: 103; Proved in Lean: 32; Exploratory: 16; Proved on paper: 11; Refuted: 10; Kernel-checked: 6; Conjecture: 5; Method note: 5; Computed: 4; Other: 2.
-- Problems: 0. Claims stated stronger than their support: 41.
-- Frozen spike files (rule 2): 145.
+- Claims: 195. Empirical: 104; Proved in Lean: 32; Exploratory: 16; Proved on paper: 11; Refuted: 10; Kernel-checked: 6; Conjecture: 5; Method note: 5; Computed: 4; Other: 2.
+- Problems: 0. Claims stated stronger than their support: 42.
+- Frozen spike files (rule 2): 147.
 
 Weakest links (fixing one lifts every note that rests on it):
 

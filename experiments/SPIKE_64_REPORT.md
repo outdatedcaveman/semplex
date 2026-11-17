@@ -1,6 +1,6 @@
 # Spike 64: Is there a global frame for semantic space? Holonomy of model-to-model alignments
 
-**Date:** 2026-11-17 · **Status:** pre-registered (no run) · **Follows:** Spike 61 (P191: lexicons share shape but not axes), `charter/FOUNDATIONS.md` §12.2 (sheaf reading), C34.
+**Date:** 2026-11-17 · **Status:** complete (pre-registered in this file's first commit; results below) · **Follows:** Spike 61 (P191: lexicons share shape but not axes), `charter/FOUNDATIONS.md` §12.2 (sheaf reading), C34.
 
 ## Question
 
@@ -48,4 +48,16 @@ python -m experiments.spike64 run
 
 ## Results
 
-(Not run.)
+`experiments/results/spike64.json` (364 triangles, 182 ordered pairs).
+
+| ID | Measured | Criterion | Verdict |
+|---|---|---|---|
+| H64.1 | ρ ≥ 2 in 0% of triangles; ρ ≤ 1.2 in 100%; median holonomy 0.45 against median noise 0.63 (ρ = 0.71) | ≥ 80% at ρ ≥ 2 held; ≥ 50% at ρ ≤ 1.2 broken | **BROKEN** |
+| H64.2 | median held-out R² 0.31 (range -0.54 to 0.68) | ≥ 0.30 held | **HELD** |
+
+**Reading.**
+- **There is no detectable obstruction.** Around every triangle, the composed alignment is as close to the identity as alignment noise allows.
+- **The top components glue almost perfectly.** On the 16 highest-variance components the composite is nearly the identity (mean diagonal 0.987); the low-variance tail is noisy (mean diagonal 0.55).
+- **So the 14 lexicons are, to estimation accuracy, rotated copies of one common frame in their leading dimensions:** the frame bundle is trivial. The sheaf-obstruction reading of Spike 61 (FOUNDATIONS §12.2) is refuted.
+- Spike 61 found no shared atoms because each model's coordinates are an arbitrary rotation of the common frame, and independently learned dictionaries do not align across rotations. It was not because no global frame exists.
+- **Consequence for C34.** What models share is an invariant shape *and* a recoverable common frame, defined up to one rotation per model. A shared basis can exist in the aligned space. The next test of lexical elements should learn atoms **jointly in the aligned space**, not separately per model.

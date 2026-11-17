@@ -598,5 +598,21 @@
   "verdict": "HELD",
   "measured": "0.944 of fitted GRU runs",
   "bar": "held >= 0.8"
+ },
+ {
+  "key": "64:H64.1",
+  "spike": "64",
+  "id": "H64.1",
+  "verdict": "BROKEN",
+  "measured": "ratio >= 2 in 0.000 of triangles; median ratio 0.71",
+  "bar": "held >= 0.8 at ratio >= 2; broken >= 0.5 at ratio <= 1.2"
+ },
+ {
+  "key": "64:H64.2",
+  "spike": "64",
+  "id": "H64.2",
+  "verdict": "HELD",
+  "measured": "median held-out R2 0.31",
+  "bar": ">= 0.30"
  }
 ]
