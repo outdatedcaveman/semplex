@@ -1,0 +1,42 @@
+[
+ {
+  "readout": "SIGN",
+  "seed": 7000,
+  "n": 1117,
+  "mse_antipodal_swap": 1.2693486213684082,
+  "mse_same_state_swap": 0.0009744907729327679,
+  "ratio": 1302.5762939453125,
+  "sign_probe_balanced_accuracy": 1.0,
+  "sign_minority_fraction": 0.040341655716162994
+ },
+ {
+  "readout": "SIGN",
+  "seed": 7001,
+  "n": 1067,
+  "mse_antipodal_swap": 1.2698637247085571,
+  "mse_same_state_swap": 0.0008000945672392845,
+  "ratio": 1587.14208984375,
+  "sign_probe_balanced_accuracy": 1.0,
+  "sign_minority_fraction": 0.03775989268947011
+ },
+ {
+  "readout": "AXIS",
+  "seed": 7010,
+  "n": 1148,
+  "mse_antipodal_swap": 0.055088840425014496,
+  "mse_same_state_swap": 0.0010980722727254033,
+  "ratio": 50.16868209838867,
+  "sign_probe_balanced_accuracy": 0.999931262029145,
+  "sign_minority_fraction": 0.038415285943345756
+ },
+ {
+  "readout": "AXIS",
+  "seed": 7011,
+  "n": 1221,
+  "mse_antipodal_swap": 0.06542860716581345,
+  "mse_same_state_swap": 0.0011503075947985053,
+  "ratio": 56.87922668457031,
+  "sign_probe_balanced_accuracy": 1.0,
+  "sign_minority_fraction": 0.04142809026608285
+ }
+]

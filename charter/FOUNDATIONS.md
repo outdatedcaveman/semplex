@@ -460,6 +460,12 @@ For S4_6 it is the composite: permutation − 1 at 0.97, with χ₂ (0.65) above
 
 **Update (Spike 62): C31‴ refuted prospectively** (0/12). Networks keep unfaithful constituents. The exact predictive kernel matches every fitted case of Spikes 60 and 62 except S4_6. The law is the predictive state itself, without compression, and S4_6 is an open anomaly.
 
+**Lemma (equal energy; 2026-11-17, elementary, used to register Spike 69).** For any complex irreducible χ, the kernel matrix K_χ(g, h) = χ(g⁻¹h) has Frobenius energy Σ_{g,h} |χ(g⁻¹h)|² = |G| Σ_x |χ(x)|² = |G|², *independent of its dimension*. The constituents of χ_perm = Σ m_i χ_i are orthogonal as kernels. So the energy of constituent i in the permutation kernel is m_i²|G|². A real irreducible formed from a conjugate pair ω ⊕ ω̄ has energy 2m²|G|², because Σ_x ω(x)² = 0 when ω² ≠ 1.
+
+Consequences:
+- (i) In a permutation readout, all multiplicity-1 real constituents of perm − 1 carry *exactly equal* predictive energy. The predictive-state law alone cannot choose among them. S4_6 (std versus χ₂), S4_6c, S4_8 and A5_10 are all **ties**, and the "best character by Spearman" was a statement about pattern, not about energy. The S4_6 anomaly is therefore a question about how ties are broken.
+- (ii) Multiplicity and complex type break ties. S4_12b contains 2χ₂, which carries 4× the energy, and networks chose χ₂. A₄ on pairs contains ω ⊕ ω̄ at 2× the energy of χ₃, which gives the law a unique, unfaithful prediction. Spike 69 tests this, and with it whether the S4_6 preference for the faithful constituent survives against a non-tied kernel.
+
 ## 12. Toward the continuous and higher-algebraic side: coalgebra, sheaves, harmonic analysis, higher categories, arithmetic (2026-11-17)
 
 **Working hypothesis (user's).** Semantic space = logical space = mathematical space = phase space.

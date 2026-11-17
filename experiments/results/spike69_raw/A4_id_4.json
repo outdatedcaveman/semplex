@@ -1,0 +1,15 @@
+{
+ "automaton": "A4_id",
+ "seed": 6924,
+ "fit": 1.0,
+ "probe_macro": 1.0,
+ "n_macro": 12,
+ "elements_seen": 12,
+ "rho_predictive": 0.14341707604524245,
+ "rho_onestep": 0.1675284277886428,
+ "irrep_scores": {
+  "r0_tr2_ker4": 0.6541429908596894,
+  "r1_tr9_ker1": -0.6261873469151011
+ },
+ "best_irrep": "r0_tr2_ker4"
+}

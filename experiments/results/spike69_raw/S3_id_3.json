@@ -1,0 +1,15 @@
+{
+ "automaton": "S3_id",
+ "seed": 6913,
+ "fit": 0.9994800090789795,
+ "probe_macro": 1.0,
+ "n_macro": 6,
+ "elements_seen": 6,
+ "rho_predictive": 0.3171675237082733,
+ "rho_onestep": 0.39279220242478624,
+ "irrep_scores": {
+  "r0_tr4_ker1": -0.2591600677389407,
+  "r1_tr1_ker3": 0.5670753126026026
+ },
+ "best_irrep": "r1_tr1_ker3"
+}

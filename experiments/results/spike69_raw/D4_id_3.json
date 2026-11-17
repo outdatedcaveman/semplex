@@ -1,0 +1,17 @@
+{
+ "automaton": "D4_id",
+ "seed": 6933,
+ "fit": 1.0,
+ "probe_macro": 1.0,
+ "n_macro": 8,
+ "elements_seen": 8,
+ "rho_predictive": 0.20353612913234467,
+ "rho_onestep": 0.26037018703203585,
+ "irrep_scores": {
+  "r0_tr1_ker4": -0.18894620969391096,
+  "r1_tr1_ker4": -0.27063037895023057,
+  "r2_tr4_ker1": 0.47290640394088673,
+  "r3_tr1_ker4": -0.13655084105537477
+ },
+ "best_irrep": "r2_tr4_ker1"
+}
