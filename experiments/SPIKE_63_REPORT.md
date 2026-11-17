@@ -1,6 +1,6 @@
 # Spike 63: Can a deeper transformer learn group automata, and does it obey the Barrington split and the sufficiency law?
 
-**Date:** 2026-11-17 · **Status:** pre-registered (no run) · **Follows:** Spike 60 (P194: a 2-layer transformer learned neither S₄ nor A₅). **Conjectures:** substrate-relative periodic table (`charter/FOUNDATIONS.md` §9.2), Barrington grading (§10.2), C31‴ (§11.4).
+**Date:** 2026-11-17 · **Status:** complete (pre-registered in this file's first commit; results below) · **Follows:** Spike 60 (P194: a 2-layer transformer learned neither S₄ nor A₅). **Conjectures:** substrate-relative periodic table (`charter/FOUNDATIONS.md` §9.2), Barrington grading (§10.2), C31‴ (§11.4).
 
 ## Design
 
@@ -36,4 +36,25 @@ python -m experiments.spike63 analyse
 
 ## Results
 
-(Not run.)
+`experiments/results/spike63.json`.
+
+| Automaton | Seed | Fit | Steps to 0.99 | Probe | Best irreducible | Readout ρ |
+|---|---|---|---|---|---|---|
+| S4_4 | 6300 | 0.994 | 10475 | 0.48 | std | 0.34 |
+| S4_4 | 6301 | 0.972 | -1 | 0.38 | std | 0.33 |
+| S4_4 | 6302 | 0.987 | 13225 | 0.41 | std | 0.34 |
+| A5_5 | 6310 | 0.991 | 11150 | 0.13 | chi4 | 0.30 |
+| A5_5 | 6311 | 0.976 | -1 | 0.14 | chi4 | 0.30 |
+| A5_5 | 6312 | 0.978 | -1 | 0.11 | chi4 | 0.30 |
+
+| ID | Measured | Criterion | Verdict |
+|---|---|---|---|
+| H63.1 | S4_4 fit in 1/3 (the other two reached 0.972 and 0.987) | ≥ 2 held, 0 broken | **NEITHER** |
+| H63.2 | fit rate S₄ 1/3 = A₅ 1/3 | difference ≥ 2/3 held; A₅ ≥ S₄ broken | **BROKEN** |
+| H63.3 | both fitted runs: best irreducible as predicted (standard; χ₄); all 6 runs show it | all held | **HELD** |
+
+**Reading:**
+- **A deeper transformer with a length curriculum learns both groups** at length 30, barely (1/3 each). No solvable/non-solvable gap appears at this length, consistent with Barrington's separation being asymptotic.
+- **Its state geometry is the same as the recurrent networks':** standard for S₄, χ₄ for A₅, i.e. the readout/predictive-state character.
+- **Yet the full group element is decodable only partly** (probe 0.11–0.48, against 1.0 for GRUs). The transformer realises the predictive geometry without an explicit closed macrostate. Its outputs are computed by other routes (shortcuts, in Liu et al.'s sense).
+- **So the geometry law is substrate-independent across these two architectures, while closure is not:** the recurrent net builds the minimal automaton; the transformer builds its predictive shadow.

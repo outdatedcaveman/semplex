@@ -208,5 +208,15 @@
   "learned": "Networks do not compress a group concept to its smallest faithful, readout-sufficient part; they keep unfaithful constituents. What they build matches the exact predictive-state kernel, the geometry of expected future outputs, in every fitted case but one.",
   "moved": "A12: PARTIAL → PARTIAL (Economy/sufficiency refuted; predictive-state law is the candidate explanation)",
   "claims": "P196"
+ },
+ {
+  "spike": "63",
+  "date": "2026-11-17",
+  "commit": "see report",
+  "question": "Can a deeper transformer learn group automata, and does it obey the Barrington split and the readout geometry?",
+  "overall": "MIXED",
+  "learned": "A deeper transformer learns both groups at length 30 but rarely, with no Barrington gap at this length. Its geometry is the same predictive-state character as the recurrent nets', although it does not build a closed, linearly decodable macrostate: geometry is substrate-independent, closure is not.",
+  "moved": "A12: PARTIAL → PARTIAL (Substrate independence of geometry (transformer); closure architecture-dependent)",
+  "claims": "P197"
  }
 ]

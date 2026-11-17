@@ -83,6 +83,20 @@ Progress counts a closed gap as 1 and a partial one as ½. It measures the gap l
 
 ## 4. Run reports, newest first
 
+### Spike 63: Can a deeper transformer learn group automata, and does it obey the Barrington split and the readout geometry?
+
+2026-11-17 · commit `see report` · overall **MIXED** · report `experiments/SPIKE_63_REPORT.md` · claims P197
+
+| Hypothesis | Verdict | Measured | Criterion |
+|---|---|---|---|
+| H63.1 | **NEITHER** | S4 fit 1/3 | held >= 2 |
+| H63.2 | **BROKEN** | S4 1/3 = A5 1/3 | held difference >= 2/3; broken A5 >= S4 |
+| H63.3 | **HELD** | predicted irrep in 2/2 fitted (6/6 overall) | all |
+
+**Learned.** A deeper transformer learns both groups at length 30 but rarely, with no Barrington gap at this length. Its geometry is the same predictive-state character as the recurrent nets', although it does not build a closed, linearly decodable macrostate: geometry is substrate-independent, closure is not.
+
+- Gap A12: PARTIAL → PARTIAL. Substrate independence of geometry (transformer); closure architecture-dependent.
+
 ### Spike 62: The sufficiency law C31''' prospective on five new readouts
 
 2026-11-17 · commit `d8a9728` · overall **BROKEN** · report `experiments/SPIKE_62_REPORT.md` · claims P196
@@ -435,9 +449,9 @@ Progress counts a closed gap as 1 and a partial one as ½. It measures the gap l
 
 ## 6. Ledger health
 
-- Claims: 196. Empirical: 104; Proved in Lean: 32; Exploratory: 16; Proved on paper: 11; Refuted: 11; Kernel-checked: 6; Conjecture: 5; Method note: 5; Computed: 4; Other: 2.
+- Claims: 197. Empirical: 105; Proved in Lean: 32; Exploratory: 16; Proved on paper: 11; Refuted: 11; Kernel-checked: 6; Conjecture: 5; Method note: 5; Computed: 4; Other: 2.
 - Problems: 0. Claims stated stronger than their support: 42.
-- Frozen spike files (rule 2): 150.
+- Frozen spike files (rule 2): 152.
 
 Weakest links (fixing one lifts every note that rests on it):
 
