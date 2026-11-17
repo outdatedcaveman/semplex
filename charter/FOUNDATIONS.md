@@ -372,3 +372,63 @@ A proof exists only if A is first **duplicated** (contraction: ⊢ …, A, A) an
 2. **At infinity, classical principles are realised in the limit.** Excluded middle for Σ⁰₁ statements is realised by limit-computable (learning-in-the-limit) procedures (Berardi, Coquand, Hayashi †). That is our C27 (meaning in the limit, Δ⁰₂).
 3. **This is Peirce's own theory of truth.** For Peirce, truth is the opinion inquiry is fated to converge on: truth *in the limit*. **The logical law that bears his name holds exactly where his theory of truth operates.** It holds constructively on finite decidable matters, and is realised by convergent inquiry (learning in the limit) on infinite ones, without a modulus of convergence (fallibilism: you never know you have arrived).
 4. **The price is resources.** Linearly, Peirce's law costs copying and erasure. Classical reasoning about the infinite is paid for by duplicating hypotheses and forgetting, as abstraction is paid for by forgetting (C33).
+
+## 11. What Spikes 58–61 mean: stratification, invariants, synonymy, and the reversible/irreversible split (2026-11-17)
+
+### 11.1 The shared core is one level up: stratification, not elements
+
+Spike 61 found that 14 models' lexicons share their shape (linear CKA median 0.59) but no axes: no sparse atom and no principal direction is common to them. Spikes 58 and 60 found the same pattern for group concepts. What is invariant across networks is a **character** (a class function, basis-free), not a set of directions.
+
+Stated exactly:
+- each model fixes a basis only up to an orthogonal transformation;
+- the meet over models of any basis-dependent object (an axis, an atom) is empty;
+- what survives is the orbit under O(d), i.e. the Gram operator or kernel, i.e. the **representation up to isomorphism**.
+
+So the common part of the models is not an element of the type of bases. It is an element of the quotient type, one level up: a point of the type of representations modulo isomorphism. In HoTT that type is a groupoid, and univalence identifies isomorphic structures. The shared meaning is an *identity of structure*, not a shared component.
+
+**Relation to Synesism's Stratification Principle** (P7; negative idealism as its substantive face, `synesism-workshop/_reconciliation/canon-draft-principles.md`). That principle says the supremum of a property is not itself a thing with that property, and the totality lives at a strictly higher type.
+
+Spike 61 is an empirical instance:
+- **Stratification:** the "common basis" of all models, sought among bases, is empty;
+- **Negative idealism:** the fully realised common element is the absence of an element;
+- what is common exists at the next type, as an invariant.
+
+This is an analogy with a precise core, not a proof of P7. The precise core is the representation-theoretic fact that basis-dependent quantities average to zero over the group of changes of basis, while class functions are exactly what survives.
+
+**Conjecture C34 (invariance of shared meaning).** What independently trained systems share about a concept is exactly its invariants under their changes of representation (characters, Gram operators, homotopy types), never a component. Testable consequence: any basis-dependent claim of shared concepts (shared neurons, shared atoms, shared directions) fails across models, unless the models are trained so that their bases are tied.
+
+### 11.2 Non-unique decomposition, synonymy and connotation
+
+Krohn–Rhodes decompositions are not unique. For groups, the Jordan–Hölder theorem † says the multiset of composition factors (the simple "atoms") *is* unique, while the composition series (how they are stacked) is not. This is the chemist's isomerism: same atoms, different structure.
+
+For meaning:
+- **Denotation** (Frege's reference) is the machine: the minimal automaton, a canonical object.
+- **Sense or connotation** is the construction: which cascade realises it.
+- Two cascades of the same machine are **synonyms**: same denotation, different sense. Two cascades with the same composition factors but different arrangement are **isomers**: same atoms, different connotation.
+- The invariants of a construction are the Jordan–Hölder multiset (for groups) and the group complexity (for semigroups). The free part is the order and the wiring.
+
+Testable: independently trained networks for the same automaton realise the same minimal automaton (Spike 58, 31/31). Do they realise *different cascades*, i.e. synonymous constructions, and does the choice explain their residual differences in geometry? That requires recovering a cascade from a trained net, the retroconstruction aim.
+
+### 11.3 HoTT and irreversibility: correcting §10.2
+
+§10.2 said HoTT captures only the reversible half of the table. That holds for plain HoTT, whose types are ∞-groupoids. It is false for the extended frameworks, which exist precisely to formalise the irreversible half:
+- **Directed (simplicial) type theory:** Riehl and Shulman, "A type theory for synthetic ∞-categories" (arXiv:1705.07442, abstract read). A directed interval and Segal and Rezk types give non-invertible arrows inside HoTT. A flip-flop's reset is an arrow without inverse there.
+- **Linear HoTT:** Mitchell Riley's thesis †. It adds resource-sensitive (linear) structure to HoTT, the setting where §10.5's copying and erasure live.
+- **Categorical optics:** Riley, "Categories of optics" (arXiv:1809.00738, abstract read). These are bidirectional processes (forward computation, backward update); gradient-based learning has been formalised as optics (Cruttwell, Gavranović et al. †).
+- **Semicategories:** categories without identities, useful where "doing nothing" is not a process. They are less central here.
+- **Baez and collaborators: compositional frameworks for open systems.** These are the most directly relevant:
+  - **Open Markov processes** form a dagger compact category with a **black-boxing functor** to the steady-state input–output relation (Baez, Fong and Pollard, arXiv:1508.06448, abstract read). Black-boxing is compositional coarse-graining: the categorical form of §9.1's closure.
+  - **Open Petri nets** are morphisms of a symmetric monoidal double category, with operational and reachability semantics as functors (Baez and Master, arXiv:1808.05415). Structured cospans give the general construction (Baez and Courser, arXiv:1911.04630). Open reaction networks have rate-equation dynamics as a functor (Baez and Pollard, arXiv:1704.02051). Petri nets are resource-sensitive: tokens are consumed. That is the linear-logic setting †.
+  - **Entropy as functorial information loss.** Shannon entropy is the *only* measure of information loss under measure-preserving maps that is functorial, convex-linear and continuous (Baez, Fritz and Leinster, arXiv:1106.1791, abstract read).
+
+**What this gives the programme: a quantitative Aristotle to pair with the closure Plato.**
+- A coarse-graining (abstraction) π has a closure property (it is a congruence: causal power, §9.1, `Closure.lean`).
+- It has a *cost*: the information it discards, H(X | π(X)), which by Baez–Fritz–Leinster is the unique functorial measure of that loss.
+- Erasure has thermodynamic cost by Landauer †.
+- So every abstraction carries two numbers: whether it is closed, and how much it forgets.
+
+C33 (erasure versus symmetry) becomes measurable. Spike 57's reset forgets a lot and keeps tight macrostates; group states forget nothing and keep micro-detail.
+
+**Conjecture C35 (abstractions trade forgetting for closure).** Among the closed coarse-grainings that decide a task, learners settle on the one of least information loss compatible with their readout. That is the Myhill–Nerode congruence, which is maximal among closed task-deciding coarse-grainings (`MN_coarsest`), so it discards the most irrelevant distinctions. The C31″ rule (keep the faithful constituents of the readout representation) is the representation-theoretic face of this.
+
+A test: compute H(state | macrostate) along training and check that it rises to the Myhill–Nerode value (and stays there) exactly when interventions start to succeed.
