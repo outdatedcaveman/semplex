@@ -228,5 +228,15 @@
   "learned": "Independently trained models share a concept space's shape and a common frame up to rotation, but not their coordinates; a model and its fine-tune share coordinates. Shared axes come from shared training history, shared shape from the concepts themselves.",
   "moved": "A12: PARTIAL → PARTIAL (C34 confirmed in context)",
   "claims": "P198"
+ },
+ {
+  "spike": "65",
+  "date": "2026-11-17",
+  "commit": "49242c1",
+  "question": "Continuous sufficiency: is a tracked direction a sphere and a tracked axis a projective plane?",
+  "overall": "NO VERDICT",
+  "learned": "No verdict (fit guard). Exploratory: signed tracking is a degree-1 sphere as predicted; unsigned tracking does not collapse to the projective plane: networks keep the signed direction (the double cover), where the rotation acts linearly, and fit worse. Learners appear to prefer the simplest linear representation of the dynamics over the minimal quotient (conjecture C36).",
+  "moved": "A12: PARTIAL → PARTIAL (Continuous scale opened; linearising-cover conjecture C36)",
+  "claims": ""
  }
 ]

@@ -1038,6 +1038,43 @@
    "claims": [
     "P198"
    ]
+  },
+  {
+   "spike": "65",
+   "date": "2026-11-17",
+   "commit": "49242c1",
+   "question": "Continuous sufficiency: is a tracked direction a sphere and a tracked axis a projective plane?",
+   "overall": "NO VERDICT",
+   "verdicts": [
+    {
+     "id": "H65.1",
+     "verdict": "NO VERDICT",
+     "measured": "fitted SIGN 1/5, AXIS 0/5 (< 3)",
+     "bar": "guard"
+    },
+    {
+     "id": "H65.2",
+     "verdict": "NO VERDICT",
+     "measured": "fitted SIGN 1/5, AXIS 0/5 (< 3)",
+     "bar": "guard"
+    },
+    {
+     "id": "H65.3",
+     "verdict": "NO VERDICT",
+     "measured": "fitted SIGN 1/5, AXIS 0/5 (< 3)",
+     "bar": "guard"
+    }
+   ],
+   "learned": "No verdict (fit guard). Exploratory: signed tracking is a degree-1 sphere as predicted; unsigned tracking does not collapse to the projective plane: networks keep the signed direction (the double cover), where the rotation acts linearly, and fit worse. Learners appear to prefer the simplest linear representation of the dynamics over the minimal quotient (conjecture C36).",
+   "gaps_moved": [
+    {
+     "gap": "A12",
+     "from": "PARTIAL",
+     "to": "PARTIAL",
+     "why": "Continuous scale opened; linearising-cover conjecture C36"
+    }
+   ],
+   "claims": []
   }
  ]
 }

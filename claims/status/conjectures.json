@@ -178,5 +178,11 @@
   "title": "invariance of shared meaning",
   "state": "Supported",
   "note": "SUPPORTED; Spikes 64, 68"
+ },
+ {
+  "id": "C36",
+  "title": "linearising cover",
+  "state": "Open",
+  "note": "CONJECTURE; Spike 65 exploratory, no verdict"
  }
 ]

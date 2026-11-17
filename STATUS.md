@@ -83,6 +83,20 @@ Progress counts a closed gap as 1 and a partial one as ½. It measures the gap l
 
 ## 4. Run reports, newest first
 
+### Spike 65: Continuous sufficiency: is a tracked direction a sphere and a tracked axis a projective plane?
+
+2026-11-17 · commit `49242c1` · overall **NO VERDICT** · report `experiments/SPIKE_65_REPORT.md` · claims none
+
+| Hypothesis | Verdict | Measured | Criterion |
+|---|---|---|---|
+| H65.1 | **NO VERDICT** | fitted SIGN 1/5, AXIS 0/5 (< 3) | guard |
+| H65.2 | **NO VERDICT** | fitted SIGN 1/5, AXIS 0/5 (< 3) | guard |
+| H65.3 | **NO VERDICT** | fitted SIGN 1/5, AXIS 0/5 (< 3) | guard |
+
+**Learned.** No verdict (fit guard). Exploratory: signed tracking is a degree-1 sphere as predicted; unsigned tracking does not collapse to the projective plane: networks keep the signed direction (the double cover), where the rotation acts linearly, and fit worse. Learners appear to prefer the simplest linear representation of the dynamics over the minimal quotient (conjecture C36).
+
+- Gap A12: PARTIAL → PARTIAL. Continuous scale opened; linearising-cover conjecture C36.
+
 ### Spike 68: Do concepts in context share shape and axes across models? (C34, with a tied-basis control)
 
 2026-11-17 · commit `56a3fc1` · overall **HELD** · report `experiments/SPIKE_68_REPORT.md` · claims P198
@@ -461,12 +475,13 @@ Progress counts a closed gap as 1 and a partial one as ½. It measures the gap l
 | C31 | economy law for concept geometry | Partly | PARTLY SUPPORTED; Spike 57 |
 | C32 | closure law | Open | registered test BROKEN; exploratory analysis SUPPORTS it; Spike 57 |
 | C34 | invariance of shared meaning | Supported | SUPPORTED; Spikes 64, 68 |
+| C36 | linearising cover | Open | CONJECTURE; Spike 65 exploratory, no verdict |
 
 ## 6. Ledger health
 
 - Claims: 198. Empirical: 106; Proved in Lean: 32; Exploratory: 16; Proved on paper: 11; Refuted: 11; Kernel-checked: 6; Conjecture: 5; Method note: 5; Computed: 4; Other: 2.
 - Problems: 0. Claims stated stronger than their support: 43.
-- Frozen spike files (rule 2): 154.
+- Frozen spike files (rule 2): 156.
 
 Weakest links (fixing one lifts every note that rests on it):
 

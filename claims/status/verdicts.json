@@ -686,5 +686,29 @@
   "verdict": "HELD",
   "measured": "median Procrustes R2 0.46",
   "bar": ">= 0.3"
+ },
+ {
+  "key": "65:H65.1",
+  "spike": "65",
+  "id": "H65.1",
+  "verdict": "NO VERDICT",
+  "measured": "fitted SIGN 1/5, AXIS 0/5 (< 3)",
+  "bar": "guard"
+ },
+ {
+  "key": "65:H65.2",
+  "spike": "65",
+  "id": "H65.2",
+  "verdict": "NO VERDICT",
+  "measured": "fitted SIGN 1/5, AXIS 0/5 (< 3)",
+  "bar": "guard"
+ },
+ {
+  "key": "65:H65.3",
+  "spike": "65",
+  "id": "H65.3",
+  "verdict": "NO VERDICT",
+  "measured": "fitted SIGN 1/5, AXIS 0/5 (< 3)",
+  "bar": "guard"
  }
 ]

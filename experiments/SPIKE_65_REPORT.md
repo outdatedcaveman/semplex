@@ -1,6 +1,6 @@
 # Spike 65: The continuous sufficiency law: a tracked direction is a sphere, a tracked axis is a projective plane
 
-**Date:** 2026-11-17 · **Status:** pre-registered (no run) · **Follows:** `charter/FOUNDATIONS.md` §12.3 (harmonic analysis, continuous analogue of C31‴); Spikes 57–60 (closure, causal power, readout-determined geometry). **Conjectures:** C32 (closure) and the readout law, in a continuous setting.
+**Date:** 2026-11-17 · **Status:** complete (pre-registered in 49242c1; results below) · **Follows:** `charter/FOUNDATIONS.md` §12.3 (harmonic analysis, continuous analogue of C31‴); Spikes 57–60 (closure, causal power, readout-determined geometry). **Conjectures:** C32 (closure) and the readout law, in a continuous setting.
 
 ## Task
 
@@ -57,4 +57,35 @@ python -m experiments.spike65 analyse
 
 ## Results
 
-(Not run.)
+`experiments/results/spike65.json`.
+
+| Readout | Seed | Fit R² | R²₁ | R²₂ | R²₃ | Antipodal ratio | Swap = no-swap |
+|---|---|---|---|---|---|---|---|
+| SIGN | 6500 | 0.901 | 0.377 | 0.010 | 0.001 | 1.46 | 0.00 |
+| SIGN | 6501 | 0.946 | 0.419 | 0.010 | 0.001 | 1.45 | 0.00 |
+| SIGN | 6502 | 0.899 | 0.372 | 0.010 | 0.001 | 1.45 | 0.00 |
+| SIGN | 6503 | 0.952 | 0.413 | 0.011 | 0.001 | 1.45 | 0.00 |
+| SIGN | 6504 | 0.895 | 0.388 | 0.010 | 0.001 | 1.47 | 0.00 |
+| AXIS | 6510 | 0.805 | 0.476 | 0.034 | 0.002 | 1.44 | 0.31 |
+| AXIS | 6511 | 0.814 | 0.512 | 0.039 | 0.003 | 1.44 | 0.31 |
+| AXIS | 6512 | 0.796 | 0.500 | 0.033 | 0.002 | 1.44 | 0.24 |
+| AXIS | 6513 | 0.767 | 0.487 | 0.034 | 0.003 | 1.43 | 0.34 |
+| AXIS | 6514 | 0.817 | 0.491 | 0.035 | 0.002 | 1.42 | 0.30 |
+
+**Verdicts: H65.1, H65.2, H65.3 all NO VERDICT.** Fitted runs (fit R² ≥ 0.95 at length 100): SIGN 1/5 (0.952), AXIS 0/5 (0.77–0.82). Both are below the guard of 3. Tracking error accumulates over 100 steps of noisy rotation.
+
+**Exploratory, unfitted runs included:**
+- **SIGN behaves as predicted in every run:**
+  - degree-1 geometry (R²₁ 0.37–0.42, R²₂ ≈ 0.01);
+  - antipodes far apart (ratio 1.45);
+  - swapping in the antipodal state changes the outputs in 100% of trials (match 0.00).
+- **AXIS does not collapse to the projective plane:**
+  - networks keep the *signed* direction (R²₁ 0.48–0.51, R²₂ 0.03–0.04);
+  - antipodes stay apart (ratio 1.44);
+  - antipodal swaps change outputs in about 70% of trials.
+
+  The networks lift the task to the **double cover S² → RP²**, where SO(3) acts linearly on ℝ³ (degree 1), instead of using the minimal 5-dimensional quotient representation (degree 2). They fit the task worse for it.
+
+**Reading.** With Spike 62, where networks kept unfaithful constituents rather than compressing, this points the same way. Learned representations follow the *simplest linear representation of the dynamics*, even when a smaller quotient would suffice for the outputs. The minimal (Myhill–Nerode) quotient is reached when it is also the simplest linear one, as in the discrete automata of Spikes 57–58. It is not reached when a covering space linearises the dynamics more cheaply.
+
+This is a new conjecture (**C36, linearising cover**), to be tested with a formally registered design and a guard the task can pass: shorter evaluation length, or lower rotation noise.
