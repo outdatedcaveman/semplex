@@ -83,6 +83,20 @@ Progress counts a closed gap as 1 and a partial one as ½. It measures the gap l
 
 ## 4. Run reports, newest first
 
+### Spike 68: Do concepts in context share shape and axes across models? (C34, with a tied-basis control)
+
+2026-11-17 · commit `56a3fc1` · overall **HELD** · report `experiments/SPIKE_68_REPORT.md` · claims P198
+
+| Hypothesis | Verdict | Measured | Criterion |
+|---|---|---|---|
+| H68.1 | **HELD** | median CKA 0.84 | >= 0.5 |
+| H68.2 | **HELD** | tied excess 0.78 vs max unrelated 0.20 | >= 3x |
+| H68.3 | **HELD** | median Procrustes R2 0.46 | >= 0.3 |
+
+**Learned.** Independently trained models share a concept space's shape and a common frame up to rotation, but not their coordinates; a model and its fine-tune share coordinates. Shared axes come from shared training history, shared shape from the concepts themselves.
+
+- Gap A12: PARTIAL → PARTIAL. C34 confirmed in context.
+
 ### Spike 63: Can a deeper transformer learn group automata, and does it obey the Barrington split and the readout geometry?
 
 2026-11-17 · commit `see report` · overall **MIXED** · report `experiments/SPIKE_63_REPORT.md` · claims P197
@@ -446,12 +460,13 @@ Progress counts a closed gap as 1 and a partial one as ½. It measures the gap l
 | C30 | justice as invariance under permuting persons | Supported | SUPPORTED, approximately; Spike 56 |
 | C31 | economy law for concept geometry | Partly | PARTLY SUPPORTED; Spike 57 |
 | C32 | closure law | Open | registered test BROKEN; exploratory analysis SUPPORTS it; Spike 57 |
+| C34 | invariance of shared meaning | Supported | SUPPORTED; Spikes 64, 68 |
 
 ## 6. Ledger health
 
-- Claims: 197. Empirical: 105; Proved in Lean: 32; Exploratory: 16; Proved on paper: 11; Refuted: 11; Kernel-checked: 6; Conjecture: 5; Method note: 5; Computed: 4; Other: 2.
-- Problems: 0. Claims stated stronger than their support: 42.
-- Frozen spike files (rule 2): 152.
+- Claims: 198. Empirical: 106; Proved in Lean: 32; Exploratory: 16; Proved on paper: 11; Refuted: 11; Kernel-checked: 6; Conjecture: 5; Method note: 5; Computed: 4; Other: 2.
+- Problems: 0. Claims stated stronger than their support: 43.
+- Frozen spike files (rule 2): 154.
 
 Weakest links (fixing one lifts every note that rests on it):
 

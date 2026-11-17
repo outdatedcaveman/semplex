@@ -999,6 +999,45 @@
    "claims": [
     "P197"
    ]
+  },
+  {
+   "spike": "68",
+   "date": "2026-11-17",
+   "commit": "56a3fc1",
+   "question": "Do concepts in context share shape and axes across models? (C34, with a tied-basis control)",
+   "overall": "HELD",
+   "verdicts": [
+    {
+     "id": "H68.1",
+     "verdict": "HELD",
+     "measured": "median CKA 0.84",
+     "bar": ">= 0.5"
+    },
+    {
+     "id": "H68.2",
+     "verdict": "HELD",
+     "measured": "tied excess 0.78 vs max unrelated 0.20",
+     "bar": ">= 3x"
+    },
+    {
+     "id": "H68.3",
+     "verdict": "HELD",
+     "measured": "median Procrustes R2 0.46",
+     "bar": ">= 0.3"
+    }
+   ],
+   "learned": "Independently trained models share a concept space's shape and a common frame up to rotation, but not their coordinates; a model and its fine-tune share coordinates. Shared axes come from shared training history, shared shape from the concepts themselves.",
+   "gaps_moved": [
+    {
+     "gap": "A12",
+     "from": "PARTIAL",
+     "to": "PARTIAL",
+     "why": "C34 confirmed in context"
+    }
+   ],
+   "claims": [
+    "P198"
+   ]
   }
  ]
 }

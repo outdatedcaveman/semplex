@@ -218,5 +218,15 @@
   "learned": "A deeper transformer learns both groups at length 30 but rarely, with no Barrington gap at this length. Its geometry is the same predictive-state character as the recurrent nets', although it does not build a closed, linearly decodable macrostate: geometry is substrate-independent, closure is not.",
   "moved": "A12: PARTIAL → PARTIAL (Substrate independence of geometry (transformer); closure architecture-dependent)",
   "claims": "P197"
+ },
+ {
+  "spike": "68",
+  "date": "2026-11-17",
+  "commit": "56a3fc1",
+  "question": "Do concepts in context share shape and axes across models? (C34, with a tied-basis control)",
+  "overall": "HELD",
+  "learned": "Independently trained models share a concept space's shape and a common frame up to rotation, but not their coordinates; a model and its fine-tune share coordinates. Shared axes come from shared training history, shared shape from the concepts themselves.",
+  "moved": "A12: PARTIAL → PARTIAL (C34 confirmed in context)",
+  "claims": "P198"
  }
 ]

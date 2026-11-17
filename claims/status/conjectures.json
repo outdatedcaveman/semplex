@@ -172,5 +172,11 @@
   "title": "closure law",
   "state": "Open",
   "note": "registered test BROKEN; exploratory analysis SUPPORTS it; Spike 57"
+ },
+ {
+  "id": "C34",
+  "title": "invariance of shared meaning",
+  "state": "Supported",
+  "note": "SUPPORTED; Spikes 64, 68"
  }
 ]

@@ -662,5 +662,29 @@
   "verdict": "HELD",
   "measured": "predicted irrep in 2/2 fitted (6/6 overall)",
   "bar": "all"
+ },
+ {
+  "key": "68:H68.1",
+  "spike": "68",
+  "id": "H68.1",
+  "verdict": "HELD",
+  "measured": "median CKA 0.84",
+  "bar": ">= 0.5"
+ },
+ {
+  "key": "68:H68.2",
+  "spike": "68",
+  "id": "H68.2",
+  "verdict": "HELD",
+  "measured": "tied excess 0.78 vs max unrelated 0.20",
+  "bar": ">= 3x"
+ },
+ {
+  "key": "68:H68.3",
+  "spike": "68",
+  "id": "H68.3",
+  "verdict": "HELD",
+  "measured": "median Procrustes R2 0.46",
+  "bar": ">= 0.3"
  }
 ]

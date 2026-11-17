@@ -1,0 +1,146 @@
+{
+ "verdicts": {
+  "H68.1": "HELD",
+  "H68.2": "HELD",
+  "H68.3": "HELD"
+ },
+ "median_cka_unrelated": 0.8380708555363522,
+ "median_procrustes_unrelated": 0.45598970375302816,
+ "tied": {
+  "pair": [
+   "Qwen/Qwen2.5-0.5B",
+   "Qwen/Qwen2.5-0.5B-Instruct"
+  ],
+  "tied": true,
+  "cka": 0.9936101480572164,
+  "procrustes_r2": 0.9829983828358242,
+  "axis": 0.9665507260662521,
+  "axis_shuffled": 0.18717713145846068,
+  "axis_excess": 0.7793735946077914
+ },
+ "max_unrelated_axis_excess": 0.19939777588708077,
+ "median_unrelated_axis_excess": 0.1672271301608908,
+ "pairs": [
+  {
+   "pair": [
+    "Qwen/Qwen2.5-0.5B",
+    "Qwen/Qwen2.5-0.5B-Instruct"
+   ],
+   "tied": true,
+   "cka": 0.9936101480572164,
+   "procrustes_r2": 0.9829983828358242,
+   "axis": 0.9665507260662521,
+   "axis_shuffled": 0.18717713145846068,
+   "axis_excess": 0.7793735946077914
+  },
+  {
+   "pair": [
+    "Qwen/Qwen2.5-0.5B",
+    "HuggingFaceTB/SmolLM2-360M"
+   ],
+   "tied": false,
+   "cka": 0.8494183169028395,
+   "procrustes_r2": 0.47511768018897405,
+   "axis": 0.3895007234374096,
+   "axis_shuffled": 0.19010294755032883,
+   "axis_excess": 0.19939777588708077
+  },
+  {
+   "pair": [
+    "Qwen/Qwen2.5-0.5B",
+    "EleutherAI/pythia-410m"
+   ],
+   "tied": false,
+   "cka": 0.8380708555363522,
+   "procrustes_r2": 0.46176109225645623,
+   "axis": 0.3616558701185327,
+   "axis_shuffled": 0.19364299470187143,
+   "axis_excess": 0.16801287541666124
+  },
+  {
+   "pair": [
+    "Qwen/Qwen2.5-0.5B",
+    "openai-community/gpt2"
+   ],
+   "tied": false,
+   "cka": 0.7918887551861408,
+   "procrustes_r2": 0.28676797159971923,
+   "axis": 0.3481010243182006,
+   "axis_shuffled": 0.19058138019690238,
+   "axis_excess": 0.15751964412129824
+  },
+  {
+   "pair": [
+    "Qwen/Qwen2.5-0.5B-Instruct",
+    "HuggingFaceTB/SmolLM2-360M"
+   ],
+   "tied": false,
+   "cka": 0.8461679858337843,
+   "procrustes_r2": 0.4697163446975616,
+   "axis": 0.3859746935935538,
+   "axis_shuffled": 0.1907822695741702,
+   "axis_excess": 0.1951924240193836
+  },
+  {
+   "pair": [
+    "Qwen/Qwen2.5-0.5B-Instruct",
+    "EleutherAI/pythia-410m"
+   ],
+   "tied": false,
+   "cka": 0.8344733410132487,
+   "procrustes_r2": 0.45598970375302816,
+   "axis": 0.35879372259480996,
+   "axis_shuffled": 0.19156375236482356,
+   "axis_excess": 0.1672299702299864
+  },
+  {
+   "pair": [
+    "Qwen/Qwen2.5-0.5B-Instruct",
+    "openai-community/gpt2"
+   ],
+   "tied": false,
+   "cka": 0.7906770461397952,
+   "procrustes_r2": 0.31724008022399564,
+   "axis": 0.345545384527184,
+   "axis_shuffled": 0.19152952361875725,
+   "axis_excess": 0.15401586090842673
+  },
+  {
+   "pair": [
+    "HuggingFaceTB/SmolLM2-360M",
+    "EleutherAI/pythia-410m"
+   ],
+   "tied": false,
+   "cka": 0.8416836852856392,
+   "procrustes_r2": 0.43223951845179487,
+   "axis": 0.3578075952780082,
+   "axis_shuffled": 0.1905804651171174,
+   "axis_excess": 0.1672271301608908
+  },
+  {
+   "pair": [
+    "HuggingFaceTB/SmolLM2-360M",
+    "openai-community/gpt2"
+   ],
+   "tied": false,
+   "cka": 0.8026920139819278,
+   "procrustes_r2": 0.3231560324490106,
+   "axis": 0.34686851563478915,
+   "axis_shuffled": 0.19296605958360646,
+   "axis_excess": 0.1539024560511827
+  },
+  {
+   "pair": [
+    "EleutherAI/pythia-410m",
+    "openai-community/gpt2"
+   ],
+   "tied": false,
+   "cka": 0.8533209349982772,
+   "procrustes_r2": 0.47047959092796765,
+   "axis": 0.3479523168023336,
+   "axis_shuffled": 0.19308348127120856,
+   "axis_excess": 0.15486883553112507
+  }
+ ],
+ "n_words": 300
+}

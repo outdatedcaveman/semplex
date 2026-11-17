@@ -7,3 +7,4 @@ proofs/lean-mathlib/.lake/
 experiments/results/spike57_raw/*.npz
 experiments/results/spike59_raw/
 experiments/results/spike61_raw/
+experiments/results/spike68_raw/*.npz

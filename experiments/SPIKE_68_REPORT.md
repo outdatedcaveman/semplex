@@ -1,6 +1,6 @@
 # Spike 68: Shared shape and shared axes for concepts in context, with a tied-basis control (C34)
 
-**Date:** 2026-11-17 · **Status:** pre-registered (no run) · **Follows:** Spikes 61 and 64 (P191, P195: lexicons share shape and a common frame up to one rotation per model, but not raw axes); `charter/FOUNDATIONS.md` §11.1 (C34). Numbered 68 because §12 reserved 65–67 for the continuous and arithmetic tests.
+**Date:** 2026-11-17 · **Status:** complete (pre-registered in 56a3fc1; results below) · **Follows:** Spikes 61 and 64 (P191, P195: lexicons share shape and a common frame up to one rotation per model, but not raw axes); `charter/FOUNDATIONS.md` §11.1 (C34). Numbered 68 because §12 reserved 65–67 for the continuous and arithmetic tests.
 
 ## Question
 
@@ -63,4 +63,31 @@ python -m experiments.spike68 analyse
 
 ## Results
 
-(Not run.)
+`experiments/results/spike68.json`; representations in `spike68_raw/`. 300 concepts. Layers used (nearest 60% of depth): Qwen 14, SmolLM2 19, Pythia 14, GPT-2 7.
+
+| Pair | Tied | CKA | Procrustes R² | Axis | Axis (shuffled) | Axis excess |
+|---|---|---|---|---|---|---|
+| Qwen2.5-0.5B – Qwen2.5-0.5B-Instruct | yes | 0.99 | 0.98 | 0.97 | 0.19 | 0.78 |
+| Qwen2.5-0.5B – SmolLM2-360M |  | 0.85 | 0.48 | 0.39 | 0.19 | 0.20 |
+| Qwen2.5-0.5B – pythia-410m |  | 0.84 | 0.46 | 0.36 | 0.19 | 0.17 |
+| Qwen2.5-0.5B – gpt2 |  | 0.79 | 0.29 | 0.35 | 0.19 | 0.16 |
+| Qwen2.5-0.5B-Instruct – SmolLM2-360M |  | 0.85 | 0.47 | 0.39 | 0.19 | 0.20 |
+| Qwen2.5-0.5B-Instruct – pythia-410m |  | 0.83 | 0.46 | 0.36 | 0.19 | 0.17 |
+| Qwen2.5-0.5B-Instruct – gpt2 |  | 0.79 | 0.32 | 0.35 | 0.19 | 0.15 |
+| SmolLM2-360M – pythia-410m |  | 0.84 | 0.43 | 0.36 | 0.19 | 0.17 |
+| SmolLM2-360M – gpt2 |  | 0.80 | 0.32 | 0.35 | 0.19 | 0.15 |
+| pythia-410m – gpt2 |  | 0.85 | 0.47 | 0.35 | 0.19 | 0.15 |
+
+| ID | Measured | Criterion | Verdict |
+|---|---|---|---|
+| H68.1 | median CKA over unrelated pairs 0.84 | ≥ 0.5 | **HELD** |
+| H68.2 | tied axis excess 0.78 against a largest unrelated excess of 0.20 (3.9×) | ≥ 3× | **HELD** |
+| H68.3 | median Procrustes held-out R² over unrelated pairs 0.46 | ≥ 0.3 | **HELD** |
+
+**Reading.** For concepts in context, independently trained models share:
+- the **shape** of the concept space (CKA 0.84, higher than for static embeddings);
+- a **common frame up to rotation** (Procrustes R² 0.46).
+
+They do **not** share raw coordinates: the best neuron-to-neuron correlation barely exceeds a shuffle (excess ≤ 0.20).
+
+A model and its own fine-tune share coordinates almost perfectly (axis 0.97, CKA 0.99). Shared axes are an artefact of shared training history; shared shape is a property of the concepts. This is C34, as amended after Spike 64, now confirmed in context.

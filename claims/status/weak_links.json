@@ -36,15 +36,15 @@
   "statement": "The minimal automaton is present in trained recurrent nets as an exact closed coarse-graining, not as clusters: a linear"
  },
  {
+  "claim": "P191",
+  "notes": 2,
+  "status": "r",
+  "statement": "Model lexicons share a shape but not a basis: over 6,163 words in 14 open models' input embeddings, independently learne"
+ },
+ {
   "claim": "P001",
   "notes": 1,
   "status": "PROVED (literature)",
   "statement": "ROBDD under a fixed order is a normal form for F0 (idempotent; equal iff extensionally equivalent)"
- },
- {
-  "claim": "P003",
-  "notes": 1,
-  "status": "PROVED (informal sketch)",
-  "statement": "With full care, the minimal sufficient variable set is unique and equals support(f)"
  }
 ]
