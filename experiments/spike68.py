@@ -28,21 +28,25 @@ def concepts():
 def reps(repo, words):
     import torch
     from transformers import AutoTokenizer, AutoModelForCausalLM
-    torch.set_num_threads(os.cpu_count())
+    torch.set_num_threads(2)
     tok = AutoTokenizer.from_pretrained(repo, cache_dir=CACHE)
     model = AutoModelForCausalLM.from_pretrained(repo, cache_dir=CACHE, torch_dtype=torch.float32).eval()
     L = model.config.num_hidden_layers; layer = int(round(0.6 * L))
     tid = {w: tok.encode(" " + w, add_special_tokens=False)[0] for w in words}
-    V = []
+    if tok.pad_token is None:
+        tok.pad_token = tok.eos_token
+    tok.padding_side = "right"
+    acc = np.zeros((len(words), model.config.hidden_size))
     with torch.no_grad():
-        for w in words:
-            acc = []
-            for t in TPL:
-                ids = tok(t.format(w=w), return_tensors="pt").input_ids
-                pos = (ids[0] == tid[w]).nonzero()[0, 0]
-                h = model(ids, output_hidden_states=True).hidden_states[layer][0, pos]
-                acc.append(h.float().numpy())
-            V.append(np.mean(acc, 0))
+        for t in TPL:                                  # one batched forward pass per template
+            for s0 in range(0, len(words), 100):
+                ws = words[s0:s0 + 100]
+                enc = tok([t.format(w=w) for w in ws], return_tensors="pt", padding=True)
+                hs = model(**enc, output_hidden_states=True).hidden_states[layer]
+                for i, w in enumerate(ws):
+                    pos = (enc.input_ids[i] == tid[w]).nonzero()[0, 0]
+                    acc[s0 + i] += hs[i, pos].float().numpy() / len(TPL)
+    V = list(acc)
     return np.array(V), layer
 
 

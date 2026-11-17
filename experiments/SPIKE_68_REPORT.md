@@ -52,6 +52,8 @@ Anything else is *neither*.
 - Five models, one layer choice, five templates.
 - Neuron-level matching is one notion of axis; others (sparse atoms) were tested in Spike 61.
 
+**Procedure change before any result (recorded).** The first run computed one sentence at a time and took over 50 minutes for its first model, with CPU threads oversubscribed by a parallel spike. It was stopped, no representation saved, and replaced by batched forward passes (100 sentences per batch, right padding, attention mask). The representation (the residual at the concept token) is unchanged.
+
 ## Commands
 
 ```
