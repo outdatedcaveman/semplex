@@ -13,7 +13,7 @@ In recurrent networks trained on automata whose algebraic building blocks are kn
 
 Learning cost follows the algebraic grading of the target, from the aperiodic reset to the non-solvable simple group A₅.
 
-The geometry of the learned states is not the group's smallest faithful representation. It is predicted by what the network must read out. A state that encodes its expected future outputs has a Gram matrix equal to the permutation character of the readout, which we derive exactly. A prospective test confirmed this: A₅ read out through its 6-point action gives the 5-dimensional character, with the minimal faithful 3-dimensional characters anti-correlated. A proposed compression refinement was refuted prospectively (§5). The predictive-state kernel matches every fitted case but one.
+The geometry of the learned states is not the group's smallest faithful representation. It is predicted by what the network must read out. A state that encodes its expected future outputs has a Gram matrix equal to the permutation character of the readout, which we derive exactly. A prospective test confirmed this: A₅ read out through its 6-point action gives the 5-dimensional character, with the minimal faithful 3-dimensional characters anti-correlated. A proposed compression refinement was refuted prospectively (§5). A proposed compression refinement was refuted prospectively, and the predictive-state law fails for degenerate readouts (§5).
 
 ## 1. Closure: abstraction as a macrostate with its own dynamics
 
@@ -73,7 +73,12 @@ where χ_perm is the permutation character on G/H. A predictive state's Gram mat
 
 The **exact predictive-state kernel** (the Gram of expected future outputs over the training horizon, computed from the automaton alone) predicts the best character in every fitted case of Spikes 60 and 62 except one: S₄ via its 6-point pair action, where networks use the standard representation. Three of these predictions were computed before the corresponding runs finished, though they were not formally pre-registered.
 
-The current law is therefore: **a trained recurrent network represents a group concept by the geometry of its predictive state.** A formally pre-registered test, including the anomaly, is the next step.
+**The formal test (Spike 66) bounds the law.**
+- For identity-only readouts the predictive kernel is diagonal: it predicts equidistant states. Networks instead build compact structured geometry (H66.1–H66.2 broken).
+- The S₄ 6-point anomaly replicated.
+- The predictive-state law therefore holds for structured, low-rank predictive states (coset readouts of moderate size), not universally. Where the predictive state is degenerate, the architecture's bias toward compact, low-frequency geometry decides. This two-regime account is post hoc.
+
+**Closure, by contrast, held exactly in the arithmetic case.** A mod-3 readout of a mod-6 counter leaves no linearly decodable trace of the 2-part.
 
 ## 6. Related work
 
