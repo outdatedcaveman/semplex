@@ -921,6 +921,45 @@
    "claims": [
     "P195"
    ]
+  },
+  {
+   "spike": "62",
+   "date": "2026-11-17",
+   "commit": "d8a9728",
+   "question": "The sufficiency law C31''' prospective on five new readouts",
+   "overall": "BROKEN",
+   "verdicts": [
+    {
+     "id": "H62.1",
+     "verdict": "BROKEN",
+     "measured": "predicted irrep best in 0/12 fitted runs",
+     "bar": "held >= 0.8, broken < 0.5"
+    },
+    {
+     "id": "H62.2",
+     "verdict": "BROKEN",
+     "measured": "0/5",
+     "bar": "held >= 0.8"
+    },
+    {
+     "id": "H62.3",
+     "verdict": "BROKEN",
+     "measured": "1/15",
+     "bar": "held >= 0.8"
+    }
+   ],
+   "learned": "Networks do not compress a group concept to its smallest faithful, readout-sufficient part; they keep unfaithful constituents. What they build matches the exact predictive-state kernel, the geometry of expected future outputs, in every fitted case but one.",
+   "gaps_moved": [
+    {
+     "gap": "A12",
+     "from": "PARTIAL",
+     "to": "PARTIAL",
+     "why": "Economy/sufficiency refuted; predictive-state law is the candidate explanation"
+    }
+   ],
+   "claims": [
+    "P196"
+   ]
   }
  ]
 }

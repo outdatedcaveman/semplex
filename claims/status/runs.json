@@ -198,5 +198,15 @@
   "learned": "There is no gluing obstruction: models' lexicons are rotated copies of a common frame in their leading dimensions, so a shared basis can be recovered after alignment. Spike 61's missing atoms reflect arbitrary per-model rotations, not the absence of a global frame.",
   "moved": "A12: PARTIAL → PARTIAL (Common frame recoverable up to rotation; next learn atoms in the aligned space)",
   "claims": "P195"
+ },
+ {
+  "spike": "62",
+  "date": "2026-11-17",
+  "commit": "d8a9728",
+  "question": "The sufficiency law C31''' prospective on five new readouts",
+  "overall": "BROKEN",
+  "learned": "Networks do not compress a group concept to its smallest faithful, readout-sufficient part; they keep unfaithful constituents. What they build matches the exact predictive-state kernel, the geometry of expected future outputs, in every fitted case but one.",
+  "moved": "A12: PARTIAL → PARTIAL (Economy/sufficiency refuted; predictive-state law is the candidate explanation)",
+  "claims": "P196"
  }
 ]

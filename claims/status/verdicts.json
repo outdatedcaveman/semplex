@@ -614,5 +614,29 @@
   "verdict": "HELD",
   "measured": "median held-out R2 0.31",
   "bar": ">= 0.30"
+ },
+ {
+  "key": "62:H62.1",
+  "spike": "62",
+  "id": "H62.1",
+  "verdict": "BROKEN",
+  "measured": "predicted irrep best in 0/12 fitted runs",
+  "bar": "held >= 0.8, broken < 0.5"
+ },
+ {
+  "key": "62:H62.2",
+  "spike": "62",
+  "id": "H62.2",
+  "verdict": "BROKEN",
+  "measured": "0/5",
+  "bar": "held >= 0.8"
+ },
+ {
+  "key": "62:H62.3",
+  "spike": "62",
+  "id": "H62.3",
+  "verdict": "BROKEN",
+  "measured": "1/15",
+  "bar": "held >= 0.8"
  }
 ]

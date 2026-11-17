@@ -1,0 +1,19 @@
+{
+ "automaton": "S4_12b",
+ "seed": 6223,
+ "first99": 1750,
+ "fit": 1.0,
+ "rho_readout": 0.527828930974931,
+ "irrep_scores": {
+  "sign": 0.8172358412830435,
+  "chi2": -0.16220503424250893,
+  "std": -0.11425917414245236,
+  "std_sign": -0.2725604910572534
+ },
+ "best_irrep": "sign",
+ "set_scores": {
+  "sign+std": 0.5985292891794004,
+  "sign+std_sign": 0.5219318777690128
+ },
+ "n_states_seen": 24
+}

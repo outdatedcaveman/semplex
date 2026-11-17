@@ -83,6 +83,20 @@ Progress counts a closed gap as 1 and a partial one as ½. It measures the gap l
 
 ## 4. Run reports, newest first
 
+### Spike 62: The sufficiency law C31''' prospective on five new readouts
+
+2026-11-17 · commit `d8a9728` · overall **BROKEN** · report `experiments/SPIKE_62_REPORT.md` · claims P196
+
+| Hypothesis | Verdict | Measured | Criterion |
+|---|---|---|---|
+| H62.1 | **BROKEN** | predicted irrep best in 0/12 fitted runs | held >= 0.8, broken < 0.5 |
+| H62.2 | **BROKEN** | 0/5 | held >= 0.8 |
+| H62.3 | **BROKEN** | 1/15 | held >= 0.8 |
+
+**Learned.** Networks do not compress a group concept to its smallest faithful, readout-sufficient part; they keep unfaithful constituents. What they build matches the exact predictive-state kernel, the geometry of expected future outputs, in every fitted case but one.
+
+- Gap A12: PARTIAL → PARTIAL. Economy/sufficiency refuted; predictive-state law is the candidate explanation.
+
 ### Spike 64: Is there a global frame for semantic space? (holonomy of model-to-model alignments)
 
 2026-11-17 · commit `see report` · overall **MIXED** · report `experiments/SPIKE_64_REPORT.md` · claims P195
@@ -421,9 +435,9 @@ Progress counts a closed gap as 1 and a partial one as ½. It measures the gap l
 
 ## 6. Ledger health
 
-- Claims: 195. Empirical: 104; Proved in Lean: 32; Exploratory: 16; Proved on paper: 11; Refuted: 10; Kernel-checked: 6; Conjecture: 5; Method note: 5; Computed: 4; Other: 2.
+- Claims: 196. Empirical: 104; Proved in Lean: 32; Exploratory: 16; Proved on paper: 11; Refuted: 11; Kernel-checked: 6; Conjecture: 5; Method note: 5; Computed: 4; Other: 2.
 - Problems: 0. Claims stated stronger than their support: 42.
-- Frozen spike files (rule 2): 147.
+- Frozen spike files (rule 2): 150.
 
 Weakest links (fixing one lifts every note that rests on it):
 
