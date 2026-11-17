@@ -432,3 +432,26 @@ C33 (erasure versus symmetry) becomes measurable. Spike 57's reset forgets a lot
 **Conjecture C35 (abstractions trade forgetting for closure).** Among the closed coarse-grainings that decide a task, learners settle on the one of least information loss compatible with their readout. That is the Myhill–Nerode congruence, which is maximal among closed task-deciding coarse-grainings (`MN_coarsest`), so it discards the most irrelevant distinctions. The C31″ rule (keep the faithful constituents of the readout representation) is the representation-theoretic face of this.
 
 A test: compute H(state | macrostate) along training and check that it rises to the Myhill–Nerode value (and stays there) exactly when interventions start to succeed.
+
+### 11.4 The readout law is the geometry of a predictive state (derivation), and networks compress it
+
+**Derivation (finite group theory, elementary).** Take a group automaton with states G, right action g ↦ g·w, and output o(g) = the left coset gH (one-hot). For w uniform on G:
+
+  ⟨o(gw), o(hw)⟩ = 1 iff (gw)⁻¹(hw) ∈ H iff w⁻¹(g⁻¹h)w ∈ H,
+
+and the number of such w is |H|·χ_perm(g⁻¹h). So
+
+  E_w ⟨o(gw), o(hw)⟩ = χ_perm(g⁻¹h) / [G : H].
+
+A state that encodes its expected future outputs (a predictive state) therefore has, once the walk mixes, Gram matrix proportional to the readout's permutation character. After centring, that is the permutation character minus the trivial one: exactly C31′.
+
+**Exact computation for the Spike 60 automata** (`experiments/theory/predictive_kernel.py`, horizon 30, no training, `results/theory_predictive_kernel.json`). The predictive kernel's best character is χ₄ (A5_5, 0.97), χ₅ (A5_6, 0.96) and standard (S4_4, 0.97), matching the trained GRUs in all three.
+
+For S4_6 it is the composite: permutation − 1 at 0.97, with χ₂ (0.65) above standard (0.41). The trained GRUs instead keep the standard part alone (χ₂ ≈ 0, P193).
+
+**Reading.**
+- C31′ is **derived**, not just fitted: it is the geometry of the predictive state. This is the first first-principles account in the atlas programme of *why* a learned concept has the shape it has (gap E2, "Explains").
+- Trained networks **compress** the predictive state. They drop χ₂, the constituent that is not faithful (its kernel is V₄), and keep a faithful one.
+- **Conjecture C31‴ (sufficiency).** A network keeps the smallest set of constituents of the predictive state that is (i) faithful, so its macrostates are the minimal automaton's (closure), and (ii) sufficient for its readout: the outputs remain threshold-separable from it.
+
+  This predicts the A₅ results too, provided the minimal faithful 3-dimensional representations fail (ii) for those readouts while χ₄ and χ₅ pass. That is decidable by linear programming, and it is the next step.
