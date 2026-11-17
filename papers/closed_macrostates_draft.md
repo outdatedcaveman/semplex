@@ -13,7 +13,7 @@ In recurrent networks trained on automata whose algebraic building blocks are kn
 
 Learning cost follows the algebraic grading of the target, from the aperiodic reset to the non-solvable simple group A₅.
 
-The geometry of the learned states is not the group's smallest faithful representation. It is predicted by what the network must read out. A state that encodes its expected future outputs has a Gram matrix equal to the permutation character of the readout, which we derive exactly. A prospective test confirmed this: A₅ read out through its 6-point action gives the 5-dimensional character, with the minimal faithful 3-dimensional characters anti-correlated. Networks sometimes compress further, keeping only a faithful, readout-sufficient part; a prospective test of that refinement is reported in §5.
+The geometry of the learned states is not the group's smallest faithful representation. It is predicted by what the network must read out. A state that encodes its expected future outputs has a Gram matrix equal to the permutation character of the readout, which we derive exactly. A prospective test confirmed this: A₅ read out through its 6-point action gives the 5-dimensional character, with the minimal faithful 3-dimensional characters anti-correlated. A proposed compression refinement was refuted prospectively (§5). The predictive-state kernel matches every fitted case but one.
 
 ## 1. Closure: abstraction as a macrostate with its own dynamics
 
@@ -67,11 +67,13 @@ where χ_perm is the permutation character on G/H. A predictive state's Gram mat
 - **Spike 60, prospective:** A₅ via 6 points gives χ₅ in 3/3 fitted runs (5/5 overall), with the minimal faithful characters at −0.16 to −0.25.
 - **Spike 60:** S₄ via 6 points (readout module standard ⊕ χ₂) uses the standard representation alone, contradicting the pure predictive-state form.
 
-## 5. Compression: faithful and readout-sufficient (prospective test, Spike 62)
+## 5. No compression: the predictive state is the law (Spike 62)
 
-The refinement C31‴ says: keep the smallest set of irreducibles that is faithful and lets every output coset be linearly separated. Linear programming over matrix coefficients reproduces all four Spike 60 cases, but that match is post hoc. Spike 62 tests it on five new readouts with predictions computed before training.
+**C31‴** (keep the smallest faithful set of irreducibles from which every output coset is linearly separable) matched all four Spike 60 cases post hoc. It was tested prospectively on five new readouts and **refuted**: the predicted set was best in 0/12 fitted runs. Networks keep unfaithful constituents as their dominant geometry (S₄ via ⟨(0 1 2 3)⟩: χ₂ 5/5; via ⟨(0 1 2)⟩: sign 5/5; 12-point readout: χ₂ 4/5).
 
-*[Results to be inserted when the run completes. Early runs on S₄ via ⟨(0 1 2 3)⟩ select χ₂, not the predicted std⊗sign, which would refute C31‴ in that case.]*
+The **exact predictive-state kernel** (the Gram of expected future outputs over the training horizon, computed from the automaton alone) predicts the best character in every fitted case of Spikes 60 and 62 except one: S₄ via its 6-point pair action, where networks use the standard representation. Three of these predictions were computed before the corresponding runs finished, though they were not formally pre-registered.
+
+The current law is therefore: **a trained recurrent network represents a group concept by the geometry of its predictive state.** A formally pre-registered test, including the anomaly, is the next step.
 
 ## 6. Related work
 

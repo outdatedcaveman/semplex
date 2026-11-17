@@ -458,6 +458,8 @@ For S4_6 it is the composite: permutation − 1 at 0.97, with χ₂ (0.65) above
 
   This predicts the A₅ results too, provided the minimal faithful 3-dimensional representations fail (ii) for those readouts while χ₄ and χ₅ pass. That is decidable by linear programming, and it is the next step.
 
+**Update (Spike 62): C31‴ refuted prospectively** (0/12). Networks keep unfaithful constituents. The exact predictive kernel matches every fitted case of Spikes 60 and 62 except S4_6. The law is the predictive state itself, without compression, and S4_6 is an open anomaly.
+
 ## 12. Toward the continuous and higher-algebraic side: coalgebra, sheaves, harmonic analysis, higher categories, arithmetic (2026-11-17)
 
 **Working hypothesis (user's).** Semantic space = logical space = mathematical space = phase space.
