@@ -563,3 +563,55 @@ The same group, with a different readout, gives a different shape, forced by suf
 | Harmonic analysis | circles (k = 1), characters (P185, P192) | Spike 65: SO(3), signed vs unsigned |
 | Extensions, higher structure | product vs cascade interaction (P185, P188) | Spike 66: extension classes |
 | Arithmetic, 𝔽₁ | permutation (𝔽₁) representations at the root of C31‴ | Spike 67: p-primary parts |
+
+## 13. After the prior-art reading: where a breakthrough could still be (2026-11-17)
+
+**Re-scoping, honestly** (`charter/LITERATURE_REVIEW.md`, 2026-11-17).
+- Closure for group automata, with causal interventions, is in Zhang & Li (2026).
+- Coset readouts living on G/H's permutation character is Stander et al.'s lemma.
+- "Features learned in order of spectral energy" is proved for two-layer networks: AGF (Kunin et al. 2025) and Marchetti et al. (2026).
+- Shared representational shape is the Platonic hypothesis (Huh et al. 2024).
+
+What is not in that literature is a theory of **which quotient and which constituent a *recurrent* learner selects**:
+- with arbitrary readouts;
+- with ties, which the equal-energy lemma shows are generic for permutation readouts;
+- with continuous groups and covers.
+
+That is the target from here on.
+
+### 13.1 The A₅/SO(3) contrast and conjecture C38 (the encoding decides the cover)
+
+A₅ ⊂ SO(3) is the icosahedral rotation group, and A₅/D₅ is its 6 axes, a finite subset of RP².
+- Spike 60 (one-hot letters) built χ₅, the quotient's own representation.
+- Spike 70 (ω given in ℝ³) built the double cover S².
+
+The cover was available in the discrete case too: the 12 icosahedral vertices in χ₃, smaller than χ₅. So "smallest linear orbit covering the readout" is already refuted by Spike 60.
+
+C38 instead says that the representation in which the inputs arrive decides it. This is the recurrent analogue of AGF's dependence on encoding statistics. It is tested in both directions in Spike 72: the discrete lift with χ₃-encoded letters, and the continuous descent with degree-2-encoded rotations.
+
+If C38 holds, the picture becomes a **triangle of representations**:
+- the input module (encoding);
+- the readout module (permutation character on what is distinguished);
+- the predictive kernel's energy, which weights the readout constituents by multiplicity.
+
+The learned geometry would be the constituent that is cheapest jointly: present in the readout module, energetic in the predictive kernel, and reachable from the input module by linear maps and gated products. In representation-theoretic terms, the candidate constituents are those ρ with Hom_G(ρ, readout) ≠ 0. Their cost would be set by how ρ sits in tensor powers of the input module, since an RNN builds products of inputs. This **tensor-power reachability** is a definite, computable quantity: the least t such that ρ ⊂ (input)^{⊗t}. That is the classical "depth" of ρ relative to a faithful module (Burnside–Brauer: every irreducible appears in some tensor power of a faithful representation).
+
+**Conjecture C39 (tensor depth).** Among the readout's constituents of comparable predictive energy, a recurrent learner leads with the one of least tensor depth relative to its input module.
+
+For one-hot (regular) inputs every irreducible has depth 1, so energy alone decides. That matches Spikes 62 and 69 outside ties. Check against the known ties:
+- **S₄ pair readout with one-hot inputs:** all depths are 1, so the tie remains; C39 is silent there. This is consistent with the generating-set dependence.
+- **SO(3) with ω input:** degree 1 has depth 1 and degree 2 has depth 2. C39 predicts the cover, as observed.
+
+C39 is post hoc on these two cases and must be registered on new encodings: for example S₄ letters encoded in std versus std⊗sign, whose tensor depths differ by constituent.
+
+### 13.2 Frontier mathematics that bears on this (inspiration; nothing here is claimed)
+
+- **The Burnside ring and the table of marks.** The learning trajectories of Zhang & Li pass through coset stages G/H₁ → G/H₂ → …. That is a path in the poset of transitive G-sets, and the Burnside ring A(G) is the algebra of those G-sets. A dynamical theory would be a flow on A(G) ⊗ ℝ, with marks φ_K(G/H) = |(G/H)^K| as coordinates.
+
+  Testable consequence: stages should move down the subgroup lattice through subgroups whose permutation modules gain predictive energy fastest. Our predictive kernel restricted to each G/H gives that energy.
+- **Mackey and Green functors.** The family of predictive kernels over all subgroups, with restriction and induction, is a Mackey functor. Frobenius reciprocity is what made Stander's lemma and our equal-energy lemma work. A "learned representation functor" from automata to G-modules would have to be a morphism of Mackey functors to respect quotients. That is a strong structural constraint, worth checking on the stage data.
+- **Coverings, spin and the Schur multiplier.** The SO(3) cover S² → RP² is the orbit-level shadow of the Lie-group cover SU(2) → SO(3). For finite groups, the analogous lifts are central extensions, classified by the Schur multiplier H²(G; ℂ^×). A₅'s double cover is the binary icosahedral group 2I = SL(2, 5).
+
+  Prediction in the spirit of C38: letters encoded through a *projective* representation (the 2-dimensional spin representation of 2I, given as SU(2) matrices) should make networks build a geometry of the double cover group itself. That is: track a sign that A₅ does not have, giving 120 states instead of 60. If so, the input encoding can *enlarge* the learned state space beyond the Myhill–Nerode automaton. That would be a clean, surprising failure of closure, caused by the encoding.
+- **Tannaka–Krein duality.** A group is recoverable from its category of representations with the tensor product. If C39 holds, a network sees "its" group through the tensor category generated by its input module. Then what is learnable at bounded depth is a truncation of that category: a concrete, Tannakian reading of "the network's concept of the group".
+- **Perfectoid and profinite threads (§12.5), revisited.** Tilting replaces a characteristic-0 object by a characteristic-p one with the same étale data. The analogue here is replacing a group concept by a quotient or a cover with the same observable (readout) data. The Myhill–Nerode quotient and the encoding-induced cover are the two directions of such a "same observations, different object" equivalence. This is metaphor only until there is a functor to write down.

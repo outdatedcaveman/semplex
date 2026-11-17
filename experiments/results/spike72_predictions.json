@@ -1,0 +1,20 @@
+{
+ "rho3_label": "r1_tr9_ker1",
+ "rho3_match": {
+  "r0_tr9_ker1": -1.1225588360098805e-16,
+  "r1_tr9_ker1": 1.0,
+  "r2_tr16_ker1": -1.2918822933330257e-16,
+  "r3_tr25_ker1": 1.0584126168093163e-16
+ },
+ "rho5_label": "r3_tr25_ker1",
+ "rho5_match": {
+  "r0_tr9_ker1": -4.4038846643464495e-16,
+  "r1_tr9_ker1": -5.46476444343271e-16,
+  "r2_tr16_ker1": -5.744823446470003e-16,
+  "r3_tr25_ker1": 1.0
+ },
+ "ONEHOT": "r3_tr25_ker1",
+ "RHO3": "r1_tr9_ker1",
+ "RHO5": "r3_tr25_ker1",
+ "note": "rho5 is the readout's own representation (6 axes minus trivial = chi5)."
+}
