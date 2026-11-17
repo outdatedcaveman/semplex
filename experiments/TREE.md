@@ -72,6 +72,12 @@ Run in parallel by Gemini from the Spike 10c state; renumbered at the merge (ori
 ├ 58  causal power (interventions), characters, topology, cost incl. A5     frozen: H58.1–3, H58.6 held; H58.4 neither (A5 → χ4); H58.5 broken
 ├ 59  semantic primes as lexical elements (14 models' weights)              frozen: H59.1–2 broken; H59.3 held but non-specific (control)
 ├ 60  readout representation (C31') vs minimal faithful; GRU vs transformer  frozen: H60.2, H60.6 held; H60.1, H60.5 broken; → C31''
-└ 61  data-driven lexical atoms across 14 models                             frozen: H61.1 neither, H61.2 broken; shape shared, axes not
+├ 61  data-driven lexical atoms across 14 models                             frozen: H61.1 neither, H61.2 broken; shape shared, axes not
+├ 62  sufficiency law C31''' prospective (5 new readouts)                    frozen: H62.1–3 broken; predictive-state kernel matches
+├ 63  4-layer transformer + curriculum on S4, A5                             frozen: H63.3 held (same geometry); H63.1 neither; H63.2 broken
+├ 64  holonomy of model-to-model alignments (sheaf reading)                  frozen: H64.1 broken (no obstruction; common frame); H64.2 held
+├ 65  continuous: S^2 vs RP^2 tracking                                       frozen: no verdict (fit); exploratory C36 (double cover)
+├ 66  predictive-state law, formal (extension pairs, Z6 mod 3, S4_6)        running
+└ 68  C34 in context with tied control                                       frozen: H68.1–3 held
 ```
 ```

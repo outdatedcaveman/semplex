@@ -70,4 +70,15 @@ G10 found that kernel `decide` stops scaling at about 41–60 LRAT steps. Find a
 
 **Done when:** `[8]→[4]→1` (104 LRAT steps in G10's table) verifies in under 120 s with standard axioms only; or a handoff shows, with measurements, which stage is the irreducible cost.
 
+### G18. Lean proof of the predictive-kernel identity (high value, mechanical)
+
+`charter/FOUNDATIONS.md` §11.4 derives that, for a finite group G, a subgroup H and w uniform on G, the number of w with w⁻¹ x w ∈ H equals |H| times the number of left cosets of H fixed by x. Equivalently, E_w⟨o(gw), o(hw)⟩ = χ_perm(g⁻¹h)/[G:H] for the one-hot coset readout o.
+
+Work in `proofs/lean-mathlib/` (Mathlib: `Subgroup`, `QuotientGroup`, `MulAction`, `Fintype.card`).
+
+1. State and prove the counting identity: for x ∈ G, #{w : w⁻¹xw ∈ H} = |H| · #{gH : x·gH = gH}.
+2. Derive the expectation form for the coset-indicator readout.
+
+**Done when:** both theorems compile with standard axioms only (`#print axioms`), with statements exactly as above and no weakening. The handoff should state the exact Lean statements.
+
 ### G17. (done by Claude) The Lean test timeout is read from `SEMPLEX_LEAN_TIMEOUT` (default 600 s); see `proofs/lean/README.md`.
