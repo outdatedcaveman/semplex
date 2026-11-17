@@ -20,7 +20,7 @@ Progress counts a closed gap as 1 and a partial one as ½. It measures the gap l
 | Gap | Leverage | State | What is missing | Closes when | Next |
 |---|---|---|---|---|---|
 | **A11** Concept geometry from symmetry (C29) across models and brains | HIGH | PARTIAL | A symmetry group that accounts for the residual brain–model agreement; an account of composition (sum plus structured residue) derived from statistics; C30 in larger models and contested cases; a predictive test of geometry from measured co-occurrence symmetry. | A pre-registered test predicts a family's geometry from its measured co-occurrence symmetry before looking, in activations and cortex, including a product family. | C30 at scale (larger models, more frames, contested cases); derive additive-plus-residue composition from co-occurrence statistics |
-| **A12** Atlas and periodic table of concepts: closure (C32), economy (C31), construction cost | HIGH | PARTIAL | C31'' tested prospectively; a transformer that learns group automata (deeper, longer), to test substrate-relativity and the Barrington grading; lexical elements as operations rather than directions; a derivation of C31'' from training dynamics. | For automata sampled from a stated distribution, the minimal automaton, its Krohn–Rhodes cascade and the geometry of each part are predicted before training and recovered from trained nets of two architectures, and the same calculus predicts held-out lexical concepts from their parts. | Spike 62: C31'' prospective (readouts whose permutation representation has two faithful constituents, e.g. S4 on 12 points or A5 on 10 points) plus a deeper transformer (4-6 layers, more steps) |
+| **A12** Atlas and periodic table of concepts: closure (C32), the predictive-state geometry law (C37), construction cost | HIGH | PARTIAL | Why the leading constituent sometimes defers to the smooth circle (Z7 via {0,2}); what decides the leading abelian count under identity readouts; why ties in permutation readouts depend on the generating set (S4 pairs); a derivation of the leading-component law from training dynamics; a transformer that learns group automata for substrate comparison; the 'coarsest linearly-acting quotient' reconciliation of discrete closure with the continuous double cover (C36); lexical elements as operations. | For automata sampled from a stated distribution, the minimal automaton, its Krohn–Rhodes cascade and the geometry of each part are predicted before training and recovered from trained nets of two architectures, and the same calculus predicts held-out lexical concepts from their parts. | Spike 71: tie-breaking and degenerate-regime dynamics (vary letter probabilities and generating sets at fixed group and readout; predict the leading constituent from the linearised training dynamics at initialisation), plus a test of the linearly-acting-quotient conjecture on SO(2)/SO(3) quotients. |
 | **A2** Real data: the theory currently fails there | HIGH | OPEN | A version of the theory that predicts trained nets on noisy real tasks better than the kernel does. | Pre-registered on the same four datasets plus two new ones: a stated predictor agrees with trained nets more than the kernel does in at least 4 of 6. | Blocked on A8: no predictor yet beats the kernel on these datasets |
 | **A3** Mechanism: why feature learning finds small circuits | HIGH | OPEN | A derivation. The unit-level selection law (volume × information tilt) is not shown to produce the Occam pull (C18 not supported). | A stated law that predicts the Occam-sides fraction or S(t) from measurable quantities, confirmed in a prospective test. | After A8: the mechanism must also explain why noise removes the pull |
 | **A6** Scale: n ≥ 8 | HIGH | PARTIAL | Widths beyond 8 in the feature-learning regime, and target classes other than two-unit ones at n ≥ 8. | The consensus law re-measured at width ≥ 32 and on cost-4 targets at n = 8. | Unscheduled |
@@ -54,7 +54,7 @@ Progress counts a closed gap as 1 and a partial one as ½. It measures the gap l
 | **A9** What the hidden layer represents | E2 | OPEN | Ruled out (Spike 47): the layer does not collapse onto a minimum circuit's cells (0.08% of nets) nor onto the class. Minimum circuits are over-represented 700-fold but explain only 56% of the variance; the layer uses more than two directions. Prior art covers the canonical quotient itself. | P132, P171 |
 | **A10** Identifiability of mechanisms | E2 | PARTIAL | Census done (P167): at 4 inputs, 50 of 128 cost-3 classes have a single orbit of minimum circuits and no class of cost ≥ 4 does. So for most functions the function does not fix its mechanism. | P069, P167 |
 | **A11** Concept geometry from symmetry (C29) across models and brains | E1 | PARTIAL | Spike 53: circles for cyclic families in 14 models' static weights; category block structure and shared brain–model geometry (THINGS-fMRI, 3 subjects); the tensor-product row refuted for lexical composition (additive instead); shared structure finer than the 17-category skeleton. Spike 54: semantic products in Neuronpedia sparse codes are also mainly additive (tensor residue carries the cycle at p < 0.05 in 71%). Spike 55: fairness verdict readable in only 2 of 7 sources, so C30 untested. Spike 56: small models' own fairness verdicts are nearly invariant under permuting persons (names 3–5% of verdict variance vs 33–40% of state; C30 supported approximately). | P179, P180, P181, P182, P183, P184 |
-| **A12** Atlas and periodic table of concepts: closure (C32), economy (C31), construction cost | E2 | PARTIAL | FOUNDATIONS §9: abstraction as closed coarse-graining (Rosas et al. 2024: closure ⇔ strong lumpability), Krohn–Rhodes primes as the periodic table (substrate-relative). Spike 57: recurrent nets build reset → simplex, S3 → 2-D, ℤ/n → ordered circle, product → sum, cascade → more interaction than product; the minimal automaton is present as an exact linear, lumpable coarse-graining (exploratory). Construction cost rises with composition (exploratory). Spike 59: the NSM semantic primes are not a privileged basis of 14 models' lexicons (worse spanning than frequency-matched words; universality non-specific). Spike 58: closure, causal power (interventions 100%) and micro-inertness confirmed in all 31 fitted nets; learning cost follows the table (A5 costliest); minimal-faithful geometry refuted for A5, replaced by the readout-induced permutation representation (C31', exploratory). Spike 61: no data-driven word-level elements shared across 14 models (shape shared, CKA 0.59; axes not). Spike 60: A5 through 6 points gives chi5 as predicted; S4 through 6 points keeps only the faithful standard part, so the law is refined to C31'' (post hoc); 2-layer transformers learned neither group. | P185, P186, P187, P188, P189, P190, P191, P192, P193, P194 |
+| **A12** Atlas and periodic table of concepts: closure (C32), the predictive-state geometry law (C37), construction cost | E2 | PARTIAL | FOUNDATIONS §9: abstraction as closed coarse-graining (Rosas et al. 2024: closure ⇔ strong lumpability), Krohn–Rhodes primes as the periodic table (substrate-relative). Spike 57: recurrent nets build reset → simplex, S3 → 2-D, ℤ/n → ordered circle, product → sum, cascade → more interaction than product; the minimal automaton is present as an exact linear, lumpable coarse-graining (exploratory). Construction cost rises with composition (exploratory). Spike 59: the NSM semantic primes are not a privileged basis of 14 models' lexicons (worse spanning than frequency-matched words; universality non-specific). Spike 58: closure, causal power (interventions 100%) and micro-inertness confirmed in all 31 fitted nets; learning cost follows the table (A5 costliest); minimal-faithful geometry refuted for A5, replaced by the readout-induced permutation representation (C31', exploratory). Spike 61: no data-driven word-level elements shared across 14 models (shape shared, CKA 0.59; axes not). Spike 60: A5 through 6 points gives chi5 as predicted; S4 through 6 points keeps only the faithful standard part, so the law is refined to C31'' (post hoc); 2-layer transformers learned neither group. Spike 69: the predictive kernel's top isotypic component is the leading learned constituent (29/34, incl. unfaithful predictions); identity readouts do not give minimal faithful geometry; permutation ties (equal energy, proved) are broken by the generating set. Spike 70: axis-trackers build the double cover S2, not RP2 (C36 supported). | P185, P186, P187, P188, P189, P190, P191, P192, P193, P194, P195, P196, P197, P198, P199, P200, P201, P202, P203 |
 
 ### Compiler
 
@@ -82,6 +82,39 @@ Progress counts a closed gap as 1 and a partial one as ½. It measures the gap l
 | **D3** Prior-art reading queue | E4 | CLOSED | Gemini G7 worked through the queue and eight further areas: 53 works, 24 read in full, 9 metadata only (paywalled). Verdicts per claim are in `charter/PRIOR_ART.md`. | P165 |
 
 ## 4. Run reports, newest first
+
+### Spike 70: Direction vs axis with a passable guard: does the network lift to the double cover (C36)?
+
+2026-11-17 · commit `9f126ec` · overall **HELD** · report `experiments/SPIKE_70_REPORT.md` · claims P203
+
+| Hypothesis | Verdict | Measured | Criterion |
+|---|---|---|---|
+| H70.1 | **HELD** | AXIS R2_1 > R2_2 and >= 0.2 in 5/5 | >= 80% |
+| H70.2 | **HELD** | sign probe 1.000 in 5/5 (unbalanced; balanced 1.0 exploratory) | >= 0.9 in 80% |
+| H70.3 | **NEITHER** | swap match AXIS 0.04, SIGN 0.00 | AXIS >= 0.9 and SIGN <= 0.1 |
+| H70.4 | **HELD** | SIGN degree-1 in 5/5 | >= 80% |
+
+**Learned.** Networks asked only for the axis build the double cover S2 (signed direction), not the minimal quotient RP2: continuous closure keeps a bit the readout cannot see when dropping it would break linearity of the dynamics.
+
+- Gap A12: PARTIAL → PARTIAL. C36 linearising cover supported (P203).
+
+### Spike 69: Formal two-regime test of C37 with predictive-kernel structure (tau) computed beforehand; S4_6 anomaly variants
+
+2026-11-17 · commit `2335972` · overall **MIXED** · report `experiments/SPIKE_69_REPORT.md` · claims P201, P202
+
+| Hypothesis | Verdict | Measured | Criterion |
+|---|---|---|---|
+| H69.1 | **BROKEN** | rho_predictive >= 0.6 in 36% | held >= 0.8 |
+| H69.2 | **BROKEN** | predictive > one-step in 31% | held >= 0.8 |
+| H69.3 | **HELD** | top isotypic component best in 85% (29/34) | >= 0.8 |
+| H69.4 | **BROKEN** | minimal faithful best in 39% of degenerate runs | held >= 0.8, broken < 0.5 |
+| H69.5 | **NEITHER** | ties to faithful 55% | held >= 0.8, broken < 0.5 |
+| H69.6 | **BROKEN** | ties to lowest dimension 45% | held >= 0.8, broken < 0.5 |
+| H69.7 | **NEITHER** | law 67%, bias 33% on discriminating cases | law >= 0.8 held; bias >= 0.5 broken |
+
+**Learned.** The predictive kernel's top isotypic component decides the leading constituent of the learned geometry, even when unfaithful (A4 on pairs, Z8 via {0,1,4}); the full Gram is not the kernel. Identity readouts do not give minimal faithful geometry (abelian counts lead in Q8, A4, S3). Permutation-readout ties have equal energy (proved) and are broken by the generating set, so the S4_6 anomaly is dynamical and does not generalise.
+
+- Gap A12: PARTIAL → PARTIAL. Geometry law narrowed to the leading isotypic component (P201); degenerate regime and ties open (P202).
 
 ### Spike 66: Formal test of the predictive-state law (extension pairs, p-primary readout, S4_6 anomaly)
 
@@ -489,13 +522,14 @@ Progress counts a closed gap as 1 and a partial one as ½. It measures the gap l
 | C31 | economy law for concept geometry | Partly | PARTLY SUPPORTED; Spike 57 |
 | C32 | closure law | Open | registered test BROKEN; exploratory analysis SUPPORTS it; Spike 57 |
 | C34 | invariance of shared meaning | Supported | SUPPORTED; Spikes 64, 68 |
-| C36 | linearising cover | Open | CONJECTURE; Spike 65 exploratory, no verdict |
+| C36 | linearising cover | Supported | SUPPORTED; Spike 70, pre-registered; H70.1, H70.2, H70.4 held, H70.3 neither |
+| C37 | two regimes | Refuted | STRUCTURED HALF SUPPORTED as a leading-component law; DEGENERATE HALF REFUTED; Spike 69, pre-registered with predictions |
 
 ## 6. Ledger health
 
-- Claims: 200. Empirical: 107; Proved in Lean: 32; Exploratory: 16; Refuted: 12; Proved on paper: 11; Kernel-checked: 6; Conjecture: 5; Method note: 5; Computed: 4; Other: 2.
-- Problems: 0. Claims stated stronger than their support: 44.
-- Frozen spike files (rule 2): 159.
+- Claims: 203. Empirical: 109; Proved in Lean: 32; Exploratory: 16; Refuted: 13; Proved on paper: 11; Kernel-checked: 6; Conjecture: 5; Method note: 5; Computed: 4; Other: 2.
+- Problems: 0. Claims stated stronger than their support: 45.
+- Frozen spike files (rule 2): 166.
 
 Weakest links (fixing one lifts every note that rests on it):
 
@@ -503,7 +537,7 @@ Weakest links (fixing one lifts every note that rests on it):
 |---|---|---|---|
 | P069 | 21 | PROVED (paper proof) + PARTLY MECHANIZED (P160) + EMPIRICALLY-CONFIRMED (H14.1) | Theorem 15: under task-symmetric initialization and equivariant training, circuit probability is constant on task-symmet |
 | P127 | 11 | EXPLORATORY (post hoc) | Feature learning moves nets from the NTK toward the Occam completion: 91% agreement with Occam vs 81–83% with the NTK; w |
-| P186 | 3 | EXPLORATORY (the registered cluster-based closure test H57.1 is BROKEN; the probe analysis was run after the verdicts) | The minimal automaton is present in trained recurrent nets as an exact closed coarse-graining, not as clusters: a linear |
+| P186 | 4 | EXPLORATORY (the registered cluster-based closure test H57.1 is BROKEN; the probe analysis was run after the verdicts) | The minimal automaton is present in trained recurrent nets as an exact closed coarse-graining, not as clusters: a linear |
 | P133 | 2 | EXPLORATORY (demonstrated, tested) | A causal Bayes net's Bayes-optimal decision rule can be distilled to a canonical F0 expr + circuit in CSIR with a kernel |
 | P141 | 2 | EXPLORATORY + PARTLY MECHANIZED | Profile-factor compilation (`profile_factor_compile` in Lean; `cerp/ur_compiler.py`, H-G) factors low-rank partitions `f |
 | P175 | 2 | ~ φ iff every least-cost function agreeing with D satisfies φ") is a rational nonmonotonic consequence relation: it satisfies Cut, Cautious Monotony and Rational Monotony and fails classical Monotony. Exhaustively at n = 3 over 6,561 partial labellings: 0 violations of the three rules, 3,888 of 14,816 Monotony instances fail | Minimum-circuit forcing ("D |

@@ -182,7 +182,13 @@
  {
   "id": "C36",
   "title": "linearising cover",
-  "state": "Open",
-  "note": "CONJECTURE; Spike 65 exploratory, no verdict"
+  "state": "Supported",
+  "note": "SUPPORTED; Spike 70, pre-registered; H70.1, H70.2, H70.4 held, H70.3 neither"
+ },
+ {
+  "id": "C37",
+  "title": "two regimes",
+  "state": "Refuted",
+  "note": "STRUCTURED HALF SUPPORTED as a leading-component law; DEGENERATE HALF REFUTED; Spike 69, pre-registered with predictions"
  }
 ]

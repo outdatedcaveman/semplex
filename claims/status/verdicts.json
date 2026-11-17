@@ -734,5 +734,93 @@
   "verdict": "HELD",
   "measured": "probe c mod 2 = 0.54",
   "bar": "<= 0.60"
+ },
+ {
+  "key": "69:H69.1",
+  "spike": "69",
+  "id": "H69.1",
+  "verdict": "BROKEN",
+  "measured": "rho_predictive >= 0.6 in 36%",
+  "bar": "held >= 0.8"
+ },
+ {
+  "key": "69:H69.2",
+  "spike": "69",
+  "id": "H69.2",
+  "verdict": "BROKEN",
+  "measured": "predictive > one-step in 31%",
+  "bar": "held >= 0.8"
+ },
+ {
+  "key": "69:H69.3",
+  "spike": "69",
+  "id": "H69.3",
+  "verdict": "HELD",
+  "measured": "top isotypic component best in 85% (29/34)",
+  "bar": ">= 0.8"
+ },
+ {
+  "key": "69:H69.4",
+  "spike": "69",
+  "id": "H69.4",
+  "verdict": "BROKEN",
+  "measured": "minimal faithful best in 39% of degenerate runs",
+  "bar": "held >= 0.8, broken < 0.5"
+ },
+ {
+  "key": "69:H69.5",
+  "spike": "69",
+  "id": "H69.5",
+  "verdict": "NEITHER",
+  "measured": "ties to faithful 55%",
+  "bar": "held >= 0.8, broken < 0.5"
+ },
+ {
+  "key": "69:H69.6",
+  "spike": "69",
+  "id": "H69.6",
+  "verdict": "BROKEN",
+  "measured": "ties to lowest dimension 45%",
+  "bar": "held >= 0.8, broken < 0.5"
+ },
+ {
+  "key": "69:H69.7",
+  "spike": "69",
+  "id": "H69.7",
+  "verdict": "NEITHER",
+  "measured": "law 67%, bias 33% on discriminating cases",
+  "bar": "law >= 0.8 held; bias >= 0.5 broken"
+ },
+ {
+  "key": "70:H70.1",
+  "spike": "70",
+  "id": "H70.1",
+  "verdict": "HELD",
+  "measured": "AXIS R2_1 > R2_2 and >= 0.2 in 5/5",
+  "bar": ">= 80%"
+ },
+ {
+  "key": "70:H70.2",
+  "spike": "70",
+  "id": "H70.2",
+  "verdict": "HELD",
+  "measured": "sign probe 1.000 in 5/5 (unbalanced; balanced 1.0 exploratory)",
+  "bar": ">= 0.9 in 80%"
+ },
+ {
+  "key": "70:H70.3",
+  "spike": "70",
+  "id": "H70.3",
+  "verdict": "NEITHER",
+  "measured": "swap match AXIS 0.04, SIGN 0.00",
+  "bar": "AXIS >= 0.9 and SIGN <= 0.1"
+ },
+ {
+  "key": "70:H70.4",
+  "spike": "70",
+  "id": "H70.4",
+  "verdict": "HELD",
+  "measured": "SIGN degree-1 in 5/5",
+  "bar": ">= 80%"
  }
 ]

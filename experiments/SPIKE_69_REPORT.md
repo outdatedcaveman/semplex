@@ -1,6 +1,6 @@
 # Spike 69: The two-regime law (C37), registered with the predictive kernel's structure computed beforehand
 
-**Date:** 2026-11-17 · **Status:** pre-registered (predictions in `results/spike69_predictions.json`, committed with this report before any run) · **Follows:** Spike 66 (P199–P200), where the identity readout made the predictive kernel exactly diagonal and that degeneracy was not checked before registration. Also follows Spike 62 (the predictive-state law) and the S4_6 anomaly (Spikes 60, 66). **Conjectures:** C37; the predictive-state law; the S4_6 anomaly.
+**Date:** 2026-11-17 · **Status:** complete (pre-registered with predictions in 2335972; results below) · **Follows:** Spike 66 (P199–P200), where the identity readout made the predictive kernel exactly diagonal and that degeneracy was not checked before registration. Also follows Spike 62 (the predictive-state law) and the S4_6 anomaly (Spikes 60, 66). **Conjectures:** C37; the predictive-state law; the S4_6 anomaly.
 
 ## What changed since Spike 66
 
@@ -104,3 +104,58 @@ python -m experiments.spike69 predict
 python -m experiments.spike69 run
 python -m experiments.spike69 analyse
 ```
+
+## Results
+
+`experiments/results/spike69.json`; per-run outputs in `spike69_raw/`. 82 of 85 runs fit. Z8_id seeds 0 and 4 reached 0.92–0.95, and Z9_013 seed 0 reached 0.63. All 17 automata qualify.
+
+| Automaton | Class | Prediction | Best irreducible (fitted runs) | Median ρ_pred | Median ρ_one-step |
+|---|---|---|---|---|---|
+| Z8_id | degenerate | k = ±1 or ±3 | k = ±1 (r3) 3/3 | 0.00 | 0.39 |
+| S3_id | degenerate | std | sign 3/5, std 2/5 | 0.27 | 0.39 |
+| A4_id | degenerate | χ₃ | **ω-pair 5/5** | 0.29 | 0.22 |
+| D4_id | degenerate | 2-dim faithful | 2-dim 4/5, 1-dim 1/5 | 0.20 | 0.25 |
+| Q8_id | degenerate | quaternionic | **1-dim r0 5/5** (both generators ↦ −1: word-length parity) | −0.06 | 0.18 |
+| D4_4 | tie | {2-dim r2, 1-dim r0} | 1-dim r0 5/5 | 0.79 | 0.61 |
+| **A4_6** | unique | ω-pair | **ω-pair 5/5** | 0.74 | 0.50 |
+| **Z7_02** | unique | k = ±3 | **k = ±1 5/5** | 0.10 | 0.61 |
+| Z9_013 | unique | k = ±1 | k = ±1 4/4 | 0.49 | 0.47 |
+| **Z8_014** | unique | k = ±2 | **k = ±2 5/5** | 0.56 | 0.86 |
+| Z4xZ2 | unique | r2 | r2 5/5 | 0.82 | 0.73 |
+| V4_01 | unique | r0 | r0 5/5 | 0.77 | 0.85 |
+| Z33_sub | tie (reported) | {r1, r2, r3} | r2 4/5, r1 1/5 | 0.43 | 0.80 |
+| Q8_sub | unique | quaternionic | quaternionic 5/5 | 0.29 | 0.88 |
+| S4_6 | tie | {std, χ₂} | std 5/5 | 0.46 | 0.57 |
+| S4_6cox | tie | {std, χ₂} | **χ₂ 4/5**, std 1/5 | 0.54 | 0.58 |
+| S4_6c3 | tie | {std, χ₂} | std 5/5 | 0.31 | 0.56 |
+
+| ID | Measured | Criterion | Verdict |
+|---|---|---|---|
+| H69.1 | ρ_predictive ≥ 0.6 in 36% of fitted structured runs | ≥ 80% held, < 50% broken | **BROKEN** |
+| H69.2 | ρ_predictive > ρ_onestep in 31% | ≥ 80% held, < 50% broken | **BROKEN** |
+| H69.3 | best irreducible = the kernel's top isotypic component in 85% of fitted unique runs (29/34) | ≥ 80% | **HELD** |
+| H69.4 | best irreducible minimal faithful in 39% of fitted degenerate runs (9/23) | ≥ 80% held, < 50% broken | **BROKEN** |
+| H69.5 | ties broken toward the faithful constituent in 55% (11/20) | ≥ 80% held, < 50% broken | **NEITHER** |
+| H69.6 | ties broken toward the lowest dimension in 45% (9/20) | ≥ 80% held, < 50% broken | **BROKEN** |
+| H69.7 | discriminating cases: law best in 67% (A4_6 5/5, Z8_014 5/5, Z7_02 0/5); bias best in 33% | law ≥ 80% held; bias ≥ 50% broken | **NEITHER** |
+
+**Reading:**
+- **The predictive law decides the dominant constituent, not the whole geometry.** Where the predictive kernel has a unique top isotypic component, networks build that constituent in 29 of 34 runs. This holds even when it is unfaithful and the architectural alternative is smoother:
+  - **A4_6:** the ω-pair, with kernel V₄, against χ₃;
+  - **Z8_014:** frequency k = ±2, which cannot tell c from c + 4, against the k = ±1 circle.
+
+  But the full Gram does not match the full kernel (H69.1–H69.2 broken). The one-step output kernel often fits better, so the secondary structure is not predictive in this sense. The law is a statement about the *leading isotypic component*.
+- **The S4_6 anomaly does not generalise.** In A4_6, where the kernel is not tied, networks follow the kernel to the unfaithful constituent in 5/5 runs. Within S₄ the tie is broken by the *letters*. With (01), (0123) and with (012), (0123), the networks use std (5/5 each). With the Coxeter transpositions (01), (12), (23), they use χ₂ (4/5). Same group, same readout, same predictive energy: the choice depends on the generating set. So the tie-break is dynamical, not a preference for faithfulness (H69.5 neither) or for low dimension (H69.6 broken).
+
+  The registered "smoothness" index does not explain it either, since it predicts std for the Coxeter set. The anomaly is now reframed (equal-energy lemma, `charter/FOUNDATIONS.md` §11.4) and narrowed, but not explained.
+- **The degenerate regime is not "minimal faithful"** (H69.4 broken). With an identity readout, the dominant geometry depends on the group:
+  - ℤ/8 builds the k = 1 circle;
+  - D₄ builds its 2-dimensional faithful representation (4/5);
+  - Q₈ builds word-length parity (5/5);
+  - A₄ builds the ω-pair, which counts (0 1 2) letters mod 3 (5/5);
+  - S₃ splits between sign and std.
+
+  In three of the five groups the network's leading axis is a character of the abelianisation, a letter-counting quotient. This is post hoc. The architectural half of C37 needs a new conjecture: what decides which abelian count the network leads with.
+- **One unique prediction failed, and it failed toward the circle.** In Z7_02 the kernel put 81% of its energy on k = ±3, and every network built k = ±1. For cyclic counters, the inc letter's smooth circle can override a strong predictive preference. In Z8_014 (90%, unfaithful k = 2) it did not.
+
+**Status of C37.** The structured half is supported in the form "leading constituent = top isotypic component of the predictive kernel" (H69.3), with one cyclic exception. The degenerate half, as registered, is refuted. Ties are broken by the generating set.

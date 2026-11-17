@@ -1115,6 +1115,115 @@
     "P199",
     "P200"
    ]
+  },
+  {
+   "spike": "69",
+   "date": "2026-11-17",
+   "commit": "2335972",
+   "question": "Formal two-regime test of C37 with predictive-kernel structure (tau) computed beforehand; S4_6 anomaly variants",
+   "overall": "MIXED",
+   "verdicts": [
+    {
+     "id": "H69.1",
+     "verdict": "BROKEN",
+     "measured": "rho_predictive >= 0.6 in 36%",
+     "bar": "held >= 0.8"
+    },
+    {
+     "id": "H69.2",
+     "verdict": "BROKEN",
+     "measured": "predictive > one-step in 31%",
+     "bar": "held >= 0.8"
+    },
+    {
+     "id": "H69.3",
+     "verdict": "HELD",
+     "measured": "top isotypic component best in 85% (29/34)",
+     "bar": ">= 0.8"
+    },
+    {
+     "id": "H69.4",
+     "verdict": "BROKEN",
+     "measured": "minimal faithful best in 39% of degenerate runs",
+     "bar": "held >= 0.8, broken < 0.5"
+    },
+    {
+     "id": "H69.5",
+     "verdict": "NEITHER",
+     "measured": "ties to faithful 55%",
+     "bar": "held >= 0.8, broken < 0.5"
+    },
+    {
+     "id": "H69.6",
+     "verdict": "BROKEN",
+     "measured": "ties to lowest dimension 45%",
+     "bar": "held >= 0.8, broken < 0.5"
+    },
+    {
+     "id": "H69.7",
+     "verdict": "NEITHER",
+     "measured": "law 67%, bias 33% on discriminating cases",
+     "bar": "law >= 0.8 held; bias >= 0.5 broken"
+    }
+   ],
+   "learned": "The predictive kernel's top isotypic component decides the leading constituent of the learned geometry, even when unfaithful (A4 on pairs, Z8 via {0,1,4}); the full Gram is not the kernel. Identity readouts do not give minimal faithful geometry (abelian counts lead in Q8, A4, S3). Permutation-readout ties have equal energy (proved) and are broken by the generating set, so the S4_6 anomaly is dynamical and does not generalise.",
+   "gaps_moved": [
+    {
+     "gap": "A12",
+     "from": "PARTIAL",
+     "to": "PARTIAL",
+     "why": "Geometry law narrowed to the leading isotypic component (P201); degenerate regime and ties open (P202)"
+    }
+   ],
+   "claims": [
+    "P201",
+    "P202"
+   ]
+  },
+  {
+   "spike": "70",
+   "date": "2026-11-17",
+   "commit": "9f126ec",
+   "question": "Direction vs axis with a passable guard: does the network lift to the double cover (C36)?",
+   "overall": "HELD",
+   "verdicts": [
+    {
+     "id": "H70.1",
+     "verdict": "HELD",
+     "measured": "AXIS R2_1 > R2_2 and >= 0.2 in 5/5",
+     "bar": ">= 80%"
+    },
+    {
+     "id": "H70.2",
+     "verdict": "HELD",
+     "measured": "sign probe 1.000 in 5/5 (unbalanced; balanced 1.0 exploratory)",
+     "bar": ">= 0.9 in 80%"
+    },
+    {
+     "id": "H70.3",
+     "verdict": "NEITHER",
+     "measured": "swap match AXIS 0.04, SIGN 0.00",
+     "bar": "AXIS >= 0.9 and SIGN <= 0.1"
+    },
+    {
+     "id": "H70.4",
+     "verdict": "HELD",
+     "measured": "SIGN degree-1 in 5/5",
+     "bar": ">= 80%"
+    }
+   ],
+   "learned": "Networks asked only for the axis build the double cover S2 (signed direction), not the minimal quotient RP2: continuous closure keeps a bit the readout cannot see when dropping it would break linearity of the dynamics.",
+   "gaps_moved": [
+    {
+     "gap": "A12",
+     "from": "PARTIAL",
+     "to": "PARTIAL",
+     "why": "C36 linearising cover supported (P203)"
+    }
+   ],
+   "claims": [
+    "P203"
+   ]
   }
  ]
 }

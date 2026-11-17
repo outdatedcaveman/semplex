@@ -248,5 +248,25 @@
   "learned": "The predictive-state law is not universal: for identity-only readouts it predicts equidistant states, but networks build compact structured geometry. Closure discards the unobservable part exactly: a mod-3 readout of a mod-6 counter leaves no trace of the 2-part. The S4 6-point anomaly replicates.",
   "moved": "A12: PARTIAL → PARTIAL (Geometry law: two regimes (C37); closure confirmed arithmetically)",
   "claims": "P199 P200"
+ },
+ {
+  "spike": "69",
+  "date": "2026-11-17",
+  "commit": "2335972",
+  "question": "Formal two-regime test of C37 with predictive-kernel structure (tau) computed beforehand; S4_6 anomaly variants",
+  "overall": "MIXED",
+  "learned": "The predictive kernel's top isotypic component decides the leading constituent of the learned geometry, even when unfaithful (A4 on pairs, Z8 via {0,1,4}); the full Gram is not the kernel. Identity readouts do not give minimal faithful geometry (abelian counts lead in Q8, A4, S3). Permutation-readout ties have equal energy (proved) and are broken by the generating set, so the S4_6 anomaly is dynamical and does not generalise.",
+  "moved": "A12: PARTIAL → PARTIAL (Geometry law narrowed to the leading isotypic component (P201); degenerate regime and ties open (P202))",
+  "claims": "P201 P202"
+ },
+ {
+  "spike": "70",
+  "date": "2026-11-17",
+  "commit": "9f126ec",
+  "question": "Direction vs axis with a passable guard: does the network lift to the double cover (C36)?",
+  "overall": "HELD",
+  "learned": "Networks asked only for the axis build the double cover S2 (signed direction), not the minimal quotient RP2: continuous closure keeps a bit the readout cannot see when dropping it would break linearity of the dynamics.",
+  "moved": "A12: PARTIAL → PARTIAL (C36 linearising cover supported (P203))",
+  "claims": "P203"
  }
 ]

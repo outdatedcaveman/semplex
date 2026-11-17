@@ -1,0 +1,17 @@
+{
+ "automaton": "Q8_sub",
+ "seed": 7033,
+ "fit": 1.0,
+ "probe_macro": 1.0,
+ "n_macro": 8,
+ "elements_seen": 8,
+ "rho_predictive": 0.35867954380159517,
+ "rho_onestep": 0.8787967037583381,
+ "irrep_scores": {
+  "r0_tr1_ker4": 0.060573798476471825,
+  "r1_tr1_ker4": -0.2843427624753786,
+  "r2_tr4_ker1": 0.33570651255423034,
+  "r3_tr1_ker4": -0.31450118528039367
+ },
+ "best_irrep": "r2_tr4_ker1"
+}
