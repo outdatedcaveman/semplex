@@ -1,6 +1,6 @@
-# Lean Lean (version 4.12.0, x86_64-unknown-linux-gnu, commit dc2533473114, Release)
-# compiled Cerp.lean: OK, no errors, no warnings-as-errors
-# the word "sorry" occurs once in Cerp.lean: in the header comment stating that none is used; the axiom audit below confirms no sorryAx
+# Lean (version 4.12.0, x86_64-unknown-linux-gnu, commit dc2533473114, Release)
+# Cerp.lean compiled with no errors; Audit.lean exit 0; occurrences of the word 'sorry' in Cerp.lean: 1 (comments only; the audit below shows no sorryAx)
+# regenerated 2026-11-17 by the project audit
 'Cerp.decideEquiv_correct' depends on axioms: [propext, Quot.sound]
 'Cerp.decideTask_correct' depends on axioms: [propext, Quot.sound]
 'Cerp.eval_congr' depends on axioms: [propext]
@@ -9,3 +9,13 @@
 'Cerp.rup_sound' depends on axioms: [propext, Quot.sound]
 'Cerp.checkAll_sound' depends on axioms: [propext, Quot.sound]
 'Cerp.unsat_of_certificate' depends on axioms: [propext, Quot.sound]
+'Cerp.tseitinEncode_sound' depends on axioms: [propext, Quot.sound]
+'Cerp.tseitinEncode_complete' depends on axioms: [propext, Quot.sound]
+'Cerp.tseitinMiter_unsat_implies_equiv' depends on axioms: [propext, Quot.sound]
+'Cerp.checkLrat_sound' depends on axioms: [propext, Quot.sound]
+'Cerp.tseitinMiter_lrat_unsat_implies_equiv' depends on axioms: [propext, Quot.sound]
+'Cerp.evalTNetFrom_congr' depends on axioms: [propext, Quot.sound]
+'Cerp.decideTNetEquivExpr_correct' depends on axioms: [propext, Quot.sound]
+'Cerp.eval_pbToExpr' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Cerp.tseitinTNetGo_complete' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Cerp.tseitinTNetMiter_lrat_unsat_implies_equiv' depends on axioms: [propext, Classical.choice, Quot.sound]

@@ -54,8 +54,6 @@ def main():
             rep = inquire(Interface(world, acts, seed=700 + seed), cands, seed=seed, queries=queries,
                           generate_on_refutation=True, max_rounds=40)
             proposed = [p for g in rep["generations"] for p in g["proposed"]]
-            canon = {n: c for g in rep["generations"] for n, c in zip(g["proposed"], g.get("canon", []))}
-            surv_canon = []
             gen_structs = rep.get("generated_structures", {})
             true_proposed = any(canon_of_structure(gen_structs[n]) == true_canon for n in proposed)
             true_survived = any(canon_of_structure(gen_structs[n]) == true_canon

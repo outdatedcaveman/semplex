@@ -22,7 +22,6 @@ from . import kernel
 from .bdd import normal_form
 from .ledger import Ledger
 from .resources import dominates, pareto_front
-from .semantics import TruthTable
 from .substrates import cost, expr_vars, semantics
 from .sufficiency import (MAX_SUFFICIENCY_VARS, insufficiency_witness,
                           minimal_sufficient_sets, project)

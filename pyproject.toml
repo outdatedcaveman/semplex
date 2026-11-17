@@ -4,6 +4,15 @@ version = "0.1.0"
 requires-python = ">=3.10"
 dependencies = ["numpy"]
 
+[project.optional-dependencies]
+# solver families (cerp.netsolve, Spikes 08b/11/13/16)
+solver = ["ortools"]
+# rule-learning experiments (cerp.localrules, Spikes 10b/10c/16)
+learning = ["jax"]
+# Spike 14b real-data case study
+data = ["scikit-learn"]
+test = ["pytest", "ortools", "jax"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 markers = [

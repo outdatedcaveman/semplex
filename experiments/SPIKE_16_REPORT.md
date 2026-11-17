@@ -1,8 +1,8 @@
 # Spike 16 Report — Width-Coarsening (`H-D`), XOR6 Grokking (`H-C`), Depth-3 Separation (`H-E`), and Scaled `ur_compiler` Benchmarks
 
 **Date:** 2026-11-13  
-**Script:** [spike16_scale_and_coarsening.py](file:///C:/Users/bruno/Claude%20Code/semplex/experiments/spike16_scale_and_coarsening.py)  
-**Raw output:** [spike16_results.json](file:///C:/Users/bruno/Claude%20Code/semplex/experiments/spike16_results.json)  
+**Script:** [spike16_scale_and_coarsening.py](spike16_scale_and_coarsening.py)  
+**Raw output:** [results/spike16_scale_and_coarsening.json](results/spike16_scale_and_coarsening.json)  
 **Trust status:** Untrusted empirical runs (JAX 0.12.0.1 + OR-Tools CP-SAT 9.15.6755 in `%TEMP%\semplex_extras_venv`), except where noted as Lean-certified.
 
 ---
@@ -57,7 +57,7 @@ Trained 64-wide `tanh` MLPs on `XOR6` ($n = 6$, 64 total points) for 3,000 Adam 
 
 Using `cerp.netsolve.solve` (OR-Tools CP-SAT, bounded integer weights `|w| <= 4`):
 - `parity4` in depth-2 `[3, 1]` (4 neurons total): **`unsat`** in `13.985s` (supports tightness of `Bounds.lean` `parity4_not_two_halfspaces`; unbounded $\mathbb{R}^4$ Lean mechanization still faces the $\binom{1882}{3} \approx 1.1\times 10^9$ canonical-LTF enumeration barrier without $B_4$ symmetry reduction or a hyperplane-slicing theorem).
-- `parity5` in **depth-3 chain `chain(5, 3)`** (**3 total neurons**): **`sat`** in `0.596s` (explicit witness saved in [spike16_results.json](file:///C:/Users/bruno/Claude%20Code/semplex/experiments/spike16_results.json)).
+- `parity5` in **depth-3 chain `chain(5, 3)`** (**3 total neurons**): **`sat`** in `0.596s` (explicit witness saved in [results/spike16_scale_and_coarsening.json](results/spike16_scale_and_coarsening.json)).
 - `parity5` in `layered(5, [2, 2, 1], skip=True)` (depth-3, width-2 with skip): **`sat`** in `0.766s`.
 - `parity5` in depth-2 `[3, 1]` (4 neurons, `W=4`): **`unsat`** in `17.539s`.
 - `parity5` in depth-2 `[4, 1]` (5 neurons, `W=4`): **`unknown`** at `25.038s` timeout.

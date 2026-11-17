@@ -161,7 +161,7 @@ code ≠ code), **E** inefficient, **N** no longer needed. Status column is fill
 | B6 | `compile_multi_profile_factored` | Output soundness label ignores the decoder's own label; for wide inputs a sampled decoder can sit under a label that does not say so. | Code path; J3 |
 | B7 | `atlas.build_all` cache | Pickle cache is keyed only by `m_max`; after any change to `atlas.py` the old tables (the basis of every "optimal" claim) are silently reused. | Code path; J4 |
 | B8 | `HANDOFF_CLAUDE.md`, `experiments/SPIKE_16_REPORT.md` | Links point to `file:///C:/Users/bruno/...`; broken for anyone else and on GitHub. | grep |
-| B9 | `pyproject.toml` | Declares only `numpy`; tests and experiments also need `ortools`, `jax`, `pytest`, and Spike 14b needs `scikit-learn`. Without them, test modules error at import instead of skipping. | J9 |
+| B9 | `pyproject.toml` | Declares only `numpy`; tests and experiments also need `ortools`, `jax`, `pytest`, and Spike 14b needs `scikit-learn`. *(Correction after checking: the tests already `importorskip` jax and netsolve, so they skip cleanly; only the declared dependencies were wrong.)* | J9 |
 
 ### Inconsistent
 
@@ -210,4 +210,86 @@ code ≠ code), **E** inefficient, **N** no longer needed. Status column is fill
 
 ## Part 3 — What was changed
 
-(Filled in after the fixes; see below.)
+Test suite after the fixes, with Lean: **135 passed, 0 failed** (was 130 passed, 1 failed; 4 new
+regression tests). All three Lean files compile; all 81 audited theorems use at most
+`propext`, `Quot.sound`, `Classical.choice`, and none uses `sorryAx`. `pyflakes` is clean over
+`cerp/`, `tests/` and `experiments/`.
+
+### Fixed
+
+| id | Fix | How it is checked |
+|---|---|---|
+| B1 | Test now compares the returned rule with backprop on the same 4 fresh networks (`found ≥ backprop − 0.05`, `backprop ≥ 0.85`). On those draws backprop scores 0.92, no learning 0.30, negated backprop 0.00, so the test still discriminates. | passes; P076 and THEORY §7.5 corrected |
+| B2, B3 | `_lean_certify_equiv` takes the spec function and builds the reference from **it** (n ≤ 12), never from the compiled expression. With no spec it returns `ok: False, status: "no-reference"`. `compile_unified` passes `spec_fn` for `f0` and `continuous`. | `test_lean_certificate_needs_a_specification`; Lean test `test_lrat_miter_equiv_and_ur_compiler_certify_lean` still passes, now as a real spec check |
+| B4 | SAT timeout returns `"unknown"`; the split keeps its `sampled(k)` label. | `test_cegar_timeout_is_not_a_proof` (fails on the old code) |
+| B5, E1 | `lts` and `stochastic_lts` share `_compile_lts_steps`. Each output now has a kernel `table` node; links are `spec → table` (`distills`, basis `exact-uncertified`, the binary encoding stated as a condition), `table → expr` and `expr → net` (`extensional`, **kernel-checked when built**, exhaustive certificate). The spec node now contains the transitions. CSIR accepts every kind the kernel can evaluate (`F0_KINDS`, asserted equal to `kernel._EVAL`). `continuous` also kernel-checks its expr ↔ circuit link. | `test_lts_bundle_claims_only_what_the_kernel_rechecks`: all kernel-checked links re-verify from the bundle; flipping one table bit makes `recheck` report `FAILED` |
+| — | New `threshold_net_to_dnet`: Ur-Compiler threshold nets are now checkable by the trusted Python kernel, not only by Lean. | `test_threshold_net_is_checked_by_the_python_kernel` |
+| B6 | Multi-output soundness combines the split, decoder and encoder labels (`_combine_soundness`, also used by the single-output path). | code |
+| B7 | Atlas cache file name includes a hash of `atlas.py`; older cache files are deleted when a new one is written. | rebuild observed after the edit |
+| B8 | `file:///C:/...` links replaced by repository-relative links. | grep |
+| B9 | `pyproject.toml` declares extras `solver`, `learning`, `data`, `test`; README install line updated. | — |
+| I1 | Lean docstring, THEORY §7.3 and P073 now say what is proved: one direction, no faithfulness hypothesis, a corollary of Theorem 3. | Lean recompiled |
+| I2 | THEORY Prop 14 cites its Lean core lemma; the Lean comment no longer calls it "Theorem 13". | — |
+| I3 | THEORY §6: "C1 and C3 have partial Lean results but remain open in general". | — |
+| I4 | README updated through Spike 16 and the audit; layout table lists every module. | — |
+| I5, N4 | ROADMAP split into "Done (chronological)" and "Open"; duplicate and superseded rows removed; missing reports listed as open work. | — |
+| I6 | `proofs/lean/README.md` updated; the three check logs regenerated from this run (18 + 54 + 9 lines). | — |
+| I7 | `Audit.lean` now also audits `tseitinEncode_sound`, `tseitinEncode_complete`, `tseitinMiter_unsat_implies_equiv`, `tseitinTNetGo_complete`. | standard axioms only |
+| I8 | Kernel, ledger and bridge docstrings corrected; the bridge docstring now lists, per route, exactly what is trusted. | — |
+| I9 | P078 says "bounded-weight evidence, not a proof"; P076 says "deterministic, not intermittent". | — |
+| I10 | `spike16_results.json` moved to `experiments/results/spike16_scale_and_coarsening.json` (script and report updated). Missing reports recorded in ROADMAP "Open". | — |
+| I11 | `cerp/epistemics.py` → `cerp/epistemics/` in HANDOFF and ROADMAP. | — |
+| E2 | Dead branches and assignments removed from `ur_compiler.py`; `_fn_from_expr` (now unused) removed. | — |
+| E3 | `lean_bridge.version()` cached per binary. | — |
+| E7 | `crunch.py` uses a plain lazy import. | — |
+| N1 | Unused imports/variables removed in `cerp/`, `tests/`, `experiments/`. | `pyflakes` clean |
+
+### Left for you to review
+
+These are either judgment calls about the research, or changes I could not make safely
+without your input.
+
+1. **I13: novelty claim in `LITERATURE_REVIEW.md` §3c.** The "genuine original niche" combines
+   classical results: the TV data-processing inequality, Ville's inequality (1939), finite
+   optional stopping, and a definitional quotient. I would reword it to "new as one Lean
+   development connected to running code" and drop "original mathematical niche".
+   *Recommendation: reword.*
+2. **I12: references.** `Ramdas23` names a body of work, not a source. "Web search summary" is
+   not a level in the REFERENCES scale. *Recommendation: split into concrete papers (Ville 1939;
+   Shafer–Vovk; Ramdas et al. on e-processes) and relabel them META or ABSTRACT.*
+3. **I14: `continuous` eps_bound.** `L·√d·2^-bits` does not bound any stated error. Grid points
+   are `i/(2^bits−1)`; there is no rule for mapping an input to a grid point; a Lipschitz bound
+   on `f` says nothing about errors of `[f ≥ θ]` near θ. *Recommendation: define rounding to the
+   nearest grid point, report the bound as "|f(x) − f(grid(x))| ≤ L·√d/(2(2^bits−1))", and stop
+   calling it a classification error bound.* The adaptive subdivision itself is sound, given a
+   true Lipschitz constant.
+4. **THEORY §7.2 says the Markov-kernel theorems "ground" the `stochastic_lts` T-step bound.**
+   The code's bound is `T·(1 − max p)` (a union bound over steps), which does not use the
+   data-processing inequality. *Recommendation: connect them in Lean (coupling lemma), or
+   say "motivates" instead of "grounds".*
+5. **I15: net rendering is not round-tripped.** Lean checks a `TNode` list that is never
+   compared with the Python net. Fixing it needs a `TNode.render` in `Cerp.lean` (small).
+   Until then the Python-kernel check added here (`threshold_net_to_dnet`) is the independent
+   cross-check. *Recommendation: add the render (WP-A territory).*
+6. **I16: field name `atlas_min_neurons`** holds an upper bound on composed nodes (a sum of
+   leaf optima). Renaming it changes test assertions and recorded JSON. *Recommendation:
+   rename to `neuron_ub` in a separate commit.*
+7. **E4: `sat.rup_to_lrat`** rescans the clause database for each propagation. It is the next
+   bottleneck after `pbToExpr` for larger LRAT proofs. *Recommendation: use watched literals
+   when WP-A starts.*
+8. **E5: `csir.distill_causal_rule`** scans the full joint distribution per feature row.
+   Fine now; marginalize once if models grow.
+9. **N2: failed meta-learning code** (`localrules.meta_learn`, `localrules.normalisation`,
+   `learnrules.meta_learn_local`). Superseded by `cem_search`, but the Spike 10b scripts that
+   regenerate published numbers import it. *Recommendation: keep, and mark as historical.*
+10. **N3: `cerp/train.py` overlaps `cerp/learnrules.py`** (n=4 special case). Both are used.
+    *Recommendation: leave as is unless Spike 09 is rerun.*
+11. **N5: ADR-0002's "revisit at 300 lines"** trigger has fired (kernel ~470 lines, plus two
+    sibling kernels). The trusted base has grown with each spike. *Recommendation: write
+    ADR-0005 that either accepts the size (each addition is a small, independent checker) or
+    moves the newer checks behind Lean.*
+12. **Missing reports** for Spikes 12, 13b, 14b and 15. Their numbers live only in the register
+    and JSON.
+13. **Earlier spike reports are not rewritten.** For example, `SPIKE_01_REPORT.md` says the
+    kernel is 220 lines and `SPIKE_08_REPORT.md` predates the 08b/09 corrections. Reports are
+    records of what was known then; corrections live in later reports and in the register.

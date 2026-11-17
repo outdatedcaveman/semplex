@@ -483,7 +483,7 @@ end PFT
 
 namespace PFT
 
-/-- Theorem 13 (symmetry gap, core). A quantity that is unchanged when a unit's
+/-- Core lemma of Proposition 14 in THEORY.md (symmetry gap). A quantity that is unchanged when a unit's
     sign is flipped cannot equal one that changes sign, unless the latter is zero.
     Applied to learning rules: every monomial in which a hidden index occurs an
     even number of times is unchanged by flipping that unit, so no combination
@@ -1333,10 +1333,12 @@ theorem indist_implies_pragEquiv {H : Type u1} {P : Type u2} {S : Type u3} {Act 
     (hi : Indist rep Ω h₁ h₂) : PragEquiv rep interp Ω h₁ h₂ :=
   fun p hp => congrArg (interp p) (hi p hp)
 
-/-- Peirce's Pragmatic Maxim in PFT:
-    An action/task query `q : H → Act` is determined by the sign-interpretant
-    pipeline iff it conflicts nowhere within `PragEquiv` classes; and when `interp`
-    is faithful on `Ω`, pragmatic determination coincides with representamen determination. -/
+/-- "Pragmatic maxim" in PFT (named after Peirce; the content is PFT's own):
+    (i) a query is determined by the sign-then-interpretant pipeline iff it hits every
+    conflict set of that pipeline (Theorem 3 applied to the composite observation);
+    (ii) pragmatic determination implies determination by the signs themselves.
+    Only this direction is proved. The converse needs `interp` to be injective on the
+    relevant signs and is NOT claimed here. -/
 theorem peirce_pragmatic_maxim {H : Type u1} {P : Type u2} {S : Type u3} {Act : Type u4}
     (rep : P → H → S) (interp : P → S → Act) (Ω : P → Prop)
     (Dom : H → Prop) (q : H → Act) :

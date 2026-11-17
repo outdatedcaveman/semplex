@@ -1,7 +1,7 @@
 """Trusted verification kernel, v0.
 
 This is the only module whose correctness the PROVED-IN-FRAGMENT label
-depends on. Design rules (enforced by tests/test_kernel_independence.py):
+depends on. Design rules (enforced by tests/test_kernel.py):
 
   * stdlib only; it must NOT import anything from the rest of `cerp`;
   * it re-implements its own tiny interpreters for every serialized
@@ -9,8 +9,10 @@ depends on. Design rules (enforced by tests/test_kernel_independence.py):
     cannot silently agree with itself;
   * it decides claims by exhaustive enumeration over a finite Boolean
     domain (n <= MAX_VARS), so for this fragment the decision procedure
-    *is* the proof. It does not check succinct certificates yet (see
-    experiments/SPIKE_01_REPORT.md, finding F3).
+    *is* the proof; beyond that it checks RUP certificates against its own
+    Tseitin miter (check_rup, Spike 03) and replays counterexamples.
+    LTS and lower-bound checks live in kernel_lts.py and kernel_bounds.py,
+    which share this file's Verdict token.
 
 Trusted base for a PROVED-IN-FRAGMENT verdict: this file + the CPython
 interpreter + the hardware. That is weaker than a proof-assistant kernel
@@ -31,6 +33,9 @@ Serialized artifact kinds (plain JSON-compatible data):
   bdd      {"kind": "bdd", "body": {"order": [names],
             "nodes": [[level, lo, hi], ...], "root": int}}
            Node 0 is FALSE, node 1 is TRUE (their entries are ignored).
+  tnet, table, dnet   strictly layered threshold nets, explicit truth tables,
+           and general feedforward step/ReLU nets; formats are documented
+           on _eval_tnet, _eval_table and _eval_dnet below.
 """
 
 from __future__ import annotations

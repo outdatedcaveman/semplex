@@ -22,39 +22,44 @@ Rules of thumb:
 
 ## Spike sequence
 
-| Spike | Fragment / focus | Main assumptions under test | Status |
+### Done (chronological)
+
+| Spike | Fragment / focus | Main assumptions under test | Report |
 |---|---|---|---|
-| **01** | F0: finite Boolean functions, 3 substrates | Canonical forms; untrusted translation + small verifier; task sufficiency; resource gain; status taxonomy | **done**, see `experiments/SPIKE_01_REPORT.md` |
-| **02** | World-facing sandbox: synthetic world with known latent structure | Natural semantics (§3.3); measurement maps; rival ontologies; evidence ledger; ontology revision (§3.4); "observation can hide causal difference" (§10) | **done**, see `experiments/SPIKE_02_REPORT.md` |
-| **02b** | Ontology *generation* when the closed world is refuted | Revision beyond elimination, without relativism (§1.3) | **done**, see `experiments/SPIKE_02b_REPORT.md` |
-| **03** | Succinct equivalence certificates (RUP) | Proof-carrying translation past the exhaustive wall (S01 F3) | **done**, see `experiments/SPIKE_03_REPORT.md` |
-| **04** | Status as structured warrant | §10 taxonomy as a partial order (S01 F7, S02 F8) | **done**, see `experiments/SPIKE_04_REPORT.md`, ADR-0004 |
-| **05** | F1: stateful systems (LTS) | Trace vs completed-trace vs bisimulation; "don't collapse into I/O functions" | **done**, see `experiments/SPIKE_05_REPORT.md` |
-| **06** | Kernel in a proof assistant (Lean 4) | Layer A: prove the kernel's decision procedures correct | **done**, see `experiments/SPIKE_06_REPORT.md` |
-| **T** | Protocol-Frame Theory | Unify the spikes formally | **v0.1 done**: `THEORY.md`, 11 theorems in `proofs/lean/Theory.lean` |
-| **08** | Periodic table of threshold circuits (n ≤ 4) + compiler v1 | Exhaustive, verifiable optimal circuits per function class; first layer as observational power | **done**, see `experiments/SPIKE_08_REPORT.md`, `atlas/` |
-| **07** | CSIR v0.1 extraction | One schema across fragments; composition along the relation order | **done**, see `experiments/SPIKE_07_REPORT.md` |
-| — | Bibliography verification | Charter §13: no unverified citations | **done**, see `charter/BIBLIOGRAPHY.md` (two corroborations, one discrepancy) |
+| **01** | F0: finite Boolean functions, 3 substrates | Canonical forms; untrusted translation + small verifier; task sufficiency; resource gain; status taxonomy | `experiments/SPIKE_01_REPORT.md` |
+| **02** | World-facing sandbox with known latent structure | Natural semantics (§3.3); rival ontologies; evidence ledger; revision (§3.4) | `experiments/SPIKE_02_REPORT.md` |
+| **02b** | Ontology *generation* when the closed world is refuted | Revision beyond elimination, without relativism (§1.3) | `experiments/SPIKE_02b_REPORT.md` |
+| **03** | Succinct equivalence certificates (RUP) | Proof-carrying translation past the exhaustive wall | `experiments/SPIKE_03_REPORT.md` |
+| **04** | Status as structured warrant | §10 taxonomy as a partial order | `experiments/SPIKE_04_REPORT.md`, ADR-0004 |
+| **05** | F1: stateful systems (LTS) | Trace vs completed-trace vs bisimulation | `experiments/SPIKE_05_REPORT.md` |
+| **06** | Kernel in Lean 4 | Prove the kernel's decision procedures correct | `experiments/SPIKE_06_REPORT.md` |
+| **07** | CSIR v0.1 | One schema across fragments; composition along the relation order | `experiments/SPIKE_07_REPORT.md` |
+| **T** | Protocol-Frame Theory | Unify the spikes formally | `THEORY.md`, `proofs/lean/Theory.lean` |
+| — | Bibliography verification, literature review | No unverified citations; novelty audit | `charter/BIBLIOGRAPHY.md`, `charter/REFERENCES.md`, `charter/LITERATURE_REVIEW.md` |
+| **08** | Periodic table of threshold circuits (n ≤ 4) + compiler v1 | Exact optimal circuits per function class | `experiments/SPIKE_08_REPORT.md`, `atlas/` |
+| **08b** | Atlas hardening | Certified lower bounds, skip/ReLU families, weight-space geometry, n=5 hunt | `experiments/SPIKE_08b_REPORT.md` |
+| **09** | Train small real networks against the atlas | Do learned circuits land on table optima | `experiments/SPIKE_09_REPORT.md` |
+| **10b** | Learning rules as observational powers | Task-blindness (Thm 12); volume prior | `experiments/SPIKE_10b_REPORT.md` |
+| **10c** | Rule search; learnability per rule dictionary | C6, C7 (H-A) | `experiments/SPIKE_10c_REPORT.md` |
+| **11** | H-B (volume law for mechanisms), H-D (coarser, not folded) | | `experiments/SPIKE_11_REPORT.md` |
+| **12** | Bridge: causal model → verified circuit (`csir.distill_causal_rule`) | Charter §8 steps 9–10 | no report; P060, `tests/test_csir.py` |
+| **13, 13b** | C1 statistical lift, H-C (grokking XOR6), H-E (depth separation) | | `experiments/SPIKE_13_REPORT.md` (13b: JSON only, `experiments/results/spike13b_hc_long.json`) |
+| **14, 14b** | First real case studies (PlayTennis, UCI breast cancer) | Charter §11.1 | `experiments/SPIKE_14_REPORT.md` (14b: JSON only, `experiments/results/spike14b_breast_cancer.json`) |
+| **15** | Ur-Compiler (profile factorization; F0/LTS/stochastic/continuous/causal) | H-G, H-H | no report; P068–P069, `experiments/results/spike15_ur_compiler.json` |
+| **16** | Lean §§17–19, `ThresholdNet` LRAT bridge, n=16 SAT-CEGAR, H-A/H-D/H-C/H-E scaling | | `experiments/SPIKE_16_REPORT.md`, `HANDOFF_CLAUDE.md` |
+| — | Project audit (2026-11-17) | Everything: broken, inconsistent, inefficient, unneeded | `AUDIT.md` |
 
-### Proposed next spikes
+### Open
 
-| Spike | Focus | Why now |
+| Item | Focus | Why |
 |---|---|---|
-| T2 | Theory conjectures C1–C5 (`THEORY.md` §5) | C1 (statistical lift) and C2 (limit representations) first: they decide whether the theory survives contact with finite data and with the long-run properties science cares about |
-| **08b** | Atlas hardening: certified lower bounds, skip/ReLU families, weight-space geometry, bit-flip theorem, n=5 hunt | See `experiments/SPIKE_08b_REPORT.md` | **done** (no depth-sensitive element among 100,000 five-input candidates) |
-| **09** | Train small real networks against the atlas | Do learned circuits land on table optima, and which isomer | **done**, see `experiments/SPIKE_09_REPORT.md` |
-| **10b** | Learning rules as observational powers; volume prior; grokking against ground truth | See `experiments/SPIKE_10b_REPORT.md`, `THEORY.md` §3.6 | **done**, except meta-learning of rules (failed four times; cause partly understood) |
-| — | Literature review and novelty audit | `charter/LITERATURE_REVIEW.md` | **done (first pass)**; redo against the Codex dossier and Cammarata's essay once accessible |
-| 11+ | New hypotheses H-B (volume law for mechanisms), H-D (clean vs superposed), H-C, H-E, H-F | Chosen because no prior work was found; each still needs its own prior-art gate |
-| **10c** | Rule search fixed; learnability per rule dictionary (H-A) | See `experiments/SPIKE_10c_REPORT.md` | **done**; results are lower bounds |
-| **16** | Prior-art closure (`charter/LITERATURE_REVIEW.md` §3c), Lean §§17–19 (`FrameHom`/DPI/Peirce/Ville), `ThresholdNet` LRAT bridge (`Cerp.lean` Part D), $n=16$ SAT-CEGAR + shared-encoder `ur_compiler`, `H-A`/`H-D`/`H-C`/`H-E` scaling | See `experiments/SPIKE_16_REPORT.md`, `HANDOFF_CLAUDE.md`, `proofs/lean/Theory.lean`, `proofs/lean/Cerp.lean` | **done** (empirics falsified wide `H-A` in favor of subspace `H-D`, found `wd=0.01` XOR6 collapse, isolated `O(2^d)` `pbToExpr` Lean kernel wall) |
-| (old 10c) | Fix rule meta-learning; settle C7 (= H-A) | Fixed long horizon or adjoint method; then find the least observational power per element |
-| (old 10b) | Grokking against ground truth | 5–6 inputs with a real held-out set: does the post-grokking function equal the table/solver optimum; score local learning rules (arXiv:2611.12248) the same way |
-| 08c | Periodic table, remaining parameters | In order: (1) certify lower bounds; (2) n=5 by class-level search, hunting the first depth-sensitive element; (3) skip connections and ReLU; (4) weight-space geometry (the manifold proper); (5) prove the one-bit-flip ≤ 2 conjecture |
-| 12 | Bridge: world-model ↔ executable artifact | CSIR has no link from a causal model to a circuit or program implementing its decision rule. This is the charter's §8 steps 9–10 (distill, then translate and verify) |
-| 09 | LRAT certificates | S03 F3: hint-carrying proofs should make checking linear (literature agrees, see `charter/BIBLIOGRAPHY.md`) |
-| 10 | Stress the epistemic agent | A non-parsimonious truth (S02b gap), cancelling paths (faithfulness premise), noisy interventions, more latents |
-| 11 | First non-synthetic case study | Charter §11.1: only after the measurement-adequacy protocol is clear, which S02/02b now make concrete |
+| WP-A | Linear-size pseudo-Boolean → CNF in `Cerp.lean` | `pbToExpr` is O(2^fan-in); pure-kernel LRAT stops at ~4 inputs (`HANDOFF_CLAUDE.md`) |
+| WP-B | Connect `ville_anytime_valid_bound` to a concrete sequential test in `cerp/epistemics/` | The Lean bound has no instance in running code |
+| WP-C | `parity4 ≥ 5` neurons for unbounded weights; depth-3 separation | Bounded-weight CP-SAT is evidence only |
+| WP-D | Symbolic (BDD/AIG) Ur-Compiler for n > 14 without dense tables | Current large-n path is sampled or SAT-CEGAR on given ASTs |
+| C7 | Least observational power per atlas element | Spike 10c search results are lower bounds |
+| — | Stress the epistemic agent | Non-parsimonious truth, cancelling paths (faithfulness), noisy interventions, more latents |
+| — | Reports for Spikes 12, 13b, 14b and 15 | Register cites them; only code, tests and JSON exist |
 
 ## Open questions carried forward
 
@@ -70,5 +75,5 @@ Rules of thumb:
 - **Q-A1** (S02 F2): a general recipe for calibrating adequacy tests of fitted predictors (bootstrap, e-values, or held-out refits).
 - **Q-LRAT-PB** (Spike 16): replace `O(2^d)` `Cerp.pbToExpr` Shannon trees with linear `O(d * w)` binary-adder PB->CNF in Lean so pure-kernel `by decide` LRAT scales past fan-in 4 (`xor4` >900s).
 - **Q-Bounds-Sym** (Spike 16): break the $\binom{1882}{3} \approx 1.1\times 10^9$ `parity4 >= 5` enumeration barrier in `Bounds.lean` via $B_4$ signed-permutation symmetry reduction or an algebraic hyperplane-slicing theorem.
-- **Q-OptStop-Connect** (Spike 16): instantiate `Theory.ville_anytime_valid_bound` directly on concrete sequential `QueryTree` / `cerp/epistemics.py` e-value processes and lift finite Markov-kernel DPI (`Fin n`) toward continuous state spaces.
+- **Q-OptStop-Connect** (Spike 16): instantiate `Theory.ville_anytime_valid_bound` directly on concrete sequential `QueryTree` / `cerp/epistemics/` e-value processes and lift finite Markov-kernel DPI (`Fin n`) toward continuous state spaces.
 - **Q-HD-Theory** (Spike 16): formalize why width coarsening shifts canonical profile representations from isolated units (`max_unit_corr`) to distributed linear subspaces (`R^2 = 0.9850`), and test SAT-CEGAR compiler scaling on ASTs beyond `n = 16` without dense tables.

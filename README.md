@@ -21,12 +21,15 @@ We build toward it **agilely**. Each step is a thin end-to-end *spike* that test
 
 **Spike 06 is done**: the kernel's deciders are *proved* correct in Lean 4, and concrete claims are checked by Lean's kernel through an audited bridge.
 
-**The theory: [`THEORY.md`](THEORY.md).** Protocol-Frame Theory unifies the spikes. Its 11 theorems are machine-checked in `proofs/lean/Theory.lean`:
+**The theory: [`THEORY.md`](THEORY.md).** Protocol-Frame Theory unifies the spikes. Theorems 1–12 (and the core of Proposition 14) are machine-checked in `proofs/lean/Theory.lean`, together with partial results for conjectures C1–C5 and §§17–19 (frame morphisms, finite Markov-kernel contraction, finite optional stopping and Ville's bound). Every audited theorem uses only `propext`, `Quot.sound` and `Classical.choice`:
 - representation, inquiry and testing are one hitting-set problem;
 - canonical objects are relative to observational power;
 - minimal representations are unique exactly when every distinction has a decisive protocol, and can fail to exist at all for tail properties;
 - honest abstention is sound and never flips;
-- the ledger's weakest-link rule is the optimal safe rule.
+- the ledger's weakest-link rule is the optimal safe rule;
+- a learning rule that cannot observe the task carries no information about it.
+
+A literature review (`charter/LITERATURE_REVIEW.md`) found prior work for most of this core; what is ours is the integration, the Lean development, kernel-checked certificates on running code, and the exact small-scale measurements.
 
 **Spike 08 is done: a verifiable periodic table of circuits** (`atlas/`, `experiments/SPIKE_08_REPORT.md`). For strictly layered threshold networks on up to 4 inputs, every function class has an exact minimum neuron count with a kernel-verified witness circuit, and a table-driven compiler returns provably optimal task circuits.
 
@@ -34,14 +37,18 @@ We build toward it **agilely**. Each step is a thin end-to-end *spike* that test
 
 **Spike 09** trains about 27,000 small real-valued networks against the table: on underspecified tasks, gradient descent picks a table-cheapest function in 88–95% of runs, but different seeds find different circuits (`experiments/SPIKE_09_REPORT.md`).
 
-**Spike 10b** treats learning rules as observers: systematic rule dictionaries by what a rule may see and by the layer's symmetry group, a Lean-proved task-blindness theorem, and evidence that the simplicity bias comes from weight space, not from the rule (`experiments/SPIKE_10b_REPORT.md`, `THEORY.md` §3.6).
+**Spikes 10b and 10c** treat learning rules as observers: rule dictionaries by what a rule may see and by the layer's symmetry group, a Lean-proved task-blindness theorem, and a search showing that a broadcast error with permutation symmetry suffices to learn all 222 four-input elements (`experiments/SPIKE_10b_REPORT.md`, `SPIKE_10c_REPORT.md`).
+
+**Spikes 11–16** (run from a second session; see `HANDOFF_CLAUDE.md`): mechanism volume and width compression (11), a causal model distilled to a kernel-verified circuit (12), statistical lift, grokking and depth separation (13), two real-data case studies (14), the **Ur-Compiler** (`cerp/ur_compiler.py`), which factors Boolean, LTS, stochastic, continuous and causal specifications into circuits and threshold nets with optional Lean LRAT certificates (15–16), and Lean §§17–19.
+
+**Audit (2026-11-17):** `AUDIT.md` maps how the pieces connect, where they can break, what was fixed, and what is left for review.
 
 All sources, with how far each was verified: `charter/REFERENCES.md`.
 
 ## Run it
 
 ```bash
-pip install pytest numpy ortools
+pip install numpy pytest ortools jax                    # see pyproject.toml extras; scikit-learn for spike 14b
 python -m pytest -m "not slow" -q                        # fast unit/integration loop (~23s)
 python -m pytest -q                                   # full suite including Lean (elan uses lean-toolchain 4.12.0) and slow sweeps
 python -m cerp.demo                                   # spike 01: redundant-sensor alarm, full ledger
@@ -60,19 +67,22 @@ python -m experiments.spike08                         # periodic table of circui
 | Path | Contents |
 |---|---|
 | `charter/` | The foundational brief (original .docx and markdown conversion) |
-| `cerp/kernel.py`, `cerp/kernel_lts.py` | **Trusted** kernels: stdlib only, independent interpreters, exhaustive decision, RUP checking, LTS certificate checks |
+| `cerp/kernel.py`, `cerp/kernel_lts.py`, `cerp/kernel_bounds.py` | **Trusted** kernels: stdlib only, independent interpreters, exhaustive decision, RUP checking, LTS certificate checks, lower-bound certificates |
 | `cerp/` (rest) | Untrusted machinery: semantics, substrates, BDD canonicalization, translators, sufficiency, resources, ledger, pipeline |
 | `cerp/epistemics/` | Spikes 02/02b: causal Bayes nets with latents, sandbox worlds (ground truth, agent may not import), rival ontologies, the inquiry loop, ontology generation |
 | `cerp/sat.py`, `cerp/lts.py`, `cerp/csir.py` | Spikes 03, 05, 07: untrusted CDCL solver, LTS algorithms, CSIR schema |
-| `cerp/atlas.py`, `atlas/` | Spike 08: circuit atlas builder and compiler; the generated tables |
+| `cerp/atlas.py`, `cerp/bounds.py`, `cerp/netsolve.py`, `cerp/geometry.py`, `cerp/crunch.py`, `atlas/` | Spikes 08/08b: circuit atlas builder and compiler, lower bounds, CP-SAT solver for other families, weight-space geometry, overnight jobs; the generated tables |
+| `cerp/train.py`, `cerp/learnrules.py`, `cerp/localrules.py` | Spikes 09–10c: training small nets, learning rules, rule dictionaries and search (JAX) |
+| `cerp/ur_compiler.py`, `cerp/lean_bridge.py` | Spikes 12–16: the Ur-Compiler and the Python ↔ Lean bridge |
 | `csir/examples/` | Example CSIR bundles from three fragments |
-| `proofs/lean/` | Lean 4 proofs: kernel deciders (`Cerp.lean`) and the theory (`Theory.lean`), with axiom audits |
+| `proofs/lean/` | Lean 4 proofs: kernel deciders, certificate checkers and threshold nets (`Cerp.lean`), the theory (`Theory.lean`), lower bounds (`Bounds.lean`), with axiom audits |
 | `THEORY.md` | Protocol-Frame Theory: definitions, theorems, conjectures |
 | `tests/` | Correctness and adversarial tests, including charter §12.1 criteria |
 | `experiments/` | Spike experiments, reports and raw results |
 | `claims/REGISTER.md` | Program-level claims, with honest status |
 | `decisions/` | Architecture decision records |
 | `ROADMAP.md` | Spike protocol and sequence |
+| `AUDIT.md` | Whole-project audit: architecture, failure points, fixes, open items |
 
 ## The one rule
 

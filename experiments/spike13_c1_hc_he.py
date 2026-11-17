@@ -62,7 +62,6 @@ def run_hc_grokking(scales=(0.5, 1.0, 1.5, 2.0), seeds=8, steps=600):
     care_mask[train_idx] = 1.0
     T = np.array([f_bits] * seeds, dtype=float)
     C = np.array([care_mask] * seeds, dtype=float)
-    full_mask = np.ones_like(T)
 
     rows = []
     for scale in scales:

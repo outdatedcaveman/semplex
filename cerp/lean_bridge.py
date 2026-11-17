@@ -15,9 +15,18 @@ Acceptance requires ALL of:
   * round trip: Lean renders the expressions it checked, and they must equal
     the bridge's own rendering of the source artifacts (translation faithfulness).
 
-Remaining trust, recorded in each warrant: the Lean 4 kernel; for the CNF
-route, the Python Tseitin encoder (cerp.kernel.miter_cnf) is NOT verified,
-so "unsat CNF" -> "equivalent circuits" is a bridge assumption.
+Routes and what each leaves trusted (besides the Lean 4 kernel):
+  prove_expr_claim             exhaustive decider in Lean; nothing else.
+  prove_cnf_unsat              proves only "this CNF is unsat"; reading that as
+                               "the circuits are equivalent" trusts the Python
+                               Tseitin encoder cerp.kernel.miter_cnf (unverified).
+  verify_expr_equiv_tseitin /  the Tseitin miter is built INSIDE Lean and proved
+  verify_expr_equiv_lrat       sound and complete there; the statement is about
+                               the expressions themselves.
+  verify_threshold_net_equiv   as above for TNode nets. The round trip checks the
+                               spec expression only; the rendering of the net
+                               (tnet_to_lean) is not round-tripped (AUDIT.md I15).
+native=True adds the Lean compiler and runtime (axiom Lean.ofReduceBool).
 """
 
 from __future__ import annotations
@@ -92,8 +101,15 @@ def _library(build_dir: pathlib.Path):
     return out
 
 
+_VERSION: dict = {}
+
+
 def version():
-    return _run([lean_binary(), "--version"], cwd=".")[1].strip()
+    """Lean version string, queried once per binary (it used to spawn `lean` per check)."""
+    b = lean_binary()
+    if b not in _VERSION:
+        _VERSION[b] = _run([b, "--version"], cwd=".")[1].strip()
+    return _VERSION[b]
 
 
 # ------------------------------------------------------------ translation
@@ -210,7 +226,7 @@ def verify_expr_equiv_tseitin(left, right, vars_, lemmas, name="tseitin_equiv", 
 def verify_expr_equiv_lrat(left, right, vars_, lrat_steps, name="lrat_equiv", native=False):
     """Prove ∀σ, eval σ L = eval σ R in Lean via linear-time hint-indexed LRAT checker."""
     n = len(vars_)
-    fmt_step = lambda c, hs: f"([" + ", ".join(str(l) for l in c) + "], [" + ", ".join(str(h) for h in hs) + "])"
+    fmt_step = lambda c, hs: "([" + ", ".join(str(l) for l in c) + "], [" + ", ".join(str(h) for h in hs) + "])"
     Ls = "[" + ", ".join(fmt_step(c, hs) for c, hs in lrat_steps) + "]"
     defs = [
         f"def eL : Expr := {expr_to_lean(left['body'], vars_)}",
@@ -257,7 +273,7 @@ def verify_threshold_net_equiv(net, ref_expr, vars_, lrat_steps=None, name="tnet
     if lrat_steps is None:
         proof = f"(decideTNetEquivExpr_correct {n} tns eSpec (by decide) (by decide)).mp (by {dec})"
     else:
-        fmt_step = lambda c, hs: f"([" + ", ".join(str(l) for l in c) + "], [" + ", ".join(str(h) for h in hs) + "])"
+        fmt_step = lambda c, hs: "([" + ", ".join(str(l) for l in c) + "], [" + ", ".join(str(h) for h in hs) + "])"
         Ls = "[" + ", ".join(fmt_step(c, hs) for c, hs in lrat_steps) + "]"
         defs.append(f"def Ls : List (Clause × List Nat) := {Ls}")
         proof = f"tseitinTNetMiter_lrat_unsat_implies_equiv {n} tns eSpec Ls (by decide) (by decide) (by decide) (by {dec}) (by {dec})"
