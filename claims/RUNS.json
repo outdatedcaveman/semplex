@@ -1224,6 +1224,76 @@
    "claims": [
     "P203"
    ]
+  },
+  {
+   "spike": "71",
+   "date": "2026-11-17",
+   "commit": "1b5a15d",
+   "question": "Which constituent does a recurrent learner select: predictive energy vs AGF vs orbit size; emergence order; reparametrisation-invariant geometry",
+   "overall": "MIXED",
+   "verdicts": [
+    {
+     "id": "H71.1",
+     "verdict": "NEITHER",
+     "measured": "energy = final leader 67%",
+     "bar": "held >= 0.8, broken < 0.5"
+    },
+    {
+     "id": "H71.2",
+     "verdict": "BROKEN",
+     "measured": "AGF = first leader 15%",
+     "bar": "held >= 0.8"
+    },
+    {
+     "id": "H71.3",
+     "verdict": "BROKEN",
+     "measured": "orbit = final leader 34%",
+     "bar": "held >= 0.8"
+    },
+    {
+     "id": "H71.4",
+     "verdict": "HELD",
+     "measured": "energy beats AGF where they disagree 8/8",
+     "bar": ">= 0.8"
+    },
+    {
+     "id": "H71.5",
+     "verdict": "BROKEN",
+     "measured": "first = final 39%",
+     "bar": "held >= 0.8"
+    },
+    {
+     "id": "H71.6",
+     "verdict": "HELD",
+     "measured": "whitened = cosine leader 80%",
+     "bar": ">= 0.8"
+    },
+    {
+     "id": "H71.7",
+     "verdict": "BROKEN",
+     "measured": "ties to lowest C n 36%",
+     "bar": "held >= 0.8"
+    },
+    {
+     "id": "H71.8",
+     "verdict": "NEITHER",
+     "measured": "cyclic: energy 36%, smooth circle 21%",
+     "bar": "energy >= 0.8 held; smooth >= 0.5 broken"
+    }
+   ],
+   "learned": "Multiplicity-weighted predictive energy, not dimension or orbit size, selects the leading constituent of a non-abelian group concept (8/8 against AGF and orbit predictors); geometry is reparametrisation-robust; learning passes through stages; ties and cyclic counters are decided by the letters, with a pull to the smooth circle.",
+   "gaps_moved": [
+    {
+     "gap": "A12",
+     "from": "PARTIAL",
+     "to": "PARTIAL",
+     "why": "Leading-constituent law sharpened to multiplicity-weighted energy (P204); stage dynamics and tie-breaking open (P205)"
+    }
+   ],
+   "claims": [
+    "P204",
+    "P205"
+   ]
   }
  ]
 }

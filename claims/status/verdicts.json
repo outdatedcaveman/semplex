@@ -822,5 +822,69 @@
   "verdict": "HELD",
   "measured": "SIGN degree-1 in 5/5",
   "bar": ">= 80%"
+ },
+ {
+  "key": "71:H71.1",
+  "spike": "71",
+  "id": "H71.1",
+  "verdict": "NEITHER",
+  "measured": "energy = final leader 67%",
+  "bar": "held >= 0.8, broken < 0.5"
+ },
+ {
+  "key": "71:H71.2",
+  "spike": "71",
+  "id": "H71.2",
+  "verdict": "BROKEN",
+  "measured": "AGF = first leader 15%",
+  "bar": "held >= 0.8"
+ },
+ {
+  "key": "71:H71.3",
+  "spike": "71",
+  "id": "H71.3",
+  "verdict": "BROKEN",
+  "measured": "orbit = final leader 34%",
+  "bar": "held >= 0.8"
+ },
+ {
+  "key": "71:H71.4",
+  "spike": "71",
+  "id": "H71.4",
+  "verdict": "HELD",
+  "measured": "energy beats AGF where they disagree 8/8",
+  "bar": ">= 0.8"
+ },
+ {
+  "key": "71:H71.5",
+  "spike": "71",
+  "id": "H71.5",
+  "verdict": "BROKEN",
+  "measured": "first = final 39%",
+  "bar": "held >= 0.8"
+ },
+ {
+  "key": "71:H71.6",
+  "spike": "71",
+  "id": "H71.6",
+  "verdict": "HELD",
+  "measured": "whitened = cosine leader 80%",
+  "bar": ">= 0.8"
+ },
+ {
+  "key": "71:H71.7",
+  "spike": "71",
+  "id": "H71.7",
+  "verdict": "BROKEN",
+  "measured": "ties to lowest C n 36%",
+  "bar": "held >= 0.8"
+ },
+ {
+  "key": "71:H71.8",
+  "spike": "71",
+  "id": "H71.8",
+  "verdict": "NEITHER",
+  "measured": "cyclic: energy 36%, smooth circle 21%",
+  "bar": "energy >= 0.8 held; smooth >= 0.5 broken"
  }
 ]

@@ -254,6 +254,9 @@ So: **volume decides what is available; tanh gradient training adds an informati
 - **C36, linearising cover (SUPPORTED; Spike 70, pre-registered; H70.1, H70.2, H70.4 held, H70.3 neither).** With a guard the networks pass (R² ≥ 0.99), GRUs trained to output only the axis uuᵀ represent the signed direction: the double cover S² → RP², not the minimal quotient. Their degree-1 geometry matches sign-trained networks, the sign is perfectly decodable, and antipodes stay apart (P203). Continuous closure keeps a bit the readout cannot see when dropping it would break the linearity of the dynamics. The candidate reconciliation with discrete closure (the coarsest quotient on which the dynamics act linearly at small dimension) is untested.
 
 - **C37, two regimes (STRUCTURED HALF SUPPORTED as a leading-component law; DEGENERATE HALF REFUTED; Spike 69, pre-registered with predictions).**
+  - *Spike 71 (pre-registered head-to-head):* the leading constituent follows **multiplicity-weighted** predictive energy (share ∝ m²C). It beats the dimension-discounted AGF utility (Kunin et al. 2025, extrapolated) and the minimum-orbit predictor (Wu et al. 2025) in 8/8 runs where they disagree (P204), and it is robust to reparametrisation.
+  - *Refuted:* low-dimension tie-breaking and persistence of the first-emerging geometry, since learning passes through stages (P205).
+  - *Open:* ties and cyclic counters depend on the letters, with a pull toward the smooth k = ±1 circle.
   - *Supported:* where the predictive kernel has a unique top isotypic component, GRUs build it as the leading constituent in 29/34 runs, including unfaithful ones (P201).
   - *Refuted:* the full Gram is not the kernel (H69.1–H69.2 broken).
   - *Refuted:* with identity readouts, networks do not build the minimal faithful representation (H69.4 broken). In Q₈, A₄ and S₃, abelian letter counts lead.

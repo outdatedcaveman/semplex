@@ -1,6 +1,6 @@
 # Spike 71: Which constituent does a recurrent learner select? Predictive energy versus AGF versus orbit size, with emergence order
 
-**Date:** 2026-11-17 · **Status:** pre-registered (predictions in `results/spike71_predictions.json`, committed with this report before any run) · **Follows:** Spike 69 (P201, P202) and the prior-art reading of 2026-11-17 (`charter/LITERATURE_REVIEW.md`).
+**Date:** 2026-11-17 · **Status:** complete (pre-registered with predictions in 1b5a15d; results below) · **Follows:** Spike 69 (P201, P202) and the prior-art reading of 2026-11-17 (`charter/LITERATURE_REVIEW.md`).
 
 That reading fixes the competitors:
 - Kunin et al. (AGF, arXiv:2506.06489) and Marchetti et al. (arXiv:2602.03655): in feedforward networks, irreps are learned one at a time in order of the utility ‖x̂[ρ]‖^{k+1}/(C_ρ n_ρ)^{(k−1)/2}.
@@ -83,3 +83,51 @@ python -m experiments.spike71 predict
 python -m experiments.spike71 run
 python -m experiments.spike71 analyse
 ```
+
+## Results
+
+`experiments/results/spike71.json`; per-run trajectories in `spike71_raw/`.
+
+**Fitted runs.**
+- **A₅ did not fit:** A5_10 reached 0.91–0.92 and A5_20 0.95–0.96, so both are excluded.
+- S4_12: 3/5 fitted. S4_8: 4/5. Z11_03: 4/5. All others: 5/5.
+- Nine automata qualify.
+
+| Automaton | Energy | AGF | Orbit | Final leader (fitted runs) | First leader |
+|---|---|---|---|---|---|
+| **S4_12** | std (m = 2) | χ₂ | χ₂ | **std 3/3** | std⊗sign 3/3 |
+| **S4_12b** | χ₂ (m = 2) | sign | sign | **χ₂ 5/5** | std⊗sign 5/5 |
+| S4_8 | tie | sign | sign | std 3/4, std⊗sign 1/4 | std⊗sign 4/4 |
+| D4_4r | tie | r0 (1-dim) | r0 | r0 4/5, 2-dim 1/5 | mixed |
+| D4_4e | tie | r3 (1-dim) | r3 | 2-dim 4/5, r3 1/5 | 2-dim 5/5 |
+| A4_4 | χ₃ | χ₃ | χ₃ | χ₃ 5/5 | χ₃ 5/5 |
+| Z11_03 | k = ±4 | k = ±4 | all | **k = ±1 3/4**, k = ±3 1/4 | k = ±1 4/4 |
+| Z10_05 | k = ±2 (unfaithful) | same | k = 5 | **k = ±2 5/5** | k = ±1 5/5 |
+| Z12_06 | k = 6 | same | same | **k = ±2 5/5** (third by energy) | k = ±1 4/5 |
+| A5_10 (unfitted) | tie | χ₄ | χ₄ | χ₄ 5/5 (unfitted) | — |
+| A5_20 (unfitted) | χ₄ (m = 2) | χ₃ / χ₃′ | χ₄ | χ₄ 3/5, χ₃ 2/5 (unfitted) | — |
+
+| ID | Measured | Criterion | Verdict |
+|---|---|---|---|
+| H71.1 | energy prediction = final leader in 67% of fitted unique runs | ≥ 80% held, < 50% broken | **NEITHER** |
+| H71.2 | AGF prediction = first leader in 15% | ≥ 80% held, < 50% broken | **BROKEN** |
+| H71.3 | minimum orbit predicts the final leader in 34% | ≥ 80% held, < 50% broken | **BROKEN** |
+| H71.4 | **energy vs AGF where they disagree** (S4_12, S4_12b): energy wins 8/8 (100%), AGF 0% | ≥ 80% held | **HELD** |
+| H71.5 | first leader = final leader in 39% | ≥ 80% held, < 50% broken | **BROKEN** |
+| H71.6 | whitened leader = cosine leader in 80% | ≥ 80% | **HELD** |
+| H71.7 | energy ties broken to the lowest C·n in 36% | ≥ 80% held, < 50% broken | **BROKEN** |
+| H71.8 | cyclic: energy 36%, smooth k = ±1 circle 21% | energy ≥ 80% held; smooth ≥ 50% broken | **NEITHER** |
+
+**Reading:**
+- **Multiplicity decides, and dimension does not.** These are the decisive cases. When a readout's permutation module contains a constituent twice, networks lead with it in 8/8 runs: std in S₄ on 12 cosets, χ₂ in S₄ on cosets of ⟨(01)(23)⟩. This happens against both the low-dimension preference of AGF and the minimum-orbit predictor of Wu et al. Energy ∝ m² (the equal-energy lemma) is the right currency, and dimension discounts are not. In the two A₅ cases that did not fit, the same holds in the majority of runs (χ₄, m = 2, 3/5), but they do not count.
+- **The geometry is not an artefact of the metric.** The leader is the same under a whitening that removes any invertible linear reparametrisation in 80% of runs, which answers arXiv:2610.05292's objection.
+- **Learning passes through stages.** The first structured geometry is usually *not* the final one (39% persist). S₄ networks start with std⊗sign and end with the energetic constituent. Cyclic networks start with the smooth k = ±1 circle and, in Z10 and Z12, leave it later. This is the recurrent counterpart of Zhang & Li's coset stages. AGF's ordering does not describe the first stage either (15%).
+- **Ties are not broken toward low dimension.** S4_8 now leads with std, where Spike 62, *without* an identity letter, gave sign 5/5. D4's two coset readouts break oppositely: vertex stabiliser → 1-dim, edge reflection → 2-dim. Ties remain decided by the letters, as in Spike 69, and no registered rule predicts them.
+- **Cyclic counters keep returning to the circle.**
+  - Z11 (all characters faithful) ends at k = ±1 against an energy prediction of k = ±4, as Z7 did in Spike 69.
+  - Z10 follows energy to the unfaithful k = ±2.
+  - Z12 ends at k = ±2, which is neither the energy prediction (k = 6) nor the circle.
+
+  A post-hoc pattern: when the energetic character is faithful but rough (prime n), the smooth circle wins. When an unfaithful character carries most of the energy, a coarse low-frequency character wins. A "smooth, energetic, coarse" trade-off is not yet a law.
+
+**Status of the shape law after Spike 71.** The leading constituent tracks multiplicity-weighted predictive energy in all non-abelian cases with a unique prediction: A4_4, S4_12 and S4_12b here, A4_6 in Spike 69. Ties and cyclic counters are decided by something else: the letters, with a pull toward smooth low-frequency characters.

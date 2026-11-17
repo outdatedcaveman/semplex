@@ -1,7 +1,7 @@
 [
  {
   "class": "Empirical",
-  "claims": 109
+  "claims": 110
  },
  {
   "class": "Proved in Lean",
@@ -13,7 +13,7 @@
  },
  {
   "class": "Refuted",
-  "claims": 13
+  "claims": 14
  },
  {
   "class": "Proved on paper",

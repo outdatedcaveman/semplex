@@ -268,5 +268,15 @@
   "learned": "Networks asked only for the axis build the double cover S2 (signed direction), not the minimal quotient RP2: continuous closure keeps a bit the readout cannot see when dropping it would break linearity of the dynamics.",
   "moved": "A12: PARTIAL → PARTIAL (C36 linearising cover supported (P203))",
   "claims": "P203"
+ },
+ {
+  "spike": "71",
+  "date": "2026-11-17",
+  "commit": "1b5a15d",
+  "question": "Which constituent does a recurrent learner select: predictive energy vs AGF vs orbit size; emergence order; reparametrisation-invariant geometry",
+  "overall": "MIXED",
+  "learned": "Multiplicity-weighted predictive energy, not dimension or orbit size, selects the leading constituent of a non-abelian group concept (8/8 against AGF and orbit predictors); geometry is reparametrisation-robust; learning passes through stages; ties and cyclic counters are decided by the letters, with a pull to the smooth circle.",
+  "moved": "A12: PARTIAL → PARTIAL (Leading-constituent law sharpened to multiplicity-weighted energy (P204); stage dynamics and tie-breaking open (P205))",
+  "claims": "P204 P205"
  }
 ]
