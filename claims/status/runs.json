@@ -288,5 +288,15 @@
   "learned": "The double cover survives degree-2 input encoding, so it is not an encoding effect; unfitted discrete A5 networks lead with the readout's chi5 even when fed chi3. Candidate post-hoc explanation: a smoothness pull toward the lowest-frequency faithful representation when letters are near-identity.",
   "moved": "A12: PARTIAL → PARTIAL (C38 refuted (P206); C40 smoothness pull proposed)",
   "claims": "P206"
+ },
+ {
+  "spike": "73",
+  "date": "2026-11-18",
+  "commit": "4bca70d",
+  "question": "Smoothness pull (C40): letter step vs readout spectrum; A5 icosahedral letters with fit repaired; large-step axis tracking",
+  "overall": "MIXED",
+  "learned": "Input encoding decides nothing here (A5 with chi3 letters still builds chi5); cyclic geometry follows neither smoothness nor energy alone; post-hoc gated smoothness (smoothest among sufficiently energetic constituents) fits 46/48 cyclic runs.",
+  "moved": "A12: PARTIAL → PARTIAL (C38 refuted on both sides (P207); gated smoothness C41 proposed)",
+  "claims": "P207"
  }
 ]

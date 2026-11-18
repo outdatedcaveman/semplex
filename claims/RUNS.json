@@ -1339,6 +1339,57 @@
    "claims": [
     "P206"
    ]
+  },
+  {
+   "spike": "73",
+   "date": "2026-11-18",
+   "commit": "4bca70d",
+   "question": "Smoothness pull (C40): letter step vs readout spectrum; A5 icosahedral letters with fit repaired; large-step axis tracking",
+   "overall": "MIXED",
+   "verdicts": [
+    {
+     "id": "H73.1",
+     "verdict": "NO VERDICT",
+     "measured": "3 qualifying automata (needs 4)",
+     "bar": "guard"
+    },
+    {
+     "id": "H73.2",
+     "verdict": "NEITHER",
+     "measured": "smooth 50%, energy 38%",
+     "bar": "smooth >= 0.8 held; energy >= 0.5 broken"
+    },
+    {
+     "id": "H73.3",
+     "verdict": "BROKEN",
+     "measured": "chi3 leads 0/4",
+     "bar": ">= 0.8"
+    },
+    {
+     "id": "H73.4",
+     "verdict": "HELD",
+     "measured": "chi5 5/5",
+     "bar": ">= 0.8"
+    },
+    {
+     "id": "H73.5",
+     "verdict": "NO VERDICT",
+     "measured": "sigma 1.0 not learned",
+     "bar": "guard"
+    }
+   ],
+   "learned": "Input encoding decides nothing here (A5 with chi3 letters still builds chi5); cyclic geometry follows neither smoothness nor energy alone; post-hoc gated smoothness (smoothest among sufficiently energetic constituents) fits 46/48 cyclic runs.",
+   "gaps_moved": [
+    {
+     "gap": "A12",
+     "from": "PARTIAL",
+     "to": "PARTIAL",
+     "why": "C38 refuted on both sides (P207); gated smoothness C41 proposed"
+    }
+   ],
+   "claims": [
+    "P207"
+   ]
   }
  ]
 }

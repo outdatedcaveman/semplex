@@ -918,5 +918,45 @@
   "verdict": "HELD",
   "measured": "D1: sign 1.00 in 5/5",
   "bar": ">= 80%"
+ },
+ {
+  "key": "73:H73.1",
+  "spike": "73",
+  "id": "H73.1",
+  "verdict": "NO VERDICT",
+  "measured": "3 qualifying automata (needs 4)",
+  "bar": "guard"
+ },
+ {
+  "key": "73:H73.2",
+  "spike": "73",
+  "id": "H73.2",
+  "verdict": "NEITHER",
+  "measured": "smooth 50%, energy 38%",
+  "bar": "smooth >= 0.8 held; energy >= 0.5 broken"
+ },
+ {
+  "key": "73:H73.3",
+  "spike": "73",
+  "id": "H73.3",
+  "verdict": "BROKEN",
+  "measured": "chi3 leads 0/4",
+  "bar": ">= 0.8"
+ },
+ {
+  "key": "73:H73.4",
+  "spike": "73",
+  "id": "H73.4",
+  "verdict": "HELD",
+  "measured": "chi5 5/5",
+  "bar": ">= 0.8"
+ },
+ {
+  "key": "73:H73.5",
+  "spike": "73",
+  "id": "H73.5",
+  "verdict": "NO VERDICT",
+  "measured": "sigma 1.0 not learned",
+  "bar": "guard"
  }
 ]
