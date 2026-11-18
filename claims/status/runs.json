@@ -298,5 +298,15 @@
   "learned": "Input encoding decides nothing here (A5 with chi3 letters still builds chi5); cyclic geometry follows neither smoothness nor energy alone; post-hoc gated smoothness (smoothest among sufficiently energetic constituents) fits 46/48 cyclic runs.",
   "moved": "A12: PARTIAL → PARTIAL (C38 refuted on both sides (P207); gated smoothness C41 proposed)",
   "claims": "P207"
+ },
+ {
+  "spike": "74",
+  "date": "2026-11-18",
+  "commit": "609b0a1",
+  "question": "Prospective test of gated smoothness (C41) with theta fixed",
+  "overall": "MIXED",
+  "learned": "The post-hoc gated-smoothness law does not generalise; when several constituents carry predictive energy the leader is a seed lottery. The robust shape law is: geometry lies in the readout's energetic constituents, and a clearly dominant (multiplicity-weighted) one leads.",
+  "moved": "A12: PARTIAL → PARTIAL (C41 refuted (P208); selection reframed as a distribution over seeds)",
+  "claims": "P208"
  }
 ]

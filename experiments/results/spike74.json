@@ -1,0 +1,267 @@
+{
+ "verdicts": {
+  "H74.1": "NEITHER",
+  "H74.2": "NEITHER",
+  "H74.3": "HELD"
+ },
+ "frac": {
+  "gated_all": 0.6818181818181818,
+  "discrim_gated": 0.44,
+  "discrim_energy": 0.36,
+  "dihedral_gated": 1.0
+ },
+ "per": {
+  "Z9_s1_014": {
+   "pred": {
+    "energy": "r0_tr2_ker1",
+    "gated": "r1_tr2_ker1"
+   },
+   "fits": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    0.999
+   ],
+   "final": [
+    "r1_tr2_ker1",
+    "r0_tr2_ker1",
+    "r0_tr2_ker1",
+    "r0_tr2_ker1",
+    "r0_tr2_ker1"
+   ],
+   "white": [
+    "r1_tr2_ker1",
+    "r0_tr2_ker1",
+    "r0_tr2_ker1",
+    "r0_tr2_ker1",
+    "r0_tr2_ker1"
+   ],
+   "fitted": 5
+  },
+  "Z9_s2_014": {
+   "pred": {
+    "energy": "r0_tr2_ker1",
+    "gated": "r1_tr2_ker1"
+   },
+   "fits": [
+    0.997,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "final": [
+    "r3_tr2_ker1",
+    "r2_tr2_ker3",
+    "r2_tr2_ker3",
+    "r2_tr2_ker3",
+    "r2_tr2_ker3"
+   ],
+   "white": [
+    "r2_tr2_ker3",
+    "r2_tr2_ker3",
+    "r2_tr2_ker3",
+    "r2_tr2_ker3",
+    "r2_tr2_ker3"
+   ],
+   "fitted": 5
+  },
+  "Z10_s1_014": {
+   "pred": {
+    "energy": "r4_tr2_ker1",
+    "gated": "r0_tr2_ker1"
+   },
+   "fits": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "final": [
+    "r4_tr2_ker1",
+    "r4_tr2_ker1",
+    "r4_tr2_ker1",
+    "r0_tr2_ker1",
+    "r0_tr2_ker1"
+   ],
+   "white": [
+    "r4_tr2_ker1",
+    "r4_tr2_ker1",
+    "r4_tr2_ker1",
+    "r0_tr2_ker1",
+    "r0_tr2_ker1"
+   ],
+   "fitted": 5
+  },
+  "Z10_s1_024": {
+   "pred": {
+    "energy": "r2_tr1_ker5",
+    "gated": "r0_tr2_ker1"
+   },
+   "fits": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "final": [
+    "r0_tr2_ker1",
+    "r0_tr2_ker1",
+    "r2_tr1_ker5",
+    "r0_tr2_ker1",
+    "r0_tr2_ker1"
+   ],
+   "white": [
+    "r0_tr2_ker1",
+    "r0_tr2_ker1",
+    "r2_tr1_ker5",
+    "r0_tr2_ker1",
+    "r2_tr1_ker5"
+   ],
+   "fitted": 5
+  },
+  "Z10_s3_026": {
+   "pred": {
+    "energy": "r2_tr1_ker5",
+    "gated": "r4_tr2_ker1"
+   },
+   "fits": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "final": [
+    "r4_tr2_ker1",
+    "r4_tr2_ker1",
+    "r4_tr2_ker1",
+    "r2_tr1_ker5",
+    "r4_tr2_ker1"
+   ],
+   "white": [
+    "r2_tr1_ker5",
+    "r2_tr1_ker5",
+    "r4_tr2_ker1",
+    "r2_tr1_ker5",
+    "r2_tr1_ker5"
+   ],
+   "fitted": 5
+  },
+  "Z7_s1_01": {
+   "pred": {
+    "energy": "r2_tr2_ker1",
+    "gated": "r2_tr2_ker1"
+   },
+   "fits": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "final": [
+    "r2_tr2_ker1",
+    "r2_tr2_ker1",
+    "r2_tr2_ker1",
+    "r2_tr2_ker1",
+    "r2_tr2_ker1"
+   ],
+   "white": [
+    "r2_tr2_ker1",
+    "r2_tr2_ker1",
+    "r2_tr2_ker1",
+    "r2_tr2_ker1",
+    "r2_tr2_ker1"
+   ],
+   "fitted": 5
+  },
+  "Z7_s2_01": {
+   "pred": {
+    "energy": "r2_tr2_ker1",
+    "gated": "r2_tr2_ker1"
+   },
+   "fits": [
+    1.0,
+    0.994,
+    1.0,
+    0.952,
+    1.0
+   ],
+   "final": [
+    "r2_tr2_ker1",
+    "r2_tr2_ker1",
+    "r2_tr2_ker1",
+    "r2_tr2_ker1",
+    "r2_tr2_ker1"
+   ],
+   "white": [
+    "r2_tr2_ker1",
+    "r2_tr2_ker1",
+    "r2_tr2_ker1",
+    "r2_tr2_ker1",
+    "r2_tr2_ker1"
+   ],
+   "fitted": 4
+  },
+  "D5_pt": {
+   "pred": {
+    "energy": null,
+    "gated": "r1_tr4_ker1"
+   },
+   "fits": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "final": [
+    "r1_tr4_ker1",
+    "r1_tr4_ker1",
+    "r1_tr4_ker1",
+    "r1_tr4_ker1",
+    "r1_tr4_ker1"
+   ],
+   "white": [
+    "r0_tr4_ker1",
+    "r0_tr4_ker1",
+    "r1_tr4_ker1",
+    "r1_tr4_ker1",
+    "r0_tr4_ker1"
+   ],
+   "fitted": 5
+  },
+  "D6_pt": {
+   "pred": {
+    "energy": null,
+    "gated": "r2_tr4_ker1"
+   },
+   "fits": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "final": [
+    "r2_tr4_ker1",
+    "r2_tr4_ker1",
+    "r2_tr4_ker1",
+    "r2_tr4_ker1",
+    "r2_tr4_ker1"
+   ],
+   "white": [
+    "r2_tr4_ker1",
+    "r0_tr1_ker6",
+    "r0_tr1_ker6",
+    "r0_tr1_ker6",
+    "r0_tr1_ker6"
+   ],
+   "fitted": 5
+  }
+ }
+}

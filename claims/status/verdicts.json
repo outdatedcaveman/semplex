@@ -958,5 +958,29 @@
   "verdict": "NO VERDICT",
   "measured": "sigma 1.0 not learned",
   "bar": "guard"
+ },
+ {
+  "key": "74:H74.1",
+  "spike": "74",
+  "id": "H74.1",
+  "verdict": "NEITHER",
+  "measured": "gated = leader 68%",
+  "bar": "held >= 0.8, broken < 0.5"
+ },
+ {
+  "key": "74:H74.2",
+  "spike": "74",
+  "id": "H74.2",
+  "verdict": "NEITHER",
+  "measured": "gated 44%, energy 36%",
+  "bar": "gated >= 0.8 held; energy >= 0.5 broken"
+ },
+ {
+  "key": "74:H74.3",
+  "spike": "74",
+  "id": "H74.3",
+  "verdict": "HELD",
+  "measured": "dihedral ties 10/10 (cosine only)",
+  "bar": ">= 0.8"
  }
 ]

@@ -1390,6 +1390,45 @@
    "claims": [
     "P207"
    ]
+  },
+  {
+   "spike": "74",
+   "date": "2026-11-18",
+   "commit": "609b0a1",
+   "question": "Prospective test of gated smoothness (C41) with theta fixed",
+   "overall": "MIXED",
+   "verdicts": [
+    {
+     "id": "H74.1",
+     "verdict": "NEITHER",
+     "measured": "gated = leader 68%",
+     "bar": "held >= 0.8, broken < 0.5"
+    },
+    {
+     "id": "H74.2",
+     "verdict": "NEITHER",
+     "measured": "gated 44%, energy 36%",
+     "bar": "gated >= 0.8 held; energy >= 0.5 broken"
+    },
+    {
+     "id": "H74.3",
+     "verdict": "HELD",
+     "measured": "dihedral ties 10/10 (cosine only)",
+     "bar": ">= 0.8"
+    }
+   ],
+   "learned": "The post-hoc gated-smoothness law does not generalise; when several constituents carry predictive energy the leader is a seed lottery. The robust shape law is: geometry lies in the readout's energetic constituents, and a clearly dominant (multiplicity-weighted) one leads.",
+   "gaps_moved": [
+    {
+     "gap": "A12",
+     "from": "PARTIAL",
+     "to": "PARTIAL",
+     "why": "C41 refuted (P208); selection reframed as a distribution over seeds"
+    }
+   ],
+   "claims": [
+    "P208"
+   ]
   }
  ]
 }

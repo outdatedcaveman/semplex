@@ -1,6 +1,6 @@
 # Spike 74: Gated smoothness (C41), prospective
 
-**Date:** 2026-11-18 · **Status:** pre-registered (predictions in `results/spike74_predictions.json`, committed with this report before any run) · **Follows:** Spike 73's exploratory finding (`experiments/theory/gated_smoothness.py`). Gated smoothness fits 46/48 fitted cyclic runs across Spikes 69, 71 and 73 post hoc, with θ ∈ [0.05, 0.10].
+**Date:** 2026-11-18 · **Status:** complete (pre-registered with predictions in 609b0a1; results below) · **Follows:** Spike 73's exploratory finding (`experiments/theory/gated_smoothness.py`). Gated smoothness fits 46/48 fitted cyclic runs across Spikes 69, 71 and 73 post hoc, with θ ∈ [0.05, 0.10].
 
 ## Conjecture C41 (gated smoothness)
 
@@ -58,3 +58,43 @@ python -m experiments.spike74 predict
 python -m experiments.spike74 run
 python -m experiments.spike74 analyse
 ```
+
+## Results
+
+`experiments/results/spike74.json`; per-run outputs in `spike74_raw/`. 44 of 45 runs fit (one Z7_s2_01 run reached 0.95).
+
+| Automaton | Energy | Gated | Final leader (fitted runs) | Whitened leader |
+|---|---|---|---|---|
+| Z9_s1_014 | r0 | r1 | energy 4/5, gated 1/5 | same |
+| Z9_s2_014 | r0 | r1 | **r2 (k = 3, unfaithful; neither) 4/5**, r3 1/5 | r2 5/5 |
+| Z10_s1_014 | r4 | r0 | energy 3/5, gated 2/5 | same |
+| Z10_s1_024 | r2 (k = 5) | r0 | gated 4/5, energy 1/5 | gated 3/5 |
+| Z10_s3_026 | r2 (k = 5) | r4 | gated 4/5, energy 1/5 | **energy 4/5** |
+| Z7_s1_01 | r2 | r2 | 5/5 | 5/5 |
+| Z7_s2_01 | r2 | r2 | 4/4 | 4/4 |
+| D5_pt | tie | r1 | r1 5/5 | r0 3/5 |
+| D6_pt | tie | r2 | r2 5/5 | r0 (1-dim) 4/5 |
+
+| ID | Measured | Criterion | Verdict |
+|---|---|---|---|
+| H74.1 | gated smoothness = final leader in 68% of fitted runs | ≥ 80% held, < 50% broken | **NEITHER** |
+| H74.2 | discriminating cases: gated 44%, energy 36%, neither 20% | gated ≥ 80% held; energy ≥ 50% broken | **NEITHER** |
+| H74.3 | dihedral ties broken as gated smoothness predicts in 10/10 | ≥ 80% | **HELD** |
+
+**Reading:**
+- **C41 fails prospectively as a deterministic law.** In the cyclic cases where gated smoothness and energy disagree, the leader differs across seeds of the same automaton: 4:1, 3:2, 4:1. One automaton led with a third constituent in 4/5 runs (Z9_s2_014, k = 3). Neither rule predicts individual runs.
+
+  The post-hoc fit of 46/48 in Spike 73 was fitting the data it was chosen on. That is a cautionary result about our own method: θ and the smoothness index were chosen after seeing those runs.
+- **When several constituents pass the gate, which one leads is a seed lottery,** as He et al. (arXiv:2606.02993) prove for abelian group composition: the initially largest component wins. Our cosine and whitened leaders also disagree more often in these cases (Z10_s3_026, D5, D6). So the "leader" is not a robust summary when constituents are comparable.
+
+  The robust statements are the earlier ones:
+  - multiplicity-weighted energy decides when one constituent clearly dominates the readout (P204);
+  - constituents absent from the readout are never built.
+- **Dihedral ties went to the smoother constituent in 10/10** (H74.3 held), but only in the cosine geometry. Under whitening the 1-dimensional or other constituent leads in most runs, so this holds only for one metric.
+
+**What the shape law now is, honestly:**
+1. The learned geometry lies in the readout's constituents: those with predictive energy.
+2. If one constituent clearly dominates in multiplicity-weighted energy, it leads (non-abelian cases, P201, P204).
+3. Otherwise the choice is not determined by any statistic tested here (energy, AGF dimension, orbit size, smoothness, gated smoothness). It varies with seed and letters.
+
+The next step is to treat the selection as **a distribution over seeds**, not a single leader. A prediction would then be stated as P(leader = ρ) from a dynamical model at initialisation, e.g. He et al.'s lottery generalised to recurrent networks. It should be tested with ≥ 20 seeds per automaton.

@@ -1,7 +1,7 @@
 [
  {
   "metric": "Claims",
-  "value": 207
+  "value": 208
  },
  {
   "metric": "Ledger problems",
@@ -13,6 +13,6 @@
  },
  {
   "metric": "Frozen spike files",
-  "value": 177
+  "value": 180
  }
 ]

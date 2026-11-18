@@ -8,12 +8,12 @@
   "claims": 32
  },
  {
-  "class": "Exploratory",
+  "class": "Refuted",
   "claims": 16
  },
  {
-  "class": "Refuted",
-  "claims": 15
+  "class": "Exploratory",
+  "claims": 16
  },
  {
   "class": "Proved on paper",
