@@ -82,3 +82,5 @@ python -m experiments.spike77 predict
 python -m experiments.spike77 run
 python -m experiments.spike77 analyse
 ```
+
+**Bug fix before the H77.3 verdict (2026-11-18).** The pressure arm calls Spike 76's trainer, which looked automata up in Spike 76's own table. All 18 η = 1.0 runs therefore crashed before producing output. The fix also patches `spike76.spec`. The default-condition runs used a different trainer and are unaffected.

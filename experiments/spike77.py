@@ -76,9 +76,10 @@ def predict():
 def run(which=None):
     import torch
     torch.set_num_threads(2); os.makedirs(RAW, exist_ok=True); P = json.load(open(PRED))
-    S71.spec = spec; S75.spec = spec; S76.S75.spec = spec
+    S71.spec = spec; S75.spec = spec; S76.S75.spec = spec; S76.spec = spec   # S76.spec patch: bug fix before H77.3 verdict
     jobs = [(n, 0.0) for n in P["automata"]] + [(n, 1.0) for n in P["automata"][::2]]
-    if which: jobs = [j for j in jobs if str(j[1]) in which.split(",")]
+    if which:
+        w = which.split(","); jobs = [j for j in jobs if str(j[1]) in w or j[0] in w]
     for name, eta in jobs:
         for i in range(SEEDS if eta == 0.0 else 3):
             p = os.path.join(RAW, f"{name}_n{eta}_{i}.json")
