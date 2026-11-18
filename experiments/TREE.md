@@ -87,6 +87,7 @@ Run in parallel by Gemini from the Spike 10c state; renumbered at the merge (ori
 ├ 74  gated smoothness (C41) prospective                                  frozen: H74.3 held (dihedral ties, cosine only); H74.1-2 neither: seed lottery
 ├ 75  substrate independence: GRU, Hankel spectral, reservoir, ES          frozen: H75.1-4 held (laws hold for adaptive learners; reservoir shows neither)
 ├ 76  energy as variational principle (width, noise, acquisition order)   frozen: H76.1-4 broken; pressure selects the smoothest letter action (post hoc C42)
-└ 77  Gibbs selection with one exchange rate (C43), frozen params          frozen: H77.1-3 held (98% on new automata; pressure raises the rate)
+├ 77  Gibbs selection with one exchange rate (C43), frozen params          frozen: H77.1-3 held (98% on new automata; pressure raises the rate)
+└ 78  loopholes of C43: learners, unselected automata, frequency, rival     frozen: H78.1-3, 5, 6 held; H78.4 neither (cost not usage-weighted)
 ```
 ```

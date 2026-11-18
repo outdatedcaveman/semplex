@@ -1070,5 +1070,53 @@
   "verdict": "HELD",
   "measured": "exchange rate 2.8 -> 9.2 under noise",
   "bar": "eta=1 rate > default"
+ },
+ {
+  "key": "78:H78.1",
+  "spike": "78",
+  "id": "H78.1",
+  "verdict": "HELD",
+  "measured": "unselected: 93.5%",
+  "bar": ">= 75%"
+ },
+ {
+  "key": "78:H78.2",
+  "spike": "78",
+  "id": "H78.2",
+  "verdict": "HELD",
+  "measured": "frozen rule beats rivals for LSTM, RNN, GRU+SGD",
+  "bar": "all"
+ },
+ {
+  "key": "78:H78.3",
+  "spike": "78",
+  "id": "H78.3",
+  "verdict": "HELD",
+  "measured": "per-learner LOO 77-100%",
+  "bar": ">= 70%"
+ },
+ {
+  "key": "78:H78.4",
+  "spike": "78",
+  "id": "H78.4",
+  "verdict": "NEITHER",
+  "measured": "frequency flip 12/24",
+  "bar": ">= 80% held, < 50% broken"
+ },
+ {
+  "key": "78:H78.5",
+  "spike": "78",
+  "id": "H78.5",
+  "verdict": "HELD",
+  "measured": "richer model -9.6% (worse)",
+  "bar": "< 10% improvement"
+ },
+ {
+  "key": "78:H78.6",
+  "spike": "78",
+  "id": "H78.6",
+  "verdict": "HELD",
+  "measured": "whitened 93.8%",
+  "bar": ">= 70%"
  }
 ]

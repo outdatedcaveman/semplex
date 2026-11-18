@@ -338,5 +338,15 @@
   "learned": "A two-parameter Gibbs rule, value^alpha * exp(-lambda * cost), with parameters frozen in advance, predicts the leading representation of new automata in 98% of runs in both directions; resource pressure raises the exchange rate toward dynamical cost, like a temperature.",
   "moved": "A12: PARTIAL → PARTIAL (Selection law with one exchange rate supported prospectively (P212))",
   "claims": "P212"
+ },
+ {
+  "spike": "78",
+  "date": "2026-11-18",
+  "commit": "0f3143e",
+  "question": "Does the Gibbs selection rule survive its loopholes (other learners, unselected automata, usage-weighted cost, richer rival, invariant geometry)?",
+  "overall": "MIXED",
+  "learned": "The rule holds across recurrent learners, optimisers, unselected automata and invariant geometry, with learner-specific exchange rates; its cost depends on the repertoire of actions, not on their usage frequencies.",
+  "moved": "A12: PARTIAL → PARTIAL (Selection rule robust to loopholes (P213); usage-weighting refuted)",
+  "claims": "P213"
  }
 ]

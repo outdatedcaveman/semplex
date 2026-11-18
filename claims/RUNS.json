@@ -1559,6 +1559,63 @@
    "claims": [
     "P212"
    ]
+  },
+  {
+   "spike": "78",
+   "date": "2026-11-18",
+   "commit": "0f3143e",
+   "question": "Does the Gibbs selection rule survive its loopholes (other learners, unselected automata, usage-weighted cost, richer rival, invariant geometry)?",
+   "overall": "MIXED",
+   "verdicts": [
+    {
+     "id": "H78.1",
+     "verdict": "HELD",
+     "measured": "unselected: 93.5%",
+     "bar": ">= 75%"
+    },
+    {
+     "id": "H78.2",
+     "verdict": "HELD",
+     "measured": "frozen rule beats rivals for LSTM, RNN, GRU+SGD",
+     "bar": "all"
+    },
+    {
+     "id": "H78.3",
+     "verdict": "HELD",
+     "measured": "per-learner LOO 77-100%",
+     "bar": ">= 70%"
+    },
+    {
+     "id": "H78.4",
+     "verdict": "NEITHER",
+     "measured": "frequency flip 12/24",
+     "bar": ">= 80% held, < 50% broken"
+    },
+    {
+     "id": "H78.5",
+     "verdict": "HELD",
+     "measured": "richer model -9.6% (worse)",
+     "bar": "< 10% improvement"
+    },
+    {
+     "id": "H78.6",
+     "verdict": "HELD",
+     "measured": "whitened 93.8%",
+     "bar": ">= 70%"
+    }
+   ],
+   "learned": "The rule holds across recurrent learners, optimisers, unselected automata and invariant geometry, with learner-specific exchange rates; its cost depends on the repertoire of actions, not on their usage frequencies.",
+   "gaps_moved": [
+    {
+     "gap": "A12",
+     "from": "PARTIAL",
+     "to": "PARTIAL",
+     "why": "Selection rule robust to loopholes (P213); usage-weighting refuted"
+    }
+   ],
+   "claims": [
+    "P213"
+   ]
   }
  ]
 }
