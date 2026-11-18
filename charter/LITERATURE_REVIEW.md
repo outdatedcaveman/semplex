@@ -277,3 +277,27 @@ Not found in this literature:
 - the equal-energy tie lemma and generating-set-dependent tie-breaking.
 
 Breakthrough potential, if any, lies in a dynamical theory of *which quotient and which constituent a recurrent learner selects*, covering ties and continuous groups, where AGF stops.
+
+### Sources read on 2026-11-18 (user-supplied batch of 25)
+
+These were read by a delegated reader using alphaXiv full text, or the alphaXiv page reader for non-arXiv pages, one call per source. I checked the notes against our claims. For Goodfire and PLOS only the opening portion and key passages were read.
+
+| Source | Relevance | What it changes here |
+|---|---|---|
+| Turnbull, Ottlik, Simon, "feature ODE" for shallow MLPs, arXiv:2610.25652 | **High (C-cost)** | Gives a computable spectral/coefficient null model for learning time. C-cost (the solvability grading) must explain residual cost after controlling for it, or it is the Saxe confound under another name. |
+| Perseus 6 (Nanda, Oxford; v6.0.0) | **High (C-cover)** | Computes the integral barcode with a certificate of the "bad primes" where the F_p barcode differs. S² vs RP² is a ℤ/2-torsion question. A torsion test is also possible now with ripser by comparing coefficients F₂ and F₃ (RP²: β₁ = β₂ = 1 over F₂, 0 over F₃). Not installed: the package name comes from a fetched page and must be verified first. |
+| Goodfire, "neuron communities" (2026) | Medium (atlas; C-closure) | Co-attribution graphs over many prompts give small, necessary-and-sufficient neuron groups. Candidate tool: run the same community detection on our GRUs and test whether communities map onto macrostates or onto letter (generator) actions. |
+| V-JEPA-LM, arXiv:2611.17831 | Medium (C-shape, C-closure) | Prop. 2: a symmetry-invariant loss plus identifiability gives equivariant ± splits, with no claim about which component leads, so it does not pre-empt C-shape. "Linearly decodable but unread by the downstream model" is the reason C-closure needs interventions, not just probes. Counterfactual answer-flip pairs are a cleaner readout test. |
+| Lehman & Stanley, unified factored representations resist forgetting, arXiv:2611.11020 | Medium (C-closure) | Testable prediction: exactly Myhill–Nerode networks should forget less under their cyclic fine-tuning protocol than non-minimal ones. |
+| Mehta, Singh et al., interpretable weight-space programming (alphaXiv 2611) | Medium (weight-space arm) | Adopt their test: rebuild the model from a description of at most 200 words. |
+| Ok & Lee, weight-space programming without Transformers (alphaXiv 2611) | Medium (weight-space arm) | When weights are written rather than trained, sparse local tables win. Adopt their BM25 and row-deletion locality controls before any weight-writing claim. |
+| Park & Pillow, Bayesian efficient coding, PLOS Comp Biol 10.1371/journal.pcbi.1014894 | Low–medium (C-shape) | The optimal code depends on the loss over the posterior. Check that the leading-constituent law is stable across readout losses (BCE vs MSE). |
+| Pixels over Symbols (BashivanLab; arXiv:2611.10565) | Low–medium (C-cover) | Input realism matters for behavioural alignment. Spike 72 refuted encoding effects only for the linear encodings ω, R and D₂(R). A perceptual encoding (rendered views) remains untested. |
+| EvoTrias, arXiv:2611.15309; "The critic can hurt", arXiv:2611.19037; RE-SEARCH, arXiv:2611.14487 | Process | Keep held-out criteria hidden from proposing agents. Audit any LLM critic against a no-critic baseline. Give ideation agents explicit literature surveys. |
+| AnisoFlow, arXiv:2611.17767; knowledge distillation models, arXiv:2611.17230; nested TDA ensembles, arXiv:2611.14900; JEM α interpolation, arXiv:2605.23819; sparse reward subsystem, arXiv:2602.00986 | Low | The distillation paper is a null control for soft-target comparisons. The others are loose analogues only. |
+| RePPO, arXiv:2610.36425; Peskine sixfolds, arXiv:2611.18921; rational analytic prismatization, arXiv:2610.27918; quasi-F-split heights, arXiv:2611.20424; LaMemo, arXiv:2204.07341; Schmeding, infinite-dimensional geometry, arXiv:2112.08114; AttnRes depth transfer (blog); ARCHER, arXiv:2611.18494 | None | Not relevant to the current claims. The prismatization and quasi-F-split papers are p-adic/arithmetic-geometry frontier work, filed with the §12.5 threads. |
+
+**Net.** Nothing in this batch pre-empts C-closure, C-shape, C-cover or C-shared. The serious threat is to C-cost, from the feature-ODE null model. The most useful items for the next experiments:
+1. a torsion-certified topology test for the cover;
+2. the feature-ODE null for learning cost;
+3. neuron-community discovery for the "elemental parts" atlas.
