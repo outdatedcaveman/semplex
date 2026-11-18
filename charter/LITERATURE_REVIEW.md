@@ -319,3 +319,15 @@ A delegated reader (alphaXiv plus web) checked five questions. Its findings are 
 A delegated reader examined Bialek–Nemenman–Tishby 2001, Still–Crutchfield–Ellison 2010, Still–Sivak–Bell–Crooks 2012, Palmer et al. 2015, Arbabi–Mezić 2017, Lusch–Kutz–Brunton 2018, Shai et al. 2024, Marchetti–Kunin et al. 2026, Liu 2026 (2605.05029) and Chung–Tiomkin 2026 (2611.08426) in full text. It covered Creutzig–Globerson–Tishby 2009, Chechik et al. 2005, Creutzig–Sprekeler 2008, Turner–Sahani 2007 and the VAMP papers through abstracts and citing papers only.
 
 What each establishes and the three corrections are recorded in `charter/FOUNDATIONS.md` §15.2–§15.3. **The unifying picture is established prior art.** Our possible contributions are its representation-theoretic consequences for symmetric systems, cross-substrate convergence, the intervention tests, and the cover anomaly.
+
+### Prior-art check on 2026-11-18: the Free Energy Principle, slowness, causal blankets, dynamical cost
+
+A delegated reader examined these in full text: Vastola & Gershman 2026 (2610.36272); Chung & Tiomkin 2026 (2611.08426); Rosas et al. 2020 (2008.12568), from abstract and snippet. Other items are from search results or marked as cited from memory: Kiebel–Daunizeau–Friston 2008; Biehl–Pollock–Kanai 2021; Aguilera et al. 2022; Bruineberg et al. 2022; Creutzig–Sprekeler 2008; Turner–Sahani 2007; Boyd–Mandal–Crutchfield 2017; Marzen–Crutchfield (1412.2859); Wolpert 2019; Finlay et al. 2020 (kinetic regularization); Aurell et al. 2011 and Nakazato–Ito (optimal-transport speed limits).
+
+**Conclusions** (`charter/FOUNDATIONS.md` §16):
+- Our value-minus-dynamical-cost rule is **not FEP**. FEP's complexity is informational, and its smoothness enters only as a chosen prior.
+- It is **not plain slowness plus prediction**. That equivalence holds only in the linear-Gaussian one-step case.
+- The nearest prior form is Vastola & Gershman.
+- "Causal blanket" (Rosas et al.) is the defensible name for our closure object.
+
+Also checked: math-rsi (github.com/lisresearchgroup/math-rsi), recorded in §16.5.

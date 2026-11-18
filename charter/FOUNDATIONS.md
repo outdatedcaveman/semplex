@@ -724,3 +724,69 @@ Spike 76 refuted energy as a variational principle for nonlinear recurrent learn
 Under pressure, cyclic learners choose the character on which each letter acts as the smallest rotation. Where all candidates are equally cheap to implement (S₄), energy still decides.
 
 The working replacement is **C42**: *learned constituent = argmax [predictive value − implementation cost]*, where the cost measures how far each letter's action is from the identity in that representation. This unifies the circle pull, the lotteries (value ≈ cost) and, possibly, the cover anomaly (degree 1 is the cheaper action of small rotations). Physically it is the familiar trade-off between information value and thermodynamic or kinetic cost, with the cost carried by the *dynamics* rather than by the memory. That is the term the information-bottleneck literature lacks. C42 is post hoc and must be registered quantitatively.
+
+## 16. Free energy, enaction, relativity and Synesism: what the data allow (2026-11-18)
+
+### 16.1 The Free Energy Principle: checked; what it gives and what it does not
+
+(Prior-art check, `charter/LITERATURE_REVIEW.md` 2026-11-18.)
+
+- **Shared form.** Variational free energy is *complexity − accuracy*. Our refuted "energy only" picture (P211) was the accuracy term alone. The information bottleneck (§15) is accuracy minus an *informational* complexity. FEP's complexity is also informational: KL(q‖p) over states.
+- **What FEP does not give.** The data (P211, C42/C43) require a complexity that is a cost of the **dynamics**: how far each input's action is from the identity. FEP produces a preference for slow or smooth dynamics only through a *modeller-chosen prior* on flows (generalized coordinates; Kiebel, Daunizeau & Friston 2008). Explaining our flip that way would be circular.
+- **Markov blankets.** The formal critiques matter: Biehl, Pollock & Kanai 2021 (2001.06408); Aguilera et al. 2022 (2105.11203: blankets are non-generic); Bruineberg et al. 2022 ("Pearl" vs "Friston" blankets).
+
+  The defensible statement of our closure result is: **learners recover the *causal blanket*** in the sense of Rosas, Mediano, Biehl, Chandaria & Polani 2020 (2008.12568). That is the minimal *dynamical sufficient statistic* that screens the past off from the future (a Pearl-type blanket in time), and it needs neither a steady state nor FEP's spatial ontology.
+
+  So yes: **a concept is a blanket of a specific kind**, the minimal screening-off variable between an agent's history and its future, i.e. its causal state. FEP's spatial blanket ontology is not needed for that.
+- **The patch our data suggest.** Replace (or supplement) FEP's informational complexity with a **kinematic complexity**: the cost of moving the internal state under each input.
+
+  A principled form exists in stochastic thermodynamics. The minimum dissipation to carry out a state transformation in time τ is ∝ W₂²/τ (optimal-transport speed limits: Aurell et al. 2011; Nakazato & Ito). So the cost of an input's action is its *transport distance from the identity*, and our cost index c_ρ is the representation-theoretic version of that distance.
+
+  The nearest existing objective is Vastola & Gershman 2026 (2610.36272): information minus an energetic cost of temporal variation, with phase transitions. Theirs is a linear filter with a stimulus-history information term. Ours is predictive value over group actions with the cost on each input's operator, tested on learners.
+
+### 16.2 Enaction: value is agent-relative, and the cost carries the agent
+
+The selection rule P(ρ) ∝ e_ρ^α · exp(−λ c_ρ) (C43, calibrated post hoc, tested prospectively in Spike 77) splits a concept's representation into two parts:
+- **an invariant part**: the predictive operator of the target and its spectrum e_ρ, the same for every observer of the same behaviour;
+- **an agent-relative part**: the cost c_ρ of realising each candidate *with that agent's dynamics*, and the exchange rate λ/α set by the agent's resources (width, noise).
+
+Two agents facing the same target X therefore realise it differently, as the user anticipated: no two beings hold exactly the same representation, or obtain the same value from it. The difference is *lawful*, because it is fixed by their cost structure and exchange rate. This is the cybernetic and Peircean point (a representation's value lies in directing action) made quantitative.
+
+The Spike 72–73 refutations (input encoding does not decide) constrain *where* agent-relativity lives. It is in the cost of the internal dynamics and the resource budget, not in how the input is presented.
+
+### 16.3 Relativity: the conversion factor and the proper frame (analogy made precise where it can be)
+
+- **The "c" (conversion factor).** In physics, Landauer's kT ln 2 converts bits into joules, and in Still et al. 2012 the inverse temperature β converts non-predictive bits into dissipated work. In our rule, **λ/α converts log-predictive value into dynamical cost**. If λ/α is universal for a class of learners (fixed by, e.g., their noise temperature), the theory is "relative on the surface, deterministic as a whole": every agent's choice follows from the invariant spectrum plus its own cost structure, through one exchange rate.
+
+  Spike 77, H77.3, tests whether pressure *moves* the rate, as a temperature would. Calibration hint: λ/α ≈ 1.5 at default, ≈ 4.4 under heavy noise.
+- **The proper frame ("view from nowhere").** By Kalman's realization theorem, all *minimal* realizations of the same predictive operator are related by a unique invertible change of state coordinates. The basis-free invariants — Hankel singular values, Markov parameters, and for symmetric systems the isotypic decomposition with its multiplicities — are the same for every observer. **The behaviour in the final coalgebra (§12.1) is the frame-independent object.** Each agent's representation is a chart on it, a truncated realization chosen by that agent's exchange rate.
+
+  The "proper time" analogue is thus the agent-independent spectrum of the predictive operator: the *essential spectrum of a concept*, from which every agent's representation is obtained by its own cost-weighted truncation.
+
+### 16.4 Synesism: correspondences, and terms to coin (proposals for the user)
+
+The Synesism canon (`synesism-workshop/canon/lexicon.md`, v1.2) already has close counterparts:
+
+| Our object | Synesism term | Fit |
+|---|---|---|
+| An agent's truncated realization of a target's behaviour | **Module**: a partial, perspectival reality-slice set by the entity's signature and fitness function; real, not illusion; illusion is misapplication outside its domain | close |
+| The invariant behaviour shared by all modules | **module-level unitarity**: the sum of reality shared across entities equals one | close in spirit |
+| The learning signal toward the minimal realization | **Tensor**: an imbalance producing a pseudoforce toward equilibrium; from the worldtree's own frame never tipped | suggestive |
+| The proper (frame-independent) object | the **worldtree's own frame / Semes** | suggestive |
+| A conserved budget split between value and cost | **Molarity**: a conserved measure summing to 1 | speculative |
+
+**Things Synesism does not yet name (proposals; the user coins the terms):**
+1. The **exchange rate** λ/α between predictive value and the cost of realising it: the theory's "c".
+2. The **essential spectrum of a concept**: the frame-independent spectrum and multiplicities of its predictive operator, from which every module is a cost-weighted truncation.
+3. The **cost of an action**: how far an input moves the internal state from where it was, as the dissipation-bounded transport distance.
+4. A **lawful perspective**: the specific truncation an agent makes, determined by its own cost structure. This is the quantitative form of a Module.
+5. The **causal blanket of a concept**: the minimal screening-off state between an agent's past and its future.
+6. A **cover**: a representation that keeps a distinction the target does not need (C36) because it is cheaper to realize. Ontologically, this is a perspectival surplus that is not an illusion.
+
+### 16.5 math-rsi (lisresearchgroup/math-rsi), checked
+
+A workflow-level self-improving harness for mathematical research. Its loop is Prepare → Route → Prove → Verify → Handoff, with a per-problem wiki, Lean 4/DRAT certificates, and a `meta-evolve` skill that turns diagnosed failures into workflow changes. "RSI" is not expanded on the page, and the case-study claims are partly flagged by the authors as pending verification.
+
+**For semplex:** adopt the meta-evolve step. Our failed post-hoc C41 (fitted 46/48, failed prospectively) is exactly the kind of failure such a step should turn into a rule. The rule: "post-hoc fits must be cross-validated across held-out automata before registration", which Spike 77's calibration follows (leave-one-automaton-out).
+
+**For Synesism:** its Lean-certificate verification stage and per-problem wiki fit the workshop's proof-exploration protocol.
