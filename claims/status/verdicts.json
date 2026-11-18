@@ -982,5 +982,37 @@
   "verdict": "HELD",
   "measured": "dihedral ties 10/10 (cosine only)",
   "bar": ">= 0.8"
+ },
+ {
+  "key": "75:H75.1",
+  "spike": "75",
+  "id": "H75.1",
+  "verdict": "HELD",
+  "measured": "c mod 2 probe GRU 0.56, SPEC 0.52, ES 0.53",
+  "bar": "all <= 0.6"
+ },
+ {
+  "key": "75:H75.2",
+  "spike": "75",
+  "id": "H75.2",
+  "verdict": "HELD",
+  "measured": "energy leader 100% (GRU, SPEC)",
+  "bar": ">= 0.8"
+ },
+ {
+  "key": "75:H75.3",
+  "spike": "75",
+  "id": "H75.3",
+  "verdict": "HELD",
+  "measured": "reservoir same leader across readouts 5/5; GRU 0/5",
+  "bar": "RES >= 0.8, GRU <= 0.2"
+ },
+ {
+  "key": "75:H75.4",
+  "spike": "75",
+  "id": "H75.4",
+  "verdict": "HELD",
+  "measured": "reservoir macro probe 0.05-0.35 in 25/25",
+  "bar": "<= 0.9 in >= 80%"
  }
 ]

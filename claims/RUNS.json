@@ -1429,6 +1429,52 @@
    "claims": [
     "P208"
    ]
+  },
+  {
+   "spike": "75",
+   "date": "2026-11-18",
+   "commit": "015d439",
+   "question": "Are closure and the predictive-energy shape law substrate-independent (gradient RNN, Hankel spectral learner, fixed reservoir, evolution strategies)?",
+   "overall": "HELD",
+   "verdicts": [
+    {
+     "id": "H75.1",
+     "verdict": "HELD",
+     "measured": "c mod 2 probe GRU 0.56, SPEC 0.52, ES 0.53",
+     "bar": "all <= 0.6"
+    },
+    {
+     "id": "H75.2",
+     "verdict": "HELD",
+     "measured": "energy leader 100% (GRU, SPEC)",
+     "bar": ">= 0.8"
+    },
+    {
+     "id": "H75.3",
+     "verdict": "HELD",
+     "measured": "reservoir same leader across readouts 5/5; GRU 0/5",
+     "bar": "RES >= 0.8, GRU <= 0.2"
+    },
+    {
+     "id": "H75.4",
+     "verdict": "HELD",
+     "measured": "reservoir macro probe 0.05-0.35 in 25/25",
+     "bar": "<= 0.9 in >= 80%"
+    }
+   ],
+   "learned": "Closure and the energy law are properties of adaptive predictive compression: gradient, spectral (no neurons) and gradient-free learners reach the same minimal automaton and the same leading constituent (the top of the Hankel realisation); a fixed reservoir reaches neither, and its geometry ignores the readout.",
+   "gaps_moved": [
+    {
+     "gap": "A12",
+     "from": "PARTIAL",
+     "to": "PARTIAL",
+     "why": "Laws shown substrate-independent across adaptive learners (P209, P210)"
+    }
+   ],
+   "claims": [
+    "P209",
+    "P210"
+   ]
   }
  ]
 }

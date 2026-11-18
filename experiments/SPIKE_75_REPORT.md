@@ -1,6 +1,6 @@
 # Spike 75: Are closure and the predictive-energy shape law substrate-independent?
 
-**Date:** 2026-11-18 · **Status:** pre-registered (predictions in `results/spike75_predictions.json`, committed with this report before any run) · **Follows:** the user's directive of 2026-11-18 to state laws for any computing system, not for one network architecture; P200 (closure discards the unobservable part); P201 and P204 (the shape law); `charter/FOUNDATIONS.md` §14.
+**Date:** 2026-11-18 · **Status:** complete (pre-registered with predictions in 015d439; results below) · **Follows:** the user's directive of 2026-11-18 to state laws for any computing system, not for one network architecture; P200 (closure discards the unobservable part); P201 and P204 (the shape law); `charter/FOUNDATIONS.md` §14.
 
 ## Question
 
@@ -68,3 +68,49 @@ python -m experiments.spike75 predict
 python -m experiments.spike75 run
 python -m experiments.spike75 analyse
 ```
+
+## Results
+
+`experiments/results/spike75.json`; per-run outputs in `spike75_raw/`. A container restart interrupted the runs. Because they are seeded and the runner skips completed runs, the restart changed nothing.
+
+**Fits:**
+- GRU: 23 of 25 fitted (two S4_12 runs reached 0.93 and 0.98).
+- SPEC: exact by construction.
+- ES: Z6_mod3 fitted 3/3; **A4_4 did not fit (0.77–0.78) and A4_6 did not (0.85–0.90)**, so ES counts only for H75.1.
+- RES: fit 0.65–0.92 (not guarded).
+
+| Substrate | Z6_mod3: macro probe / c mod 2 | A4_4 leader | A4_6 leader | S4_12 leader | Z9_s1_014 leader | Macro probe (A₄, S₄) |
+|---|---|---|---|---|---|---|
+| GRU (gradients) | 1.00 / **0.52–0.57** | χ₃ 5/5 | **ω-pair 5/5** | **std 5/5** | r0 5/5 | 0.70–1.00 |
+| SPEC (Hankel SVD) | 1.00 / **0.50–0.52** | χ₃ 3/3 | **ω-pair 3/3** | **std 3/3** | r0 3/3 | 1.00 |
+| ES (no gradients) | 1.00 / **0.52–0.54** | χ₃ 3/3 (unfitted) | ω-pair 3/3 (unfitted) | — | — | 0.24–0.59 (unfitted) |
+| RES (fixed reservoir) | **0.33–0.35** / 0.50 | χ₃ 5/5 | **χ₃ 5/5** | std⊗sign 5/5 | r1 5/5 | **0.05–0.16** |
+
+| ID | Measured | Criterion | Verdict |
+|---|---|---|---|
+| H75.1 | median c mod 2 probe: GRU 0.56, SPEC 0.52, ES 0.53 | all ≤ 0.6 | **HELD** |
+| H75.2 | energy prediction = leader in 100% of fitted A4_6/S4_12 runs (GRU 9/9, SPEC 6/6; ES unfitted) | ≥ 80%, ≥ 2 substrates | **HELD** |
+| H75.3 | reservoir: same leader for both A₄ readouts in 5/5 seed pairs; GRU in 0/5 | RES ≥ 80% and GRU ≤ 20% | **HELD** |
+| H75.4 | reservoir macrostate probe ≤ 0.9 in 25/25 runs (0.05–0.35) | ≥ 80% | **HELD** |
+
+**Reading:**
+- **Closure is a property of adaptive predictive compression, not of gradient descent or of one architecture.**
+  - Three learners that share nothing but a predictive objective and an adaptive state each build exactly the 3-state minimal automaton of ℤ/6 read out mod 3. Each keeps no linearly decodable trace of the unobserved 2-part:
+    - a gradient-trained GRU;
+    - an exact SVD of the Hankel matrix;
+    - a GRU trained by evolution strategies, with no gradients at all.
+  - A fixed random reservoir with a trained linear readout builds no minimal automaton at all. Its state is a fading memory of recent letters (Tiňo's Markovian bias), and probes recover the macrostate at near-chance levels for every automaton.
+- **The predictive-energy shape law holds identically in a substrate with no neurons and no gradients.** Wherever the gradient-trained network fits, its leading constituent is the one the exact spectral learner selects: the unfaithful ω-pair for A₄ on pairs, std (multiplicity 2) for S₄ on 12 cosets. In the ℤ/9 automaton that was a seed lottery in Spike 74, this spike's GRUs (5/5) and the spectral learner (3/3) both chose the energy prediction.
+
+  The evolution-strategies networks, not fitted on A₄, already led with the readout's predicted constituent: ω-pair for the pair readout, χ₃ for the point readout.
+- **Readout-shaped geometry requires an adaptive state.** The reservoir's leading constituent is the same whatever the readout (χ₃ for both A₄ readouts), because its geometry is set by its fixed dynamics and the letters. Adaptive learners switch with the readout.
+
+**What this establishes, honestly.** For the spectral learner the shape law holds by construction: its Gram is the Hankel Gram. The content of H75.2 is that a gradient-trained nonlinear network converges to the same subspace, and the content of H75.1 that a gradient-free one discards the same information. So the laws describe a *target* that different adaptive learners reach, the top of the Hankel (Ho–Kalman) realisation. They are not a property of one learning rule.
+
+In the 2026-11-18 literature check, no prior measurement of recurrent-network states against the Hankel singular subspace, and no cross-substrate test of minimal-automaton recovery, was found.
+
+**Limits:**
+- ES failed to fit A₄.
+- One reservoir configuration.
+- All four substrates are simulated digitally.
+- The next substrates in `charter/FOUNDATIONS.md` §14.2 are chemical reaction networks and Hebbian/local learners.

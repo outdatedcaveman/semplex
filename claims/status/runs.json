@@ -308,5 +308,15 @@
   "learned": "The post-hoc gated-smoothness law does not generalise; when several constituents carry predictive energy the leader is a seed lottery. The robust shape law is: geometry lies in the readout's energetic constituents, and a clearly dominant (multiplicity-weighted) one leads.",
   "moved": "A12: PARTIAL → PARTIAL (C41 refuted (P208); selection reframed as a distribution over seeds)",
   "claims": "P208"
+ },
+ {
+  "spike": "75",
+  "date": "2026-11-18",
+  "commit": "015d439",
+  "question": "Are closure and the predictive-energy shape law substrate-independent (gradient RNN, Hankel spectral learner, fixed reservoir, evolution strategies)?",
+  "overall": "HELD",
+  "learned": "Closure and the energy law are properties of adaptive predictive compression: gradient, spectral (no neurons) and gradient-free learners reach the same minimal automaton and the same leading constituent (the top of the Hankel realisation); a fixed reservoir reaches neither, and its geometry ignores the readout.",
+  "moved": "A12: PARTIAL → PARTIAL (Laws shown substrate-independent across adaptive learners (P209, P210))",
+  "claims": "P209 P210"
  }
 ]

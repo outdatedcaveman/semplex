@@ -84,6 +84,7 @@ Run in parallel by Gemini from the Spike 10c state; renumbered at the merge (ori
 ├ 71  energy vs AGF vs orbit; emergence order; whitened geometry           frozen: H71.4, 6 held (multiplicity decides); H71.2, 3, 5, 7 broken; H71.1, 8 neither
 ├ 72  input encoding decides the cover (C38)                               frozen: H72.3 broken (cover survives degree-2 input); H72.4 held; H72.1-2 no verdict (A5 fit)
 ├ 73  smoothness pull (C40); A5 icosahedral letters repaired              frozen: H73.4 held; H73.3 broken (C38 refuted); H73.2 neither; post hoc C41 gated smoothness
-└ 74  gated smoothness (C41) prospective                                  frozen: H74.3 held (dihedral ties, cosine only); H74.1-2 neither: seed lottery
+├ 74  gated smoothness (C41) prospective                                  frozen: H74.3 held (dihedral ties, cosine only); H74.1-2 neither: seed lottery
+└ 75  substrate independence: GRU, Hankel spectral, reservoir, ES          frozen: H75.1-4 held (laws hold for adaptive learners; reservoir shows neither)
 ```
 ```
