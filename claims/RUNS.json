@@ -1294,6 +1294,51 @@
     "P204",
     "P205"
    ]
+  },
+  {
+   "spike": "72",
+   "date": "2026-11-18",
+   "commit": "bc6f04e",
+   "question": "Does the input encoding decide whether a recurrent network lifts to a cover (C38)?",
+   "overall": "BROKEN",
+   "verdicts": [
+    {
+     "id": "H72.1",
+     "verdict": "NO VERDICT",
+     "measured": "0 fitted RHO3 runs",
+     "bar": "guard"
+    },
+    {
+     "id": "H72.2",
+     "verdict": "NO VERDICT",
+     "measured": "0 fitted ONEHOT/RHO5",
+     "bar": "guard"
+    },
+    {
+     "id": "H72.3",
+     "verdict": "BROKEN",
+     "measured": "D2 input: sign probe 1.00 in 5/5",
+     "bar": "RP2 in >= 80% held; sign >= 0.95 in >= 50% broken"
+    },
+    {
+     "id": "H72.4",
+     "verdict": "HELD",
+     "measured": "D1: sign 1.00 in 5/5",
+     "bar": ">= 80%"
+    }
+   ],
+   "learned": "The double cover survives degree-2 input encoding, so it is not an encoding effect; unfitted discrete A5 networks lead with the readout's chi5 even when fed chi3. Candidate post-hoc explanation: a smoothness pull toward the lowest-frequency faithful representation when letters are near-identity.",
+   "gaps_moved": [
+    {
+     "gap": "A12",
+     "from": "PARTIAL",
+     "to": "PARTIAL",
+     "why": "C38 refuted (P206); C40 smoothness pull proposed"
+    }
+   ],
+   "claims": [
+    "P206"
+   ]
   }
  ]
 }

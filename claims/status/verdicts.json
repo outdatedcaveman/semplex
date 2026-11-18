@@ -886,5 +886,37 @@
   "verdict": "NEITHER",
   "measured": "cyclic: energy 36%, smooth circle 21%",
   "bar": "energy >= 0.8 held; smooth >= 0.5 broken"
+ },
+ {
+  "key": "72:H72.1",
+  "spike": "72",
+  "id": "H72.1",
+  "verdict": "NO VERDICT",
+  "measured": "0 fitted RHO3 runs",
+  "bar": "guard"
+ },
+ {
+  "key": "72:H72.2",
+  "spike": "72",
+  "id": "H72.2",
+  "verdict": "NO VERDICT",
+  "measured": "0 fitted ONEHOT/RHO5",
+  "bar": "guard"
+ },
+ {
+  "key": "72:H72.3",
+  "spike": "72",
+  "id": "H72.3",
+  "verdict": "BROKEN",
+  "measured": "D2 input: sign probe 1.00 in 5/5",
+  "bar": "RP2 in >= 80% held; sign >= 0.95 in >= 50% broken"
+ },
+ {
+  "key": "72:H72.4",
+  "spike": "72",
+  "id": "H72.4",
+  "verdict": "HELD",
+  "measured": "D1: sign 1.00 in 5/5",
+  "bar": ">= 80%"
  }
 ]

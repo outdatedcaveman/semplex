@@ -82,6 +82,6 @@ Run in parallel by Gemini from the Spike 10c state; renumbered at the merge (ori
 ├ 69  C37 formal: predictive structure (tau) fixed beforehand, 17 automata   frozen: H69.3 held (leading component); H69.1–2, 4, 6 broken; H69.5, 7 neither
 ├ 70  S^2 vs RP^2 redesigned (passable guard)                              frozen: H70.1, 2, 4 held (double cover, C36); H70.3 neither
 ├ 71  energy vs AGF vs orbit; emergence order; whitened geometry           frozen: H71.4, 6 held (multiplicity decides); H71.2, 3, 5, 7 broken; H71.1, 8 neither
-└ 72  input encoding decides the cover (C38): A5 icosahedral letters; D2 rotations   running
+└ 72  input encoding decides the cover (C38)                               frozen: H72.3 broken (cover survives degree-2 input); H72.4 held; H72.1-2 no verdict (A5 fit)
 ```
 ```

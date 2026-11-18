@@ -1,6 +1,6 @@
 # Spike 72: Does the input encoding decide whether a network lifts to a cover?
 
-**Date:** 2026-11-17 · **Status:** pre-registered (predictions in `results/spike72_predictions.json`, committed with this report before any run) · **Follows:** Spike 70 (C36: axis-trackers build the double cover S² → RP², P203) and Spike 60 (A₅ read through 6 points builds χ₅, P192). The comparison of the two was made on 2026-11-17 and is recorded in `charter/FOUNDATIONS.md` §13. **Related prior work:** Marchetti, Kunin et al. (arXiv:2602.03655) prove that the *encoding's* Fourier statistics set which irreps a two-layer network learns.
+**Date:** 2026-11-17 · **Status:** complete (pre-registered with predictions in bc6f04e; results below) · **Follows:** Spike 70 (C36: axis-trackers build the double cover S² → RP², P203) and Spike 60 (A₅ read through 6 points builds χ₅, P192). The comparison of the two was made on 2026-11-17 and is recorded in `charter/FOUNDATIONS.md` §13. **Related prior work:** Marchetti, Kunin et al. (arXiv:2602.03655) prove that the *encoding's* Fourier statistics set which irreps a two-layer network learns.
 
 ## The observation that motivates it
 
@@ -76,3 +76,38 @@ python -m experiments.spike72 predict
 python -m experiments.spike72 run
 python -m experiments.spike72 analyse
 ```
+
+## Results
+
+`experiments/results/spike72.json`; per-run outputs in `spike72_raw/`.
+
+**Discrete part: no verdict.** A₅ with an identity letter failed the fit guard in all 15 runs: ONEHOT 0.86–0.89, RHO3 0.87–0.89, RHO5 0.87–0.97.
+
+**Continuous part: all 15 runs fit** (R² 0.993–0.996).
+
+| Encoding | Fit R² | R²₁ | R²₂ | Balanced sign probe |
+|---|---|---|---|---|
+| OMEGA (ω, 3) | 0.993–0.994 | 0.73–0.75 | 0.38–0.42 | 1.00 in 5/5 |
+| D1 (R, 9) | 0.993–0.995 | 0.74–0.76 | 0.41–0.44 | 1.00 in 5/5 |
+| **D2 (degree-2, 25)** | 0.995–0.996 | **0.71–0.74** | 0.36–0.42 | **1.00 in 5/5** |
+
+| ID | Measured | Criterion | Verdict |
+|---|---|---|---|
+| H72.1 | no fitted RHO3 runs | guard | **NO VERDICT** |
+| H72.2 | no fitted ONEHOT or RHO5 runs | guard | **NO VERDICT** |
+| H72.3 | D2: R²₁ < 0.5 × OMEGA median (0.37) **and** balanced sign probe ≤ 0.75 in 0/5; sign probe ≥ 0.95 in 5/5 | ≥ 80% held; sign ≥ 0.95 in ≥ 50% broken | **BROKEN** |
+| H72.4 | D1: balanced sign probe ≥ 0.95 in 5/5 | ≥ 80% | **HELD** |
+
+**Exploratory, unfitted:** in all 15 discrete runs the leader is χ₅ (r3), both in cosine and whitened geometry, including all 5 RHO3 runs that were fed the icosahedral χ₃ matrices.
+
+**Reading:**
+- **C38 (the encoding decides the cover) is refuted on the continuous side.**
+  - Rotations were given in the very representation in which the minimal state space RP² sits linearly (degree 2).
+  - Axis-trackers still built the signed direction: the sign is perfectly decodable and the degree-1 geometry matches ω-fed networks.
+  - The double cover is not an encoding effect.
+- **The discrete side gives no verdict**, but every unfitted network led with the readout's own χ₅, including those fed χ₃. This is consistent with the predictive-energy law and against C38.
+- **What remains to explain the cover** (post hoc, untested): degree 1 is the *smoothest* faithful representation of SO(3). That is the same pull that sends cyclic counters back to the k = ±1 circle (Spikes 69, 71) when inputs are near-identity increments.
+
+  Candidate **C40, smoothness pull.** When every letter is close to the identity (small rotations; +1 steps on a large cycle), learners lead with the lowest-frequency faithful representation, against the predictive kernel. When letters are far from the identity (3- and 5-cycles of A₅), the predictive kernel's energy decides.
+
+  This must be registered with a letter-step-size sweep at a fixed group and readout. One example: ℤ/n with steps +1 versus +s for s coprime to n, where relabelling makes the k = s⁻¹ character "smooth".

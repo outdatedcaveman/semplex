@@ -278,5 +278,15 @@
   "learned": "Multiplicity-weighted predictive energy, not dimension or orbit size, selects the leading constituent of a non-abelian group concept (8/8 against AGF and orbit predictors); geometry is reparametrisation-robust; learning passes through stages; ties and cyclic counters are decided by the letters, with a pull to the smooth circle.",
   "moved": "A12: PARTIAL → PARTIAL (Leading-constituent law sharpened to multiplicity-weighted energy (P204); stage dynamics and tie-breaking open (P205))",
   "claims": "P204 P205"
+ },
+ {
+  "spike": "72",
+  "date": "2026-11-18",
+  "commit": "bc6f04e",
+  "question": "Does the input encoding decide whether a recurrent network lifts to a cover (C38)?",
+  "overall": "BROKEN",
+  "learned": "The double cover survives degree-2 input encoding, so it is not an encoding effect; unfitted discrete A5 networks lead with the readout's chi5 even when fed chi3. Candidate post-hoc explanation: a smoothness pull toward the lowest-frequency faithful representation when letters are near-identity.",
+  "moved": "A12: PARTIAL → PARTIAL (C38 refuted (P206); C40 smoothness pull proposed)",
+  "claims": "P206"
  }
 ]
