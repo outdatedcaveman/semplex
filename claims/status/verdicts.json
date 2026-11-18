@@ -1046,5 +1046,29 @@
   "verdict": "BROKEN",
   "measured": "ES width 2/6",
   "bar": ">= 0.8"
+ },
+ {
+  "key": "77:H77.1",
+  "spike": "77",
+  "id": "H77.1",
+  "verdict": "HELD",
+  "measured": "NLL Gibbs 4.4 vs energy 35.5, smooth 56.7",
+  "bar": "Gibbs < both"
+ },
+ {
+  "key": "77:H77.2",
+  "spike": "77",
+  "id": "H77.2",
+  "verdict": "HELD",
+  "measured": "argmax 50/51 (98%)",
+  "bar": ">= 75%"
+ },
+ {
+  "key": "77:H77.3",
+  "spike": "77",
+  "id": "H77.3",
+  "verdict": "HELD",
+  "measured": "exchange rate 2.8 -> 9.2 under noise",
+  "bar": "eta=1 rate > default"
  }
 ]

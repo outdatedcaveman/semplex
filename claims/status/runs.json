@@ -328,5 +328,15 @@
   "learned": "Energy is not the variational principle: under width or noise pressure cyclic learners trade energy for the smoothest letter action (k = 1 circle), while S4 keeps the energetic constituent when costs are equal. Post-hoc C42: learned constituent = predictive value minus implementation cost of the letter actions.",
   "moved": "A12: PARTIAL → PARTIAL (Variational-energy picture refuted (P211); C42 value-minus-cost proposed)",
   "claims": "P211"
+ },
+ {
+  "spike": "77",
+  "date": "2026-11-18",
+  "commit": "8550e70",
+  "question": "Does one exchange rate between predictive value and dynamical cost predict which representation a learner builds (C43)?",
+  "overall": "HELD",
+  "learned": "A two-parameter Gibbs rule, value^alpha * exp(-lambda * cost), with parameters frozen in advance, predicts the leading representation of new automata in 98% of runs in both directions; resource pressure raises the exchange rate toward dynamical cost, like a temperature.",
+  "moved": "A12: PARTIAL → PARTIAL (Selection law with one exchange rate supported prospectively (P212))",
+  "claims": "P212"
  }
 ]

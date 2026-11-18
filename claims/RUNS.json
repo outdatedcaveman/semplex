@@ -1520,6 +1520,45 @@
    "claims": [
     "P211"
    ]
+  },
+  {
+   "spike": "77",
+   "date": "2026-11-18",
+   "commit": "8550e70",
+   "question": "Does one exchange rate between predictive value and dynamical cost predict which representation a learner builds (C43)?",
+   "overall": "HELD",
+   "verdicts": [
+    {
+     "id": "H77.1",
+     "verdict": "HELD",
+     "measured": "NLL Gibbs 4.4 vs energy 35.5, smooth 56.7",
+     "bar": "Gibbs < both"
+    },
+    {
+     "id": "H77.2",
+     "verdict": "HELD",
+     "measured": "argmax 50/51 (98%)",
+     "bar": ">= 75%"
+    },
+    {
+     "id": "H77.3",
+     "verdict": "HELD",
+     "measured": "exchange rate 2.8 -> 9.2 under noise",
+     "bar": "eta=1 rate > default"
+    }
+   ],
+   "learned": "A two-parameter Gibbs rule, value^alpha * exp(-lambda * cost), with parameters frozen in advance, predicts the leading representation of new automata in 98% of runs in both directions; resource pressure raises the exchange rate toward dynamical cost, like a temperature.",
+   "gaps_moved": [
+    {
+     "gap": "A12",
+     "from": "PARTIAL",
+     "to": "PARTIAL",
+     "why": "Selection law with one exchange rate supported prospectively (P212)"
+    }
+   ],
+   "claims": [
+    "P212"
+   ]
   }
  ]
 }

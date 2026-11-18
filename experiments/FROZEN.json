@@ -97,6 +97,9 @@
  "experiments/results/spike75_predictions.json": "87bafccbb0df86cd283b503f2659a12b20e0461441aeaf90d0b329c0b935c2ac",
  "experiments/results/spike76.json": "f9698f06938dcb415a0ef2254572ad5374ecb3f121894873661e4da24895de39",
  "experiments/results/spike76_predictions.json": "a91428c5deaaa0a57e52e6a8d02aa31d826fdd6794aeceedba7f930cdb63a061",
+ "experiments/results/spike77.json": "d1698fb2a20c32a6130e85fd4d56ca0aba92ea998ca7323ca0223891b72b10dd",
+ "experiments/results/spike77_predictions.json": "52b50f7e63e06a5e37239c85cdbf58caae6e8aeba73ace41d30e210fb6f5080a",
+ "experiments/results/theory_exchange_rate.json": "36895d65ffbc4192c34c2e15ddf140ed5c7924e06101669e4ed3547c398a4e45",
  "experiments/results/theory_gated_smoothness.json": "50c04377f25145f0f0f9d0752e938bccb0fdebbdea734ee057858dad41d05dc7",
  "experiments/spike01.py": "105ad901e24b58b2a58d425436345546f79e159d9cd49a8a33335ad98006c8ca",
  "experiments/spike02.py": "0841215acf72e5258b9ff7b1d95bbf300a9a76972500df9b37022e7162f13e9e",
@@ -184,5 +187,7 @@
  "experiments/spike74.py": "542e4f018e84506f75cad6bc8def65a2efe20ad006dca4d3f8e41013e4a43795",
  "experiments/spike75.py": "4bb119160a8aadd5b8d07b84c763eeba4043cc025a69dd9517b7fecc95399aae",
  "experiments/spike76.py": "b607aee446d896b83e2a0d8bc010b9e2acd0f9e74d459fe363893c28193f31d2",
+ "experiments/spike77.py": "99ec34c23093cb93809e9a0a681244373993b00f98e5a44390b7ce5cb7c49075",
+ "experiments/theory/exchange_rate.py": "138eafa6e51e7bc3bfb3bd63913573efab57b5018b67d5fde4d9b85074a05e6d",
  "experiments/theory/gated_smoothness.py": "605be44548f4c3ceb1729681135e5047a3f1822a32e90015a5e3a6196eda7460"
 }

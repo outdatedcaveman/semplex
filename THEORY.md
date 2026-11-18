@@ -257,6 +257,8 @@ So: **volume decides what is available; tanh gradient training adds an informati
 
 - **Energy as variational principle (REFUTED; Spike 76, H76.1–H76.4 broken).** Width limits, state noise and training time do not act on learned constituents as the truncated-realisation / information-bottleneck picture predicts; under pressure cyclic learners pick the smoothest letter action (P211). Post-hoc C42: value (predictive energy) minus implementation cost (distance of letter actions from identity).
 
+- **C43, selection with one exchange rate (SUPPORTED prospectively; Spike 77, H77.1–H77.3 held).** P(ρ) ∝ e_ρ^α·exp(−λ c_ρ): predictive value (energy share) traded against dynamical cost (distance of input actions from identity) at one exchange rate λ/α predicts the leading representation of 11 new automata in 98% of runs, in both directions; resource pressure raises the rate like a temperature (P212). Interpretation and relation to FEP, enaction and relativity in `charter/FOUNDATIONS.md` §16.
+
 - **C37, two regimes (STRUCTURED HALF SUPPORTED as a leading-component law; DEGENERATE HALF REFUTED; Spike 69, pre-registered with predictions).**
   - *Spike 71 (pre-registered head-to-head):* the leading constituent follows **multiplicity-weighted** predictive energy (share ∝ m²C). It beats the dimension-discounted AGF utility (Kunin et al. 2025, extrapolated) and the minimum-orbit predictor (Wu et al. 2025) in 8/8 runs where they disagree (P204), and it is robust to reparametrisation.
   - *Refuted:* low-dimension tie-breaking and persistence of the first-emerging geometry, since learning passes through stages (P205).

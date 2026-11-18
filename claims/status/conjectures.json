@@ -190,5 +190,11 @@
   "title": "two regimes",
   "state": "Refuted",
   "note": "STRUCTURED HALF SUPPORTED as a leading-component law; DEGENERATE HALF REFUTED; Spike 69, pre-registered with predictions"
+ },
+ {
+  "id": "C43",
+  "title": "selection with one exchange rate",
+  "state": "Supported",
+  "note": "SUPPORTED prospectively; Spike 77, H77.1–H77.3 held"
  }
 ]
