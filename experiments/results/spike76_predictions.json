@@ -1,0 +1,82 @@
+{
+ "Z9_s1_014": {
+  "order": [
+   "r0_tr2_ker1",
+   "r2_tr2_ker3",
+   "r1_tr2_ker1",
+   "r3_tr2_ker1"
+  ],
+  "shares": {
+   "r0_tr2_ker1": 0.5487019407081525,
+   "r1_tr2_ker1": 0.09974030426705503,
+   "r2_tr2_ker3": 0.3282456688913612,
+   "r3_tr2_ker1": 0.00806110776468862
+  }
+ },
+ "Z10_s1_014": {
+  "order": [
+   "r4_tr2_ker1",
+   "r1_tr2_ker2",
+   "r0_tr2_ker1",
+   "r2_tr1_ker5",
+   "r3_tr2_ker2"
+  ],
+  "shares": {
+   "r0_tr2_ker1": 0.1613158861395776,
+   "r1_tr2_ker2": 0.19449009324150193,
+   "r2_tr1_ker5": 0.014186197008739547,
+   "r3_tr2_ker2": 0.004148159593896288,
+   "r4_tr2_ker1": 0.6051474025653717
+  }
+ },
+ "S4_12": {
+  "order": [
+   "r2_tr9_ker1",
+   "r1_tr9_ker1",
+   "r0_tr4_ker4"
+  ],
+  "shares": {
+   "r0_tr4_ker4": 0.1668355427194551,
+   "r1_tr9_ker1": 0.16716031227726302,
+   "r2_tr9_ker1": 0.6660041450032826,
+   "r3_tr1_ker12": 1.4541496199409009e-32
+  }
+ },
+ "W_GRU_Z9_s1_014_w2_n0.0": {
+  "predicted_top": [
+   "r0_tr2_ker1"
+  ]
+ },
+ "W_GRU_Z9_s1_014_w4_n0.0": {
+  "predicted_top": [
+   "r0_tr2_ker1",
+   "r2_tr2_ker3"
+  ]
+ },
+ "W_GRU_Z10_s1_014_w2_n0.0": {
+  "predicted_top": [
+   "r4_tr2_ker1"
+  ]
+ },
+ "W_GRU_Z10_s1_014_w4_n0.0": {
+  "predicted_top": [
+   "r4_tr2_ker1",
+   "r1_tr2_ker2"
+  ]
+ },
+ "W_GRU_S4_12_w3_n0.0": {
+  "predicted_top": [
+   "r2_tr9_ker1"
+  ]
+ },
+ "W_ES_Z9_s1_014_w2_n0.0": {
+  "predicted_top": [
+   "r0_tr2_ker1"
+  ]
+ },
+ "W_ES_Z10_s1_014_w2_n0.0": {
+  "predicted_top": [
+   "r4_tr2_ker1"
+  ]
+ }
+}
