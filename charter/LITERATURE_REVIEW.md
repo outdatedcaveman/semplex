@@ -313,3 +313,9 @@ A delegated reader (alphaXiv plus web) checked five questions. Its findings are 
 | One notion of closure across lumping, bisimulation, Mori–Zwanzig, RG | Cardelli et al. (CRN bisimulation); Larsen–Skou, Buchholz; 2609.11893 (lumpability taxonomy); Mori–Nagasawa, "Informational and algebraic RG", 2609.30362 (read: RG as a conditional expectation, no automata) | Pairwise only |
 | Cross-substrate recovery of the minimal automaton | Zhang–Li 2609.29951 (transformer vs RNN); Michalenko et al. 1902.10297; Tiňo (Markovian bias) | **None found** for a systematic cross-substrate test |
 | Pattern selection vs representation selection | Ermentrout–Cowan; Swindale; Wolf–Geisel; Bressloff et al. (Hebbian cortical maps with isotropy subgroups); "Pattern formation in transformers" 2609.37921 (forward pass only) | Partial and old: Hebbian maps only |
+
+### Prior-art check on 2026-11-18: the predictive-operator / past-future information-bottleneck lineage
+
+A delegated reader examined Bialek–Nemenman–Tishby 2001, Still–Crutchfield–Ellison 2010, Still–Sivak–Bell–Crooks 2012, Palmer et al. 2015, Arbabi–Mezić 2017, Lusch–Kutz–Brunton 2018, Shai et al. 2024, Marchetti–Kunin et al. 2026, Liu 2026 (2605.05029) and Chung–Tiomkin 2026 (2611.08426) in full text. It covered Creutzig–Globerson–Tishby 2009, Chechik et al. 2005, Creutzig–Sprekeler 2008, Turner–Sahani 2007 and the VAMP papers through abstracts and citing papers only.
+
+What each establishes and the three corrections are recorded in `charter/FOUNDATIONS.md` §15.2–§15.3. **The unifying picture is established prior art.** Our possible contributions are its representation-theoretic consequences for symmetric systems, cross-substrate convergence, the intervention tests, and the cover anomaly.

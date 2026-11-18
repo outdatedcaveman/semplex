@@ -656,3 +656,60 @@ Prior art for gradient learners: Marchetti–Kunin et al. (2602.03655, irreps le
 - **Chemical reaction networks as learners.** CRNs can compute (Soloveichik et al.) and their exact lumping is decidable (Cardelli et al.). A CRN trained to track an automaton, for example by evolutionary search over rate constants, is a chemical substrate for Spike-75-style tests. Deficiency theory (Feinberg) constrains which closures are reachable.
 - **Thermodynamic cost of closure.** Discarding the unobservable part is erasure (Landauer). Recent stochastic thermodynamics gives lower bounds on the cost of computing a coarse-graining. Hypothesis: the minimal automaton minimises the dissipation needed to predict, which would make closure a thermodynamic optimum for any physical learner.
 - **Morphogenesis and positional information.** Development builds a *readout-determined* geometry: gene expression patterns set by what downstream cells read, much as our geometry is set by the readout. Wolpert's positional information and Turing pattern selection are the biological analogues of the shape law and the lottery.
+
+## 15. One object behind closure and energy: the predictive operator (2026-11-18)
+
+### 15.1 The picture
+
+Let H be a system's **predictive (Hankel) operator**: each past maps to its row of future outputs, over all continuations. Two of our robust results are two properties of this single object.
+
+- **Closure = the row partition of H.** A representation works only if it identifies exactly those pasts whose Hankel rows are equal. That is the Myhill–Nerode partition, or the causal states for stochastic systems. The dynamics descend to it because the set of rows is closed under the letters (shift invariance: Fliess; Ho–Kalman).
+
+  Correction recorded on 2026-11-18: this is the *partition by equal rows*, not the linear kernel of H. For stochastic processes the causal-state partition can be strictly finer than the Hankel rank suggests (Mess3: Hankel rank 3, infinitely many belief states).
+- **Energy = the singular structure of H's row space.** Within what is kept, the geometry and the order of acquisition follow the singular values of the centred row Gram, which is our predictive kernel. By Eckart–Young, the best r-dimensional linear predictive representation is the top-r singular subspace.
+
+  With a symmetry, H commutes with the group action. By Schur's lemma it is then block-diagonal by isotypic component, which gives:
+  - the multiplicity-weighted isotypic law (P204);
+  - the equal-energy ties for permutation readouts (§11.4 lemma);
+  - lotteries when singular values coincide (P208).
+
+**Mechanism in learners (hypothesis).** A component of the state receives learning signal in proportion to how much the future depends on it. Nothing the future does not pay for is built, and what is paid for is built in order of how much. A system with no adaptive state gets no such signal and builds neither (P209, P210).
+
+The one anomaly is C36: the unobservable sign is kept in continuous axis tracking. The working conjecture is that the cost being minimised is *realisation complexity* (state dimension of a near-linear realisation: S² in ℝ³ against RP² in ℝ⁵), not information about the past. In discrete automata the two costs coincide.
+
+### 15.2 What is already established (credit; checked 2026-11-18)
+
+| Element | Established by | Scope |
+|---|---|---|
+| "Keep only what predicts the future" | Bialek, Nemenman, Tishby, *Neural Comput.* 2001 (physics/0007070): predictive information; §6 poses the past→future information bottleneck and names the minimal sufficient statistic | general |
+| The IB on futures recovers causal states as the trade-off vanishes, with a hierarchy of approximations | Still, Crutchfield, Ellison, *Chaos* 2010 (0708.1580). **Caveat (their Cor. 1):** prediction alone ties causal states with all prescient rivals; minimality needs a vanishing compression pressure | general |
+| Dimensions enter in canonical-correlation (Hankel-SVD) order at critical trade-offs | Chechik et al., *JMLR* 2005; Creutzig, Globerson, Tishby, *PRE* 2009 | **linear-Gaussian only**. Chung & Tiomkin 2611.08426: the unconstrained optimum is not itself a realisable Hankel system |
+| Nonpredictive memory costs dissipation | Still, Sivak, Bell, Crooks, *PRL* 2012 (1203.3271) | physical |
+| A biological encoder near the predictive-IB bound | Palmer, Marre, Berry, Bialek, *PNAS* 2015 (1307.0225), retina | biological |
+| Truncated SVD of the past→future (Koopman/transfer) operator as the optimal linear model; networks trained to find it | Arbabi & Mezić 2017 (1611.06664, Hankel-DMD ↔ ERA/Ho–Kalman); VAMP (Wu & Noé 2020, 1707.04659); VAMPnets (Mardt et al. 2018); Lusch, Kutz, Brunton 2018 (1712.09707) | dynamical systems / molecular kinetics |
+| Networks represent belief (causal) states linearly | Shai et al. 2024 (2405.15943) | transformers, HMM data |
+| Gradient learners acquire irreducibles one at a time by a spectral score | Marchetti, Kunin et al. 2026 (2602.03655); Kunin et al. 2025 (AGF); Saxe et al. 2014/2019 | two-layer and linear networks |
+| Predictive optima favour easy-to-predict modes, not causally relevant ones | Liu 2026 (2605.05029) | general caution |
+
+**So the unifying picture itself (past→future operator; information bottleneck; Hankel/Koopman truncation) is not new.** It is the Bialek–Tishby–Crutchfield–Still line in physics and neuroscience and the Koopman/VAMP line in dynamical systems. Our results are an instance of it.
+
+### 15.3 What may be new, stated modestly
+
+1. **The representation theory of the predictive operator for symmetric systems.**
+   - multiplicity-weighted isotypic energy, which beats a dimension-weighted spectral score (AGF) where they disagree (P204);
+   - the equal-energy lemma that makes permutation readouts generically tied;
+   - lotteries at ties.
+   The block structure itself follows from Schur's lemma; the empirical consequences for learners were not found in the literature.
+2. **Cross-substrate convergence.** Gradient, gradient-free (evolution strategies) and spectral learners reach the same closure and the same leading constituent, while a fixed reservoir reaches neither (P209, P210). No prior cross-substrate test was found.
+3. **Interventions** (Spike 76): if width, memory noise and training time act on the learned constituents exactly as the truncation/bottleneck picture predicts, energy is a *variational principle* for nonlinear, non-Gaussian learners on discrete systems. That would go beyond the linear-Gaussian theorems.
+4. **The cover anomaly** (C36, P203, P206): a case where learners keep an unobservable bit. It suggests the effective cost is realisation complexity rather than predictive information. If so, the bottleneck picture needs a geometric (representation-dimension) cost term, which the IB literature lacks.
+
+### 15.4 A candidate general principle (to be tested, not claimed)
+
+*A representation works, for any system and in any substrate, to the extent that it is a low-complexity realisation of the system's predictive operator:*
+1. it identifies exactly the pasts with equal futures (closure);
+2. it orders what it keeps by predictive energy (spectrum);
+3. it breaks ties by symmetry-breaking dynamics (bifurcation);
+4. its "complexity" is measured by the dimension of the linear action that realises it, which can favour covers over quotients (the cover anomaly).
+
+Points 1–3 have broad prior support. Point 4 is our conjecture.
