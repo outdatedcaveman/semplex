@@ -85,6 +85,7 @@ Run in parallel by Gemini from the Spike 10c state; renumbered at the merge (ori
 ├ 72  input encoding decides the cover (C38)                               frozen: H72.3 broken (cover survives degree-2 input); H72.4 held; H72.1-2 no verdict (A5 fit)
 ├ 73  smoothness pull (C40); A5 icosahedral letters repaired              frozen: H73.4 held; H73.3 broken (C38 refuted); H73.2 neither; post hoc C41 gated smoothness
 ├ 74  gated smoothness (C41) prospective                                  frozen: H74.3 held (dihedral ties, cosine only); H74.1-2 neither: seed lottery
-└ 75  substrate independence: GRU, Hankel spectral, reservoir, ES          frozen: H75.1-4 held (laws hold for adaptive learners; reservoir shows neither)
+├ 75  substrate independence: GRU, Hankel spectral, reservoir, ES          frozen: H75.1-4 held (laws hold for adaptive learners; reservoir shows neither)
+└ 76  energy as variational principle (width, noise, acquisition order)   frozen: H76.1-4 broken; pressure selects the smoothest letter action (post hoc C42)
 ```
 ```

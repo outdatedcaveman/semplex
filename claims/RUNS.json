@@ -1475,6 +1475,51 @@
     "P209",
     "P210"
    ]
+  },
+  {
+   "spike": "76",
+   "date": "2026-11-18",
+   "commit": "e352fc3",
+   "question": "Is predictive energy a variational principle (width, state-noise, acquisition-order interventions)?",
+   "overall": "BROKEN",
+   "verdicts": [
+    {
+     "id": "H76.1",
+     "verdict": "BROKEN",
+     "measured": "top-k kept 28%",
+     "bar": ">= 0.8 held, < 0.5 broken"
+    },
+    {
+     "id": "H76.2",
+     "verdict": "BROKEN",
+     "measured": "energy prefix 47%, monotone 40%",
+     "bar": ">= 0.8"
+    },
+    {
+     "id": "H76.3",
+     "verdict": "BROKEN",
+     "measured": "top acquired first 1/14",
+     "bar": ">= 0.8"
+    },
+    {
+     "id": "H76.4",
+     "verdict": "BROKEN",
+     "measured": "ES width 2/6",
+     "bar": ">= 0.8"
+    }
+   ],
+   "learned": "Energy is not the variational principle: under width or noise pressure cyclic learners trade energy for the smoothest letter action (k = 1 circle), while S4 keeps the energetic constituent when costs are equal. Post-hoc C42: learned constituent = predictive value minus implementation cost of the letter actions.",
+   "gaps_moved": [
+    {
+     "gap": "A12",
+     "from": "PARTIAL",
+     "to": "PARTIAL",
+     "why": "Variational-energy picture refuted (P211); C42 value-minus-cost proposed"
+    }
+   ],
+   "claims": [
+    "P211"
+   ]
   }
  ]
 }

@@ -255,6 +255,8 @@ So: **volume decides what is available; tanh gradient training adds an informati
 
 - **Substrate independence (SUPPORTED; Spike 75, pre-registered, H75.1–H75.4 held).** Closure (discarding the unobservable part) and the predictive-energy shape law hold alike for a gradient-trained GRU, an exact Hankel-SVD spectral learner (no neurons, no gradients) and an evolution-strategies GRU (no gradients); a fixed random reservoir shows neither and its geometry ignores the readout (P209, P210). The laws describe a target — the top of the Hankel (Ho–Kalman) realisation — reached by adaptive predictive learners, not a property of one architecture or learning rule (`charter/FOUNDATIONS.md` §14).
 
+- **Energy as variational principle (REFUTED; Spike 76, H76.1–H76.4 broken).** Width limits, state noise and training time do not act on learned constituents as the truncated-realisation / information-bottleneck picture predicts; under pressure cyclic learners pick the smoothest letter action (P211). Post-hoc C42: value (predictive energy) minus implementation cost (distance of letter actions from identity).
+
 - **C37, two regimes (STRUCTURED HALF SUPPORTED as a leading-component law; DEGENERATE HALF REFUTED; Spike 69, pre-registered with predictions).**
   - *Spike 71 (pre-registered head-to-head):* the leading constituent follows **multiplicity-weighted** predictive energy (share ∝ m²C). It beats the dimension-discounted AGF utility (Kunin et al. 2025, extrapolated) and the minimum-orbit predictor (Wu et al. 2025) in 8/8 runs where they disagree (P204), and it is robust to reparametrisation.
   - *Refuted:* low-dimension tie-breaking and persistence of the first-emerging geometry, since learning passes through stages (P205).

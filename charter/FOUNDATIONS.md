@@ -713,3 +713,14 @@ The one anomaly is C36: the unobservable sign is kept in continuous axis trackin
 4. its "complexity" is measured by the dimension of the linear action that realises it, which can favour covers over quotients (the cover anomaly).
 
 Points 1–3 have broad prior support. Point 4 is our conjecture.
+
+### 15.5 Update after Spike 76: energy is the value term, not the whole principle
+
+Spike 76 refuted energy as a variational principle for nonlinear recurrent learners (P211):
+- width limits do not keep the top-energy constituents;
+- memory noise does not prune from the bottom;
+- the top-energy constituent is not learned first.
+
+Under pressure, cyclic learners choose the character on which each letter acts as the smallest rotation. Where all candidates are equally cheap to implement (S₄), energy still decides.
+
+The working replacement is **C42**: *learned constituent = argmax [predictive value − implementation cost]*, where the cost measures how far each letter's action is from the identity in that representation. This unifies the circle pull, the lotteries (value ≈ cost) and, possibly, the cover anomaly (degree 1 is the cheaper action of small rotations). Physically it is the familiar trade-off between information value and thermodynamic or kinetic cost, with the cost carried by the *dynamics* rather than by the memory. That is the term the information-bottleneck literature lacks. C42 is post hoc and must be registered quantitatively.

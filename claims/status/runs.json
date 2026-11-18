@@ -318,5 +318,15 @@
   "learned": "Closure and the energy law are properties of adaptive predictive compression: gradient, spectral (no neurons) and gradient-free learners reach the same minimal automaton and the same leading constituent (the top of the Hankel realisation); a fixed reservoir reaches neither, and its geometry ignores the readout.",
   "moved": "A12: PARTIAL → PARTIAL (Laws shown substrate-independent across adaptive learners (P209, P210))",
   "claims": "P209 P210"
+ },
+ {
+  "spike": "76",
+  "date": "2026-11-18",
+  "commit": "e352fc3",
+  "question": "Is predictive energy a variational principle (width, state-noise, acquisition-order interventions)?",
+  "overall": "BROKEN",
+  "learned": "Energy is not the variational principle: under width or noise pressure cyclic learners trade energy for the smoothest letter action (k = 1 circle), while S4 keeps the energetic constituent when costs are equal. Post-hoc C42: learned constituent = predictive value minus implementation cost of the letter actions.",
+  "moved": "A12: PARTIAL → PARTIAL (Variational-energy picture refuted (P211); C42 value-minus-cost proposed)",
+  "claims": "P211"
  }
 ]

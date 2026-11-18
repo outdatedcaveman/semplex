@@ -1014,5 +1014,37 @@
   "verdict": "HELD",
   "measured": "reservoir macro probe 0.05-0.35 in 25/25",
   "bar": "<= 0.9 in >= 80%"
+ },
+ {
+  "key": "76:H76.1",
+  "spike": "76",
+  "id": "H76.1",
+  "verdict": "BROKEN",
+  "measured": "top-k kept 28%",
+  "bar": ">= 0.8 held, < 0.5 broken"
+ },
+ {
+  "key": "76:H76.2",
+  "spike": "76",
+  "id": "H76.2",
+  "verdict": "BROKEN",
+  "measured": "energy prefix 47%, monotone 40%",
+  "bar": ">= 0.8"
+ },
+ {
+  "key": "76:H76.3",
+  "spike": "76",
+  "id": "H76.3",
+  "verdict": "BROKEN",
+  "measured": "top acquired first 1/14",
+  "bar": ">= 0.8"
+ },
+ {
+  "key": "76:H76.4",
+  "spike": "76",
+  "id": "H76.4",
+  "verdict": "BROKEN",
+  "measured": "ES width 2/6",
+  "bar": ">= 0.8"
  }
 ]
