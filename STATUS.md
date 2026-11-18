@@ -578,7 +578,7 @@ Progress counts a closed gap as 1 and a partial one as ½. It measures the gap l
 ## 6. Ledger health
 
 - Claims: 207. Empirical: 111; Proved in Lean: 32; Exploratory: 16; Refuted: 15; Proved on paper: 11; Kernel-checked: 6; Conjecture: 5; Method note: 5; Computed: 4; Other: 2.
-- Problems: 1. Claims stated stronger than their support: 46.
+- Problems: 0. Claims stated stronger than their support: 45.
 - Frozen spike files (rule 2): 177.
 
 Weakest links (fixing one lifts every note that rests on it):
@@ -587,7 +587,7 @@ Weakest links (fixing one lifts every note that rests on it):
 |---|---|---|---|
 | P069 | 21 | PROVED (paper proof) + PARTLY MECHANIZED (P160) + EMPIRICALLY-CONFIRMED (H14.1) | Theorem 15: under task-symmetric initialization and equivariant training, circuit probability is constant on task-symmet |
 | P127 | 11 | EXPLORATORY (post hoc) | Feature learning moves nets from the NTK toward the Occam completion: 91% agreement with Occam vs 81–83% with the NTK; w |
-| P186 | 5 | EXPLORATORY (the registered cluster-based closure test H57.1 is BROKEN; the probe analysis was run after the verdicts) | The minimal automaton is present in trained recurrent nets as an exact closed coarse-graining, not as clusters: a linear |
+| P186 | 4 | EXPLORATORY (the registered cluster-based closure test H57.1 is BROKEN; the probe analysis was run after the verdicts) | The minimal automaton is present in trained recurrent nets as an exact closed coarse-graining, not as clusters: a linear |
 | P133 | 2 | EXPLORATORY (demonstrated, tested) | A causal Bayes net's Bayes-optimal decision rule can be distilled to a canonical F0 expr + circuit in CSIR with a kernel |
 | P141 | 2 | EXPLORATORY + PARTLY MECHANIZED | Profile-factor compilation (`profile_factor_compile` in Lean; `cerp/ur_compiler.py`, H-G) factors low-rank partitions `f |
 | P175 | 2 | ~ φ iff every least-cost function agreeing with D satisfies φ") is a rational nonmonotonic consequence relation: it satisfies Cut, Cautious Monotony and Rational Monotony and fails classical Monotony. Exhaustively at n = 3 over 6,561 partial labellings: 0 violations of the three rules, 3,888 of 14,816 Monotony instances fail | Minimum-circuit forcing ("D |

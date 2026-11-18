@@ -13,7 +13,7 @@
  },
  {
   "claim": "P186",
-  "notes": 5,
+  "notes": 4,
   "status": "EXPLORATORY (the registered cluster-based closure test H57.1 is BROKEN; the probe analysis was run after the verdicts)",
   "statement": "The minimal automaton is present in trained recurrent nets as an exact closed coarse-graining, not as clusters: a linear"
  },
