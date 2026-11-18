@@ -64,3 +64,5 @@ python -m experiments.spike76 predict
 python -m experiments.spike76 run
 python -m experiments.spike76 analyse
 ```
+
+**Bug fix before any verdict (2026-11-18).** `spike76.py` sampled strings through Spike 75's `sample`, which looks automata up in Spike 75's table only. Every Z10_s1_014 and S4_12 run that was not in that table crashed before producing any output. No recorded value changed. The fix routes Spike 75's lookup through this spike's `spec`. The 25 runs completed before the fix (all on Z9_s1_014, which is in both tables) are unaffected.

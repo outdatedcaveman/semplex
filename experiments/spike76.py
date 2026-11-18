@@ -20,9 +20,11 @@ AUT = ["Z9_s1_014", "Z10_s1_014", "S4_12"]
 CKPT = list(range(100, 3001, 100)) + list(range(3500, STEPS + 1, 500))
 
 
+_spec75 = S75.spec
 def spec(name):
-    if name in S75.TABLE: return S75.spec(name)
+    if name in S75.TABLE: return _spec75(name)
     return S74.spec(name)
+S75.spec = spec   # bug fix (before any verdict): S75.sample looked automata up in Spike 75's table only
 
 
 def energy_order(name):
