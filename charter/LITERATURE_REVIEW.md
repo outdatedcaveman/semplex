@@ -301,3 +301,15 @@ These were read by a delegated reader using alphaXiv full text, or the alphaXiv 
 1. a torsion-certified topology test for the cover;
 2. the feature-ODE null for learning cost;
 3. neuron-community discovery for the "elemental parts" atlas.
+
+### Prior-art check on 2026-11-18: substrate-general unifications
+
+A delegated reader (alphaXiv plus web) checked five questions. Its findings are recorded in `charter/FOUNDATIONS.md` §14. Papers marked "cited from memory" by the reader were not opened: Cardelli et al.; Feret et al.; Saxe 2019; Koch-Janusz–Ringel; Gordon et al.; Michalenko et al.; Tiňo et al.; Balle–Panangaden–Precup; Wolf–Geisel; Bressloff et al.
+
+| Question | Closest work | How much exists |
+|---|---|---|
+| Equivariant bifurcation for training dynamics | Marchetti–Kunin et al. 2602.03655 (read); He et al. 2606.02993 (read); Yang, "Feature Lottery? A bifurcation theory of concept emergence", 2605.24057 (read: pitchfork bifurcation, not equivariant); Arjevani–Field 2107.02422 (spurious minima, not training time) | Partial: spectral order and lotteries exist; isotropy/orbit-type predictions with ties as mode interactions do not |
+| RNN states vs Hankel singular subspace | Rabusseau–Li–Precup 1807.01406 (linear second-order RNNs = WFAs); Eyraud–Ayache 2009.13101 (spectral distillation); predictive-state RNNs (Downey 2017; Hefny 1803.01489) | **None found** that measures alignment |
+| One notion of closure across lumping, bisimulation, Mori–Zwanzig, RG | Cardelli et al. (CRN bisimulation); Larsen–Skou, Buchholz; 2609.11893 (lumpability taxonomy); Mori–Nagasawa, "Informational and algebraic RG", 2609.30362 (read: RG as a conditional expectation, no automata) | Pairwise only |
+| Cross-substrate recovery of the minimal automaton | Zhang–Li 2609.29951 (transformer vs RNN); Michalenko et al. 1902.10297; Tiňo (Markovian bias) | **None found** for a systematic cross-substrate test |
+| Pattern selection vs representation selection | Ermentrout–Cowan; Swindale; Wolf–Geisel; Bressloff et al. (Hebbian cortical maps with isotropy subgroups); "Pattern formation in transformers" 2609.37921 (forward pass only) | Partial and old: Hebbian maps only |
