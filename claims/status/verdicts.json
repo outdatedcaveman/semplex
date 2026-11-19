@@ -1270,5 +1270,53 @@
   "verdict": "HELD",
   "measured": "37/37 (vacuous: O is the whole space for minimal automata)",
   "bar": ">= 80%"
+ },
+ {
+  "key": "86:H86.1",
+  "spike": "86",
+  "id": "H86.1",
+  "verdict": "NEITHER",
+  "measured": "race winner leads 35/60 (58%)",
+  "bar": ">= 75% held, < 50% broken"
+ },
+ {
+  "key": "86:H86.2",
+  "spike": "86",
+  "id": "H86.2",
+  "verdict": "NEITHER",
+  "measured": "energy coef CI [0.035,0.119]; cost coef CI [-0.62,0.70]",
+  "bar": "both CIs exclude 0, right signs"
+ },
+ {
+  "key": "86:H86.3",
+  "spike": "86",
+  "id": "H86.3",
+  "verdict": "HELD",
+  "measured": "energy coef with log-dim covariate CI [0.020,0.154]",
+  "bar": "CI > 0"
+ },
+ {
+  "key": "86:H86.4",
+  "spike": "86",
+  "id": "H86.4",
+  "verdict": "NO VERDICT",
+  "measured": "too few fitted small-init near-tie runs (23/64)",
+  "bar": ">= 5 automata"
+ },
+ {
+  "key": "86:H86.5",
+  "spike": "86",
+  "id": "H86.5",
+  "verdict": "BROKEN",
+  "measured": "cheaper-block share W 0.65 vs D 0.69",
+  "bar": "W - D >= 0.10"
+ },
+ {
+  "key": "86:H86.6",
+  "spike": "86",
+  "id": "H86.6",
+  "verdict": "BROKEN",
+  "measured": "NLL linear 66.0 vs log 59.1",
+  "bar": "linear < log"
  }
 ]

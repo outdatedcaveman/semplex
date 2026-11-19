@@ -418,5 +418,15 @@
   "learned": "The learner's dominant direction is the output vector (generator of the cyclic observable module), not the pi-orthogonal head; the head as a quotient is the right object and its canonical lift is the generator (exploratory C45').",
   "moved": "A12: PARTIAL → PARTIAL (Candidate connecting principle for irreversible concepts: lead with the module generator (P220, exploratory))",
   "claims": "P220"
+ },
+ {
+  "spike": "86",
+  "date": "2026-11-20",
+  "commit": "59c68b0",
+  "question": "Is the Gibbs selection rule the outcome of a race between linearly growing representations?",
+  "overall": "MIXED",
+  "learned": "Value enters through early growth rates (not a dimension artefact); cost does not act on early growth, the race winner is a weak predictor of the leader, weight decay is not the pressure that raises the exchange rate, and the log-linear form stands.",
+  "moved": "A12: PARTIAL → PARTIAL (Mechanism of the value term located in early growth; cost term mechanism open (P221))",
+  "claims": "P221"
  }
 ]
