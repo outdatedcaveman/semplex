@@ -56,3 +56,9 @@ python -m experiments.spike84 predict
 python -m experiments.spike84 run
 python -m experiments.spike84 analyse
 ```
+
+## Measurement bug fixed before any run produced a result
+
+- `predict()` merged the module structure into each automaton record. Its key `"O"` (observable-module basis) overwrote the automaton's output vector `"O"`, so `run` crashed on the first training step and no result was produced.
+- Fix: `train` reads the output vector from Spike 81's seeded pool by automaton id, asserting the transition table matches; all 16 match. `measure` keeps using `"O"` as the module basis, as intended.
+- No hypothesis, criterion or automaton changed.

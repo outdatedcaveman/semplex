@@ -75,11 +75,18 @@ def predict():
     for r in pick: print(r["id"], r["kind"], "dimO", r["dimO"], "dimH", r["dimH"], "dimR", r["dimR"], "head fraction", round(r["dimH"] / r["dimO"], 2))
 
 
+_POOL = []
+def _pool():
+    if not _POOL: _POOL.extend(S81.build_pool())
+    return _POOL
+
+
 def train(A, seed):
     import torch
     from experiments.spike60 import build
     nn = torch.nn
-    D, O = np.array(A["D"]), np.array(A["O"]); Dl = np.vstack([D, np.arange(D.shape[1])[None]]); m = Dl.shape[1]; L = Dl.shape[0]
+    src = _pool()[A["id"]]; assert src["D"] == A["D"]                            # bug fix: A["O"] holds the module basis (key clash)
+    D, O = np.array(A["D"]), np.array(src["O"]); Dl = np.vstack([D, np.arange(D.shape[1])[None]]); m = Dl.shape[1]; L = Dl.shape[0]
     torch.manual_seed(seed); rng = np.random.default_rng(seed)
     def sample(B, T, r):
         X = r.integers(0, L, size=(B, T)); Y = np.zeros((B, T, 1), np.float32); ST = np.zeros((B, T), int)
