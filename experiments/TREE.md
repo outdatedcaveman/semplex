@@ -89,6 +89,9 @@ Run in parallel by Gemini from the Spike 10c state; renumbered at the merge (ori
 ├ 76  energy as variational principle (width, noise, acquisition order)   frozen: H76.1-4 broken; pressure selects the smoothest letter action (post hoc C42)
 ├ 77  Gibbs selection with one exchange rate (C43), frozen params          frozen: H77.1-3 held (98% on new automata; pressure raises the rate)
 ├ 78  loopholes of C43: learners, unselected automata, frequency, rival     frozen: H78.1-3, 5, 6 held; H78.4 neither (cost not usage-weighted)
-└ 79  last loopholes: non-abelian unselected, transformer, ES, derived cost frozen: H79.3 held; H79.1 neither; H79.2 no verdict; H79.4 broken (0.4%)
+├ 79  last loopholes: non-abelian unselected, transformer, ES, derived cost frozen: H79.3 held; H79.1 neither; H79.2 no verdict; H79.4 broken (0.4%)
+├ 80  cost form, ES at convergence, non-abelian disagreement              running (ES arm)
+├ 81  rule beyond groups (random automata, merges, resets)               frozen: H81.1-3 broken (law bounded to symmetric systems)
+└ 82  LM number concepts                                                   frozen: H82.1 held (non-discriminating)
 ```
 ```

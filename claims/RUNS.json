@@ -1688,6 +1688,45 @@
    "claims": [
     "P215"
    ]
+  },
+  {
+   "spike": "81",
+   "date": "2026-11-19",
+   "commit": "63b3236",
+   "question": "Does the selection rule extend beyond groups (random automata with merges and resets)?",
+   "overall": "BROKEN",
+   "verdicts": [
+    {
+     "id": "H81.1",
+     "verdict": "BROKEN",
+     "measured": "random 22%",
+     "bar": ">= 60% and NLL below rivals"
+    },
+    {
+     "id": "H81.2",
+     "verdict": "BROKEN",
+     "measured": "discriminating 39%",
+     "bar": "same"
+    },
+    {
+     "id": "H81.3",
+     "verdict": "BROKEN",
+     "measured": "non-permutation 29%",
+     "bar": "same"
+    }
+   ],
+   "learned": "Without symmetry, no rule (Gibbs, energy, smoothness) predicts the leading learned mode beyond chance-plus-a-little; the selection rule is a law of symmetric systems, and irreversible concepts need a different account.",
+   "gaps_moved": [
+    {
+     "gap": "A12",
+     "from": "PARTIAL",
+     "to": "PARTIAL",
+     "why": "Rule bounded to symmetric systems (P216)"
+    }
+   ],
+   "claims": [
+    "P216"
+   ]
   }
  ]
 }

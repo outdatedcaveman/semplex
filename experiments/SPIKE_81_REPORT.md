@@ -1,6 +1,6 @@
 # Spike 81: The selection rule beyond groups: arbitrary automata with resets and merges
 
-**Date:** 2026-11-19 · **Status:** pre-registered (predictions in `results/spike81_predictions.json`, committed with this report before any run) · **Follows:** Spikes 77–80 (the Gibbs selection rule C43, P212–P214). So far it has been tested only on group automata, where symmetry supplies the candidate representations. A law about concepts must say what happens without symmetry.
+**Date:** 2026-11-19 · **Status:** complete (pre-registered with predictions in 63b3236; results below) · **Follows:** Spikes 77–80 (the Gibbs selection rule C43, P212–P214). So far it has been tested only on group automata, where symmetry supplies the candidate representations. A law about concepts must say what happens without symmetry.
 
 ## The rule, generalised (no group needed)
 
@@ -63,3 +63,32 @@ python -m experiments.spike81 predict
 python -m experiments.spike81 run
 python -m experiments.spike81 analyse
 ```
+
+## Results
+
+`experiments/results/spike81.json`; per-run outputs in `spike81_raw/`. All 72 runs fitted (≥ 0.99). A container restart interrupted the runs once; the seeded runner resumed.
+
+| Set | Fitted runs | Gibbs accuracy | NLL Gibbs / energy-only / smoothness-only |
+|---|---|---|---|
+| Random (12 automata) | 36 | **22%** | 49.5 / **48.7** / 60.9 |
+| Discriminating (12) | 36 | **39%** | 78.0 / **61.0** / 66.4 |
+| Non-permutation (mixed + free; 15) | 45 | **29%** | 73.9 / **62.3** / 69.6 |
+
+**Pooled argmax accuracy over all 72 fitted runs** (exploratory comparison): Gibbs 31%, energy-only 35%, smoothness-only 32%, chance (1/number of modes) 20%.
+
+| ID | Measured | Criterion | Verdict |
+|---|---|---|---|
+| H81.1 | random: 22%, NLL not below energy-only | ≥ 60% and below both held; < 50% broken | **BROKEN** |
+| H81.2 | discriminating: 39% | same | **BROKEN** |
+| H81.3 | non-permutation: 29% | same | **BROKEN** |
+
+**Reading:**
+- **The rule does not extend to automata without symmetry, in this generalised form.** On random automata with merges and resets, no rule predicts which predictive mode a trained GRU's leading geometric direction aligns with: all three sit at 31–35%, against 20% chance. Energy alone is marginally best, so the cost term adds nothing here.
+- **Two explanations, not yet separated:**
+  1. **Symmetry is what makes the law work.** In group automata the candidate representations are irreducible blocks: rigid, mutually orthogonal and invariant under every input. Learners must pick among a few clean options, and value and cost are well defined per block.
+
+     Without symmetry, the predictive kernel's eigenvectors are not invariant under the inputs. The learned geometry need not align with any single one, and "the leading mode" is ill-defined.
+  2. **The generalisation is wrong.** The right modes for non-invertible dynamics may not be eigenvectors of the predictive kernel at all, but, e.g., the singular vectors of the Hankel operator in a realisation adapted to the inputs (Ho–Kalman), or invariant subspaces of the letter actions.
+- **What survives.** The selection rule C43 is a law about *symmetric* systems: groups, where it holds across learners, optimisers, architectures and samples (Spikes 77–80). Its extension to arbitrary machines fails as formulated here.
+
+  For an "atlas of concepts" this is a substantive boundary. The rule predicts how a concept is represented when the concept has a symmetry, i.e. when its actions are invertible and compose into a group. It does not yet predict representations of irreversible, reset-like concepts. Those were the aperiodic "flip-flop" primes of the periodic table, and their geometry was erasure, not symmetry (C33, Spikes 57–58).

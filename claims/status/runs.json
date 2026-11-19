@@ -368,5 +368,15 @@
   "learned": "Pretrained LMs lead with the counting circle as predicted (non-discriminating); parity is a strong secondary mode despite maximal counting cost, pointing to a richer action repertoire in text.",
   "moved": "A12: PARTIAL → PARTIAL (First LM test (P215), weak)",
   "claims": "P215"
+ },
+ {
+  "spike": "81",
+  "date": "2026-11-19",
+  "commit": "63b3236",
+  "question": "Does the selection rule extend beyond groups (random automata with merges and resets)?",
+  "overall": "BROKEN",
+  "learned": "Without symmetry, no rule (Gibbs, energy, smoothness) predicts the leading learned mode beyond chance-plus-a-little; the selection rule is a law of symmetric systems, and irreversible concepts need a different account.",
+  "moved": "A12: PARTIAL → PARTIAL (Rule bounded to symmetric systems (P216))",
+  "claims": "P216"
  }
 ]

@@ -1158,5 +1158,29 @@
   "verdict": "HELD",
   "measured": "leading k = 1 in 3/3 models; NLL 0.08 vs 2.73, 9.19",
   "bar": ">= 2/3 and NLL below rivals"
+ },
+ {
+  "key": "81:H81.1",
+  "spike": "81",
+  "id": "H81.1",
+  "verdict": "BROKEN",
+  "measured": "random 22%",
+  "bar": ">= 60% and NLL below rivals"
+ },
+ {
+  "key": "81:H81.2",
+  "spike": "81",
+  "id": "H81.2",
+  "verdict": "BROKEN",
+  "measured": "discriminating 39%",
+  "bar": "same"
+ },
+ {
+  "key": "81:H81.3",
+  "spike": "81",
+  "id": "H81.3",
+  "verdict": "BROKEN",
+  "measured": "non-permutation 29%",
+  "bar": "same"
  }
 ]
