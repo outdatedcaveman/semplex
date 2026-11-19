@@ -790,3 +790,48 @@ A workflow-level self-improving harness for mathematical research. Its loop is P
 **For semplex:** adopt the meta-evolve step. Our failed post-hoc C41 (fitted 46/48, failed prospectively) is exactly the kind of failure such a step should turn into a rule. The rule: "post-hoc fits must be cross-validated across held-out automata before registration", which Spike 77's calibration follows (leave-one-automaton-out).
 
 **For Synesism:** its Lean-certificate verification stage and per-problem wiki fit the workshop's proof-exploration protocol.
+
+## 17. The principle connecting symmetric and irreversible concepts: invariant subspaces of the action on observables (2026-11-19)
+
+### 17.1 The observation that forces it
+
+- The selection rule (C43) holds for group concepts across learners, architectures and samples (P212–P214, P217).
+- It fails, as generalised via predictive-kernel eigenvectors, for automata with resets and merges (P216).
+- Closure (the minimal automaton, discarding the unobservable) holds for every adaptive learner on every automaton tried (P188, P200, P209).
+
+So the invariant across both cases is closure, and the selection rule must be a special case of something stated in terms of closure.
+
+### 17.2 The statement
+
+Let the inputs act on observables (functions on the minimal states) by (T_a f)(q) = f(δ_a q). This is the Koopman, or pullback, action. Three facts:
+1. A coarse-graining is closed (strongly lumpable, a congruence) **iff** the span of its block indicators is an invariant subspace of every T_a (Kemeny–Snell; the linear form of Myhill–Nerode).
+2. For a **group**, the T_a are invertible and generate a *semisimple* algebra. Every invariant subspace is a sum of irreducible constituents with a complement, so the candidates are the isotypic blocks, and value against cost picks among them (C43).
+3. For a **monoid** (non-invertible inputs: resets, merges, erasures), the algebra is in general *not* semisimple.
+   - Invariant subspaces form a lattice without complements.
+   - The irreducible composition factors are indexed by the regular J-classes and the irreducible representations of their maximal subgroups. This is Clifford–Munn–Ponizovskii theory: a group-theoretic core at each level, with the levels joined by non-split (radical) extensions.
+   - Aperiodic monoids (all maximal subgroups trivial: the flip-flop primes of Krohn–Rhodes) have only 1-dimensional factors stacked in a filtration. Their representations are *triangular*: an ordered, layered geometry, the "erasure" geometry of C33 (Spikes 57–58).
+
+**Conjecture C44 (closure all the way down).** For any automaton, the dominant geometry a learner builds spans an invariant subspace of the input action: *a coarser closed concept*. The candidates selected among are invariant subspaces, not eigenvectors:
+- isotypic blocks for groups;
+- submodules along the J-filtration for monoids.
+
+The value-minus-cost rule chooses among them.
+
+Krohn–Rhodes then has a representational reading:
+- **group primes** contribute semisimple, rotational components (symmetry, "Plato");
+- **flip-flop primes** contribute triangular, layered components (erasure, "Aristotle").
+
+### 17.3 Synesism, for the user to name
+
+Synesism's **partition / conjoinment** pair has a precise counterpart here.
+- **Reversible inputs (groups) partition without loss.** They split the space of observables into independent, complemented irreducible blocks.
+- **Irreversible inputs (merges, resets) conjoin.** They fuse states, creating non-split, layered structure that cannot be undone.
+
+The canon's asymmetry ("there are combinatorially more ways to conjoin than to partition") matches the representation theory: monoid algebras are generically non-semisimple, group algebras never are.
+
+The principle "a concept is a closed (invariant) piece of the action, and its dominant geometry is again closed" would be the formal content of a *synex that preserves itself under action*. A name for this self-preserving closed piece is left for the user to coin.
+
+### 17.4 Tests
+
+- **Spike 83** tests C44's first half: invariance of the dominant learned subspace, for groups and non-groups.
+- **If it holds**, the next test is selection among submodules: value and kinetic cost computed on the composition factors of the observable module, using the J-class filtration.
