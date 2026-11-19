@@ -1246,5 +1246,29 @@
   "verdict": "HELD",
   "measured": "median rho 0.581",
   "bar": ">= 0.5"
+ },
+ {
+  "key": "84:H84.1",
+  "spike": "84",
+  "id": "H84.1",
+  "verdict": "NEITHER",
+  "measured": "29/37 (78.4%)",
+  "bar": ">= 80% held, < 50% broken"
+ },
+ {
+  "key": "84:H84.2",
+  "spike": "84",
+  "id": "H84.2",
+  "verdict": "HELD",
+  "measured": "27/37 (73%)",
+  "bar": ">= 70%"
+ },
+ {
+  "key": "84:H84.3",
+  "spike": "84",
+  "id": "H84.3",
+  "verdict": "HELD",
+  "measured": "37/37 (vacuous: O is the whole space for minimal automata)",
+  "bar": ">= 80%"
  }
 ]

@@ -1838,6 +1838,45 @@
    "claims": [
     "P219"
    ]
+  },
+  {
+   "spike": "84",
+   "date": "2026-11-19",
+   "commit": "f5fd824",
+   "question": "Do learners on irreversible automata concentrate their geometry on the head of the observable module?",
+   "overall": "MIXED",
+   "verdicts": [
+    {
+     "id": "H84.1",
+     "verdict": "NEITHER",
+     "measured": "29/37 (78.4%)",
+     "bar": ">= 80% held, < 50% broken"
+    },
+    {
+     "id": "H84.2",
+     "verdict": "HELD",
+     "measured": "27/37 (73%)",
+     "bar": ">= 70%"
+    },
+    {
+     "id": "H84.3",
+     "verdict": "HELD",
+     "measured": "37/37 (vacuous: O is the whole space for minimal automata)",
+     "bar": ">= 80%"
+    }
+   ],
+   "learned": "The learner's dominant direction is the output vector (generator of the cyclic observable module), not the pi-orthogonal head; the head as a quotient is the right object and its canonical lift is the generator (exploratory C45').",
+   "gaps_moved": [
+    {
+     "gap": "A12",
+     "from": "PARTIAL",
+     "to": "PARTIAL",
+     "why": "Candidate connecting principle for irreversible concepts: lead with the module generator (P220, exploratory)"
+    }
+   ],
+   "claims": [
+    "P220"
+   ]
   }
  ]
 }

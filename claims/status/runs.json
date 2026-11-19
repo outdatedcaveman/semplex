@@ -408,5 +408,15 @@
   "learned": "The predictive-energy term predicts the whole LM number spectrum (rho 0.47-0.70); the cost term adds almost nothing with a transition-derived repertoire, and its low-k bias misses parity and decimal modes.",
   "moved": "A12: PARTIAL → PARTIAL (Value term extends to pretrained LMs' whole spectrum (P219))",
   "claims": "P219"
+ },
+ {
+  "spike": "84",
+  "date": "2026-11-19",
+  "commit": "f5fd824",
+  "question": "Do learners on irreversible automata concentrate their geometry on the head of the observable module?",
+  "overall": "MIXED",
+  "learned": "The learner's dominant direction is the output vector (generator of the cyclic observable module), not the pi-orthogonal head; the head as a quotient is the right object and its canonical lift is the generator (exploratory C45').",
+  "moved": "A12: PARTIAL → PARTIAL (Candidate connecting principle for irreversible concepts: lead with the module generator (P220, exploratory))",
+  "claims": "P220"
  }
 ]

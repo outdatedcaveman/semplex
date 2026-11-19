@@ -202,5 +202,11 @@
   "title": "closure all the way down",
   "state": "Open",
   "note": "HELD for groups; PARTIAL for monoids; Spike 83"
+ },
+ {
+  "id": "C45",
+  "title": "the head of the observable module",
+  "state": "Open",
+  "note": "MIXED; Spike 84"
  }
 ]
