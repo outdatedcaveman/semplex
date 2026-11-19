@@ -365,3 +365,50 @@ Four delegated readers, reading abstracts and key sections only.
   - Already published: energy-ordered, one-irrep-at-a-time learning (Marchetti–Kunin 2602.03655, read on 2026-11-17 and tested in Spike 71) and initialisation lotteries (He et al. 2606.02993, 2602.16849). He et al. report that dimension via initialisation geometry, not energy, drives selection. Our e_ρ carries d_ρ² multiplicity, so an initialisation-normalised control is needed.
   - "Prediction under a dissipation cost gives IB-like Gibbs forms" is Still's; we must not claim it.
   - Apparently new: the kinetic action cost, the Gibbs exchange rate and its noise dependence, the failure on monoids, and HN as the generalisation.
+
+### Sources read on 2026-11-19 (user-supplied batch; physics imports)
+
+**Citation status.**
+- Bespoke Labs, "How models explore ideas": primary text read.
+- Goodfire Public Neuron Atlas: secondary sources only, because the page is rendered in JavaScript.
+- arXiv 2611.22103 and 2611.19717: full or partial text read.
+- AtlasKV: arXiv 2510.17934 and its repository.
+- Physics: verified Kozik–Ferrero–Georges (1407.5687), Rossi–Werner (1504.08320), 2502.01420 and Potthoff (cond-mat/0406671). Cited from memory: Luttinger–Ward 1960, Baym–Kadanoff 1961, Kitaev (0901.2686), Freed–Moore (1208.5055), Douglas (hep-th/0011017), Bordelon–Pehlevan (2205.09653), Mehta–Schwab (1410.3831).
+
+**What changes here:**
+
+- **Bespoke Labs.**
+  - Primary text: "a switch to a new idea is followed by about nine times the gain of a refinement step, almost all of it in the first 6 hours"; switches are about twice as likely to set a new best score. Also: 47% of runs never leave their first basin; half of all switches are returns to an earlier basin; 58% of runs never reach the best basin.
+  - The figure is correlational. Our 4–5-spike cadence (AGENTS.md rule 6) is a local choice, not theirs. A switch should count only if it goes to a front we have not visited before.
+
+- **Goodfire neuron atlas.**
+  - Covers Qwen3.6-35B-A3B, with about 10M labelled neuron-poles. Ablating the weakest 92.2% of activations raises the loss by only 2.9%.
+  - The labels are text, not activations. The atlas is usable only as a lookup for candidate number or cyclic neurons, followed by our own Fourier analysis on the open weights.
+
+- **Alex Wang, "Reasoning as pathfinding"** (essay) and **the Quantitative Semantics Lab**: weak relevance, and none, respectively.
+
+- **2611.22103 (MathEye, Lean proof repair) and 2611.19717 (misty-state calculus):** not relevant, and no prior-art overlap.
+
+- **AtlasKV.**
+  - It turns knowledge-graph triples into keys and values injected into the attention of Llama-3.1-8B. It needs trained adapters and about 20 GB of GPU memory. Accuracy is shown only up to about 10⁴ triples, for single-hop lookup.
+  - It does not suit Mouseion, which holds documents and metadata, not triples, and needs answers that can be cited. A read-only MCP server over Mouseion's SQLite/FTS5 and MiniLM–Chroma store, plus full-text RAG over its PDFs and stored OpenAlex citation edges, gives more value for the effort.
+
+- **The Luttinger–Ward quip** ("a redundant self-energy insertion in a skeleton graph") is a category error. Its usable core is the Schur-complement / Mori–Zwanzig self-energy of a projected Markov chain: the memory kernel left by the discarded states.
+  - Strong lumpability (closure) is exactly zero self-energy. That gives a continuous closure-error metric, but it is a reformulation, not a prediction.
+  - The self-consistent "dressed" dynamics already exist for learning (Bordelon–Pehlevan dynamical mean-field theory).
+  - Luttinger–Ward multivaluedness is not our seed lottery.
+
+- **K-theory.**
+  - The Kitaev/Freed–Moore classification of phases is decorative for us. The exception is the threefold way: a real-weight learner must carry complex and quaternionic irreps at doubled real dimension. Check whether the Gibbs-rule residuals split by Frobenius–Schur indicator; this uses existing data.
+  - **Algebraic K₀ is a genuine lead.**
+    - K₀(A) ≅ ℤ^{#simples}, with simples labelled by Clifford–Munn–Ponizovskii pairs: a J-class and an irrep of its maximal subgroup. These are exact labels for a "periodic table of concepts".
+    - King's θ is a linear form on K₀. Bridgeland's central charge comes from Douglas's Π-stability in string theory.
+    - Additivity over composition factors turns the HN lead into a parameter-free prediction for irreversible automata: fit θ per simple on groups, then predict.
+
+- **Tensor networks: an exact match.**
+  - Weighted automata are uniform MPS. Hankel rank equals the minimal bond dimension, and the Schmidt spectrum equals the Hankel singular values.
+  - e_ρ is the symmetry-resolved entanglement spectrum, so the α-term is DMRG truncation. It does not explain λ.
+
+- **The heat kernel on the Cayley graph** is the most direct physics reading of C43.
+  - c_ρ = 1 − (1/|S|) Σ_s Re χ_ρ(s)/d_ρ is the random-walk Laplacian eigenvalue in the ρ-block. So exp(−λ c_ρ) is the heat kernel, and λ is an effective diffusion time.
+  - Prediction: random generator moves injected into the inputs shift λ linearly in their rate and leave α unchanged.
