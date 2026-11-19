@@ -331,3 +331,37 @@ A delegated reader examined these in full text: Vastola & Gershman 2026 (2610.36
 - "Causal blanket" (Rosas et al.) is the defensible name for our closure object.
 
 Also checked: math-rsi (github.com/lisresearchgroup/math-rsi), recorded in §16.5.
+
+### Sources read on 2026-11-19: fields outside ML theory (bifurcation, statistical physics, homological algebra, thermodynamics)
+
+Four delegated readers, reading abstracts and key sections only.
+
+**Citation status.**
+- Verified by search or full text this session: Reineke (math/0204059); Fersztand–Jacquard–Nanda–Tillmann (2303.16075, 2211.07553, 2406.05069, 2306.08283); Steinberg 2016 (doi 10.1007/978-3-319-43932-7); Denton–Hivert–Schilling–Thiéry (1010.3455); Margolis–Steinberg (1101.0416, 1706.05425); Jeffreys–Lau (2101.11487); Still 2020 (1705.00612); Kolchinsky–Wolpert (1607.00956); Ouldridge–Wolpert (2208.06895); Riechers et al. (1909.06650); Nakazato–Ito (2103.00503); Hermisson et al. (cond-mat/0202432); Gordon et al. (2012.01447); Chechik et al. JMLR 2005; Creutzig–Globerson–Tishby 2009; Hu et al. (1905.07769); Chizat (2202.01009); Nitanda–Wu–Suzuki (2201.10469); Lasry–Lions 2007; McKelvey–Palfrey 1995; Arjevani–Field (1912.11939, 2107.10370, 2107.02422, 2210.06088); Yang (2605.24057); Ziyin (2309.16932); He et al. (2602.16849); Hazelden–Shea-Brown (2605.12763); Morwani et al. (2311.07568); Chughtai et al. (2302.03025).
+- Cited from memory, to be checked before any claim relies on them: King 1994; Rudakov 1997; Bridgeland (math/0212237); Golubitsky–Stewart–Schaeffer; Cross–Hohenberg 1993; Trefethen et al. 1993; Saad–Solla 1995; Eigen 1971; Still et al. 2012; Sivak–Crooks 2012.
+
+**What changes here:**
+- **Homological algebra: a canonical ordering for the irreversible case** (Harder–Narasimhan / King–Rudakov stability). Every module of a finite-dimensional algebra has a unique filtration by decreasing slope.
+  - For a semisimple O, the filtration is the isotypic blocks ordered by slope. With slope α log e − λ c, it reproduces the Gibbs ranking exactly. This reduction is our derivation, not taken from a paper.
+  - It therefore generalises C43 to non-semisimple algebras without needing complements.
+  - Open choice: build it on the function (observable) side or the state side. The two give opposite predictions.
+  - No prior work links HN filtrations to the order in which a learner acquires features.
+  - Clifford–Munn–Ponizovskii labels (J-class, irrep of the maximal subgroup) extend the irrep index ρ to monoids.
+  - O = A·o is cyclic, hence a quotient of the projective cover of its head. This is consistent with Spike 84's finding that the generator dominates.
+- **Bifurcation theory: a mechanism for the Gibbs form.** Learning from small initialisation is a race of linear growth rates σ_ρ. The winner is argmax_ρ[σ_ρ T + log A_ρ(0)]. With Gumbel-like initial spread, P(ρ) ∝ exp(σ_ρ T/s). That is a softmax that is *linear* in σ, whereas C43 uses α log e.
+  - Predictions: the lottery sharpens as the initial scale shrinks; the lottery occurs where |Δσ|·T/s ≲ 1 (Yang 2605.24057 gives the pitchfork mechanism).
+  - Swift–Hohenberg reading: c_k ≈ k² plays the role of the diffusive −Dk² term. Prediction: λ/α scales with weight decay × noise.
+- **Non-normal operators** (Trefethen; Hazelden–Shea-Brown). Transient growth follows top singular vectors, not eigenvectors, and near a bifurcation the learning operator collapses to rank 1. This is a candidate explanation of Spike 84: with resets, the dominant learned direction should be the top singular vector of the finite-horizon propagator, which is close to the output generator.
+- **Thermodynamics: a principled reason the group and monoid cases differ.**
+  - Mismatch cost (Kolchinsky–Wolpert) is zero under invertible maps and positive under merges.
+  - Ouldridge–Wolpert split DFAs into zero and non-zero minimal-entropy-production classes. They should be read in full.
+  - Still 2020 fixes the predictive-IB trade-off thermodynamically.
+  - Gaussian IB (Chechik et al.): eigenvector i switches on at β_i = 1/(1 − λ_i). This gives a parameter-free onset order to test.
+- **Statistical physics.**
+  - Mean-field Langevin has a Gibbs stationary measure, but convexity rules out a lottery.
+  - The quasispecies maximum principle (Hermisson et al.: fitness minus mutational loss, Perron–Frobenius selection) predicts a sharp error threshold under noise.
+  - Logit (quantal-response) form implies independence of irrelevant alternatives. A cheap falsification test: adding a zero-energy irrep should not change the odds of the others.
+- **Prior-art risk.**
+  - Already published: energy-ordered, one-irrep-at-a-time learning (Marchetti–Kunin 2602.03655, read on 2026-11-17 and tested in Spike 71) and initialisation lotteries (He et al. 2606.02993, 2602.16849). He et al. report that dimension via initialisation geometry, not energy, drives selection. Our e_ρ carries d_ρ² multiplicity, so an initialisation-normalised control is needed.
+  - "Prediction under a dissipation cost gives IB-like Gibbs forms" is Still's; we must not claim it.
+  - Apparently new: the kinetic action cost, the Gibbs exchange rate and its noise dependence, the failure on monoids, and HN as the generalisation.
