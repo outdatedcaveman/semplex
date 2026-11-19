@@ -63,3 +63,30 @@ python -m experiments.spike87 predict
 python -m experiments.spike87 run 0/2      # and 1/2
 python -m experiments.spike87 analyse
 ```
+
+## Results
+
+`experiments/results/spike87.json`; per-run centroids in `spike87_raw/`. 96 runs. Fitted at ≥ 0.99: 33 linear-readout runs (13 automata) and 30 MLP-readout runs (12 automata).
+
+| ID | Measured | Criterion | Verdict |
+|---|---|---|---|
+| H87.1 | (u₁·ô)² ≥ 0.8 in 28/33 linear-readout runs (85%); median 0.95 | ≥ 75% | **HELD** |
+| H87.2 | beats the kernel's top mode in 26/27 runs where they differ (96%) | ≥ 70% | **HELD** |
+| H87.3 | trained nonlinear readout: (u₁·ô)² ≥ 0.8 in 8/30 runs (27%); median 0.61 | ≥ 75% held, < 50% broken | **BROKEN** |
+| H87.4 | beats the Gibbs-selected kernel mode in 29/30 runs (97%) | ≥ 70% | **HELD** |
+| H87.5 | where o lies mostly outside the π-head, the generator beats the head subspace in 12/12 runs (4 automata) | ≥ 70% | **HELD** |
+
+Median squared alignment of u₁, linear vs MLP readout:
+
+| Rival | Linear readout | MLP readout |
+|---|---|---|
+| o | 0.95 | 0.61 |
+| k₁ | 0.48 | 0.51 |
+| Gibbs mode | 0.15 | 0.15 |
+| π-head (subspace) | 0.84 | 0.72 |
+
+**Reading:**
+- **Prospectively, on fresh automata, the dominant direction of a linearly read-out learner is the output vector.** It beats every structural rival: the kernel's top mode, the Gibbs-selected mode, and the π-orthogonal head even where o lies outside the head.
+- **That is mostly the readout.** With a trained nonlinear readout the alignment falls to a median of 0.61. Only 27% of runs pass the bar, though o still ranks above k₁ and the Gibbs mode.
+- **C45′ as a substrate-general principle is refuted.** The irreversible case's "generator lead" is the architectural fact that a linear readout pulls the top direction onto what it reads, not a property of the observable module.
+- What remains for irreversible concepts is weaker. The leading direction is still more aligned with o than with any kernel-derived mode, and no candidate predicts it strongly once the readout is nonlinear. The principle connecting groups and monoids stays open. The Harder–Narasimhan rival (Spike 88) is the next candidate, and it must be tested with a nonlinear readout from the start.

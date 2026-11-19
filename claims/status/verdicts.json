@@ -1318,5 +1318,45 @@
   "verdict": "BROKEN",
   "measured": "NLL linear 66.0 vs log 59.1",
   "bar": "linear < log"
+ },
+ {
+  "key": "87:H87.1",
+  "spike": "87",
+  "id": "H87.1",
+  "verdict": "HELD",
+  "measured": "28/33 (85%)",
+  "bar": ">= 75%"
+ },
+ {
+  "key": "87:H87.2",
+  "spike": "87",
+  "id": "H87.2",
+  "verdict": "HELD",
+  "measured": "96% vs kernel top mode",
+  "bar": ">= 70%"
+ },
+ {
+  "key": "87:H87.3",
+  "spike": "87",
+  "id": "H87.3",
+  "verdict": "BROKEN",
+  "measured": "MLP readout 8/30 (27%), median 0.61",
+  "bar": ">= 75% held, < 50% broken"
+ },
+ {
+  "key": "87:H87.4",
+  "spike": "87",
+  "id": "H87.4",
+  "verdict": "HELD",
+  "measured": "97% vs Gibbs mode",
+  "bar": ">= 70%"
+ },
+ {
+  "key": "87:H87.5",
+  "spike": "87",
+  "id": "H87.5",
+  "verdict": "HELD",
+  "measured": "12/12 vs pi-head",
+  "bar": ">= 70%"
  }
 ]

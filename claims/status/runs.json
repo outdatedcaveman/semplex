@@ -428,5 +428,15 @@
   "learned": "Value enters through early growth rates (not a dimension artefact); cost does not act on early growth, the race winner is a weak predictor of the leader, weight decay is not the pressure that raises the exchange rate, and the log-linear form stands.",
   "moved": "A12: PARTIAL → PARTIAL (Mechanism of the value term located in early growth; cost term mechanism open (P221))",
   "claims": "P221"
+ },
+ {
+  "spike": "87",
+  "date": "2026-11-20",
+  "commit": "7ce4b01",
+  "question": "On irreversible automata, does a learner lead with the output vector (generator of its observable module), independent of the readout?",
+  "overall": "MIXED",
+  "learned": "The generator lead is real against all structural rivals but is largely produced by the linear readout; C45' is refuted as a substrate-general principle.",
+  "moved": "A12: PARTIAL → PARTIAL (Irreversible-case candidate C45' refuted as substrate-general (P223))",
+  "claims": "P223"
  }
 ]

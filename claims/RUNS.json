@@ -1934,6 +1934,57 @@
    "claims": [
     "P221"
    ]
+  },
+  {
+   "spike": "87",
+   "date": "2026-11-20",
+   "commit": "7ce4b01",
+   "question": "On irreversible automata, does a learner lead with the output vector (generator of its observable module), independent of the readout?",
+   "overall": "MIXED",
+   "verdicts": [
+    {
+     "id": "H87.1",
+     "verdict": "HELD",
+     "measured": "28/33 (85%)",
+     "bar": ">= 75%"
+    },
+    {
+     "id": "H87.2",
+     "verdict": "HELD",
+     "measured": "96% vs kernel top mode",
+     "bar": ">= 70%"
+    },
+    {
+     "id": "H87.3",
+     "verdict": "BROKEN",
+     "measured": "MLP readout 8/30 (27%), median 0.61",
+     "bar": ">= 75% held, < 50% broken"
+    },
+    {
+     "id": "H87.4",
+     "verdict": "HELD",
+     "measured": "97% vs Gibbs mode",
+     "bar": ">= 70%"
+    },
+    {
+     "id": "H87.5",
+     "verdict": "HELD",
+     "measured": "12/12 vs pi-head",
+     "bar": ">= 70%"
+    }
+   ],
+   "learned": "The generator lead is real against all structural rivals but is largely produced by the linear readout; C45' is refuted as a substrate-general principle.",
+   "gaps_moved": [
+    {
+     "gap": "A12",
+     "from": "PARTIAL",
+     "to": "PARTIAL",
+     "why": "Irreversible-case candidate C45' refuted as substrate-general (P223)"
+    }
+   ],
+   "claims": [
+    "P223"
+   ]
   }
  ]
 }
