@@ -388,5 +388,15 @@
   "learned": "The rule holds for a converged gradient-free learner and in non-abelian groups where cost and energy disagree; the kinetic (minimum-dissipation) cost form is preferred.",
   "moved": "A12: PARTIAL → PARTIAL (Remaining loopholes for symmetric systems closed (P217))",
   "claims": "P217"
+ },
+ {
+  "spike": "83",
+  "date": "2026-11-19",
+  "commit": "bf8b42c",
+  "question": "Is a learned concept's dominant geometry closed under the inputs (invariant subspace), for groups and for monoids?",
+  "overall": "MIXED",
+  "learned": "Symmetric concepts are closed all the way down (dominant geometry = invariant block); irreversible concepts only partly; Spike 81's failure is not due to non-invariant candidates.",
+  "moved": "A12: PARTIAL → PARTIAL (Connecting principle partly supported (P218))",
+  "claims": "P218"
  }
 ]

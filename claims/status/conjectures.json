@@ -196,5 +196,11 @@
   "title": "selection with one exchange rate",
   "state": "Supported",
   "note": "SUPPORTED prospectively; Spike 77, H77.1–H77.3 held"
+ },
+ {
+  "id": "C44",
+  "title": "closure all the way down",
+  "state": "Open",
+  "note": "HELD for groups; PARTIAL for monoids; Spike 83"
  }
 ]

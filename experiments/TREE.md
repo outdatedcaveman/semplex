@@ -92,6 +92,7 @@ Run in parallel by Gemini from the Spike 10c state; renumbered at the merge (ori
 ├ 79  last loopholes: non-abelian unselected, transformer, ES, derived cost frozen: H79.3 held; H79.1 neither; H79.2 no verdict; H79.4 broken (0.4%)
 ├ 80  cost form, ES at convergence, non-abelian disagreement              frozen: H80.1-3 held
 ├ 81  rule beyond groups (random automata, merges, resets)               frozen: H81.1-3 broken (law bounded to symmetric systems)
-└ 82  LM number concepts                                                   frozen: H82.1 held (non-discriminating)
+├ 82  LM number concepts                                                   frozen: H82.1 held (non-discriminating)
+└ 83  invariance principle (closure all the way down)                     frozen: H83.1 held (groups); H83.2 neither (monoids); H83.3 broken
 ```
 ```

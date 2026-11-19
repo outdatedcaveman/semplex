@@ -1,0 +1,45 @@
+{
+ "verdicts": {
+  "H83.1": "HELD",
+  "H83.2": "NEITHER",
+  "H83.3": "BROKEN"
+ },
+ "frac": {
+  "groups_invariant": 0.8,
+  "nongroups_invariant": 0.7,
+  "learned_beats_kernel": 0.16666666666666666
+ },
+ "median": {
+  "group_defect": 0.09523107389787797,
+  "group_random": 0.2706638484274998,
+  "nongroup_defect": NaN,
+  "nongroup_random": NaN,
+  "nongroup_kernel": NaN
+ },
+ "n": {
+  "group": 20,
+  "nongroup": 30,
+  "all": 52
+ },
+ "corrected_excluding_nan_runs": {
+  "nongroups_invariant": 0.6538461538461539,
+  "learned_beats_kernel": 0.19230769230769232,
+  "n_valid": 26,
+  "excluded": [
+   "nongroup_335_0",
+   "nongroup_335_1",
+   "nongroup_422_0",
+   "nongroup_422_1"
+  ],
+  "median": {
+   "nongroup_defect": 0.1582,
+   "nongroup_random": 0.2286,
+   "nongroup_kernel": 0.1196
+  },
+  "verdicts": {
+   "H83.1": "HELD",
+   "H83.2": "NEITHER",
+   "H83.3": "BROKEN"
+  }
+ }
+}

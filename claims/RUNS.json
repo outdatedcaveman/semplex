@@ -1766,6 +1766,45 @@
    "claims": [
     "P217"
    ]
+  },
+  {
+   "spike": "83",
+   "date": "2026-11-19",
+   "commit": "bf8b42c",
+   "question": "Is a learned concept's dominant geometry closed under the inputs (invariant subspace), for groups and for monoids?",
+   "overall": "MIXED",
+   "verdicts": [
+    {
+     "id": "H83.1",
+     "verdict": "HELD",
+     "measured": "groups 16/20 invariant",
+     "bar": ">= 80%"
+    },
+    {
+     "id": "H83.2",
+     "verdict": "NEITHER",
+     "measured": "non-groups 17/26",
+     "bar": ">= 80% held, < 50% broken"
+    },
+    {
+     "id": "H83.3",
+     "verdict": "BROKEN",
+     "measured": "learned more invariant than kernel modes 5/26",
+     "bar": ">= 70%"
+    }
+   ],
+   "learned": "Symmetric concepts are closed all the way down (dominant geometry = invariant block); irreversible concepts only partly; Spike 81's failure is not due to non-invariant candidates.",
+   "gaps_moved": [
+    {
+     "gap": "A12",
+     "from": "PARTIAL",
+     "to": "PARTIAL",
+     "why": "Connecting principle partly supported (P218)"
+    }
+   ],
+   "claims": [
+    "P218"
+   ]
   }
  ]
 }

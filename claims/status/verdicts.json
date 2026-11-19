@@ -1206,5 +1206,29 @@
   "verdict": "HELD",
   "measured": "78%; NLL 14.8 vs 17.4, 21.3",
   "bar": ">= 70% and below both"
+ },
+ {
+  "key": "83:H83.1",
+  "spike": "83",
+  "id": "H83.1",
+  "verdict": "HELD",
+  "measured": "groups 16/20 invariant",
+  "bar": ">= 80%"
+ },
+ {
+  "key": "83:H83.2",
+  "spike": "83",
+  "id": "H83.2",
+  "verdict": "NEITHER",
+  "measured": "non-groups 17/26",
+  "bar": ">= 80% held, < 50% broken"
+ },
+ {
+  "key": "83:H83.3",
+  "spike": "83",
+  "id": "H83.3",
+  "verdict": "BROKEN",
+  "measured": "learned more invariant than kernel modes 5/26",
+  "bar": ">= 70%"
  }
 ]

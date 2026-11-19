@@ -1,6 +1,6 @@
 # Spike 83: The invariance principle: is a learned concept's dominant geometry itself closed under the inputs?
 
-**Date:** 2026-11-19 · **Status:** pre-registered (automata fixed in `results/spike83_predictions.json`, committed with this report before any run) · **Follows:**
+**Date:** 2026-11-19 · **Status:** complete (pre-registered in bf8b42c; results below) · **Follows:**
 - Spikes 77–80: the selection rule holds for group, i.e. symmetric, concepts (P212–P214, P217).
 - Spike 81: it fails as generalised to automata with resets and merges (P216).
 - The request to find the principle connecting the two cases. Theory: `charter/FOUNDATIONS.md` §17.
@@ -55,3 +55,49 @@ python -m experiments.spike83 predict
 python -m experiments.spike83 run
 python -m experiments.spike83 analyse
 ```
+
+## Results
+
+`experiments/results/spike83.json`; per-run outputs in `spike83_raw/`. All 52 runs completed. Groups: 20/22 fitted. Non-groups: 30/30 fitted.
+
+**Measurement bug, found before the verdicts were recorded.**
+- In two non-group automata (ids 335 and 422), one minimal state was never visited in the sampled strings. Its visit weight was 0, the defect computation divided by √0, and all defects for those 4 runs became NaN.
+- The script's percentile then counted NaN ≤ threshold as false and reported percentile 0, so these runs were wrongly counted as "invariant".
+- The hidden states were not saved, so the 4 runs cannot be recomputed. They are excluded.
+
+Both values are kept:
+
+| Fraction | Script output (with the 4 NaN runs) | Corrected (26 valid runs) |
+|---|---|---|
+| non-groups invariant | 70% | 65% |
+| learned beats kernel | 17% | 19% |
+
+The verdicts are the same under both.
+
+| Measure | Groups (20 fitted) | Non-groups (26 valid) |
+|---|---|---|
+| Median defect of the learned dominant subspace | **0.095** | **0.158** |
+| Median defect of random subspaces of equal dimension | 0.271 | 0.229 |
+| Median percentile of learned vs random | **0.0** | 0.05 |
+| Median defect of the top predictive-kernel eigenvectors | — | **0.120** |
+
+| ID | Measured | Criterion | Verdict |
+|---|---|---|---|
+| H83.1 | groups: learned subspace in the lowest 20% of random subspaces in 16/20 (80%) | ≥ 80% | **HELD** |
+| H83.2 | non-groups: in the lowest 20% in 17/26 (65%) | ≥ 80% held, < 50% broken | **NEITHER** |
+| H83.3 | non-groups: learned defect < kernel-eigenvector defect in 5/26 (19%) | ≥ 70% held, < 50% broken | **BROKEN** |
+
+**Reading:**
+- **For symmetric concepts, closure goes all the way down** (H83.1 held). The dominant geometry a GRU builds for a group automaton spans an invariant subspace of the input actions: a closed sub-concept, an isotypic block. Its defect is below every random subspace in the median run.
+- **For irreversible concepts, only partly** (H83.2 neither).
+  - The dominant learned geometry is more closed than chance in most runs (65%, median percentile 0.05), but far from exactly closed (median defect 0.16 against 0.23 for random).
+  - In about a third of the runs it is no more closed than a random subspace.
+- **The explanation offered for Spike 81's failure is refuted** (H83.3 broken). The predictive-kernel eigenvectors used in Spike 81 are *more* invariant than the learned subspace (median 0.12 vs 0.16, in 21/26 runs). So Spike 81 did not fail because its candidates were not closed.
+
+  Rather, learners on irreversible automata do not organise their dominant geometry around a closed sub-concept as cleanly as they do for groups. Their geometry is less constrained. That agrees with the layered, non-semisimple representation theory: monoids have no complemented blocks to settle into.
+
+**Status of C44.** Holds for groups. Partly holds for monoids. The principle connecting the two cases is still open:
+- invariance is shared, but only approximately for monoids;
+- what the dominant geometry is in the irreversible case is not yet determined.
+
+A next candidate, in line with §17: the *head* of the observable module (its top composition factor along the J-filtration) rather than any closed subspace, since the learner sees outputs first and the layers beneath are reached only through erasure.
