@@ -1230,5 +1230,21 @@
   "verdict": "BROKEN",
   "measured": "learned more invariant than kernel modes 5/26",
   "bar": ">= 70%"
+ },
+ {
+  "key": "85:H85.1",
+  "spike": "85",
+  "id": "H85.1",
+  "verdict": "HELD",
+  "measured": "gibbs beats energy and cost in 2/3 (margins 0.015, 0.008; Pythia tied)",
+  "bar": ">= 2/3"
+ },
+ {
+  "key": "85:H85.2",
+  "spike": "85",
+  "id": "H85.2",
+  "verdict": "HELD",
+  "measured": "median rho 0.581",
+  "bar": ">= 0.5"
  }
 ]

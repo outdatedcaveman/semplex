@@ -54,3 +54,24 @@ Anything else is *neither*. At least 3 models are needed for a verdict.
 python -m experiments.spike85 predict
 python -m experiments.spike85 analyse
 ```
+
+## Results
+
+Output: `experiments/results/spike85.json`.
+
+| Model | ρ gibbs | ρ energy-only | ρ cost-only | Learned top-6 k | Gibbs top-6 k |
+|---|---|---|---|---|---|
+| GPT-2 | **0.698** | 0.683 | 0.274 | 1, 50, 40, 30, 10, 2 | 1, 40, 2, 3, 20, 50 |
+| Pythia-410m | 0.470 | 0.470 | undefined (cost ≡ 0) | 1, 50, 40, 2, 20, 33 | 1, 40, 50, 2, 20, 10 |
+| GPT-2-medium | **0.581** | 0.573 | 0.410 | 1, 50, 40, 2, 20, 10 | 1, 2, 40, 3, 20, 4 |
+
+| ID | Measured | Criterion | Verdict |
+|---|---|---|---|
+| H85.1 | gibbs beats both rivals in 2/3 models (Pythia tied by construction, counted as a loss) | ≥ 2/3 | **HELD** |
+| H85.2 | median gibbs ρ = 0.581 | ≥ 0.5 | **HELD** |
+
+**Reading, without inflation:**
+- **The whole learned spectrum of an LM's number concept is predicted to ρ ≈ 0.5–0.7 by the frozen rule.** The parameters were fitted on GRUs trained on small group automata. This is the first whole-spectrum, not leading-mode, test of the rule in a pretrained model, and it passed both criteria.
+- **Almost all of the predictive power is the value term.** Gibbs beats energy-only by only 0.015 (GPT-2) and 0.008 (GPT-2-medium). H85.1 held by the letter of the criterion, but the margin is too small to claim that the cost term matters here. The evidence is for *energy predicts the LM spectrum*. The *energy–cost trade-off* is only weakly supported.
+- **Where the cost term errs.** The model's repertoire is small steps (d = 1, 2, 3, 5), so the cost favours low k (2, 3, 4). The learned spectrum instead puts k = 50 (parity) and k = 40 (the d = 5 / decimal structure) right after k = 1. Those modes come from the energy term, which already ranks them high. The low-k smoothness the cost adds is not what the model builds next.
+- The repertoire proxy is weak: the 5% cut leaves 0–5 differences and an empty set for Pythia. A better action set for language (e.g. the operations the corpus applies to numbers: +1, ×10, parity, tens digit) is the obvious next step. It would have to be pre-registered, not read off this result.

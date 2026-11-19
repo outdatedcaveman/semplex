@@ -1,0 +1,77 @@
+{
+ "verdicts": {
+  "H85.1": "HELD",
+  "H85.2": "HELD"
+ },
+ "models": {
+  "openai-community/gpt2": {
+   "rho": {
+    "gibbs": 0.6975750300120047,
+    "energy": 0.6831692677070829,
+    "cost_only": 0.27385354141656665
+   },
+   "learned_top": [
+    1,
+    50,
+    40,
+    30,
+    10,
+    2
+   ],
+   "gibbs_top": [
+    1,
+    40,
+    2,
+    3,
+    20,
+    50
+   ]
+  },
+  "EleutherAI/pythia-410m": {
+   "rho": {
+    "gibbs": 0.4695798319327731,
+    "energy": 0.4695798319327731,
+    "cost_only": NaN
+   },
+   "learned_top": [
+    1,
+    50,
+    40,
+    2,
+    20,
+    33
+   ],
+   "gibbs_top": [
+    1,
+    40,
+    50,
+    2,
+    20,
+    10
+   ]
+  },
+  "openai-community/gpt2-medium": {
+   "rho": {
+    "gibbs": 0.5806962785114045,
+    "energy": 0.5733973589435775,
+    "cost_only": 0.4095754902916931
+   },
+   "learned_top": [
+    1,
+    50,
+    40,
+    2,
+    20,
+    10
+   ],
+   "gibbs_top": [
+    1,
+    2,
+    40,
+    3,
+    20,
+    4
+   ]
+  }
+ }
+}

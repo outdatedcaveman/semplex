@@ -32,11 +32,11 @@
   "claims": 5
  },
  {
-  "class": "Computed",
-  "claims": 4
+  "class": "Other",
+  "claims": 5
  },
  {
-  "class": "Other",
+  "class": "Computed",
   "claims": 4
  }
 ]

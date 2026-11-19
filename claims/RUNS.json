@@ -1805,6 +1805,39 @@
    "claims": [
     "P218"
    ]
+  },
+  {
+   "spike": "85",
+   "date": "2026-11-19",
+   "commit": "6e25314",
+   "question": "Does the frozen selection rule predict a language model's whole number spectrum from the model's own repertoire?",
+   "overall": "HELD",
+   "verdicts": [
+    {
+     "id": "H85.1",
+     "verdict": "HELD",
+     "measured": "gibbs beats energy and cost in 2/3 (margins 0.015, 0.008; Pythia tied)",
+     "bar": ">= 2/3"
+    },
+    {
+     "id": "H85.2",
+     "verdict": "HELD",
+     "measured": "median rho 0.581",
+     "bar": ">= 0.5"
+    }
+   ],
+   "learned": "The predictive-energy term predicts the whole LM number spectrum (rho 0.47-0.70); the cost term adds almost nothing with a transition-derived repertoire, and its low-k bias misses parity and decimal modes.",
+   "gaps_moved": [
+    {
+     "gap": "A12",
+     "from": "PARTIAL",
+     "to": "PARTIAL",
+     "why": "Value term extends to pretrained LMs' whole spectrum (P219)"
+    }
+   ],
+   "claims": [
+    "P219"
+   ]
   }
  ]
 }
