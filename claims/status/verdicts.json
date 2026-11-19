@@ -1182,5 +1182,29 @@
   "verdict": "BROKEN",
   "measured": "non-permutation 29%",
   "bar": "same"
+ },
+ {
+  "key": "80:H80.1",
+  "spike": "80",
+  "id": "H80.1",
+  "verdict": "HELD",
+  "measured": "chord 28.6 < geodesic 29.7",
+  "bar": "chord < geodesic"
+ },
+ {
+  "key": "80:H80.2",
+  "spike": "80",
+  "id": "H80.2",
+  "verdict": "HELD",
+  "measured": "ES 7/9",
+  "bar": ">= 75%"
+ },
+ {
+  "key": "80:H80.3",
+  "spike": "80",
+  "id": "H80.3",
+  "verdict": "HELD",
+  "measured": "78%; NLL 14.8 vs 17.4, 21.3",
+  "bar": ">= 70% and below both"
  }
 ]

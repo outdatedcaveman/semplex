@@ -378,5 +378,15 @@
   "learned": "Without symmetry, no rule (Gibbs, energy, smoothness) predicts the leading learned mode beyond chance-plus-a-little; the selection rule is a law of symmetric systems, and irreversible concepts need a different account.",
   "moved": "A12: PARTIAL → PARTIAL (Rule bounded to symmetric systems (P216))",
   "claims": "P216"
+ },
+ {
+  "spike": "80",
+  "date": "2026-11-19",
+  "commit": "0011aa5",
+  "question": "Targeted tests: cost form, gradient-free learner at convergence, non-abelian energy/cost disagreement",
+  "overall": "HELD",
+  "learned": "The rule holds for a converged gradient-free learner and in non-abelian groups where cost and energy disagree; the kinetic (minimum-dissipation) cost form is preferred.",
+  "moved": "A12: PARTIAL → PARTIAL (Remaining loopholes for symmetric systems closed (P217))",
+  "claims": "P217"
  }
 ]

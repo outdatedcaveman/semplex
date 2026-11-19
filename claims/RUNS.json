@@ -1727,6 +1727,45 @@
    "claims": [
     "P216"
    ]
+  },
+  {
+   "spike": "80",
+   "date": "2026-11-19",
+   "commit": "0011aa5",
+   "question": "Targeted tests: cost form, gradient-free learner at convergence, non-abelian energy/cost disagreement",
+   "overall": "HELD",
+   "verdicts": [
+    {
+     "id": "H80.1",
+     "verdict": "HELD",
+     "measured": "chord 28.6 < geodesic 29.7",
+     "bar": "chord < geodesic"
+    },
+    {
+     "id": "H80.2",
+     "verdict": "HELD",
+     "measured": "ES 7/9",
+     "bar": ">= 75%"
+    },
+    {
+     "id": "H80.3",
+     "verdict": "HELD",
+     "measured": "78%; NLL 14.8 vs 17.4, 21.3",
+     "bar": ">= 70% and below both"
+    }
+   ],
+   "learned": "The rule holds for a converged gradient-free learner and in non-abelian groups where cost and energy disagree; the kinetic (minimum-dissipation) cost form is preferred.",
+   "gaps_moved": [
+    {
+     "gap": "A12",
+     "from": "PARTIAL",
+     "to": "PARTIAL",
+     "why": "Remaining loopholes for symmetric systems closed (P217)"
+    }
+   ],
+   "claims": [
+    "P217"
+   ]
   }
  ]
 }

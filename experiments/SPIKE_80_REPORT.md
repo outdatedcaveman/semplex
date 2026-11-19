@@ -1,6 +1,6 @@
 # Spike 80: Three targeted tests of the selection rule: cost form, gradient-free convergence, non-abelian disagreement
 
-**Date:** 2026-11-19 · **Status:** pre-registered (predictions in `results/spike80_predictions.json`, committed with this report before any run) · **Follows:** Spike 79 (P214). That spike left three open items:
+**Date:** 2026-11-19 · **Status:** complete (pre-registered with predictions in 0011aa5; results below) · **Follows:** Spike 79 (P214). That spike left three open items:
 - the cost's form (H79.4: chord and geodesic tied, 28.4 vs 28.3);
 - gradient-free learners did not converge (H79.2: no verdict);
 - the unselected non-abelian sample never separated cost from energy (H79.1: neither).
@@ -67,3 +67,20 @@ python -m experiments.spike80 predict
 python -m experiments.spike80 run
 python -m experiments.spike80 analyse
 ```
+
+## Results
+
+`experiments/results/spike80.json`; per-run outputs in `spike80_raw/`. All 73 runs completed. Two container restarts interrupted the gradient-free arm; the seeded runner resumed.
+
+**Fits.** Arm (a) 40/40; arm (c) 18/24; ES 9/9 (**the gradient-free learner converged** this time).
+
+| ID | Measured | Criterion | Verdict |
+|---|---|---|---|
+| H80.1 | arm (a): NLL kinetic (chord) 28.6 < geodesic 29.7; argmax accuracy 55% vs 45% | chord NLL < geodesic | **HELD** |
+| H80.2 | ES: frozen-rule argmax = leader in 7/9 fitted runs (78%) | ≥ 75% | **HELD** |
+| H80.3 | arm (c): accuracy 78% (14/18); NLL Gibbs 14.8 < energy-only 17.4, smoothness-only 21.3 | ≥ 70% and below both | **HELD** |
+
+**Reading:**
+- **Gradient-free learners follow the rule at convergence** (H80.2). Evolution strategies with no gradients, trained to fit, lead with the frozen rule's prediction in 7/9 runs. That covers both the cases where the rule sides with smoothness against energy (ℤ/7) and where it sides with energy (ℤ/8). With Spike 79's transformers, the rule now holds across gradient-trained recurrent nets, a non-recurrent net and a gradient-free learner.
+- **Cost beats energy in non-abelian groups when they disagree** (H80.3). On dihedral automata drawn at random from the cases where the rule and energy disagree, the rule is right 78% of the time and beats both rivals on likelihood. This closes Spike 79's gap (H79.1 neither).
+- **The kinetic form of the cost is preferred, modestly** (H80.1). On the automata built to separate them, the minimum-dissipation (straight-line) cost predicts better than the on-orbit geodesic cost: 28.6 vs 29.7, with top-pick accuracy 55% vs 45%. Together with the calibration fit (10.7 vs 19.2 on 112 earlier runs), the kinetic form is supported. The margin on the purpose-built test is small: both forms' calibrated parameters make similar predictions in many runs.
