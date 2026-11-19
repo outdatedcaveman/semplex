@@ -1616,6 +1616,51 @@
    "claims": [
     "P213"
    ]
+  },
+  {
+   "spike": "79",
+   "date": "2026-11-19",
+   "commit": "26bdec6",
+   "question": "Last loopholes of the selection rule: unselected non-abelian automata, transformer and ES substrates, derived cost",
+   "overall": "MIXED",
+   "verdicts": [
+    {
+     "id": "H79.1",
+     "verdict": "NEITHER",
+     "measured": "acc 96.7%; NLL 2.22 vs energy 2.08",
+     "bar": "acc >= 75% and NLL below both"
+    },
+    {
+     "id": "H79.2",
+     "verdict": "NO VERDICT",
+     "measured": "ES 0/18 fitted",
+     "bar": "guard"
+    },
+    {
+     "id": "H79.3",
+     "verdict": "HELD",
+     "measured": "transformer NLL 6.6 < 8.1, 33.2",
+     "bar": "below both"
+    },
+    {
+     "id": "H79.4",
+     "verdict": "BROKEN",
+     "measured": "chord 28.44 vs geodesic 28.33",
+     "bar": "chord < geodesic"
+    }
+   ],
+   "learned": "The rule holds for unselected non-abelian automata and for transformers; the cost index is the mean minimum kinetic cost of input actions, but chord and geodesic forms are indistinguishable on these data.",
+   "gaps_moved": [
+    {
+     "gap": "A12",
+     "from": "PARTIAL",
+     "to": "PARTIAL",
+     "why": "Rule generalises to non-abelian and non-recurrent learners (P214); cost form unresolved"
+    }
+   ],
+   "claims": [
+    "P214"
+   ]
   }
  ]
 }

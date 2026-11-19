@@ -1118,5 +1118,37 @@
   "verdict": "HELD",
   "measured": "whitened 93.8%",
   "bar": ">= 70%"
+ },
+ {
+  "key": "79:H79.1",
+  "spike": "79",
+  "id": "H79.1",
+  "verdict": "NEITHER",
+  "measured": "acc 96.7%; NLL 2.22 vs energy 2.08",
+  "bar": "acc >= 75% and NLL below both"
+ },
+ {
+  "key": "79:H79.2",
+  "spike": "79",
+  "id": "H79.2",
+  "verdict": "NO VERDICT",
+  "measured": "ES 0/18 fitted",
+  "bar": "guard"
+ },
+ {
+  "key": "79:H79.3",
+  "spike": "79",
+  "id": "H79.3",
+  "verdict": "HELD",
+  "measured": "transformer NLL 6.6 < 8.1, 33.2",
+  "bar": "below both"
+ },
+ {
+  "key": "79:H79.4",
+  "spike": "79",
+  "id": "H79.4",
+  "verdict": "BROKEN",
+  "measured": "chord 28.44 vs geodesic 28.33",
+  "bar": "chord < geodesic"
  }
 ]

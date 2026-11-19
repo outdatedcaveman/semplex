@@ -348,5 +348,15 @@
   "learned": "The rule holds across recurrent learners, optimisers, unselected automata and invariant geometry, with learner-specific exchange rates; its cost depends on the repertoire of actions, not on their usage frequencies.",
   "moved": "A12: PARTIAL → PARTIAL (Selection rule robust to loopholes (P213); usage-weighting refuted)",
   "claims": "P213"
+ },
+ {
+  "spike": "79",
+  "date": "2026-11-19",
+  "commit": "26bdec6",
+  "question": "Last loopholes of the selection rule: unselected non-abelian automata, transformer and ES substrates, derived cost",
+  "overall": "MIXED",
+  "learned": "The rule holds for unselected non-abelian automata and for transformers; the cost index is the mean minimum kinetic cost of input actions, but chord and geodesic forms are indistinguishable on these data.",
+  "moved": "A12: PARTIAL → PARTIAL (Rule generalises to non-abelian and non-recurrent learners (P214); cost form unresolved)",
+  "claims": "P214"
  }
 ]

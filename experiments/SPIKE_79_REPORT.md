@@ -1,6 +1,6 @@
 # Spike 79: The last loopholes: non-abelian groups unselected, non-recurrent and gradient-free learners, and a derived cost
 
-**Date:** 2026-11-18 · **Status:** pre-registered (predictions in `results/spike79_predictions.json`, committed with this report before any run) · **Follows:** Spike 78 (P213). The Gibbs rule P(ρ) ∝ e_ρ^α·exp(−λ c_ρ) survived five of six loophole tests there. Three gaps remained:
+**Date:** 2026-11-18 · **Status:** complete (pre-registered with predictions in 26bdec6; results below) · **Follows:** Spike 78 (P213). The Gibbs rule P(ρ) ∝ e_ρ^α·exp(−λ c_ρ) survived five of six loophole tests there. Three gaps remained:
 - the random sample was all cyclic;
 - only recurrent, gradient-trained learners were tested;
 - the cost was a proxy.
@@ -71,3 +71,49 @@ python -m experiments.spike79 predict
 python -m experiments.spike79 run
 python -m experiments.spike79 analyse
 ```
+
+## Results
+
+`experiments/results/spike79.json`; per-run outputs in `spike79_raw/`. All 66 runs completed; a container restart interrupted them once, and the seeded runner resumed without changing anything.
+
+**Fits:**
+- GRU on non-abelian automata: 30/30.
+- Transformer: 18/18 at the training length.
+- **ES: 0/18 fitted (0.61–0.82)**, so H79.2 has no verdict.
+
+| Arm | Accuracy of frozen rule (argmax) | NLL Gibbs / energy-only / smoothness-only |
+|---|---|---|
+| GRU, 10 unselected non-abelian automata | **29/30 (96.7%)** | 2.22 / **2.08** / 23.5 |
+| Transformer, 6 unselected cyclic automata | **15/18 (83%)** | **6.63** / 8.07 / 33.2 |
+| ES, the same 6 cyclic automata (unfitted, exploratory) | 15/18; the misses are Z11_s2_015, where ES led with the smooth r3 | — |
+
+| ID | Measured | Criterion | Verdict |
+|---|---|---|---|
+| H79.1 | accuracy 96.7%; NLL 2.22, not below energy-only's 2.08 | accuracy ≥ 75% **and** NLL below both rivals | **NEITHER** |
+| H79.2 | no fitted ES runs | guard | **NO VERDICT** |
+| H79.3 | transformer: Gibbs NLL 6.63 < 8.07, 33.2 | below both rivals | **HELD** |
+| H79.4 | LOO NLL chord 28.44 vs geodesic 28.33 | chord < geodesic | **BROKEN** (by 0.4%) |
+
+**Reading:**
+- **Non-abelian groups, unselected (H79.1 neither).** The frozen rule names the leading representation in 29 of 30 runs on randomly drawn non-abelian automata: S₃, D₄, D₆, A₄ and S₄ with varied generators and readouts. As stated in advance, in this sample the Gibbs and energy predictions coincide everywhere. The cost term therefore only slightly lowers the rule's confidence, and energy-only wins narrowly on likelihood. This confirms generality without separating cost from energy. The separating non-abelian evidence remains the selected cases of Spike 77 (D₇) and Spike 69 (A₄ on pairs).
+- **A non-recurrent learner follows the same rule (H79.3 held).** Transformers trained on unselected cyclic automata lead with the rule's prediction in 83% of runs and beat both rivals. The law is not specific to recurrence.
+- **Gradient-free learning (H79.2 no verdict).** Evolution strategies did not fit within 4,000 iterations. Unfitted, they already lead with the rule's prediction in 15/18 runs, deviating once toward smoothness.
+- **The cost's form is not resolved (H79.4 broken, by 0.4%).**
+  - The kinetic (straight-line, minimum-dissipation) cost and the geodesic (on-orbit) cost fit these data equally well (28.4 vs 28.3).
+  - The kinetic derivation stands as mathematics: the index *is* the mean minimum kinetic cost of each input's action.
+  - The data do not single it out. On these automata the two forms are nearly monotone transforms of each other.
+  - Separating them needs large-angle actions, where chord² and angle² diverge.
+
+**Where C43 stands after all loophole tests (Spikes 77–79):**
+- **Supported:**
+  - holds prospectively and on unselected samples;
+  - across GRU, LSTM, tanh RNN and transformer, and two optimisers;
+  - on cyclic, dihedral and non-abelian groups;
+  - on reparametrisation-invariant geometry;
+  - with learner-specific exchange rates;
+  - with no missing variable.
+- **Not supported:** usage-weighting of the cost (Spike 78).
+- **Untested or unresolved:**
+  - gradient-free learners at convergence;
+  - the cost's exact functional form (chord vs geodesic);
+  - energy against cost in an *unselected* non-abelian sample.
