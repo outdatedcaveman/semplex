@@ -95,6 +95,7 @@ Run in parallel by Gemini from the Spike 10c state; renumbered at the merge (ori
 ├ 82  LM number concepts                                                   frozen: H82.1 held (non-discriminating)
 ├ 83  invariance principle (closure all the way down)                     frozen: H83.1 held (groups); H83.2 neither (monoids); H83.3 broken
 ├ 84  head of the observable module (irreversible case)                  frozen: H84.1 neither; H84.2 held; H84.3 vacuous; output-generator lead (exploratory)
-└ 85  LM whole number spectrum                                           frozen: H85.1 held (marginal); H85.2 held
+├ 85  LM whole number spectrum                                           frozen: H85.1 held (marginal); H85.2 held
 ```
 ```
+└ 86  growth-rate race (mechanism of C43)                               pre-registered
