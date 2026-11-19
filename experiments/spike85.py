@@ -43,7 +43,7 @@ def predict():
         res[repo] = {"repertoire": rep, "repertoire_mass": {str(d): float(mass[d]) for d in rep}, "cost": cost.tolist(),
                      "gibbs": sm(score(ALPHA, LAMBDA)).tolist(), "energy": sm(score(P77["energy_alpha"], 0.0)).tolist(),
                      "cost_only": sm(score(0.0, P77["smooth_lambda"])).tolist()}
-        print(repo, "repertoire d:", rep, {d: round(mass[d], 3) for d in rep}, "top gibbs k:", (np.argsort(-res[repo]["gibbs"])[:5] + 1).tolist(), flush=True)
+        print(repo, "repertoire d:", rep, {d: round(mass[d], 3) for d in rep}, "top gibbs k:", (np.argsort(-np.array(res[repo]["gibbs"]))[:5] + 1).tolist(), flush=True)
         del model
     json.dump(res, open(PRED, "w"), indent=1)
 
