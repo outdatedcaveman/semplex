@@ -1,6 +1,6 @@
 # Spike 82: The selection rule in pretrained language models: number concepts
 
-**Date:** 2026-11-19 · **Status:** pre-registered (predictions in `results/spike82_predictions.json`, computed from model *outputs only* and committed with this report before any hidden state was read) · **Follows:** Spikes 77–81 (the Gibbs selection rule C43). This is the first test outside trained-from-scratch toy automata. Related: Engels et al. 2024 (2405.14860, circular features); Kantamneni & Tegmark 2025 and Zhou et al. 2024 (Fourier features of numbers in LLMs, periods 2, 5, 10, 100).
+**Date:** 2026-11-19 · **Status:** complete (pre-registered with output-only predictions in ad98065; results below) · **Follows:** Spikes 77–81 (the Gibbs selection rule C43). This is the first test outside trained-from-scratch toy automata. Related: Engels et al. 2024 (2405.14860, circular features); Kantamneni & Tegmark 2025 and Zhou et al. 2024 (Fourier features of numbers in LLMs, periods 2, 5, 10, 100).
 
 ## Design
 
@@ -60,3 +60,27 @@ python -m experiments.spike82 predict
 python -m experiments.spike82 run
 python -m experiments.spike82 analyse
 ```
+
+## Results
+
+`experiments/results/spike82.json`; hidden states in `spike82_raw/` (git-ignored if large).
+
+| Model | Learned leading k | Top learned modes (share) | Predicted (all rules) |
+|---|---|---|---|
+| GPT-2 | **1** | 1 (0.45), **50 (0.35)**, 40 (0.17), 30, 10, 2 | k = 1 |
+| Pythia-410m | **1** | 1 (0.48), **50 (0.34)**, 40 (0.08), 2, 20 | k = 1 |
+| GPT-2-medium | **1** | 1 (0.52), **50 (0.30)**, 40 (0.14), 2, 20 | k = 1 |
+
+| ID | Measured | Criterion | Verdict |
+|---|---|---|---|
+| H82.1 | rule argmax = observed leading k in 3/3 models; pooled NLL: Gibbs 0.08, energy-only 2.73, smoothness-only 9.19 | ≥ 2/3 and NLL below both rivals | **HELD** |
+
+**Reading:**
+- **The leading mode is predicted**, in all three pretrained LMs: the period-100 counting circle (k = 1). As stated before running, every rule predicted k = 1, so this confirms the shared prediction, not the rule against its rivals. The NLL margin reflects the rule's confidence, not discrimination. A monotone magnitude code would also load on k = 1.
+- **The second mode is the instructive part.** In every model, parity (k = 50, period 2) carries 30–35% of the number geometry, and k = 40 (period 2.5) another 8–17%. These are the modes with the *highest* predictive value after k = 1 in the model's own next-token behaviour. But they are the *most expensive* under the counting action: k = 50 flips sign at every step, cost 2, the maximum. A cost-only account would suppress them.
+
+  So in LMs the leading constituent follows the rule, while the *secondary* structure follows value despite maximal cost. Two readings are possible:
+  - LM numbers are not learned through the +1 counting action alone. Other actions in text (+2, ×10, parity-dependent agreement) are cheap for the k = 50 mode. That would fit the repertoire-dependence found in Spike 78.
+  - The single-leader summary is too coarse for a multi-constituent geometry.
+
+  This is exploratory and post hoc. It points to the next test: specify the LM's action repertoire (which numerical operations appear in text) and predict the *whole* spectrum, not only its leader.

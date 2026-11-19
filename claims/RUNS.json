@@ -1661,6 +1661,33 @@
    "claims": [
     "P214"
    ]
+  },
+  {
+   "spike": "82",
+   "date": "2026-11-19",
+   "commit": "ad98065",
+   "question": "Does the selection rule predict number-concept geometry in pretrained LMs?",
+   "overall": "HELD",
+   "verdicts": [
+    {
+     "id": "H82.1",
+     "verdict": "HELD",
+     "measured": "leading k = 1 in 3/3 models; NLL 0.08 vs 2.73, 9.19",
+     "bar": ">= 2/3 and NLL below rivals"
+    }
+   ],
+   "learned": "Pretrained LMs lead with the counting circle as predicted (non-discriminating); parity is a strong secondary mode despite maximal counting cost, pointing to a richer action repertoire in text.",
+   "gaps_moved": [
+    {
+     "gap": "A12",
+     "from": "PARTIAL",
+     "to": "PARTIAL",
+     "why": "First LM test (P215), weak"
+    }
+   ],
+   "claims": [
+    "P215"
+   ]
   }
  ]
 }

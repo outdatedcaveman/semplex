@@ -358,5 +358,15 @@
   "learned": "The rule holds for unselected non-abelian automata and for transformers; the cost index is the mean minimum kinetic cost of input actions, but chord and geodesic forms are indistinguishable on these data.",
   "moved": "A12: PARTIAL → PARTIAL (Rule generalises to non-abelian and non-recurrent learners (P214); cost form unresolved)",
   "claims": "P214"
+ },
+ {
+  "spike": "82",
+  "date": "2026-11-19",
+  "commit": "ad98065",
+  "question": "Does the selection rule predict number-concept geometry in pretrained LMs?",
+  "overall": "HELD",
+  "learned": "Pretrained LMs lead with the counting circle as predicted (non-discriminating); parity is a strong secondary mode despite maximal counting cost, pointing to a richer action repertoire in text.",
+  "moved": "A12: PARTIAL → PARTIAL (First LM test (P215), weak)",
+  "claims": "P215"
  }
 ]

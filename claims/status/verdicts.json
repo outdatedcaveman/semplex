@@ -1150,5 +1150,13 @@
   "verdict": "BROKEN",
   "measured": "chord 28.44 vs geodesic 28.33",
   "bar": "chord < geodesic"
+ },
+ {
+  "key": "82:H82.1",
+  "spike": "82",
+  "id": "H82.1",
+  "verdict": "HELD",
+  "measured": "leading k = 1 in 3/3 models; NLL 0.08 vs 2.73, 9.19",
+  "bar": ">= 2/3 and NLL below rivals"
  }
 ]
