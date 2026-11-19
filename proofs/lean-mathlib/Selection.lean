@@ -25,23 +25,28 @@ theorem chord_sq_sum {d : ℕ} (R : Matrix (Fin d) (Fin d) ℝ) (hR : Rᵀ * R =
     by_cases h : j = i <;> simp [Matrix.one_apply, h] <;> ring
   simp_rw [h2, Finset.sum_add_distrib, Finset.sum_sub_distrib, h1]
   simp [Matrix.trace, Matrix.one_apply, Finset.mul_sum]
+  rw [← Finset.mul_sum]
   ring
 
 theorem fourier_laplacian {n : ℕ} [NeZero n] (S : Finset (ZMod n)) (k : ℤ) (x : ZMod n) :
     let χ : ZMod n → ℂ := fun y => Complex.exp (2 * Real.pi * Complex.I * k * (y.val : ℂ) / n)
     χ x - (S.card : ℂ)⁻¹ * ∑ s in S, χ (x + s) = (1 - (S.card : ℂ)⁻¹ * ∑ s in S, χ s) * χ x := by
   intro χ
+  have hn : (n : ℂ) ≠ 0 := by exact_mod_cast NeZero.ne n
+  set ζ : ℂ := Complex.exp (2 * Real.pi * Complex.I * k / n) with hζdef
+  have hpow : ∀ m : ℕ, Complex.exp (2 * Real.pi * Complex.I * k * (m : ℂ) / n) = ζ ^ m := by
+    intro m
+    rw [hζdef, ← Complex.exp_nat_mul]
+    congr 1
+    ring
+  have hζn : ζ ^ n = 1 := by
+    rw [← hpow n]
+    rw [show (2 * Real.pi * Complex.I * k * (n : ℂ) / n) = k * (2 * Real.pi * Complex.I) by field_simp; ring]
+    exact Complex.exp_int_mul_two_pi_mul_I k
   have key : ∀ s, χ (x + s) = χ x * χ s := by
     intro s
-    simp only [χ, ← Complex.exp_add]
-    rw [Complex.exp_eq_exp_iff_exists_int]
-    refine ⟨-k * ((x.val + s.val) / n : ℕ), ?_⟩
-    rw [ZMod.val_add]
-    have hn : (n : ℂ) ≠ 0 := by exact_mod_cast NeZero.ne n
-    have hdiv := Nat.mod_add_div (x.val + s.val) n
-    field_simp
-    push_cast
-    linear_combination hdiv
+    simp only [χ, hpow, ZMod.val_add, ← pow_add]
+    conv_rhs => rw [← Nat.mod_add_div (x.val + s.val) n, pow_add, pow_mul, hζn, one_pow, mul_one]
   simp_rw [key, ← Finset.mul_sum]
   ring
 

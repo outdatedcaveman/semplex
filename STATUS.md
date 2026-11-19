@@ -768,7 +768,7 @@ Progress counts a closed gap as 1 and a partial one as ½. It measures the gap l
 
 ## 6. Ledger health
 
-- Claims: 221. Empirical: 117; Proved in Lean: 32; Refuted: 18; Exploratory: 16; Proved on paper: 11; Other: 7; Kernel-checked: 6; Conjecture: 5; Method note: 5; Computed: 4.
+- Claims: 222. Empirical: 117; Proved in Lean: 32; Refuted: 18; Exploratory: 16; Proved on paper: 11; Other: 8; Kernel-checked: 6; Conjecture: 5; Method note: 5; Computed: 4.
 - Problems: 0. Claims stated stronger than their support: 46.
 - Frozen spike files (rule 2): 218.
 

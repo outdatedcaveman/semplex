@@ -1,0 +1,4 @@
+Selection.lean, Lean 4.12.0 + Mathlib v4.12.0, checked 2026-11-20 (angelic check: 0 obligations)
+'chord_sq_sum' depends on axioms: [propext, Classical.choice, Quot.sound]
+'fourier_laplacian' depends on axioms: [propext, Classical.choice, Quot.sound]
+'mediant_max' depends on axioms: [propext, Classical.choice, Quot.sound]
