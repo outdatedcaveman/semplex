@@ -62,3 +62,50 @@ python -m experiments.spike84 analyse
 - `predict()` merged the module structure into each automaton record. Its key `"O"` (observable-module basis) overwrote the automaton's output vector `"O"`, so `run` crashed on the first training step and no result was produced.
 - Fix: `train` reads the output vector from Spike 81's seeded pool by automaton id, asserting the transition table matches; all 16 match. `measure` keeps using `"O"` as the module basis, as intended.
 - No hypothesis, criterion or automaton changed.
+
+## Results
+
+`experiments/results/spike84.json`; per-run outputs and centroids in `spike84_raw/`.
+- 48 runs; 37 fitted with a valid measurement (15 automata).
+- Automaton 356: its 3 runs did not fit at ≥ 0.99.
+- Automaton 461: 1 of 3 at 0.99.
+
+| ID | Measured | Criterion | Verdict |
+|---|---|---|---|
+| H84.1 | head share above its dimension share in 29/37 (78.4%) | ≥ 80% held, < 50% broken | **NEITHER** |
+| H84.2 | top learned direction more in H than in R in 27/37 (73.0%) | ≥ 70% | **HELD** |
+| H84.3 | share in O ≥ 0.8 in 37/37 | ≥ 80% | **HELD, but vacuous** (see below) |
+
+Medians: share in H 0.90 against a dimension fraction of 0.29; top direction 0.98 in H, 0.02 in R.
+
+**H84.3 is true by construction.** The automata are minimal, so every pair of states is distinguishable by the output. That makes O the whole constants-removed space (dim O = m − 1 in all 16), and share_obs = 1 identically. This should have been seen at pre-registration. The verdict is recorded as it came out and carries no evidence.
+
+**The failures are whole automata, not seeds.** 178, 581, 82 (3/3 runs each) and 461 all have a one-dimensional head and put most of their geometry in R. Two other automata with dim H = 1 (257, 527) do not fail in the same way.
+
+## Exploratory (after the verdicts, not pre-registered): the learner leads with the output generator, not the π-orthogonal head
+
+Two quantities per automaton:
+- the fraction of the centred, π-weighted output vector o lying in H;
+- the squared alignment of the top learned direction with o.
+
+| Automaton | dim H / dim O | o in H | Share in H (runs) | (top · o)² (runs) |
+|---|---|---|---|---|
+| 178 | 1/4 | 0.19 | 0.15, 0.14, 0.12 | 0.98, 0.99, 0.98 |
+| 82 | 1/4 | 0.15 | 0.23, 0.22, 0.25 | 0.97, 0.97, 0.96 |
+| 581 | 1/4 | 0.50 | 0.20, 0.21, 0.23 | 0.85, 0.85, 0.89 |
+| 257 | 1/4 | 0.63 | 0.46, 0.46, 0.49 | 0.98, 0.99, 0.94 |
+| 461 | 1/5 | 0.83 | 0.45, 0.38 | 0.88, 0.84 |
+| 293 | 2/7 | 0.91 | 0.76–0.79 | 0.98 |
+| 527 | 1/4 | 0.95 | 0.88–0.91 | 0.98–0.99 |
+| the other 8 | ≥ 3/4 | ≥ 0.98 | 0.96–1.00 | 0.73–1.00 |
+
+- **In every automaton the dominant learned direction is the output vector itself** (median alignment ≈ 0.96).
+- The share in the π-orthogonal head follows how much of o lies in that complement. When o lies mostly in R (178, 82), so does the geometry.
+
+**Interpretation.** The head of a module is a *quotient*, O / rad(A)·O. Since O = A·o is cyclic, the head is spanned by the image of the generator o. The π-orthogonal complement is one arbitrary lift of that quotient, and it is the wrong one. The learner picks the lift through o. This was flagged under "What this cannot show" ("different inner products give different complements of R").
+
+So the corrected conjecture is **C45′: the learner leads with the generator of its observable module.** It is a candidate connecting principle with the group case:
+- for groups, o splits over complemented isotypic blocks and value against cost picks among them;
+- for monoids there is no complement, and the only canonical piece is the generator.
+
+This is post hoc and needs its own pre-registered test with a non-trivial rival. A readout-trained network may favour o for architectural reasons alone, so a learner without a linear readout is the control.
