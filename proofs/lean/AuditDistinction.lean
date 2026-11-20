@@ -1,0 +1,42 @@
+import Distinction
+#print axioms Distinction.inducedObservable_mk
+#print axioms Distinction.quotient_factorization_criterion
+#print axioms Distinction.quotientUnaryOp_mk
+#print axioms Distinction.substitution_of_identity
+#print axioms Distinction.linear_contraction_counterexample
+#print axioms Distinction.unrestricted_resource_can_supply
+#print axioms Distinction.moduleIndist_equivalence
+#print axioms Distinction.module_refinement
+
+#print axioms FirstOrder.satisfaction_depends_only_on_free_variables
+#print axioms FirstOrder.forall_implies_exists
+#print axioms FirstOrder.constant_has_existential_denotation
+#print axioms FirstOrder.empty_domain_existential_import_failure
+#print axioms Resources.linear_contraction_counterexample
+#print axioms Resources.persistent_context_survives_contraction
+#print axioms Resources.linear_contraction_safe_with_surplus
+
+#print axioms QuotientOperations.inducedBinary_mk
+#print axioms QuotientOperations.congruence_necessary
+
+#print axioms Admissibility.descendObservation_mk
+#print axioms Admissibility.descendUnary_mk
+#print axioms Admissibility.descendBinary_mk
+
+#print axioms FirstOrder.satisfaction_depends_only_on_free_variables
+#print axioms FirstOrder.contextSat_update_fresh
+#print axioms FirstOrder.forall_intro_fresh_sound
+#print axioms FirstOrder.exists_intro_semantic
+
+#print axioms FirstOrder.exists_elim_fresh_sound
+
+#print axioms Resources.persistent_contraction_preserves_support
+#print axioms Resources.mergePersistent_preserves_origin_count
+#print axioms Resources.linear_contraction_counterexample_occurrences
+
+#print axioms Resources.mergePersistent_records_origins
+#print axioms Resources.persistent_contraction_preserves_support_context
+#print axioms Resources.linear_contraction_loses_one_capacity
+
+#print axioms Resources.wellFormed_mergePersistent
+#print axioms Resources.wellFormed_mergeLinear

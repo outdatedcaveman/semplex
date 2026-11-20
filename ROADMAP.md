@@ -72,3 +72,35 @@ Rules of thumb:
 - **Q-Bounds-Sym** (Spike 16): break the $\binom{1882}{3} \approx 1.1\times 10^9$ `parity4 >= 5` enumeration barrier in `Bounds.lean` via $B_4$ signed-permutation symmetry reduction or an algebraic hyperplane-slicing theorem.
 - **Q-OptStop-Connect** (Spike 16): instantiate `Theory.ville_anytime_valid_bound` directly on concrete sequential `QueryTree` / `cerp/epistemics.py` e-value processes and lift finite Markov-kernel DPI (`Fin n`) toward continuous state spaces.
 - **Q-HD-Theory** (Spike 16): formalize why width coarsening shifts canonical profile representations from isolated units (`max_unit_corr`) to distributed linear subspaces (`R^2 = 0.9850`), and test SAT-CEGAR compiler scaling on ASTs beyond `n = 16` without dense tables.
+
+## Spike 17 — Distinction admissibility (initial formal core verified, 2026-11-20)
+
+Research branch: `research/distinction-calculus-2026-11-20`  
+Draft PR: https://github.com/outdatedcaveman/semplex/pull/4
+
+Implemented:
+- typed DAP contract for protected observations and total unary/binary operations, with quotient descent;
+- quotient factorization, binary congruence necessity, and unary/binary operation descent;
+- recursive first-order syntax/semantics with equality, unary predicates, falsity, implication, ∀ and ∃; Lean proofs of Tarski free-variable invariance and semantic soundness of ∀-introduction / ∃-elimination under eigenvariable freshness;
+- explicit nonempty-domain existential witness and empty-domain countermodel; variables and constants have separate semantic clauses;
+- Lean identity-type substitution fragment;
+- well-formed occurrence-sensitive resource fragment with unique token IDs, linear/persistent modes, provenance, a context-independent persistent-contraction preservation theorem, and a linear-contraction theorem showing an exact one-unit capacity loss without persistent backup;
+- small split fibration with discrete Boolean fibers, reindexing, cartesian factorization, and cleavage coherence;
+- finite two-module overlap model proving compatible local sections glue uniquely and incompatible sections do not glue;
+- dyadic Synesism molarity model: the value relation is a proved equivalence, but order/multiplicity do not descend through its quotient; binary partition conserves value while changing configuration, with synod-anchor preservation;
+- finite Python reference model with **15 distinction-specific tests**, including malformed duplicate-token rejection;
+- prior-art/novelty analysis, updated claim register, and architecture review.
+
+**Verification:** local Lean 4.12.0 suite passed 9/9; distinction-specific Python tests passed 15/15; the full fast Python suite passed 122 tests (2 skipped, 19 slow tests excluded). The new linear-capacity theorem's audit includes standard `Classical.choice` in addition to `propext` and `Quot.sound`; no `sorryAx` or custom research axiom appears. The earlier GitHub CI run is at https://github.com/outdatedcaveman/semplex/actions/runs/44693971714. Source reconciliation and module semantics design are in `research/SYNESISM_IDENTITY_MODULE_RECONCILIATION.md` and `research/SYNESISM_MODULE_SEMANTICS_DESIGN.md`.
+
+**Scope:** these are small formal fragments and standard constructions, not full FOL, full linear logic, full HoTT, a new fibration theorem, a general sheaf theorem, or a proof of Synesism's ontology. No Synesism canon or CSIR v0.1 schema changes.
+
+Next gates:
+1. Generalize the protected interface to additional operation classes only where existing Semplex fragments require them.
+2. Generalize the finite overlap model to multiple modules/covers and test descent conditions against the available Synesism module definitions; match the exact P8 source before claiming alignment.
+3. Do not duplicate Synesism C-20's existing resource-sensitive lambda calculus. First build the finite ResourceOccurrence-to-usage-profile adapter described in `research/SYNESISM_C20_RESOURCE_CALCULUS_BRIDGE.md`, compare it against M263/M264/M265/M413, and record any mismatch. Only then decide whether Semplex needs a separate syntax-directed sequent calculus with cut/substitution and explicit exponential rules. Design and proof gates: `research/LINEAR_SEQUENT_CALCULUS_PLAN.md`.
+4. Complete the four-system comparison, including eigenparameter side conditions and the exact structural rules each system requires.
+5. Integrate typed transformation/loss certificates into CSIR only after multiple existing fragments require the same fields.
+6. Continue prior-art comparison before any novelty claim.
+
+- **Q-LRAT-Chunk** (Spike 17 verification): the full unfiltered pytest run was stopped after ~14 minutes to avoid excessive laptop load. It was spending several minutes in a generated pure-kernel Lean claim for a 3-input threshold-network/LRAT certificate; the Lean process reached ~1.25 GB working set. This is a performance/verification-engineering issue, not a reported theorem failure. Next: split the LRAT certificate into independently checked chunks or improve the kernel checker so pure-kernel proof terms remain tractable; compare with native execution only as a separately disclosed trust mode. Previous independent runs remain: 122 fast tests (2 skipped), 9/9 Lean suite, and 10 slow non-Lean tests (1 skipped). The unfiltered suite is **incomplete**, not passed.
