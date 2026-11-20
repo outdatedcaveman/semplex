@@ -1,0 +1,9 @@
+import Distinction
+#print axioms Distinction.inducedObservable_mk
+#print axioms Distinction.quotient_factorization_criterion
+#print axioms Distinction.quotientUnaryOp_mk
+#print axioms Distinction.substitution_of_identity
+#print axioms Distinction.linear_contraction_counterexample
+#print axioms Distinction.unrestricted_resource_can_supply
+#print axioms Distinction.moduleIndist_equivalence
+#print axioms Distinction.module_refinement
