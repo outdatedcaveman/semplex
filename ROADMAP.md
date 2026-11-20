@@ -84,14 +84,14 @@ Implemented:
 - recursive first-order syntax/semantics with equality, unary predicates, falsity, implication, ∀ and ∃; Lean proofs of Tarski free-variable invariance and semantic soundness of ∀-introduction / ∃-elimination under eigenvariable freshness;
 - explicit nonempty-domain existential witness and empty-domain countermodel; variables and constants have separate semantic clauses;
 - Lean identity-type substitution fragment;
-- resource-sensitive contraction fragment with persistent permission and surplus conditions;
+- occurrence-sensitive resource fragment with token IDs, linear/persistent modes, provenance, a verified persistent-contraction preservation theorem, and a verified linear-contraction counterexample;
 - small split fibration with discrete Boolean fibers, reindexing, cartesian factorization, and cleavage coherence;
 - finite two-module overlap model proving compatible local sections glue uniquely and incompatible sections do not glue;
 - dyadic Synesism molarity model: the value relation is a proved equivalence, but order/multiplicity do not descend through its quotient; binary partition conserves value while changing configuration, with synod-anchor preservation;
 - finite Python reference model with **9 adversarial tests**;
 - prior-art/novelty analysis, updated claim register, and architecture review.
 
-**Verification:** GitHub Actions passed with Lean 4.12.0 compilation and axiom audits for Distinction, SmallFibration, ModuleDescent, and SynesismConservation, plus 9/9 Python tests. The audited theorem dependencies are limited to `propext` and `Quot.sound`; no `sorryAx`, custom axioms, or `Classical.choice` dependency appears. See https://github.com/outdatedcaveman/semplex/actions/runs/44693153106. Source reconciliation and module semantics design are in `research/SYNESISM_IDENTITY_MODULE_RECONCILIATION.md` and `research/SYNESISM_MODULE_SEMANTICS_DESIGN.md`.
+**Verification:** GitHub Actions passed with Lean 4.12.0 compilation and axiom audits for Distinction, SmallFibration, ModuleDescent, and SynesismConservation, plus 11/11 Python tests. The audited theorem dependencies are limited to `propext` and `Quot.sound`; no `sorryAx`, custom axioms, or `Classical.choice` dependency appears. See https://github.com/outdatedcaveman/semplex/actions/runs/44693854708. Source reconciliation and module semantics design are in `research/SYNESISM_IDENTITY_MODULE_RECONCILIATION.md` and `research/SYNESISM_MODULE_SEMANTICS_DESIGN.md`.
 
 **Scope:** these are small formal fragments and standard constructions, not full FOL, full linear logic, full HoTT, a new fibration theorem, a general sheaf theorem, or a proof of Synesism's ontology. No Synesism canon or CSIR v0.1 schema changes.
 
