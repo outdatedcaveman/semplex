@@ -76,4 +76,6 @@ The correct target is not “eliminate names” in isolation. It is to make expl
 - free-variable support;
 - context-sensitive substitution.
 
-The finite Spike 17 demonstrator now includes both the free-variable invariance example and an empty-domain countermodel for existential import. A full first-order syntax/semantics development in Lean remains future work.
+The Lean first-order fragment now includes an explicit existential formula constructor, existential introduction, semantic soundness of universal introduction under the fresh-variable condition, and semantic soundness of existential elimination when the eigenvariable is absent from the persistent context and conclusion. The proof uses the free-variable satisfaction theorem to show that changing the eigenvariable cannot affect those protected formulas. This is still a small language (equality, unary predicates, falsity, implication, universal and existential quantification), not full first-order logic or a complete natural-deduction calculus.
+
+A fresh eigenvariable is not a constant denoting a pre-existing named object. Its admissibility comes from a syntactic non-occurrence condition that guarantees the conclusion/context are independent of its assigned value.
