@@ -26,10 +26,13 @@ The slide's universal-to-existential inference is valid for nonempty domains. Th
 
 ### 1.3 Linear logic and contraction
 
-Girard's linear logic already distinguishes resources that may be used once from formulas that can be reused through exponential modalities. Semplex is not introducing controlled contraction. The present Lean/Python fragment only models a small resource semantics:
-- a natural-number count of linear tokens;
-- a Boolean permission for persistent/reusable use;
-- a demand threshold.
+Girard's linear logic already distinguishes resources that may be used once from formulas that can be reused through exponential modalities. Semplex is not introducing controlled contraction. The initial Lean/Python fragment modeled a small resource semantics with a natural-number count and a Boolean persistent permission. The current branch has refined this into an occurrence-sensitive capacity model:
+- individual token IDs and proposition labels;
+- linear versus persistent modes;
+- explicit provenance trails, concatenated when occurrences are merged;
+- a finite-demand support relation.
+
+This is still not a sequent calculus for linear logic or a formalization of its exponential rules.
 
 It proves a minimal counterexample to contraction for linear tokens and sufficient conditions under which contraction is safe in this toy semantics. It is **not** a sequent calculus for linear logic, and the Boolean persistent flag is not a formalization of the full exponential rules, dereliction, promotion, or their cut-elimination metatheory.
 
