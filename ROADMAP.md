@@ -98,7 +98,7 @@ Implemented:
 Next gates:
 1. Generalize the protected interface to additional operation classes only where existing Semplex fragments require them.
 2. Generalize the finite overlap model to multiple modules/covers and test descent conditions against the available Synesism module definitions; match the exact P8 source before claiming alignment.
-3. Upgrade the occurrence-sensitive capacity fragment to a syntax-directed linear sequent calculus with cut/substitution and explicit exponential rules; compare its structural rules directly with classical FOL and dependent type theory. Design and proof gates: `research/LINEAR_SEQUENT_CALCULUS_PLAN.md`.
+3. Do not duplicate Synesism C-20's existing resource-sensitive lambda calculus. First build the finite ResourceOccurrence-to-usage-profile adapter described in `research/SYNESISM_C20_RESOURCE_CALCULUS_BRIDGE.md`, compare it against M263/M264/M265/M413, and record any mismatch. Only then decide whether Semplex needs a separate syntax-directed sequent calculus with cut/substitution and explicit exponential rules. Design and proof gates: `research/LINEAR_SEQUENT_CALCULUS_PLAN.md`.
 4. Complete the four-system comparison, including eigenparameter side conditions and the exact structural rules each system requires.
 5. Integrate typed transformation/loss certificates into CSIR only after multiple existing fragments require the same fields.
 6. Continue prior-art comparison before any novelty claim.
