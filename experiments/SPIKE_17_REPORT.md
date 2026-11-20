@@ -98,7 +98,7 @@ The repository test harness `tests/test_lean.py` also compiles these modules and
 
 1. **DAP is a typed contract schema, not a universal axiom.** It must declare the observations and operations to be protected. For quotienting, the observation condition is constancy on equivalence classes; the operation condition is congruence.
 2. **Identity, substitution, and contraction remain distinct.** The shared preservation calculus can state admissibility obligations, but does not derive all three without assumptions encoding identity, congruence, or resource permissions.
-3. **Names carry inferential commitments through their semantics.** Variables, interpreted constants, and fresh proof parameters have different roles. The slide's existential import uses nonempty-domain semantics or a witness term/parameter.
+3. **Names carry inferential commitments through their semantics.** Variables, interpreted constants, and fresh proof parameters have different roles. The slide's existential import uses nonempty-domain semantics or a witness term/parameter. Lean now proves semantic soundness of ∀-introduction and ∃-elimination under explicit eigenvariable freshness conditions.
 4. **Molarity-equivalence is not identity.** Even when the dyadic value relation is a genuine equivalence relation, order and multiplicity do not descend through its quotient. This is a direct DAP counterexample to treating equal semonic value as structural identity.
 5. **Module-relative descriptions have a concrete gluing test.** Local profiles can be assembled only when overlap restrictions agree. This is a generic matching-family example, not yet a derivation from Synesism's module ontology.
 6. **No novelty claim is warranted.** Quotient descent, congruence, free-variable invariance, linear contraction control, identity types, Grothendieck fibrations, and finite gluing are established mathematics. The possible value is the typed integration with PFT and CSIR, which still needs comparative evaluation.
@@ -119,6 +119,6 @@ The repository test harness `tests/test_lean.py` also compiles these modules and
 4. Extend the protected interface from total unary/binary operations to typed partial, stateful, effectful, stochastic, and higher-order operations only where Semplex fragments require them.
 5. Generalize the finite overlap model to multiple modules/covers and explicit transition maps; derive the exact descent conditions and test them against the available Synesism module definitions.
 6. Replace the toy Boolean persistent flag with occurrence-sensitive resource contexts, explicit copy permissions, and provenance-aware judgments; compare directly with linear logic's exponential rules.
-7. Complete a syntax-directed comparison of the four proof systems, including fresh eigenparameters and the structural rules actually used.
+7. The FOL fragment now includes ∃ and machine-checked eigenvariable soundness for ∀-introduction and ∃-elimination. Complete a syntax-directed comparison of all four systems, with occurrence-sensitive linear contexts and explicit structural rules.
 8. Design a CSIR transformation/certificate representation only after at least three existing fragments need the same typed preservation and loss-accounting fields.
 9. Continue the literature and novelty audit before any paper-level claim.
