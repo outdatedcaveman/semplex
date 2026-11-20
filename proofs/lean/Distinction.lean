@@ -365,6 +365,76 @@ theorem linear_contraction_safe_with_surplus (n required : Nat)
     CanSupply (contractLinear ⟨n, false⟩) required := by
   exact Or.inr h
 
+
+/-! ### Occurrence-sensitive resources
+
+Unlike the earlier Boolean context flag, this model records individual token
+identities, proposition labels, resource modes, and provenance. It remains a
+small capacity semantics, not a sequent calculus for linear logic.
+-/
+
+inductive ResourceMode where
+  | linear
+  | persistent
+  deriving DecidableEq, BEq, Repr
+
+structure ResourceOccurrence where
+  token : Nat
+  formula : Nat
+  mode : ResourceMode
+  origins : List Nat
+  deriving DecidableEq, Repr
+
+def linearCount (Γ : List ResourceOccurrence) (A : Nat) : Nat :=
+  (Γ.filter fun o => o.formula == A && o.mode == .linear).length
+
+def hasPersistent (Γ : List ResourceOccurrence) (A : Nat) : Bool :=
+  Γ.any fun o => o.formula == A && o.mode == .persistent
+
+def supports (Γ : List ResourceOccurrence) (A demand : Nat) : Prop :=
+  hasPersistent Γ A = true ∨ demand ≤ linearCount Γ A
+
+def mergePersistent (a b : ResourceOccurrence) : ResourceOccurrence :=
+  { token := a.token
+    formula := a.formula
+    mode := .persistent
+    origins := a.origins ++ b.origins }
+
+def mergeLinear (a b : ResourceOccurrence) : ResourceOccurrence :=
+  { token := a.token
+    formula := a.formula
+    mode := .linear
+    origins := a.origins ++ b.origins }
+
+/-- Contracting two persistent occurrences of the same formula preserves
+support for every formula and every finite demand. -/
+theorem persistent_contraction_preserves_support
+    (Γ : List ResourceOccurrence) (a b : ResourceOccurrence)
+    (hFormula : a.formula = b.formula)
+    (ha : a.mode = .persistent) (hb : b.mode = .persistent)
+    (A demand : Nat) :
+    supports (Γ ++ [a, b]) A demand ↔
+      supports (Γ ++ [mergePersistent a b]) A demand := by
+  simp [supports, hasPersistent, linearCount, mergePersistent, hFormula, ha, hb]
+
+/-- Persistent contraction preserves the complete recorded provenance list. -/
+theorem mergePersistent_preserves_origin_count
+    (a b : ResourceOccurrence) :
+    (mergePersistent a b).origins.length =
+      a.origins.length + b.origins.length := by
+  simp [mergePersistent]
+
+/-- Two distinct linear occurrences can jointly satisfy a two-use demand,
+but their one-token contraction cannot. -/
+theorem linear_contraction_counterexample_occurrences (A : Nat) :
+    let a : ResourceOccurrence := ⟨1, A, .linear, [1]⟩
+    let b : ResourceOccurrence := ⟨2, A, .linear, [2]⟩
+    a.token ≠ b.token ∧
+      supports [a, b] A 2 ∧
+      ¬ supports [mergeLinear a b] A 2 := by
+  simp [supports, hasPersistent, linearCount, mergeLinear]
+
+
 end Resources
 
 
