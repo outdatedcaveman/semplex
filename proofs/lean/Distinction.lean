@@ -142,6 +142,7 @@ inductive Formula where
   | falsum : Formula
   | imp : Formula → Formula → Formula
   | all : Nat → Formula → Formula
+  | ex : Nat → Formula → Formula
 
 def Formula.free : Formula → Nat → Prop
   | .equal t u, v => Term.free t v ∨ Term.free u v
@@ -149,6 +150,7 @@ def Formula.free : Formula → Nat → Prop
   | .falsum, _ => False
   | .imp φ ψ, v => Formula.free φ v ∨ Formula.free ψ v
   | .all x φ, v => v ≠ x ∧ Formula.free φ v
+  | .ex x φ, v => v ≠ x ∧ Formula.free φ v
 
 structure Interpretation (α : Type u) where
   constants : Nat → α
@@ -161,6 +163,7 @@ def Formula.sat {α : Type u} (I : Interpretation α) (s : Nat → α) :
   | .falsum => False
   | .imp φ ψ => Formula.sat I s φ → Formula.sat I s ψ
   | .all x φ => ∀ a, Formula.sat I (update s x a) φ
+  | .ex x φ => ∃ a, Formula.sat I (update s x a) φ
 
 theorem satisfaction_depends_only_on_free_variables
     {α : Type u} (I : Interpretation α) (φ : Formula) :
@@ -218,6 +221,63 @@ theorem satisfaction_depends_only_on_free_variables
         apply (ih (update s x a) (update s' x a)
           (agreeOn_update (Formula.free φ) s s' x a h)).mpr
         exact hSat a
+
+
+  | ex x φ ih =>
+      intro s s' h
+      change
+        (∃ a, Formula.sat I (update s x a) φ) ↔
+        (∃ a, Formula.sat I (update s' x a) φ)
+      constructor
+      · rintro ⟨a, ha⟩
+        refine ⟨a, ?_⟩
+        exact (ih (update s x a) (update s' x a)
+          (agreeOn_update (Formula.free φ) s s' x a h)).mp ha
+      · rintro ⟨a, ha⟩
+        refine ⟨a, ?_⟩
+        exact (ih (update s x a) (update s' x a)
+          (agreeOn_update (Formula.free φ) s s' x a h)).mpr ha
+
+/-- A finite list of assumptions is satisfied by an assignment. -/
+def ContextSat {α : Type u} (I : Interpretation α)
+    (s : Nat → α) (Γ : List Formula) : Prop :=
+  ∀ ψ, ψ ∈ Γ → Formula.sat I s ψ
+
+/-- A context not mentioning x remains satisfied when x's assignment is changed. -/
+theorem contextSat_update_fresh {α : Type u} (I : Interpretation α)
+    (Γ : List Formula) (s : Nat → α) (x : Nat) (a : α)
+    (hFresh : ∀ ψ, ψ ∈ Γ → ¬ Formula.free ψ x)
+    (hΓ : ContextSat I s Γ) :
+    ContextSat I (update s x a) Γ := by
+  intro ψ hψ
+  have hAgree : AgreeOn (Formula.free ψ) s (update s x a) := by
+    intro v hv
+    by_cases hvx : v = x
+    · subst v
+      exact False.elim (hFresh ψ hψ hv)
+    · simp [update, hvx]
+  have hInvariant :=
+    satisfaction_depends_only_on_free_variables I ψ s (update s x a) hAgree
+  exact hInvariant.mp (hΓ ψ hψ)
+
+/-- Semantic soundness of universal introduction with its eigenvariable side condition. -/
+theorem forall_intro_fresh_sound {α : Type u} (I : Interpretation α)
+    (Γ : List Formula) (φ : Formula) (x : Nat)
+    (hFresh : ∀ ψ, ψ ∈ Γ → ¬ Formula.free ψ x)
+    (hDerive : ∀ s, ContextSat I s Γ → Formula.sat I s φ) :
+    ∀ s, ContextSat I s Γ → Formula.sat I s (.all x φ) := by
+  intro s hΓ
+  change ∀ a, Formula.sat I (update s x a) φ
+  intro a
+  apply hDerive (update s x a)
+  exact contextSat_update_fresh I Γ s x a hFresh hΓ
+
+/-- Existential introduction is witnessed by an element of the interpreted domain. -/
+theorem exists_intro_semantic {α : Type u} (I : Interpretation α)
+    (s : Nat → α) (x : Nat) (φ : Formula) (witness : α)
+    (h : Formula.sat I (update s x witness) φ) :
+    Formula.sat I s (.ex x φ) :=
+  ⟨witness, h⟩
 
 /-- A nonempty domain supplies a witness for universal-to-existential import. -/
 theorem forall_implies_exists {α : Type u} (P : α → Prop) (witness : α)
