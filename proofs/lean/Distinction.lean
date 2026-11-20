@@ -376,7 +376,7 @@ small capacity semantics, not a sequent calculus for linear logic.
 inductive ResourceMode where
   | linear
   | persistent
-  deriving DecidableEq, BEq, Repr
+  deriving DecidableEq, Repr
 
 structure ResourceOccurrence where
   token : Nat
@@ -386,10 +386,10 @@ structure ResourceOccurrence where
   deriving DecidableEq, Repr
 
 def linearCount (Γ : List ResourceOccurrence) (A : Nat) : Nat :=
-  (Γ.filter fun o => o.formula == A && o.mode == .linear).length
+  (Γ.filter fun o => o.formula == A && decide (o.mode = .linear)).length
 
 def hasPersistent (Γ : List ResourceOccurrence) (A : Nat) : Bool :=
-  Γ.any fun o => o.formula == A && o.mode == .persistent
+  Γ.any fun o => o.formula == A && decide (o.mode = .persistent)
 
 def supports (Γ : List ResourceOccurrence) (A demand : Nat) : Prop :=
   hasPersistent Γ A = true ∨ demand ≤ linearCount Γ A
@@ -419,7 +419,7 @@ theorem persistent_contraction_preserves_support
   | mk aToken aFormula aMode aOrigins =>
     cases b with
     | mk bToken bFormula bMode bOrigins =>
-      simp_all [supports, hasPersistent, linearCount, mergePersistent, ResourceMode]
+      simp_all [supports, hasPersistent, linearCount, mergePersistent]
 
 /-- Persistent contraction preserves the complete recorded provenance list. -/
 theorem mergePersistent_preserves_origin_count
@@ -436,8 +436,7 @@ theorem linear_contraction_counterexample_occurrences (A : Nat) :
     a.token ≠ b.token ∧
       supports [a, b] A 2 ∧
       ¬ supports [mergeLinear a b] A 2 := by
-  change 1 ≠ 2 ∧ (false = true ∨ 2 ≤ 2) ∧ ¬ (false = true ∨ 2 ≤ 1)
-  decide
+  simp [supports, hasPersistent, linearCount, mergeLinear]
 
 
 end Resources
