@@ -150,7 +150,7 @@ The generic fibration and finite gluing fragments are mathematical scaffolds onl
 
 ## 9. Verification status
 
-**CI passed:** https://github.com/outdatedcaveman/semplex/actions/runs/44691446320
+**CI passed:** https://github.com/outdatedcaveman/semplex/actions/runs/44693971714
 
 - Lean 4.12.0 compiled and axiom-audited `Distinction.lean`, `SmallFibration.lean`, `ModuleDescent.lean`, and `SynesismConservation.lean`.
 - The finite Python reference suite now passes **11/11** tests.
