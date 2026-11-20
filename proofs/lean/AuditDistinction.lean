@@ -33,3 +33,5 @@ import Distinction
 #print axioms Resources.persistent_contraction_preserves_support
 #print axioms Resources.mergePersistent_preserves_origin_count
 #print axioms Resources.linear_contraction_counterexample_occurrences
+
+#print axioms Resources.mergePersistent_records_origins
