@@ -6,6 +6,7 @@ proof development or complete implementations of the compared logics.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from enum import Enum
 from itertools import product
 from typing import Callable, Hashable, Iterable, Mapping, Sequence, TypeVar
 
@@ -201,6 +202,68 @@ def binary_partition_profile(
     """Toy binary partition: order + 1, count doubled, new structural signature."""
     order, count, signature = profile
     return order + 1, 2 * count, signature + 1
+
+
+
+class ResourceMode(str, Enum):
+    LINEAR = "linear"
+    PERSISTENT = "persistent"
+
+
+@dataclass(frozen=True)
+class ResourceOccurrence:
+    """One assumption/evidence occurrence, distinct from its proposition label."""
+    token: int
+    formula: Hashable
+    mode: ResourceMode
+    origins: tuple[int, ...]
+
+
+def resource_supports(
+    context: Sequence[ResourceOccurrence], formula: Hashable, demand: int
+) -> bool:
+    """Persistent occurrences are reusable; linear occurrences count individually."""
+    if demand < 0:
+        raise ValueError("resource demand must be nonnegative")
+    return any(
+        item.formula == formula and item.mode is ResourceMode.PERSISTENT
+        for item in context
+    ) or sum(
+        item.formula == formula and item.mode is ResourceMode.LINEAR
+        for item in context
+    ) >= demand
+
+
+def merge_persistent_occurrences(
+    left: ResourceOccurrence, right: ResourceOccurrence
+) -> ResourceOccurrence:
+    """Contract two persistent occurrences while retaining both provenance trails."""
+    if left.formula != right.formula:
+        raise ValueError("only occurrences of the same formula can be contracted")
+    if left.mode is not ResourceMode.PERSISTENT or right.mode is not ResourceMode.PERSISTENT:
+        raise ValueError("only persistent occurrences admit this contraction")
+    return ResourceOccurrence(
+        token=left.token,
+        formula=left.formula,
+        mode=ResourceMode.PERSISTENT,
+        origins=left.origins + right.origins,
+    )
+
+
+def merge_linear_occurrences(
+    left: ResourceOccurrence, right: ResourceOccurrence
+) -> ResourceOccurrence:
+    """A deliberately unsafe merge, included to exhibit lost linear capacity."""
+    if left.formula != right.formula:
+        raise ValueError("only occurrences of the same formula can be merged")
+    if left.mode is not ResourceMode.LINEAR or right.mode is not ResourceMode.LINEAR:
+        raise ValueError("this counterexample requires two linear occurrences")
+    return ResourceOccurrence(
+        token=left.token,
+        formula=left.formula,
+        mode=ResourceMode.LINEAR,
+        origins=left.origins + right.origins,
+    )
 
 
 def run_demonstrator() -> dict[str, object]:
