@@ -86,3 +86,34 @@ def test_synesism_dyadic_partition_conserves_value_without_identity():
     assert dyadic_molarity_equivalent(
         (2, 3, 4), binary_partition_profile((2, 3, 4))
     )
+
+
+def test_occurrence_sensitive_linear_contraction_loses_capacity():
+    from cerp.distinction import (
+        ResourceMode, ResourceOccurrence, merge_linear_occurrences, resource_supports,
+    )
+    left = ResourceOccurrence(1, "A", ResourceMode.LINEAR, (1,))
+    right = ResourceOccurrence(2, "A", ResourceMode.LINEAR, (2,))
+    assert left.token != right.token
+    assert resource_supports([left, right], "A", 2)
+    merged = merge_linear_occurrences(left, right)
+    assert merged.origins == (1, 2)
+    assert not resource_supports([merged], "A", 2)
+
+
+def test_persistent_contraction_preserves_support_and_provenance():
+    from cerp.distinction import (
+        ResourceMode, ResourceOccurrence, merge_persistent_occurrences, resource_supports,
+    )
+    left = ResourceOccurrence(11, "A", ResourceMode.PERSISTENT, (11,))
+    right = ResourceOccurrence(12, "A", ResourceMode.PERSISTENT, (12,))
+    merged = merge_persistent_occurrences(left, right)
+    assert merged.origins == (11, 12)
+    background = [ResourceOccurrence(13, "B", ResourceMode.LINEAR, (13,))]
+    before = background + [left, right]
+    after = background + [merged]
+    for formula in ("A", "B", "C"):
+        for demand in range(5):
+            assert resource_supports(before, formula, demand) == resource_supports(
+                after, formula, demand
+            )
