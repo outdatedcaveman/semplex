@@ -155,7 +155,7 @@ The generic fibration and finite gluing fragments are mathematical scaffolds onl
 - Lean 4.12.0 compiled and axiom-audited `Distinction.lean`, `SmallFibration.lean`, `ModuleDescent.lean`, and `SynesismConservation.lean`.
 - The finite Python reference suite passed **9/9** tests.
 - Audited theorem dependencies are limited to `propext` and `Quot.sound`; no `sorryAx`, `Classical.choice`, or custom axiom dependency appears.
-- The FOL syntax is a fragment, the resource semantics is not full linear logic, the dependent-type fragment is not full HoTT, and the fibration/gluing examples are finite standard constructions.
+- The FOL syntax is a fragment (equality, unary predicates, falsity, implication, ∀ and ∃); the resource semantics is not full linear logic, the dependent-type fragment is not full HoTT, and the fibration/gluing examples are finite standard constructions.
 - No Synesism canon or CSIR v0.1 schema was changed.
 
 ## 10. Remaining proof obligations
@@ -165,7 +165,7 @@ The generic fibration and finite gluing fragments are mathematical scaffolds onl
 3. Define contextual fitness and modules as interaction-generated partial reality-slices.
 4. Resolve the unitarity accounting law, especially how overlapping modules share/count reality-content.
 5. Formalize the relation between modules and Markov blankets without identifying them by analogy alone.
-6. Complete the four-system comparison, including fresh eigenparameter side conditions and full structural rules.
+6. Extend the four-system comparison beyond the now-verified FOL eigenvariable soundness fragment; formalize occurrence-sensitive linear contexts and compare actual structural rules.
 7. Compare all candidate results with existing quotient algebra, linear logic, categorical logic, HoTT, fibrations, sheaf theory, and active inference before claiming novelty.
 
 ## 11. Literature anchors
