@@ -77,7 +77,7 @@ This is a finite matching-family/sheaf-style example, not a general sheaf theore
 
 **CI passed.** Lean 4.12.0 compile and axiom-audit jobs both passed, and the finite Python test suite passed **9/9**.
 
-CI run: https://github.com/outdatedcaveman/semplex/actions/runs/44691446320
+CI run: https://github.com/outdatedcaveman/semplex/actions/runs/44693971714
 
 The axiom audit reports only:
 - `propext` for some extensionality/equality-of-propositions results;
