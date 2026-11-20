@@ -1,0 +1,22 @@
+{
+ "verdicts": {
+  "H84.1": "NEITHER",
+  "H84.2": "HELD",
+  "H84.3": "HELD"
+ },
+ "frac": {
+  "head_over_dimension": 0.7837837837837838,
+  "top_in_head": 0.7297297297297297,
+  "geometry_in_observable": 1.0
+ },
+ "median": {
+  "share_head": 0.8982371386336855,
+  "share_rad": 0.10176286136631467,
+  "share_obs": 1.0,
+  "head_dim_frac": 0.2857142857142857,
+  "top_in_head": 0.9804986316426204,
+  "top_in_rad": 0.01950136835738045
+ },
+ "n_runs": 37,
+ "n_automata": 15
+}

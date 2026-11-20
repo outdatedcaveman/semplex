@@ -1,0 +1,2047 @@
+{
+  "dims": {
+    "8": {
+      "n": 8,
+      "seed": 8800,
+      "seen": 192,
+      "total": 100,
+      "gen_seconds": 57.071,
+      "wall_seconds": 31.097,
+      "sat_count": 100,
+      "verified_count": 100,
+      "verified_within_60s": 100,
+      "certified_minimal_count": 100,
+      "certified_minimal_within_60s": 100,
+      "cost_histogram": {
+        "3": 99,
+        "1": 1
+      },
+      "median_seconds": 0.2789,
+      "mean_seconds": 0.3034,
+      "max_seconds": 0.9845,
+      "tasks": [
+        {
+          "idx": 0,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.9845
+        },
+        {
+          "idx": 1,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.2236
+        },
+        {
+          "idx": 2,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.2578
+        },
+        {
+          "idx": 3,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.1288
+        },
+        {
+          "idx": 4,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.1625
+        },
+        {
+          "idx": 5,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.1445
+        },
+        {
+          "idx": 6,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.1493
+        },
+        {
+          "idx": 7,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.5763
+        },
+        {
+          "idx": 8,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.3389
+        },
+        {
+          "idx": 9,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.2607
+        },
+        {
+          "idx": 10,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.661
+        },
+        {
+          "idx": 11,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.2575
+        },
+        {
+          "idx": 12,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.278
+        },
+        {
+          "idx": 13,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.2257
+        },
+        {
+          "idx": 14,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.3884
+        },
+        {
+          "idx": 15,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.1692
+        },
+        {
+          "idx": 16,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.1786
+        },
+        {
+          "idx": 17,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.4177
+        },
+        {
+          "idx": 18,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.3285
+        },
+        {
+          "idx": 19,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.3991
+        },
+        {
+          "idx": 20,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.4915
+        },
+        {
+          "idx": 21,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.4043
+        },
+        {
+          "idx": 22,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.3456
+        },
+        {
+          "idx": 23,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.17
+        },
+        {
+          "idx": 24,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.4828
+        },
+        {
+          "idx": 25,
+          "status": "sat",
+          "verified": true,
+          "cost": 1,
+          "lower_bound": 1,
+          "certified_minimal": true,
+          "cert_kind": "trivial",
+          "seconds": 0.2157
+        },
+        {
+          "idx": 26,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.4024
+        },
+        {
+          "idx": 27,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.2766
+        },
+        {
+          "idx": 28,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.2402
+        },
+        {
+          "idx": 29,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.1949
+        },
+        {
+          "idx": 30,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.1967
+        },
+        {
+          "idx": 31,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.3769
+        },
+        {
+          "idx": 32,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.3064
+        },
+        {
+          "idx": 33,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.264
+        },
+        {
+          "idx": 34,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.3336
+        },
+        {
+          "idx": 35,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.2372
+        },
+        {
+          "idx": 36,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.3344
+        },
+        {
+          "idx": 37,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.2632
+        },
+        {
+          "idx": 38,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.1659
+        },
+        {
+          "idx": 39,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.3064
+        },
+        {
+          "idx": 40,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.2798
+        },
+        {
+          "idx": 41,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.2648
+        },
+        {
+          "idx": 42,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.1992
+        },
+        {
+          "idx": 43,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.289
+        },
+        {
+          "idx": 44,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.2214
+        },
+        {
+          "idx": 45,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.183
+        },
+        {
+          "idx": 46,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.3305
+        },
+        {
+          "idx": 47,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.372
+        },
+        {
+          "idx": 48,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.2288
+        },
+        {
+          "idx": 49,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.3987
+        },
+        {
+          "idx": 50,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.2469
+        },
+        {
+          "idx": 51,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.2101
+        },
+        {
+          "idx": 52,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.1617
+        },
+        {
+          "idx": 53,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.2456
+        },
+        {
+          "idx": 54,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.3981
+        },
+        {
+          "idx": 55,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.1394
+        },
+        {
+          "idx": 56,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.5177
+        },
+        {
+          "idx": 57,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.3969
+        },
+        {
+          "idx": 58,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.415
+        },
+        {
+          "idx": 59,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.2553
+        },
+        {
+          "idx": 60,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.1965
+        },
+        {
+          "idx": 61,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.2985
+        },
+        {
+          "idx": 62,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.2924
+        },
+        {
+          "idx": 63,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.3562
+        },
+        {
+          "idx": 64,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.3175
+        },
+        {
+          "idx": 65,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.4542
+        },
+        {
+          "idx": 66,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.1373
+        },
+        {
+          "idx": 67,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.3031
+        },
+        {
+          "idx": 68,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.2282
+        },
+        {
+          "idx": 69,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.2753
+        },
+        {
+          "idx": 70,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.375
+        },
+        {
+          "idx": 71,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.1735
+        },
+        {
+          "idx": 72,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.2772
+        },
+        {
+          "idx": 73,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.2235
+        },
+        {
+          "idx": 74,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.2907
+        },
+        {
+          "idx": 75,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.1976
+        },
+        {
+          "idx": 76,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.3593
+        },
+        {
+          "idx": 77,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.4158
+        },
+        {
+          "idx": 78,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.339
+        },
+        {
+          "idx": 79,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.1778
+        },
+        {
+          "idx": 80,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.2657
+        },
+        {
+          "idx": 81,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.2555
+        },
+        {
+          "idx": 82,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.3274
+        },
+        {
+          "idx": 83,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.2513
+        },
+        {
+          "idx": 84,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.2978
+        },
+        {
+          "idx": 85,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.1113
+        },
+        {
+          "idx": 86,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.2447
+        },
+        {
+          "idx": 87,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.211
+        },
+        {
+          "idx": 88,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.3821
+        },
+        {
+          "idx": 89,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.3156
+        },
+        {
+          "idx": 90,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.3955
+        },
+        {
+          "idx": 91,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.3524
+        },
+        {
+          "idx": 92,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.5796
+        },
+        {
+          "idx": 93,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.422
+        },
+        {
+          "idx": 94,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.4507
+        },
+        {
+          "idx": 95,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.31
+        },
+        {
+          "idx": 96,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.3314
+        },
+        {
+          "idx": 97,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.1947
+        },
+        {
+          "idx": 98,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.1841
+        },
+        {
+          "idx": 99,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.4761
+        }
+      ]
+    },
+    "10": {
+      "n": 10,
+      "seed": 8810,
+      "seen": 768,
+      "total": 100,
+      "gen_seconds": 238.733,
+      "wall_seconds": 229.892,
+      "sat_count": 100,
+      "verified_count": 100,
+      "verified_within_60s": 100,
+      "certified_minimal_count": 100,
+      "certified_minimal_within_60s": 100,
+      "cost_histogram": {
+        "3": 100
+      },
+      "median_seconds": 2.2451,
+      "mean_seconds": 2.2657,
+      "max_seconds": 4.6495,
+      "tasks": [
+        {
+          "idx": 0,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 2.0536
+        },
+        {
+          "idx": 1,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 2.1241
+        },
+        {
+          "idx": 2,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 1.2304
+        },
+        {
+          "idx": 3,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 2.4274
+        },
+        {
+          "idx": 4,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 2.1306
+        },
+        {
+          "idx": 5,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 4.0342
+        },
+        {
+          "idx": 6,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 3.6592
+        },
+        {
+          "idx": 7,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 3.2061
+        },
+        {
+          "idx": 8,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 2.9922
+        },
+        {
+          "idx": 9,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 1.7801
+        },
+        {
+          "idx": 10,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.7927
+        },
+        {
+          "idx": 11,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 3.9145
+        },
+        {
+          "idx": 12,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 1.1441
+        },
+        {
+          "idx": 13,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 3.0169
+        },
+        {
+          "idx": 14,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 2.2244
+        },
+        {
+          "idx": 15,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 2.2659
+        },
+        {
+          "idx": 16,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 1.2366
+        },
+        {
+          "idx": 17,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 2.4085
+        },
+        {
+          "idx": 18,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 2.5127
+        },
+        {
+          "idx": 19,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 1.6646
+        },
+        {
+          "idx": 20,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 2.1524
+        },
+        {
+          "idx": 21,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 2.72
+        },
+        {
+          "idx": 22,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 1.3896
+        },
+        {
+          "idx": 23,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 2.6581
+        },
+        {
+          "idx": 24,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 1.4683
+        },
+        {
+          "idx": 25,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 2.8299
+        },
+        {
+          "idx": 26,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 3.6767
+        },
+        {
+          "idx": 27,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 2.6602
+        },
+        {
+          "idx": 28,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 1.1226
+        },
+        {
+          "idx": 29,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 1.966
+        },
+        {
+          "idx": 30,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 2.9603
+        },
+        {
+          "idx": 31,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 3.6206
+        },
+        {
+          "idx": 32,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 1.3877
+        },
+        {
+          "idx": 33,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 1.4872
+        },
+        {
+          "idx": 34,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 3.163
+        },
+        {
+          "idx": 35,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 1.7443
+        },
+        {
+          "idx": 36,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 1.7918
+        },
+        {
+          "idx": 37,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 1.0166
+        },
+        {
+          "idx": 38,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 2.6337
+        },
+        {
+          "idx": 39,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 2.0186
+        },
+        {
+          "idx": 40,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 2.6897
+        },
+        {
+          "idx": 41,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 2.3782
+        },
+        {
+          "idx": 42,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 2.5906
+        },
+        {
+          "idx": 43,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 3.8375
+        },
+        {
+          "idx": 44,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 1.685
+        },
+        {
+          "idx": 45,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 2.3925
+        },
+        {
+          "idx": 46,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 1.8965
+        },
+        {
+          "idx": 47,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 2.5665
+        },
+        {
+          "idx": 48,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 1.5668
+        },
+        {
+          "idx": 49,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 2.3103
+        },
+        {
+          "idx": 50,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 2.8081
+        },
+        {
+          "idx": 51,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 2.4857
+        },
+        {
+          "idx": 52,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 2.0285
+        },
+        {
+          "idx": 53,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 2.4816
+        },
+        {
+          "idx": 54,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 1.6437
+        },
+        {
+          "idx": 55,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 2.9905
+        },
+        {
+          "idx": 56,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 2.6756
+        },
+        {
+          "idx": 57,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 1.4277
+        },
+        {
+          "idx": 58,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 2.3485
+        },
+        {
+          "idx": 59,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 4.2459
+        },
+        {
+          "idx": 60,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 2.7123
+        },
+        {
+          "idx": 61,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 1.2242
+        },
+        {
+          "idx": 62,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 1.2004
+        },
+        {
+          "idx": 63,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 2.533
+        },
+        {
+          "idx": 64,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 1.6766
+        },
+        {
+          "idx": 65,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 1.1351
+        },
+        {
+          "idx": 66,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 1.739
+        },
+        {
+          "idx": 67,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 2.6691
+        },
+        {
+          "idx": 68,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 0.6141
+        },
+        {
+          "idx": 69,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 1.3187
+        },
+        {
+          "idx": 70,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 2.8135
+        },
+        {
+          "idx": 71,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 2.6168
+        },
+        {
+          "idx": 72,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 2.7081
+        },
+        {
+          "idx": 73,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 1.1438
+        },
+        {
+          "idx": 74,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 1.3838
+        },
+        {
+          "idx": 75,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 1.2743
+        },
+        {
+          "idx": 76,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 1.6146
+        },
+        {
+          "idx": 77,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 1.6513
+        },
+        {
+          "idx": 78,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 3.3204
+        },
+        {
+          "idx": 79,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 1.41
+        },
+        {
+          "idx": 80,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 1.7762
+        },
+        {
+          "idx": 81,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 2.8769
+        },
+        {
+          "idx": 82,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 1.6653
+        },
+        {
+          "idx": 83,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 2.8847
+        },
+        {
+          "idx": 84,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 4.539
+        },
+        {
+          "idx": 85,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 2.8741
+        },
+        {
+          "idx": 86,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 2.829
+        },
+        {
+          "idx": 87,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 2.5871
+        },
+        {
+          "idx": 88,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 2.9176
+        },
+        {
+          "idx": 89,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 1.9995
+        },
+        {
+          "idx": 90,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 1.5564
+        },
+        {
+          "idx": 91,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 1.7696
+        },
+        {
+          "idx": 92,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 1.9708
+        },
+        {
+          "idx": 93,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 1.2054
+        },
+        {
+          "idx": 94,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 1.2921
+        },
+        {
+          "idx": 95,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 3.112
+        },
+        {
+          "idx": 96,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 2.6768
+        },
+        {
+          "idx": 97,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 2.1359
+        },
+        {
+          "idx": 98,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 4.6495
+        },
+        {
+          "idx": 99,
+          "status": "sat",
+          "verified": true,
+          "cost": 3,
+          "lower_bound": 3,
+          "certified_minimal": true,
+          "cert_kind": "not-threshold-partial",
+          "seconds": 2.1556
+        }
+      ]
+    }
+  }
+}

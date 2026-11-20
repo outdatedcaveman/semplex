@@ -1,0 +1,11 @@
+import CerpMathlib
+
+#print axioms CerpMathlib.gaussianReal_map_neg
+#print axioms CerpMathlib.iid_symmetric_pi_map_actRealVec
+#print axioms CerpMathlib.gaussianProd_map_actRealVec
+#print axioms CerpMathlib.gaussianProd_pushforward_equivariant
+#print axioms CerpMathlib.gaussianProd_readout_map_invariant
+#print axioms CerpMathlib.theorem15_gaussian_circuit_mass_eq
+#print axioms CerpMathlib.measurable_iterate
+#print axioms CerpMathlib.iterate_equivariant
+#print axioms CerpMathlib.theorem15_gaussian_iter_circuit_mass_eq

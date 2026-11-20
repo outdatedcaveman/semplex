@@ -1,0 +1,50 @@
+[
+ {
+  "claim": "P069",
+  "notes": 21,
+  "status": "PROVED (paper proof) + PARTLY MECHANIZED (P160) + EMPIRICALLY-CONFIRMED (H14.1)",
+  "statement": "Theorem 15: under task-symmetric initialization and equivariant training, circuit probability is constant on task-symmet"
+ },
+ {
+  "claim": "P127",
+  "notes": 11,
+  "status": "EXPLORATORY (post hoc)",
+  "statement": "Feature learning moves nets from the NTK toward the Occam completion: 91% agreement with Occam vs 81–83% with the NTK; w"
+ },
+ {
+  "claim": "P186",
+  "notes": 5,
+  "status": "EXPLORATORY (the registered cluster-based closure test H57.1 is BROKEN; the probe analysis was run after the verdicts)",
+  "statement": "The minimal automaton is present in trained recurrent nets as an exact closed coarse-graining, not as clusters: a linear"
+ },
+ {
+  "claim": "P133",
+  "notes": 2,
+  "status": "EXPLORATORY (demonstrated, tested)",
+  "statement": "A causal Bayes net's Bayes-optimal decision rule can be distilled to a canonical F0 expr + circuit in CSIR with a kernel"
+ },
+ {
+  "claim": "P141",
+  "notes": 2,
+  "status": "EXPLORATORY + PARTLY MECHANIZED",
+  "statement": "Profile-factor compilation (`profile_factor_compile` in Lean; `cerp/ur_compiler.py`, H-G) factors low-rank partitions `f"
+ },
+ {
+  "claim": "P175",
+  "notes": 2,
+  "status": "~ φ iff every least-cost function agreeing with D satisfies φ\") is a rational nonmonotonic consequence relation: it satisfies Cut, Cautious Monotony and Rational Monotony and fails classical Monotony. Exhaustively at n = 3 over 6,561 partial labellings: 0 violations of the three rules, 3,888 of 14,816 Monotony instances fail",
+  "statement": "Minimum-circuit forcing (\"D"
+ },
+ {
+  "claim": "P191",
+  "notes": 2,
+  "status": "r",
+  "statement": "Model lexicons share a shape but not a basis: over 6,163 words in 14 open models' input embeddings, independently learne"
+ },
+ {
+  "claim": "P001",
+  "notes": 1,
+  "status": "PROVED (literature)",
+  "statement": "ROBDD under a fixed order is a normal form for F0 (idempotent; equal iff extensionally equivalent)"
+ }
+]

@@ -1,0 +1,17 @@
+{
+ "automaton": "S4_6",
+ "seed": 7040,
+ "fit": 1.0,
+ "probe_macro": 1.0,
+ "n_macro": 24,
+ "elements_seen": 24,
+ "rho_predictive": 0.4819681694552271,
+ "rho_onestep": 0.559425751094689,
+ "irrep_scores": {
+  "r0_tr4_ker4": 0.005497876156517344,
+  "r1_tr9_ker1": -0.4338042376923791,
+  "r2_tr9_ker1": 0.4891031892233342,
+  "r3_tr1_ker12": -0.056603111244043984
+ },
+ "best_irrep": "r2_tr9_ker1"
+}

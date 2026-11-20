@@ -1,0 +1,13 @@
+{
+ "leader": "r1_tr9_ker1",
+ "shares": {
+  "r0_tr2_ker4": 0.0025419852858580535,
+  "r1_tr9_ker1": 0.997458014714142
+ },
+ "probe_macro": 1.0,
+ "probe_element": 1.0,
+ "substrate": "GRU",
+ "automaton": "A4_4",
+ "seed": 7514,
+ "fit": 1.0
+}

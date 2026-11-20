@@ -1,0 +1,16 @@
+{
+ "automaton": "D6_pt",
+ "seed": 7480,
+ "labels": [
+  "r0_tr1_ker6",
+  "r1_tr1_ker6",
+  "r2_tr4_ker1",
+  "r3_tr1_ker6",
+  "r4_tr4_ker2"
+ ],
+ "fit": 1.0,
+ "final_leader": "r2_tr4_ker1",
+ "final_leader_white": "r2_tr4_ker1",
+ "first_step": 50,
+ "first_leader": "r2_tr4_ker1"
+}

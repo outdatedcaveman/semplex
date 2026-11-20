@@ -1,0 +1,307 @@
+<meta name="dash-one-writer">
+<style>
+  .sx { display: flex; flex-direction: column; gap: var(--cds-gap-xl); color: var(--color-fg); font-family: var(--font-anthropic-sans); font-size: var(--cds-font-size-body); line-height: 1.5; }
+  .sx-head { display: flex; flex-direction: column; gap: var(--cds-gap-sm); }
+  .sx-title { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); margin: 0; text-wrap: balance; }
+  .sx-lede { margin: 0; max-width: 68ch; }
+  .sx-lede b { font-weight: var(--cds-font-weight-medium); font-variant-numeric: tabular-nums; }
+  .sx-muted { color: var(--color-fg-muted); }
+  .sx-h2 { font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); margin: 0; text-wrap: balance; }
+  .sx-sub { margin: 0; color: var(--color-fg-muted); max-width: 68ch; }
+  .sx-sec { display: flex; flex-direction: column; gap: var(--cds-gap-md); }
+  .sx-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: var(--cds-gap-md); min-height: 150px; }
+  .sx-card { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-lg); display: flex; flex-direction: column; gap: var(--cds-gap-sm); min-width: 0; }
+  .sx-crit-name { font-weight: var(--cds-font-weight-medium); }
+  .sx-big { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: 2.2rem; line-height: 1; font-variant-numeric: tabular-nums; }
+  .sx-cap { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+  .sx-bar { display: flex; height: 8px; border-radius: 4px; overflow: hidden; background: var(--color-border-line); }
+  .sx-bar span { display: block; height: 100%; }
+  .sx-seg-closed { background: var(--color-ok); }
+  .sx-seg-partial { background: var(--color-warn); }
+  .sx-counts { display: flex; flex-wrap: wrap; gap: var(--cds-gap-sm); font-size: var(--cds-font-size-caption); font-variant-numeric: tabular-nums; }
+  .sx-pill { display: inline-block; font-size: var(--cds-font-size-caption); font-weight: var(--cds-font-weight-medium); letter-spacing: .03em; padding: 1px 8px; border-radius: 999px; border: 1px solid var(--color-border-line); white-space: nowrap; }
+  .sx-pill.is-ok { color: var(--color-ok); border-color: var(--color-ok); }
+  .sx-pill.is-warn { color: var(--color-warn); border-color: var(--color-warn); }
+  .sx-pill.is-bad { color: var(--color-bad); border-color: var(--color-bad); }
+  .sx-pill.is-strong { background: var(--color-fg); color: var(--color-bg); border-color: var(--color-fg); }
+  .sx-tabs { display: flex; flex-wrap: wrap; gap: var(--cds-gap-xs); }
+  .sx-tab { font: inherit; font-size: var(--cds-font-size-caption); padding: 4px 12px; border-radius: 999px; border: 1px solid var(--color-border-line); background: var(--color-bg); color: var(--color-fg); cursor: pointer; }
+  .sx-tab[aria-pressed="true"] { background: var(--color-fg); color: var(--color-bg); border-color: var(--color-fg); }
+  .sx-tab:focus-visible { outline: 2px solid var(--color-fg); outline-offset: 2px; }
+  .sx-list { display: flex; flex-direction: column; gap: var(--cds-gap-md); min-height: 300px; }
+  .sx-gap-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--cds-gap-sm); }
+  .sx-gap-id { font-variant-numeric: tabular-nums; font-weight: var(--cds-font-weight-medium); }
+  .sx-gap-title { font-weight: var(--cds-font-weight-medium); flex: 1 1 200px; }
+  .sx-dl { display: grid; grid-template-columns: minmax(90px, max-content) 1fr; gap: 4px var(--cds-gap-md); margin: 0; }
+  .sx-dl dt { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); padding-top: 2px; }
+  .sx-dl dd { margin: 0; overflow-wrap: anywhere; }
+  .sx-wrap { overflow-x: auto; }
+  .sx-table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+  .sx-table th { text-align: left; font-size: var(--cds-font-size-caption); font-weight: var(--cds-font-weight-medium); color: var(--color-fg-muted); padding: 6px 10px 6px 0; border-bottom: 1px solid var(--color-border-line); white-space: nowrap; }
+  .sx-table td { padding: 6px 10px 6px 0; border-bottom: 1px solid var(--color-border-line); vertical-align: top; }
+  .sx-run-meta { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+  .sx-run-q { font-weight: var(--cds-font-weight-medium); margin: 0; }
+  .sx-p { margin: 0; max-width: 72ch; }
+  .sx-two { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--cds-gap-lg); }
+  .sx-hbars { display: grid; grid-template-columns: max-content 1fr max-content; gap: 6px var(--cds-gap-sm); align-items: center; min-height: 180px; }
+  .sx-hbar { height: 12px; border-radius: 3px; min-width: 2px; }
+  .sx-num { font-variant-numeric: tabular-nums; text-align: right; }
+  .sx-figs { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: var(--cds-gap-md); }
+  [data-dash-source-state=refreshing] { opacity: .5; }
+</style>
+
+<div class="sx">
+  <header class="sx-head" id="top">
+    <h1 class="sx-title">What the theory still lacks</h1>
+    <p class="sx-lede">
+      <b data-draw="s-open" data-source="summary" data-field="open" data-row="0">—</b> of
+      <b data-draw="s-total" data-source="summary" data-field="total" data-row="0">—</b> gaps are open,
+      <b data-draw="s-partial" data-source="summary" data-field="partial" data-row="0">—</b> are partly closed and
+      <b data-draw="s-closed" data-source="summary" data-field="closed" data-row="0">—</b> are closed.
+      <b data-draw="s-high" data-source="summary" data-field="high_open" data-row="0">—</b> of the open ones are high-leverage.
+    </p>
+    <p class="sx-sub">semplex asks why trained networks generalize, and builds a verified compiler to make the answer computable. A gap is one missing piece, with the test that would close it. Updated after every run from the repository's <code>STATUS.md</code>.</p>
+  </header>
+
+  <section class="sx-sec" id="criteria">
+    <h2 class="sx-h2">Is the theory effective yet?</h2>
+    <p class="sx-sub">Four tests it must pass. Progress counts a closed gap as 1 and a partly closed one as ½. It measures this gap list, and a new finding can add gaps.</p>
+    <div class="sx-grid" data-draw="criteria" data-source="criteria"></div>
+  </section>
+
+  <section class="sx-sec" id="gaps">
+    <h2 class="sx-h2">The gaps, highest leverage first</h2>
+    <div class="sx-tabs" role="group" aria-label="Filter gaps by pillar">
+      <button type="button" class="sx-tab" data-pillar="" aria-pressed="true">All</button>
+      <button type="button" class="sx-tab" data-pillar="Theory" aria-pressed="false">Theory</button>
+      <button type="button" class="sx-tab" data-pillar="Compiler" aria-pressed="false">Compiler</button>
+      <button type="button" class="sx-tab" data-pillar="Formal" aria-pressed="false">Formal proofs</button>
+      <button type="button" class="sx-tab" data-pillar="Process" aria-pressed="false">Process</button>
+    </div>
+    <div class="sx-list" data-draw="gaps" data-source="gaps"></div>
+  </section>
+
+  <section class="sx-sec" id="runs">
+    <h2 class="sx-h2">Run reports, newest first</h2>
+    <p class="sx-sub">Each run was pre-registered: the criteria were committed before any result. A verdict is held, broken, or neither.</p>
+    <div class="sx-list" data-draw="runs" data-source="runs verdicts"></div>
+  </section>
+
+  <section class="sx-sec" id="conjectures">
+    <h2 class="sx-h2">Conjectures</h2>
+    <div class="sx-wrap">
+      <table class="sx-table" data-source="conjectures" data-row-key="id">
+        <thead><tr><th data-field="id">ID</th><th data-field="title">Conjecture</th><th data-field="state">State</th><th data-field="note">Detail</th></tr></thead>
+        <tbody data-draw="conjectures"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="sx-sec" id="ledger">
+    <h2 class="sx-h2">How well supported the claims are</h2>
+    <p class="sx-sub">Every claim is in a register that tracks what it rests on. A claim built on weaker support is flagged as stated stronger than its support.</p>
+    <div class="sx-figs" data-draw="ledger" data-source="ledger"></div>
+    <div class="sx-two">
+      <div class="sx-sec">
+        <h3 class="sx-h2">Claims by kind of support</h3>
+        <div class="sx-hbars" data-draw="classes" data-source="claim_classes" role="img" aria-label="Number of claims by kind of support"></div>
+      </div>
+      <div class="sx-sec">
+        <h3 class="sx-h2">Weakest links</h3>
+        <p class="sx-sub">Strengthening one of these lifts every flagged claim that rests on it.</p>
+        <div class="sx-wrap">
+          <table class="sx-table" data-source="weak_links" data-row-key="claim">
+            <thead><tr><th data-field="claim">Claim</th><th data-field="notes">Flagged claims resting on it</th><th data-field="statement">Statement</th></tr></thead>
+            <tbody data-draw="weak"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+  const LEV = {HIGH: 0, MEDIUM: 1, LOW: 2};
+  const STATE_CLASS = {OPEN: '', PARTIAL: 'is-warn', CLOSED: 'is-ok'};
+  const VERDICT_CLASS = {HELD: 'is-ok', BROKEN: 'is-bad', NEITHER: 'is-warn'};
+  const CONJ_CLASS = {Supported: 'is-ok', Proved: 'is-ok', Partly: 'is-warn', Refuted: 'is-bad', 'Not supported': 'is-bad'};
+  const enc = (v) => encodeURIComponent(String(v));
+  const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+  const mark = (e, source, field, where) => { e.dataset.source = source; e.dataset.field = field; if (where) e.dataset.where = where; return e; };
+  const rowsOf = (id) => { const d = dash.data(id); return d.status === 'ok' && Array.isArray(d.data) ? d.data : null; };
+  const dashOut = (node) => node.replaceChildren(document.createTextNode('—'));
+  window.sxPillar = '';
+
+  dash.calc('summary', {
+    title: 'Gap counts',
+    description: 'How many gaps are open, partly closed and closed, and how many open ones are high-leverage.',
+    inputs: ['gaps'],
+    fn: (gaps) => [{
+      total: gaps.length,
+      open: gaps.filter((g) => g.status === 'OPEN').length,
+      partial: gaps.filter((g) => g.status === 'PARTIAL').length,
+      closed: gaps.filter((g) => g.status === 'CLOSED').length,
+      high_open: gaps.filter((g) => g.status === 'OPEN' && g.leverage === 'HIGH').length,
+    }],
+  });
+
+  for (const [name, field] of [['s-open', 'open'], ['s-total', 'total'], ['s-partial', 'partial'], ['s-closed', 'closed'], ['s-high', 'high_open']]) {
+    dash.draw(name, (node) => {
+      const d = dash.data('summary');
+      node.textContent = d.status === 'ok' && d.data && d.data[0] ? String(d.data[0][field]) : '—';
+    });
+  }
+
+  dash.draw('criteria', (node) => {
+    const rows = rowsOf('criteria');
+    if (!rows) return dashOut(node);
+    node.replaceChildren(...rows.map((c) => {
+      const where = 'id=' + enc(c.id);
+      const card = el('div', 'sx-card');
+      card.id = 'criterion-' + c.id;
+      const name = el('div', 'sx-crit-name');
+      name.append(mark(el('span', null, c.id + ' '), 'criteria', 'id', where), mark(el('span', null, c.name), 'criteria', 'name', where));
+      const big = el('div', 'sx-big');
+      big.append(mark(el('span', null, String(c.progress_pct)), 'criteria', 'progress_pct', where), document.createTextNode('%'));
+      const bar = el('div', 'sx-bar');
+      const total = Math.max(1, +c.gaps);
+      const a = el('span', 'sx-seg-closed'); a.style.width = (100 * c.CLOSED / total) + '%';
+      const b = el('span', 'sx-seg-partial'); b.style.width = (100 * c.PARTIAL / total) + '%';
+      bar.append(a, b);
+      const counts = el('div', 'sx-counts');
+      for (const [label, field] of [['open', 'OPEN'], ['partly closed', 'PARTIAL'], ['closed', 'CLOSED']]) {
+        const s = el('span');
+        s.append(mark(el('b', null, String(c[field])), 'criteria', field, where), document.createTextNode(' ' + label));
+        counts.append(s);
+      }
+      card.append(name, big, bar, counts, mark(el('div', 'sx-cap', c.test), 'criteria', 'test', where));
+      return card;
+    }));
+  });
+
+  dash.draw('gaps', (node) => {
+    const rows = rowsOf('gaps');
+    if (!rows) return dashOut(node);
+    const shown = rows
+      .filter((g) => !window.sxPillar || g.pillar === window.sxPillar)
+      .sort((x, y) => (x.status === 'CLOSED') - (y.status === 'CLOSED') || LEV[x.leverage] - LEV[y.leverage] || (x.blocked_by ? 1 : 0) - (y.blocked_by ? 1 : 0) || String(x.id).localeCompare(String(y.id)));
+    node.replaceChildren(...shown.map((g) => {
+      const where = 'id=' + enc(g.id);
+      const card = el('article', 'sx-card');
+      card.id = 'gap-' + g.id;
+      const head = el('div', 'sx-gap-head');
+      head.append(
+        mark(el('span', 'sx-gap-id', g.id), 'gaps', 'id', where),
+        mark(el('span', 'sx-gap-title', g.title), 'gaps', 'title', where),
+        mark(el('span', 'sx-pill ' + (g.leverage === 'HIGH' ? 'is-strong' : ''), g.leverage.toLowerCase() + ' leverage'), 'gaps', 'leverage', where),
+        mark(el('span', 'sx-pill ' + (STATE_CLASS[g.status] || ''), g.status === 'PARTIAL' ? 'partly closed' : g.status.toLowerCase()), 'gaps', 'status', where),
+      );
+      const dl = el('dl', 'sx-dl');
+      const line = (label, field, value) => { if (!value) return; dl.append(el('dt', null, label), mark(el('dd', null, value), 'gaps', field, where)); };
+      line('We have', 'have', g.have);
+      line('Missing', 'missing', g.missing);
+      line('Closes when', 'closes_when', g.closes_when);
+      line('Next', 'next', g.next);
+      line('Blocked by', 'blocked_by', g.blocked_by);
+      line('Serves', 'serves', g.serves + ' · ' + g.pillar);
+      line('Claims', 'claims', g.claims);
+      card.append(head, dl);
+      return card;
+    }));
+    if (!shown.length) node.replaceChildren(el('p', 'sx-muted', 'No gaps in this pillar.'));
+  });
+
+  dash.draw('runs', (node) => {
+    const runs = rowsOf('runs'), verdicts = rowsOf('verdicts');
+    if (!runs || !verdicts) return dashOut(node);
+    node.replaceChildren(...runs.slice().reverse().map((r) => {
+      const where = 'spike=' + enc(r.spike);
+      const card = el('article', 'sx-card');
+      card.id = 'run-' + r.spike;
+      const head = el('div', 'sx-gap-head');
+      const title = el('p', 'sx-run-q sx-gap-title');
+      title.append(document.createTextNode('Spike '), mark(el('span', null, String(r.spike)), 'runs', 'spike', where), document.createTextNode(': '), mark(el('span', null, r.question), 'runs', 'question', where));
+      head.append(title, mark(el('span', 'sx-pill ' + (VERDICT_CLASS[r.overall] || ''), 'overall: ' + String(r.overall).toLowerCase()), 'runs', 'overall', where));
+      const meta = el('div', 'sx-run-meta');
+      meta.append(mark(el('span', null, r.date), 'runs', 'date', where), document.createTextNode(' · commit '), mark(el('span', null, r.commit), 'runs', 'commit', where), document.createTextNode(' · claims '), mark(el('span', null, r.claims || 'none'), 'runs', 'claims', where));
+      const wrap = el('div', 'sx-wrap');
+      const table = el('table', 'sx-table');
+      table.dataset.source = 'verdicts'; table.dataset.rowKey = 'key';
+      const thead = el('thead'); const hr = el('tr');
+      for (const [label, field] of [['Hypothesis', 'id'], ['Verdict', 'verdict'], ['Measured', 'measured'], ['Criterion', 'bar']]) { const th = el('th', null, label); th.dataset.field = field; hr.append(th); }
+      thead.append(hr);
+      const tbody = el('tbody');
+      for (const v of verdicts.filter((x) => String(x.spike) === String(r.spike))) {
+        const tr = el('tr'); tr.dataset.key = enc(v.key);
+        const vd = el('td'); vd.append(el('span', 'sx-pill ' + (VERDICT_CLASS[v.verdict] || ''), String(v.verdict).toLowerCase()));
+        tr.append(el('td', null, v.id), vd, el('td', null, v.measured), el('td', null, v.bar));
+        tbody.append(tr);
+      }
+      table.append(thead, tbody); wrap.append(table);
+      const learned = el('p', 'sx-p');
+      learned.append(el('b', null, 'Learned. '), mark(el('span', null, r.learned), 'runs', 'learned', where));
+      card.append(head, meta, wrap, learned);
+      if (r.moved) {
+        const moved = el('p', 'sx-p sx-muted');
+        moved.append(document.createTextNode('Gaps moved: '), mark(el('span', null, r.moved), 'runs', 'moved', where));
+        card.append(moved);
+      }
+      return card;
+    }));
+  });
+
+  dash.draw('conjectures', (node) => {
+    const rows = rowsOf('conjectures');
+    if (!rows) return node.replaceChildren();
+    node.replaceChildren(...rows.map((c) => {
+      const tr = el('tr'); tr.dataset.key = enc(c.id);
+      const st = el('td'); st.append(el('span', 'sx-pill ' + (CONJ_CLASS[c.state] || ''), c.state));
+      tr.append(el('td', null, c.id), el('td', null, c.title), st, el('td', 'sx-muted', c.note));
+      return tr;
+    }));
+  });
+
+  dash.draw('ledger', (node) => {
+    const rows = rowsOf('ledger');
+    if (!rows) return dashOut(node);
+    node.replaceChildren(...rows.map((m) => {
+      const where = 'metric=' + enc(m.metric);
+      const card = el('div', 'sx-card');
+      card.append(mark(el('div', 'sx-big', String(m.value)), 'ledger', 'value', where), mark(el('div', 'sx-cap', m.metric), 'ledger', 'metric', where));
+      return card;
+    }));
+  });
+
+  dash.draw('classes', (node) => {
+    const rows = rowsOf('claim_classes');
+    if (!rows) return dashOut(node);
+    const max = Math.max(1, ...rows.map((r) => +r.claims));
+    const out = [];
+    for (const r of rows) {
+      const where = 'class=' + enc(r.class);
+      const track = el('div');
+      const bar = el('div', 'sx-hbar'); bar.style.width = (100 * r.claims / max) + '%'; bar.style.background = dash.colors[0];
+      track.append(bar);
+      out.push(mark(el('div', null, r.class), 'claim_classes', 'class', where), track, mark(el('div', 'sx-num', String(r.claims)), 'claim_classes', 'claims', where));
+    }
+    node.replaceChildren(...out);
+  });
+
+  dash.draw('weak', (node) => {
+    const rows = rowsOf('weak_links');
+    if (!rows) return node.replaceChildren();
+    node.replaceChildren(...rows.map((w) => {
+      const tr = el('tr'); tr.dataset.key = enc(w.claim);
+      tr.append(el('td', null, w.claim), el('td', 'sx-num', String(w.notes)), el('td', null, w.statement));
+      return tr;
+    }));
+  });
+
+  document.querySelectorAll('.sx-tab').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      window.sxPillar = btn.dataset.pillar || '';
+      document.querySelectorAll('.sx-tab').forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+      dash.draw('gaps');
+    });
+  });
+</script>

@@ -1,0 +1,16 @@
+{
+ "automaton": "Z11_s3_012",
+ "seed": 7320,
+ "labels": [
+  "r0_tr2_ker1",
+  "r1_tr2_ker1",
+  "r2_tr2_ker1",
+  "r3_tr2_ker1",
+  "r4_tr2_ker1"
+ ],
+ "fit": 0.9990599751472473,
+ "final_leader": "r0_tr2_ker1",
+ "final_leader_white": "r0_tr2_ker1",
+ "first_step": 50,
+ "first_leader": "r2_tr2_ker1"
+}

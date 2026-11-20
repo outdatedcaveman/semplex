@@ -1,0 +1,371 @@
+{
+  "timeout_sec": 150.0,
+  "results": [
+    {
+      "name": "baseline_xor4",
+      "axis": "baseline",
+      "shape": "[4]->[4]->1",
+      "n_inputs": 4,
+      "nodes": 5,
+      "max_fan_in": 4,
+      "max_abs_w": 1,
+      "sum_abs_w": 20,
+      "miter_vars": 42,
+      "miter_clauses": 120,
+      "lrat_steps": 16,
+      "sat_seconds": 0.1525,
+      "lean_status": "ok",
+      "lean_seconds": 16.461,
+      "under_120s": true,
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "kernel_breakdown": {
+        "elab_only": {
+          "status": "ok",
+          "seconds": 2.181
+        },
+        "wf_decide": {
+          "status": "ok",
+          "seconds": 2.962
+        },
+        "lrat_decide": {
+          "status": "ok",
+          "seconds": 11.45
+        }
+      }
+    },
+    {
+      "name": "n6_1hidden_w2_eq3",
+      "axis": "depth",
+      "shape": "[6]->[2]->1",
+      "n_inputs": 6,
+      "nodes": 3,
+      "max_fan_in": 6,
+      "max_abs_w": 4,
+      "sum_abs_w": 30,
+      "miter_vars": 49,
+      "miter_clauses": 140,
+      "lrat_steps": 19,
+      "sat_seconds": 0.1378,
+      "lean_status": "ok",
+      "lean_seconds": 18.848,
+      "under_120s": true,
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "name": "n6_2hidden_w2_cmp_xor",
+      "axis": "core_n6_2h",
+      "shape": "[6]->[2]->[2]->1",
+      "n_inputs": 6,
+      "nodes": 5,
+      "max_fan_in": 6,
+      "max_abs_w": 4,
+      "sum_abs_w": 34,
+      "miter_vars": 86,
+      "miter_clauses": 238,
+      "lrat_steps": 30,
+      "sat_seconds": 0.441,
+      "lean_status": "ok",
+      "lean_seconds": 53.725,
+      "under_120s": true,
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "kernel_breakdown": {
+        "elab_only": {
+          "status": "ok",
+          "seconds": 3.535
+        },
+        "wf_decide": {
+          "status": "ok",
+          "seconds": 6.917
+        },
+        "lrat_decide": {
+          "status": "ok",
+          "seconds": 52.609
+        }
+      }
+    },
+    {
+      "name": "n6_3hidden_w2_d4",
+      "axis": "depth",
+      "shape": "[6]->[2]->[2]->[2]->1",
+      "n_inputs": 6,
+      "nodes": 7,
+      "max_fan_in": 6,
+      "max_abs_w": 4,
+      "sum_abs_w": 40,
+      "miter_vars": 90,
+      "miter_clauses": 248,
+      "lrat_steps": 31,
+      "sat_seconds": 0.5401,
+      "lean_status": "ok",
+      "lean_seconds": 63.004,
+      "under_120s": true,
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "name": "n6_4hidden_w2_d5",
+      "axis": "depth",
+      "shape": "[6]->[2]->[2]->[2]->[2]->1",
+      "n_inputs": 6,
+      "nodes": 9,
+      "max_fan_in": 6,
+      "max_abs_w": 4,
+      "sum_abs_w": 46,
+      "miter_vars": 92,
+      "miter_clauses": 252,
+      "lrat_steps": 31,
+      "sat_seconds": 0.7624,
+      "lean_status": "ok",
+      "lean_seconds": 56.276,
+      "under_120s": true,
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "name": "n6_2hidden_w4_rot_xor",
+      "axis": "width",
+      "shape": "[6]->[4]->[2]->1",
+      "n_inputs": 6,
+      "nodes": 7,
+      "max_fan_in": 6,
+      "max_abs_w": 4,
+      "sum_abs_w": 70,
+      "miter_vars": 104,
+      "miter_clauses": 324,
+      "lrat_steps": 47,
+      "sat_seconds": 1.234,
+      "lean_status": "ok",
+      "lean_seconds": 104.442,
+      "under_120s": true,
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "name": "n8_1hidden_w2_eq4",
+      "axis": "core_n8_1h",
+      "shape": "[8]->[2]->1",
+      "n_inputs": 8,
+      "nodes": 3,
+      "max_fan_in": 8,
+      "max_abs_w": 8,
+      "sum_abs_w": 62,
+      "miter_vars": 98,
+      "miter_clauses": 297,
+      "lrat_steps": 41,
+      "sat_seconds": 1.2757,
+      "lean_status": "ok",
+      "lean_seconds": 75.414,
+      "under_120s": true,
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "kernel_breakdown": {
+        "elab_only": {
+          "status": "ok",
+          "seconds": 24.71
+        },
+        "wf_decide": {
+          "status": "ok",
+          "seconds": 30.602
+        },
+        "lrat_decide": {
+          "status": "ok",
+          "seconds": 72.138
+        }
+      }
+    },
+    {
+      "name": "n8_factored_parity",
+      "axis": "control",
+      "shape": "balanced(13)",
+      "n_inputs": 8,
+      "nodes": 13,
+      "max_fan_in": 4,
+      "max_abs_w": 1,
+      "sum_abs_w": 46,
+      "miter_vars": 91,
+      "miter_clauses": 256,
+      "lrat_steps": 53,
+      "sat_seconds": 0.7873,
+      "lean_status": "ok",
+      "lean_seconds": 97.087,
+      "under_120s": true,
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "name": "n8_1hidden_w3_or",
+      "axis": "width",
+      "shape": "[8]->[3]->1",
+      "n_inputs": 8,
+      "nodes": 4,
+      "max_fan_in": 8,
+      "max_abs_w": 8,
+      "sum_abs_w": 93,
+      "miter_vars": 170,
+      "miter_clauses": 515,
+      "lrat_steps": 67,
+      "sat_seconds": 5.4949,
+      "lean_status": "timeout_150s",
+      "lean_seconds": 150.0,
+      "under_120s": false,
+      "axioms": []
+    },
+    {
+      "name": "n8_1hidden_w4_rot_or",
+      "axis": "width",
+      "shape": "[8]->[4]->1",
+      "n_inputs": 8,
+      "nodes": 5,
+      "max_fan_in": 8,
+      "max_abs_w": 8,
+      "sum_abs_w": 124,
+      "miter_vars": 206,
+      "miter_clauses": 673,
+      "lrat_steps": 104,
+      "sat_seconds": 12.0553,
+      "lean_status": "timeout_150s",
+      "lean_seconds": 150.0,
+      "under_120s": false,
+      "axioms": [],
+      "kernel_breakdown": {
+        "elab_only": {
+          "status": "timeout",
+          "seconds": 150.0
+        },
+        "wf_decide": {
+          "status": "timeout",
+          "seconds": 150.0
+        },
+        "lrat_decide": {
+          "status": "timeout",
+          "seconds": 150.0
+        }
+      }
+    },
+    {
+      "name": "n8_1hidden_w8_par8",
+      "axis": "width",
+      "shape": "[8]->[8]->1",
+      "n_inputs": 8,
+      "nodes": 9,
+      "max_fan_in": 8,
+      "max_abs_w": 1,
+      "sum_abs_w": 72,
+      "miter_vars": 156,
+      "miter_clauses": 512,
+      "lrat_steps": 249,
+      "sat_seconds": 23.5719,
+      "lean_status": "timeout_150s",
+      "lean_seconds": 150.0,
+      "under_120s": false,
+      "axioms": []
+    },
+    {
+      "name": "n8_1hidden_w2_scale2",
+      "axis": "weight_scale",
+      "shape": "[8]->[2]->1",
+      "n_inputs": 8,
+      "nodes": 3,
+      "max_fan_in": 8,
+      "max_abs_w": 16,
+      "sum_abs_w": 122,
+      "miter_vars": 98,
+      "miter_clauses": 297,
+      "lrat_steps": 41,
+      "sat_seconds": 1.2723,
+      "lean_status": "ok",
+      "lean_seconds": 73.308,
+      "under_120s": true,
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "name": "n8_1hidden_w2_super53",
+      "axis": "weight_super53",
+      "shape": "[8]->[2]->1",
+      "n_inputs": 8,
+      "nodes": 3,
+      "max_fan_in": 8,
+      "max_abs_w": 53,
+      "sum_abs_w": 386,
+      "miter_vars": 98,
+      "miter_clauses": 297,
+      "lrat_steps": 41,
+      "sat_seconds": 1.8835,
+      "lean_status": "ok",
+      "lean_seconds": 80.313,
+      "under_120s": true,
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "name": "n8_1hidden_w2_nonsup_17",
+      "axis": "weight_nonsup",
+      "shape": "[8]->[2]->1",
+      "n_inputs": 8,
+      "nodes": 3,
+      "max_fan_in": 8,
+      "max_abs_w": 17,
+      "sum_abs_w": 194,
+      "miter_vars": 152,
+      "miter_clauses": 469,
+      "lrat_steps": 64,
+      "sat_seconds": 3.4024,
+      "lean_status": "timeout_150s",
+      "lean_seconds": 150.0,
+      "under_120s": false,
+      "axioms": []
+    },
+    {
+      "name": "n8_1hidden_w2_nonsup_5",
+      "axis": "weight_nonsup_colliding",
+      "shape": "[8]->[2]->1",
+      "n_inputs": 8,
+      "nodes": 3,
+      "max_fan_in": 8,
+      "max_abs_w": 5,
+      "sum_abs_w": 58,
+      "miter_vars": 176,
+      "miter_clauses": 517,
+      "lrat_steps": 61,
+      "sat_seconds": 4.8704,
+      "lean_status": "timeout_150s",
+      "lean_seconds": 150.0,
+      "under_120s": false,
+      "axioms": []
+    }
+  ]
+}

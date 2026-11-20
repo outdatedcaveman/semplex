@@ -1,0 +1,16 @@
+{
+ "automaton": "S4_6",
+ "seed": 6670,
+ "fit": 1.0,
+ "rho_predictive": 0.4734999904049946,
+ "rho_onestep": 0.583325909903224,
+ "n_macro": 24,
+ "probe_macro": 1.0,
+ "irrep_scores": {
+  "sign": -0.10933499447264512,
+  "chi2": 0.10195473831673674,
+  "std": 0.3807568441202369,
+  "std_sign": -0.4039605488777225
+ },
+ "best_irrep": "std"
+}

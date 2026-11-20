@@ -1,0 +1,17 @@
+{
+ "automaton": "Z9_013",
+ "seed": 6981,
+ "fit": 0.9982399940490723,
+ "probe_macro": 1.0,
+ "n_macro": 9,
+ "elements_seen": 9,
+ "rho_predictive": 0.5437930380010093,
+ "rho_onestep": 0.40767493412415934,
+ "irrep_scores": {
+  "r0_tr2_ker1": -0.33286123395452133,
+  "r1_tr2_ker1": 0.9107649933308817,
+  "r2_tr2_ker3": -0.22382392735710183,
+  "r3_tr2_ker1": -0.32972972972972975
+ },
+ "best_irrep": "r1_tr2_ker1"
+}

@@ -1,0 +1,9 @@
+{
+ "automaton": "Z3xZ3",
+ "seed": 6630,
+ "fit": 0.9999799728393555,
+ "rho_predictive": 0.17992661448017336,
+ "rho_onestep": 0.23154437257238475,
+ "n_macro": 9,
+ "probe_macro": 1.0
+}

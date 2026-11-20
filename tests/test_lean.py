@@ -10,6 +10,11 @@ from cerp.ledger import Ledger, LedgerError, Method, Status, compare
 from cerp.sat import prove_equivalence
 from cerp.translate import bdd_to_expr
 
+# Seconds allowed per Lean file. Bounds.lean takes about 170 s on a fast host and about 600 s on a
+# memory-constrained one; raise SEMPLEX_LEAN_TIMEOUT there instead of editing this test.
+import os as _os
+LEAN_FILE_TIMEOUT = float(_os.environ.get("SEMPLEX_LEAN_TIMEOUT", "600"))
+
 lean_bridge = pytest.importorskip("cerp.lean_bridge")
 pytestmark = [pytest.mark.lean, pytest.mark.slow]
 try:
@@ -71,12 +76,12 @@ def test_proof_files_compile_and_use_only_standard_axioms(tmp_path):
     import subprocess
     lean = lean_bridge.lean_binary()
     d = lean_bridge.LEAN_DIR
-    for f in ("Cerp", "Theory", "Bounds"):
+    for f in ("Cerp", "Theory", "Bounds", "Inference", "Closure"):
         r = subprocess.run([lean, f"--root={d}", "-o", str(tmp_path / f"{f}.olean"), str(d / f"{f}.lean")],
-                           cwd=d, capture_output=True, text=True, timeout=600)
+                           cwd=d, capture_output=True, text=True, timeout=LEAN_FILE_TIMEOUT)
         assert r.returncode == 0, r.stdout + r.stderr
-    for audit in ("Audit.lean", "AuditTheory.lean", "AuditBounds.lean"):
-        r = subprocess.run([lean, str(d / audit)], cwd=d, capture_output=True, text=True, timeout=600,
+    for audit in ("Audit.lean", "AuditTheory.lean", "AuditBounds.lean", "AuditInference.lean", "AuditClosure.lean"):
+        r = subprocess.run([lean, str(d / audit)], cwd=d, capture_output=True, text=True, timeout=LEAN_FILE_TIMEOUT,
                            env={**__import__("os").environ, "LEAN_PATH": str(tmp_path)})
         assert r.returncode == 0, r.stdout + r.stderr
         for m in re.finditer(r"depends on axioms: \[([^\]]*)\]", r.stdout):
@@ -127,12 +132,80 @@ def test_tnet_lean_exhaustive_and_lrat_equiv():
 
     status, lrat_steps, _ = sat.prove_tnet_equivalence_lrat(net, comp["expr"], vs)
     assert status == "unsat"
-    # Kernel `by decide` on XOR3 `tnet` is verified in `test_lrat_miter_equiv_and_ur_compiler_certify_lean`;
-    # 5-node XOR4 CNF (431 clauses via O(2^d) pbToExpr) uses `native=True` to avoid >900s WHNF replay.
-    r_lrat, _ = lean_bridge.verify_threshold_net_equiv(net, comp["expr"], vs, lrat_steps=lrat_steps, name="t_tnet_xor4_lrat", native=True)
-    assert r_lrat.ok and set(r_lrat.axioms) <= lean_bridge.NATIVE_AXIOMS
+    r_lrat, _ = lean_bridge.verify_threshold_net_equiv(net, comp["expr"], vs, lrat_steps=lrat_steps, name="t_tnet_xor4_lrat", native=False)
+    assert r_lrat.ok and set(r_lrat.axioms) <= set(lean_bridge.ALLOWED_AXIOMS)
 
     bad_net = {"inputs": list(net["inputs"]), "nodes": [dict(nd) for nd in net["nodes"]], "output": net["output"]}
     bad_net["nodes"][-1]["t"] = int(bad_net["nodes"][-1]["t"]) + 10
     bad_status, bad_ce, _ = sat.prove_tnet_equivalence_lrat(bad_net, comp["expr"], vs)
     assert bad_status == "sat" and isinstance(bad_ce, dict)
+
+
+def test_tnet_lean_n6_two_hidden_layer_kernel_decide():
+    from cerp import sat
+
+    vs = [f"x{i}" for i in range(6)]
+    _not = lambda a: ["not", a]
+    _and = lambda a, b: ["and", a, b]
+    _or = lambda a, b: ["or", a, b]
+    _xor = lambda a, b: ["xor", a, b]
+    _iff = lambda a, b: _not(_xor(a, b))
+
+    def _gt3(as_, bs_):
+        eq0 = _iff(as_[0], bs_[0])
+        eq1 = _iff(as_[1], bs_[1])
+        return _or(
+            _and(as_[0], _not(bs_[0])),
+            _or(_and(eq0, _and(as_[1], _not(bs_[1]))), _and(eq0, _and(eq1, _and(as_[2], _not(bs_[2]))))),
+        )
+
+    a3 = [["var", "x0"], ["var", "x1"], ["var", "x2"]]
+    b3 = [["var", "x3"], ["var", "x4"], ["var", "x5"]]
+    expr = {"kind": "expr", "body": _xor(_gt3(a3, b3), _gt3(a3, [_not(x) for x in b3]))}
+    net = {
+        "inputs": vs,
+        "nodes": [
+            {"id": "h0", "in": vs, "w": [4, 2, 1, -4, -2, -1], "t": 1},
+            {"id": "h1", "in": vs, "w": [4, 2, 1, 4, 2, 1], "t": 8},
+            {"id": "g0", "in": ["h0", "h1"], "w": [1, 1], "t": 1},
+            {"id": "g1", "in": ["h0", "h1"], "w": [1, 1], "t": 2},
+            {"id": "out", "in": ["g0", "g1"], "w": [1, -1], "t": 1},
+        ],
+        "output": "out",
+    }
+    status, lrat_steps, _ = sat.prove_tnet_equivalence_lrat(net, expr, vs, pb=True)
+    assert status == "unsat"
+    r, _ = lean_bridge.verify_threshold_net_equiv(
+        net, expr, vs, lrat_steps=lrat_steps, name="t_tnet_n6_2h_cmp_xor", native=False, pb=True
+    )
+    assert r.ok and set(r.axioms) <= set(lean_bridge.ALLOWED_AXIOMS)
+
+
+def test_tnet_lean_n8_one_hidden_layer_kernel_decide():
+    from cerp import sat
+
+    vs = [f"x{i}" for i in range(8)]
+    _iff = lambda a, b: ["not", ["xor", a, b]]
+    expr = {
+        "kind": "expr",
+        "body": [
+            "and",
+            ["and", _iff(["var", "x0"], ["var", "x4"]), _iff(["var", "x1"], ["var", "x5"])],
+            ["and", _iff(["var", "x2"], ["var", "x6"]), _iff(["var", "x3"], ["var", "x7"])],
+        ],
+    }
+    net = {
+        "inputs": vs,
+        "nodes": [
+            {"id": "h0", "in": vs, "w": [8, 4, 2, 1, -8, -4, -2, -1], "t": 0},
+            {"id": "h1", "in": vs, "w": [8, 4, 2, 1, -8, -4, -2, -1], "t": 1},
+            {"id": "out", "in": ["h0", "h1"], "w": [1, -1], "t": 1},
+        ],
+        "output": "out",
+    }
+    status, lrat_steps, _ = sat.prove_tnet_equivalence_lrat(net, expr, vs, pb=True)
+    assert status == "unsat"
+    r, _ = lean_bridge.verify_threshold_net_equiv(
+        net, expr, vs, lrat_steps=lrat_steps, name="t_tnet_n8_1h_eq4", native=False, pb=True
+    )
+    assert r.ok and set(r.axioms) <= set(lean_bridge.ALLOWED_AXIOMS)

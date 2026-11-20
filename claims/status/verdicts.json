@@ -1,0 +1,1362 @@
+[
+ {
+  "key": "43:H43.1",
+  "spike": "43",
+  "id": "H43.1",
+  "verdict": "NEITHER",
+  "measured": "A_K(1) = 0.767",
+  "bar": "held ≥ 0.80, broken < 0.65"
+ },
+ {
+  "key": "43:H43.2",
+  "spike": "43",
+  "id": "H43.2",
+  "verdict": "HELD",
+  "measured": "S(1) = 0.395",
+  "bar": "held ≤ 0.40, broken ≥ 0.55"
+ },
+ {
+  "key": "43:H43.3",
+  "spike": "43",
+  "id": "H43.3",
+  "verdict": "HELD",
+  "measured": "S(3000) − S(1) = +0.326",
+  "bar": "held ≥ +0.15, broken ≤ +0.05"
+ },
+ {
+  "key": "44:H44.1",
+  "spike": "44",
+  "id": "H44.1",
+  "verdict": "BROKEN",
+  "measured": "−0.003 (n = 5), −0.007 (n = 6)",
+  "bar": "held ≥ +0.02 at both, broken ≤ 0 at either"
+ },
+ {
+  "key": "44:H44.2",
+  "spike": "44",
+  "id": "H44.2",
+  "verdict": "BROKEN",
+  "measured": "−0.015, −0.019",
+  "bar": "held ≥ +0.03 at both, broken < 0 at both"
+ },
+ {
+  "key": "44:H44.3",
+  "spike": "44",
+  "id": "H44.3",
+  "verdict": "NEITHER",
+  "measured": "−0.009, −0.005",
+  "bar": "held ≥ 0 at both, broken ≤ −0.01 at both"
+ },
+ {
+  "key": "45:H45.1",
+  "spike": "45",
+  "id": "H45.1",
+  "verdict": "HELD",
+  "measured": "cost-4 0.72, symmetric 0.90, DNF 0.67 held; noisy 0.58 neither",
+  "bar": "held if ≥ 0.65 in ≥ 3 of 4 classes; broken if ≤ 0.50 in ≥ 2"
+ },
+ {
+  "key": "45:H45.2",
+  "spike": "45",
+  "id": "H45.2",
+  "verdict": "BROKEN",
+  "measured": "Breast Cancer 0.29, Diabetes 0.45 broken; Digits 0.56 neither; Wine 0.74 held",
+  "bar": "held if ≥ 0.60 in ≥ 3 of 4 datasets; broken if ≤ 0.50 in ≥ 2"
+ },
+ {
+  "key": "45:H45.3",
+  "spike": "45",
+  "id": "H45.3",
+  "verdict": "BROKEN",
+  "measured": "Occam minus kernel agreement ≤ 0 in 4 of 8 cells (DNF, Breast Cancer, Digits, Diabetes)",
+  "bar": "held if ≥ +0.02 in ≥ 6 of 8; broken if ≤ 0 in ≥ 4"
+ },
+ {
+  "key": "45:H45.4",
+  "spike": "45",
+  "id": "H45.4",
+  "verdict": "BROKEN",
+  "measured": "net minus kernel accuracy: Breast Cancer +0.07, Wine −0.07, Digits −0.03, Diabetes −0.04",
+  "bar": "held if ≥ +0.01 in ≥ 3 of 4; broken if ≤ 0 in ≥ 3"
+ },
+ {
+  "key": "46:H46.1",
+  "spike": "46",
+  "id": "H46.1",
+  "verdict": "HELD",
+  "measured": "pull 0.83 (no flips), 0.66 (2), 0.57 (5), 0.57 (8); drop 0.27",
+  "bar": "held if drop from 0 to 8 flips ≥ 0.10; broken if ≤ 0.02"
+ },
+ {
+  "key": "46:H46.2",
+  "spike": "46",
+  "id": "H46.2",
+  "verdict": "NEITHER",
+  "measured": "agree(simpler) − agree(exact): −0.004 at 0 flips, +0.006 at 8",
+  "bar": "held if ≤ −0.02 at 0 and ≥ +0.02 at 8; broken if ≤ 0 at 8"
+ },
+ {
+  "key": "46:H46.3",
+  "spike": "46",
+  "id": "H46.3",
+  "verdict": "NEITHER",
+  "measured": "simpler minus kernel agreement: Wine +0.05, Digits −0.02, Diabetes −0.01; Breast Cancer no verdict",
+  "bar": "held if > 0 in ≥ 3 of 4; broken if ≤ 0 in ≥ 3"
+ },
+ {
+  "key": "46:H46.4",
+  "spike": "46",
+  "id": "H46.4",
+  "verdict": "NEITHER",
+  "measured": "accuracy of simpler minus exact: +0.042 at 5 flips, +0.014 at 8",
+  "bar": "held if ≥ +0.02 at both; broken if ≤ 0 at both"
+ },
+ {
+  "key": "47:H47.1",
+  "spike": "47",
+  "id": "H47.1",
+  "verdict": "BROKEN",
+  "measured": "0.08% of nets have CR_min ≥ 0.90 (median 0.56)",
+  "bar": "held if ≥ 70% of nets; broken if < 40%"
+ },
+ {
+  "key": "47:H47.2",
+  "spike": "47",
+  "id": "H47.2",
+  "verdict": "BROKEN",
+  "measured": "top partition is a minimum circuit in 5.9% of nets (chance 0.009%)",
+  "bar": "held if ≥ 60%; broken if < 30%"
+ },
+ {
+  "key": "47:H47.3",
+  "spike": "47",
+  "id": "H47.3",
+  "verdict": "NEITHER",
+  "measured": "median CR_min rises +0.035 from step 100 to 3,000",
+  "bar": "held if ≥ +0.10; broken if ≤ +0.02"
+ },
+ {
+  "key": "48:H48.1",
+  "spike": "48",
+  "id": "H48.1",
+  "verdict": "NEITHER",
+  "measured": "pull 0.716 at n = 8, 0.649 at n = 10",
+  "bar": "held if ≥ 0.65 in both; broken if ≤ 0.50 in either"
+ },
+ {
+  "key": "48:H48.2",
+  "spike": "48",
+  "id": "H48.2",
+  "verdict": "NEITHER",
+  "measured": "Occam minus kernel agreement: +0.039 at n = 8, +0.010 at n = 10",
+  "bar": "held if ≥ +0.02 in both; broken if ≤ 0 in either"
+ },
+ {
+  "key": "48:H48.3",
+  "spike": "48",
+  "id": "H48.3",
+  "verdict": "HELD",
+  "measured": "net minus kernel accuracy: +0.060 at n = 8, +0.037 at n = 10",
+  "bar": "held if ≥ +0.02 in both; broken if ≤ 0 in either"
+ },
+ {
+  "key": "49:H49.1",
+  "spike": "49",
+  "id": "H49.1",
+  "verdict": "HELD",
+  "measured": "adherence 0.979–0.991 in the four cells",
+  "bar": "held if ≥ 0.95 in every cell; broken if < 0.90 in any"
+ },
+ {
+  "key": "49:H49.2",
+  "spike": "49",
+  "id": "H49.2",
+  "verdict": "HELD",
+  "measured": "spread across cells 0.011",
+  "bar": "held if ≤ 0.04; broken if > 0.08"
+ },
+ {
+  "key": "49:H49.3",
+  "spike": "49",
+  "id": "H49.3",
+  "verdict": "HELD",
+  "measured": "on forced inputs where the net leaves the kernel: 0.816–0.947",
+  "bar": "held if ≥ 0.80 in every cell; broken if < 0.65 in any"
+ },
+ {
+  "key": "49:H49.4",
+  "spike": "49",
+  "id": "H49.4",
+  "verdict": "NEITHER",
+  "measured": "net minus kernel adherence: +0.029, +0.059, +0.119, +0.020",
+  "bar": "held if ≥ +0.05 in every cell; broken if ≤ 0 in any"
+ },
+ {
+  "key": "50:H50.1",
+  "spike": "50",
+  "id": "H50.1",
+  "verdict": "NEITHER",
+  "measured": "agreement with a single net 0.908, 0.933, 0.908",
+  "bar": "held if ≥ 0.93 in every cell; broken if < 0.88 in any"
+ },
+ {
+  "key": "50:H50.2",
+  "spike": "50",
+  "id": "H50.2",
+  "verdict": "NEITHER",
+  "measured": "minus kernel: +0.051, +0.084, +0.028",
+  "bar": "held if ≥ +0.03 in every cell; broken if ≤ 0 in any"
+ },
+ {
+  "key": "50:H50.3",
+  "spike": "50",
+  "id": "H50.3",
+  "verdict": "HELD",
+  "measured": "Spearman 0.770, 0.762, 0.794",
+  "bar": "held if ≥ 0.40 in every cell; broken if ≤ 0.10 in any"
+ },
+ {
+  "key": "50:H50.4",
+  "spike": "50",
+  "id": "H50.4",
+  "verdict": "HELD",
+  "measured": "seed split 0.15–0.18 where circuits split evenly vs 0.014–0.019 where they agree",
+  "bar": "held if difference ≥ 0.10 in every cell; broken if ≤ 0 in any"
+ },
+ {
+  "key": "51:H51.1",
+  "spike": "51",
+  "id": "H51.1",
+  "verdict": "HELD",
+  "measured": "Cautious Monotony violated in 4.3% (93 of 2,159)",
+  "bar": "held if ≤ 0.05; broken if > 0.15"
+ },
+ {
+  "key": "51:H51.2",
+  "spike": "51",
+  "id": "H51.2",
+  "verdict": "NEITHER",
+  "measured": "Cut violated in 5.9% (130 of 2,196)",
+  "bar": "held if ≤ 0.05; broken if > 0.15"
+ },
+ {
+  "key": "51:H51.3",
+  "spike": "51",
+  "id": "H51.3",
+  "verdict": "NEITHER",
+  "measured": "Rational Monotony violated in 15.0% (124 of 824)",
+  "bar": "held if ≤ 0.10; broken if > 0.25"
+ },
+ {
+  "key": "51:H51.4",
+  "spike": "51",
+  "id": "H51.4",
+  "verdict": "NEITHER",
+  "measured": "retraction 35%; recall of the logic's retractions 48%, precision 96%",
+  "bar": "held if retraction ≥ 0.10 and recall ≥ 0.50; broken if retraction < 0.03"
+ },
+ {
+  "key": "52:H52.1",
+  "spike": "52",
+  "id": "H52.1",
+  "verdict": "NO VERDICT",
+  "measured": "no verdict: 24 observed cells, guard required 40",
+  "bar": "see report"
+ },
+ {
+  "key": "52:H52.2",
+  "spike": "52",
+  "id": "H52.2",
+  "verdict": "NO VERDICT",
+  "measured": "no verdict: 24 observed cells, guard required 40",
+  "bar": "see report"
+ },
+ {
+  "key": "52:H52.3",
+  "spike": "52",
+  "id": "H52.3",
+  "verdict": "NO VERDICT",
+  "measured": "no verdict: 24 observed cells, guard required 40",
+  "bar": "see report"
+ },
+ {
+  "key": "52:H52.4",
+  "spike": "52",
+  "id": "H52.4",
+  "verdict": "NO VERDICT",
+  "measured": "no verdict: 24 observed cells, guard required 40",
+  "bar": "see report"
+ },
+ {
+  "key": "53:H53.1",
+  "spike": "53",
+  "id": "H53.1",
+  "verdict": "HELD",
+  "measured": "0.847 of cases",
+  "bar": "held >= 0.75, broken < 0.5"
+ },
+ {
+  "key": "53:H53.2",
+  "spike": "53",
+  "id": "H53.2",
+  "verdict": "HELD",
+  "measured": "1.000 of cases",
+  "bar": "held >= 0.75, broken < 0.5"
+ },
+ {
+  "key": "53:H53.3",
+  "spike": "53",
+  "id": "H53.3",
+  "verdict": "BROKEN",
+  "measured": "0.133 of product cases",
+  "bar": "held >= 0.5, broken <= 0.2"
+ },
+ {
+  "key": "53:H53.4",
+  "spike": "53",
+  "id": "H53.4",
+  "verdict": "HELD",
+  "measured": "p = 0.0005 in 3/3 subjects",
+  "bar": "held p < 0.001 in all"
+ },
+ {
+  "key": "53:H53.5",
+  "spike": "53",
+  "id": "H53.5",
+  "verdict": "HELD",
+  "measured": "1.000 of matrices",
+  "bar": "held >= 0.75"
+ },
+ {
+  "key": "53:H53.6a",
+  "spike": "53",
+  "id": "H53.6a",
+  "verdict": "HELD",
+  "measured": "1.000 of pairs",
+  "bar": "held >= 0.75"
+ },
+ {
+  "key": "53:H53.6b",
+  "spike": "53",
+  "id": "H53.6b",
+  "verdict": "BROKEN",
+  "measured": "residual significant in 0.810 of pairs",
+  "bar": "held: residual non-significant in >= 0.5; broken: significant in >= 0.75"
+ },
+ {
+  "key": "54:H54.1",
+  "spike": "54",
+  "id": "H54.1",
+  "verdict": "NEITHER",
+  "measured": "0.524 of cases",
+  "bar": "held >= 0.75, broken < 0.5"
+ },
+ {
+  "key": "54:H54.2",
+  "spike": "54",
+  "id": "H54.2",
+  "verdict": "NEITHER",
+  "measured": "0.333 of cases",
+  "bar": "held >= 0.5, broken <= 0.2"
+ },
+ {
+  "key": "54:H54.3",
+  "spike": "54",
+  "id": "H54.3",
+  "verdict": "BROKEN",
+  "measured": "median relative interaction 0.054",
+  "bar": "held >= 0.643, broken <= 0.543"
+ },
+ {
+  "key": "55:H55.1",
+  "spike": "55",
+  "id": "H55.1",
+  "verdict": "BROKEN",
+  "measured": "accuracy >= 0.80 in 2 of 7 sources",
+  "bar": "held >= 5, broken <= 2"
+ },
+ {
+  "key": "55:H55.2",
+  "spike": "55",
+  "id": "H55.2",
+  "verdict": "NO VERDICT",
+  "measured": "3 usable sources < 4",
+  "bar": "guard"
+ },
+ {
+  "key": "55:H55.3",
+  "spike": "55",
+  "id": "H55.3",
+  "verdict": "NO VERDICT",
+  "measured": "3 usable sources < 4",
+  "bar": "guard"
+ },
+ {
+  "key": "56:H56.1",
+  "spike": "56",
+  "id": "H56.1",
+  "verdict": "NEITHER",
+  "measured": "accuracy >= 0.80 in 3 of 6 models",
+  "bar": "held >= 4, broken <= 1"
+ },
+ {
+  "key": "56:H56.2",
+  "spike": "56",
+  "id": "H56.2",
+  "verdict": "HELD",
+  "measured": "median s_v 0.038 in 3 usable models",
+  "bar": "s_v <= 0.10 in >= 75% of usable"
+ },
+ {
+  "key": "56:H56.3",
+  "spike": "56",
+  "id": "H56.3",
+  "verdict": "HELD",
+  "measured": "s_v < s_x in 3 of 3 (median s_x 0.379)",
+  "bar": ">= 75%"
+ },
+ {
+  "key": "56:H56.4",
+  "spike": "56",
+  "id": "H56.4",
+  "verdict": "HELD",
+  "measured": "largest name effect 0.15-0.21 act-SD",
+  "bar": "<= 0.25 act-SD in >= 75% of usable"
+ },
+ {
+  "key": "57:H57.1",
+  "spike": "57",
+  "id": "H57.1",
+  "verdict": "BROKEN",
+  "measured": "0.207 of runs (k-means)",
+  "bar": "held >= 0.8, broken < 0.5"
+ },
+ {
+  "key": "57:H57.2",
+  "spike": "57",
+  "id": "H57.2",
+  "verdict": "BROKEN",
+  "measured": "0.300 of runs (top-2 >= 0.8 in all; spacing fails)",
+  "bar": "held >= 0.8, broken < 0.5"
+ },
+ {
+  "key": "57:H57.3",
+  "spike": "57",
+  "id": "H57.3",
+  "verdict": "HELD",
+  "measured": "0.800 of runs",
+  "bar": "held >= 0.8, broken < 0.5"
+ },
+ {
+  "key": "57:H57.4",
+  "spike": "57",
+  "id": "H57.4",
+  "verdict": "HELD",
+  "measured": "1.000 of runs",
+  "bar": "held >= 0.8, broken < 0.5"
+ },
+ {
+  "key": "57:H57.5",
+  "spike": "57",
+  "id": "H57.5",
+  "verdict": "NEITHER",
+  "measured": "PROD median 0.033, CASC median 0.142",
+  "bar": "PROD <= 0.30 and CASC >= 0.60 in >= 80%; broken if CASC median <= PROD median"
+ },
+ {
+  "key": "59:H59.1",
+  "spike": "59",
+  "id": "H59.1",
+  "verdict": "BROKEN",
+  "measured": "p<=0.05 in 0/24; below random median in 24/24 (median z -3.83)",
+  "bar": "held p<=0.05 in >=75%; broken below median in >=50%"
+ },
+ {
+  "key": "59:H59.2",
+  "spike": "59",
+  "id": "H59.2",
+  "verdict": "BROKEN",
+  "measured": "p<=0.05 in 0/24; below random median in 17/24 (median z -0.39)",
+  "bar": "as H59.1"
+ },
+ {
+  "key": "59:H59.3",
+  "spike": "59",
+  "id": "H59.3",
+  "verdict": "HELD",
+  "measured": "shared primes 1.71 (null max 0.97) concrete, 2.63 (null max 0.99) abstract",
+  "bar": "above all 1,000 shuffles for both"
+ },
+ {
+  "key": "58:H58.1",
+  "spike": "58",
+  "id": "H58.1",
+  "verdict": "HELD",
+  "measured": "31/31 runs",
+  "bar": ">= 80%"
+ },
+ {
+  "key": "58:H58.2",
+  "spike": "58",
+  "id": "H58.2",
+  "verdict": "HELD",
+  "measured": "31/31 runs, success 1.000",
+  "bar": ">= 80% with >= 0.98"
+ },
+ {
+  "key": "58:H58.3",
+  "spike": "58",
+  "id": "H58.3",
+  "verdict": "HELD",
+  "measured": "31/31 runs, success 1.000",
+  "bar": ">= 80% with >= 0.99"
+ },
+ {
+  "key": "58:H58.4",
+  "spike": "58",
+  "id": "H58.4",
+  "verdict": "NEITHER",
+  "measured": "14/19 group runs (A5 0/5: chi4)",
+  "bar": "held >= 0.8, broken < 0.5"
+ },
+ {
+  "key": "58:H58.5",
+  "spike": "58",
+  "id": "H58.5",
+  "verdict": "BROKEN",
+  "measured": "0/4 Z5 runs with H1 ratio >= 3",
+  "bar": ">= 80%"
+ },
+ {
+  "key": "58:H58.6",
+  "spike": "58",
+  "id": "H58.6",
+  "verdict": "HELD",
+  "measured": "Spearman 1.0; CASC 300 > PROD 250",
+  "bar": "Spearman >= 0.9 and CASC > PROD"
+ },
+ {
+  "key": "61:H61.1",
+  "spike": "61",
+  "id": "H61.1",
+  "verdict": "NEITHER",
+  "measured": "sparse beats dense by >=0.05 in 0.121 of pairs; medians 0.148 vs 0.146",
+  "bar": "held >= 0.75; broken if sparse <= dense in >= 0.5"
+ },
+ {
+  "key": "61:H61.2",
+  "spike": "61",
+  "id": "H61.2",
+  "verdict": "BROKEN",
+  "measured": "0/256 universal atoms",
+  "bar": "held >= 25%; broken < 5%"
+ },
+ {
+  "key": "60:H60.1",
+  "spike": "60",
+  "id": "H60.1",
+  "verdict": "BROKEN",
+  "measured": "0.375 of discriminating runs (A5_6 3/3, S4_6 0/5)",
+  "bar": "held >= 0.8, broken < 0.5"
+ },
+ {
+  "key": "60:H60.2",
+  "spike": "60",
+  "id": "H60.2",
+  "verdict": "HELD",
+  "measured": "chi5 best in 3/3 fitted A5_6 runs",
+  "bar": "held >= 0.8"
+ },
+ {
+  "key": "60:H60.3",
+  "spike": "60",
+  "id": "H60.3",
+  "verdict": "NEITHER",
+  "measured": "0.556 of fitted GRU runs with rho_readout >= 0.5",
+  "bar": "held >= 0.8, broken < 0.5"
+ },
+ {
+  "key": "60:H60.4",
+  "spike": "60",
+  "id": "H60.4",
+  "verdict": "NO VERDICT",
+  "measured": "no fitted transformer runs",
+  "bar": "guard"
+ },
+ {
+  "key": "60:H60.5",
+  "spike": "60",
+  "id": "H60.5",
+  "verdict": "BROKEN",
+  "measured": "transformer fit rate S4 0.0, A5 0.0",
+  "bar": "held S4 >= 0.6 and A5 <= 0.2; broken A5 >= S4"
+ },
+ {
+  "key": "60:H60.6",
+  "spike": "60",
+  "id": "H60.6",
+  "verdict": "HELD",
+  "measured": "0.944 of fitted GRU runs",
+  "bar": "held >= 0.8"
+ },
+ {
+  "key": "64:H64.1",
+  "spike": "64",
+  "id": "H64.1",
+  "verdict": "BROKEN",
+  "measured": "ratio >= 2 in 0.000 of triangles; median ratio 0.71",
+  "bar": "held >= 0.8 at ratio >= 2; broken >= 0.5 at ratio <= 1.2"
+ },
+ {
+  "key": "64:H64.2",
+  "spike": "64",
+  "id": "H64.2",
+  "verdict": "HELD",
+  "measured": "median held-out R2 0.31",
+  "bar": ">= 0.30"
+ },
+ {
+  "key": "62:H62.1",
+  "spike": "62",
+  "id": "H62.1",
+  "verdict": "BROKEN",
+  "measured": "predicted irrep best in 0/12 fitted runs",
+  "bar": "held >= 0.8, broken < 0.5"
+ },
+ {
+  "key": "62:H62.2",
+  "spike": "62",
+  "id": "H62.2",
+  "verdict": "BROKEN",
+  "measured": "0/5",
+  "bar": "held >= 0.8"
+ },
+ {
+  "key": "62:H62.3",
+  "spike": "62",
+  "id": "H62.3",
+  "verdict": "BROKEN",
+  "measured": "1/15",
+  "bar": "held >= 0.8"
+ },
+ {
+  "key": "63:H63.1",
+  "spike": "63",
+  "id": "H63.1",
+  "verdict": "NEITHER",
+  "measured": "S4 fit 1/3",
+  "bar": "held >= 2"
+ },
+ {
+  "key": "63:H63.2",
+  "spike": "63",
+  "id": "H63.2",
+  "verdict": "BROKEN",
+  "measured": "S4 1/3 = A5 1/3",
+  "bar": "held difference >= 2/3; broken A5 >= S4"
+ },
+ {
+  "key": "63:H63.3",
+  "spike": "63",
+  "id": "H63.3",
+  "verdict": "HELD",
+  "measured": "predicted irrep in 2/2 fitted (6/6 overall)",
+  "bar": "all"
+ },
+ {
+  "key": "68:H68.1",
+  "spike": "68",
+  "id": "H68.1",
+  "verdict": "HELD",
+  "measured": "median CKA 0.84",
+  "bar": ">= 0.5"
+ },
+ {
+  "key": "68:H68.2",
+  "spike": "68",
+  "id": "H68.2",
+  "verdict": "HELD",
+  "measured": "tied excess 0.78 vs max unrelated 0.20",
+  "bar": ">= 3x"
+ },
+ {
+  "key": "68:H68.3",
+  "spike": "68",
+  "id": "H68.3",
+  "verdict": "HELD",
+  "measured": "median Procrustes R2 0.46",
+  "bar": ">= 0.3"
+ },
+ {
+  "key": "65:H65.1",
+  "spike": "65",
+  "id": "H65.1",
+  "verdict": "NO VERDICT",
+  "measured": "fitted SIGN 1/5, AXIS 0/5 (< 3)",
+  "bar": "guard"
+ },
+ {
+  "key": "65:H65.2",
+  "spike": "65",
+  "id": "H65.2",
+  "verdict": "NO VERDICT",
+  "measured": "fitted SIGN 1/5, AXIS 0/5 (< 3)",
+  "bar": "guard"
+ },
+ {
+  "key": "65:H65.3",
+  "spike": "65",
+  "id": "H65.3",
+  "verdict": "NO VERDICT",
+  "measured": "fitted SIGN 1/5, AXIS 0/5 (< 3)",
+  "bar": "guard"
+ },
+ {
+  "key": "66:H66.1",
+  "spike": "66",
+  "id": "H66.1",
+  "verdict": "BROKEN",
+  "measured": "0% of fitted runs with rho_predictive >= 0.6",
+  "bar": "held >= 0.8"
+ },
+ {
+  "key": "66:H66.2",
+  "spike": "66",
+  "id": "H66.2",
+  "verdict": "BROKEN",
+  "measured": "0%",
+  "bar": "held >= 0.8"
+ },
+ {
+  "key": "66:H66.3",
+  "spike": "66",
+  "id": "H66.3",
+  "verdict": "HELD",
+  "measured": "probe c mod 2 = 0.54",
+  "bar": "<= 0.60"
+ },
+ {
+  "key": "69:H69.1",
+  "spike": "69",
+  "id": "H69.1",
+  "verdict": "BROKEN",
+  "measured": "rho_predictive >= 0.6 in 36%",
+  "bar": "held >= 0.8"
+ },
+ {
+  "key": "69:H69.2",
+  "spike": "69",
+  "id": "H69.2",
+  "verdict": "BROKEN",
+  "measured": "predictive > one-step in 31%",
+  "bar": "held >= 0.8"
+ },
+ {
+  "key": "69:H69.3",
+  "spike": "69",
+  "id": "H69.3",
+  "verdict": "HELD",
+  "measured": "top isotypic component best in 85% (29/34)",
+  "bar": ">= 0.8"
+ },
+ {
+  "key": "69:H69.4",
+  "spike": "69",
+  "id": "H69.4",
+  "verdict": "BROKEN",
+  "measured": "minimal faithful best in 39% of degenerate runs",
+  "bar": "held >= 0.8, broken < 0.5"
+ },
+ {
+  "key": "69:H69.5",
+  "spike": "69",
+  "id": "H69.5",
+  "verdict": "NEITHER",
+  "measured": "ties to faithful 55%",
+  "bar": "held >= 0.8, broken < 0.5"
+ },
+ {
+  "key": "69:H69.6",
+  "spike": "69",
+  "id": "H69.6",
+  "verdict": "BROKEN",
+  "measured": "ties to lowest dimension 45%",
+  "bar": "held >= 0.8, broken < 0.5"
+ },
+ {
+  "key": "69:H69.7",
+  "spike": "69",
+  "id": "H69.7",
+  "verdict": "NEITHER",
+  "measured": "law 67%, bias 33% on discriminating cases",
+  "bar": "law >= 0.8 held; bias >= 0.5 broken"
+ },
+ {
+  "key": "70:H70.1",
+  "spike": "70",
+  "id": "H70.1",
+  "verdict": "HELD",
+  "measured": "AXIS R2_1 > R2_2 and >= 0.2 in 5/5",
+  "bar": ">= 80%"
+ },
+ {
+  "key": "70:H70.2",
+  "spike": "70",
+  "id": "H70.2",
+  "verdict": "HELD",
+  "measured": "sign probe 1.000 in 5/5 (unbalanced; balanced 1.0 exploratory)",
+  "bar": ">= 0.9 in 80%"
+ },
+ {
+  "key": "70:H70.3",
+  "spike": "70",
+  "id": "H70.3",
+  "verdict": "NEITHER",
+  "measured": "swap match AXIS 0.04, SIGN 0.00",
+  "bar": "AXIS >= 0.9 and SIGN <= 0.1"
+ },
+ {
+  "key": "70:H70.4",
+  "spike": "70",
+  "id": "H70.4",
+  "verdict": "HELD",
+  "measured": "SIGN degree-1 in 5/5",
+  "bar": ">= 80%"
+ },
+ {
+  "key": "71:H71.1",
+  "spike": "71",
+  "id": "H71.1",
+  "verdict": "NEITHER",
+  "measured": "energy = final leader 67%",
+  "bar": "held >= 0.8, broken < 0.5"
+ },
+ {
+  "key": "71:H71.2",
+  "spike": "71",
+  "id": "H71.2",
+  "verdict": "BROKEN",
+  "measured": "AGF = first leader 15%",
+  "bar": "held >= 0.8"
+ },
+ {
+  "key": "71:H71.3",
+  "spike": "71",
+  "id": "H71.3",
+  "verdict": "BROKEN",
+  "measured": "orbit = final leader 34%",
+  "bar": "held >= 0.8"
+ },
+ {
+  "key": "71:H71.4",
+  "spike": "71",
+  "id": "H71.4",
+  "verdict": "HELD",
+  "measured": "energy beats AGF where they disagree 8/8",
+  "bar": ">= 0.8"
+ },
+ {
+  "key": "71:H71.5",
+  "spike": "71",
+  "id": "H71.5",
+  "verdict": "BROKEN",
+  "measured": "first = final 39%",
+  "bar": "held >= 0.8"
+ },
+ {
+  "key": "71:H71.6",
+  "spike": "71",
+  "id": "H71.6",
+  "verdict": "HELD",
+  "measured": "whitened = cosine leader 80%",
+  "bar": ">= 0.8"
+ },
+ {
+  "key": "71:H71.7",
+  "spike": "71",
+  "id": "H71.7",
+  "verdict": "BROKEN",
+  "measured": "ties to lowest C n 36%",
+  "bar": "held >= 0.8"
+ },
+ {
+  "key": "71:H71.8",
+  "spike": "71",
+  "id": "H71.8",
+  "verdict": "NEITHER",
+  "measured": "cyclic: energy 36%, smooth circle 21%",
+  "bar": "energy >= 0.8 held; smooth >= 0.5 broken"
+ },
+ {
+  "key": "72:H72.1",
+  "spike": "72",
+  "id": "H72.1",
+  "verdict": "NO VERDICT",
+  "measured": "0 fitted RHO3 runs",
+  "bar": "guard"
+ },
+ {
+  "key": "72:H72.2",
+  "spike": "72",
+  "id": "H72.2",
+  "verdict": "NO VERDICT",
+  "measured": "0 fitted ONEHOT/RHO5",
+  "bar": "guard"
+ },
+ {
+  "key": "72:H72.3",
+  "spike": "72",
+  "id": "H72.3",
+  "verdict": "BROKEN",
+  "measured": "D2 input: sign probe 1.00 in 5/5",
+  "bar": "RP2 in >= 80% held; sign >= 0.95 in >= 50% broken"
+ },
+ {
+  "key": "72:H72.4",
+  "spike": "72",
+  "id": "H72.4",
+  "verdict": "HELD",
+  "measured": "D1: sign 1.00 in 5/5",
+  "bar": ">= 80%"
+ },
+ {
+  "key": "73:H73.1",
+  "spike": "73",
+  "id": "H73.1",
+  "verdict": "NO VERDICT",
+  "measured": "3 qualifying automata (needs 4)",
+  "bar": "guard"
+ },
+ {
+  "key": "73:H73.2",
+  "spike": "73",
+  "id": "H73.2",
+  "verdict": "NEITHER",
+  "measured": "smooth 50%, energy 38%",
+  "bar": "smooth >= 0.8 held; energy >= 0.5 broken"
+ },
+ {
+  "key": "73:H73.3",
+  "spike": "73",
+  "id": "H73.3",
+  "verdict": "BROKEN",
+  "measured": "chi3 leads 0/4",
+  "bar": ">= 0.8"
+ },
+ {
+  "key": "73:H73.4",
+  "spike": "73",
+  "id": "H73.4",
+  "verdict": "HELD",
+  "measured": "chi5 5/5",
+  "bar": ">= 0.8"
+ },
+ {
+  "key": "73:H73.5",
+  "spike": "73",
+  "id": "H73.5",
+  "verdict": "NO VERDICT",
+  "measured": "sigma 1.0 not learned",
+  "bar": "guard"
+ },
+ {
+  "key": "74:H74.1",
+  "spike": "74",
+  "id": "H74.1",
+  "verdict": "NEITHER",
+  "measured": "gated = leader 68%",
+  "bar": "held >= 0.8, broken < 0.5"
+ },
+ {
+  "key": "74:H74.2",
+  "spike": "74",
+  "id": "H74.2",
+  "verdict": "NEITHER",
+  "measured": "gated 44%, energy 36%",
+  "bar": "gated >= 0.8 held; energy >= 0.5 broken"
+ },
+ {
+  "key": "74:H74.3",
+  "spike": "74",
+  "id": "H74.3",
+  "verdict": "HELD",
+  "measured": "dihedral ties 10/10 (cosine only)",
+  "bar": ">= 0.8"
+ },
+ {
+  "key": "75:H75.1",
+  "spike": "75",
+  "id": "H75.1",
+  "verdict": "HELD",
+  "measured": "c mod 2 probe GRU 0.56, SPEC 0.52, ES 0.53",
+  "bar": "all <= 0.6"
+ },
+ {
+  "key": "75:H75.2",
+  "spike": "75",
+  "id": "H75.2",
+  "verdict": "HELD",
+  "measured": "energy leader 100% (GRU, SPEC)",
+  "bar": ">= 0.8"
+ },
+ {
+  "key": "75:H75.3",
+  "spike": "75",
+  "id": "H75.3",
+  "verdict": "HELD",
+  "measured": "reservoir same leader across readouts 5/5; GRU 0/5",
+  "bar": "RES >= 0.8, GRU <= 0.2"
+ },
+ {
+  "key": "75:H75.4",
+  "spike": "75",
+  "id": "H75.4",
+  "verdict": "HELD",
+  "measured": "reservoir macro probe 0.05-0.35 in 25/25",
+  "bar": "<= 0.9 in >= 80%"
+ },
+ {
+  "key": "76:H76.1",
+  "spike": "76",
+  "id": "H76.1",
+  "verdict": "BROKEN",
+  "measured": "top-k kept 28%",
+  "bar": ">= 0.8 held, < 0.5 broken"
+ },
+ {
+  "key": "76:H76.2",
+  "spike": "76",
+  "id": "H76.2",
+  "verdict": "BROKEN",
+  "measured": "energy prefix 47%, monotone 40%",
+  "bar": ">= 0.8"
+ },
+ {
+  "key": "76:H76.3",
+  "spike": "76",
+  "id": "H76.3",
+  "verdict": "BROKEN",
+  "measured": "top acquired first 1/14",
+  "bar": ">= 0.8"
+ },
+ {
+  "key": "76:H76.4",
+  "spike": "76",
+  "id": "H76.4",
+  "verdict": "BROKEN",
+  "measured": "ES width 2/6",
+  "bar": ">= 0.8"
+ },
+ {
+  "key": "77:H77.1",
+  "spike": "77",
+  "id": "H77.1",
+  "verdict": "HELD",
+  "measured": "NLL Gibbs 4.4 vs energy 35.5, smooth 56.7",
+  "bar": "Gibbs < both"
+ },
+ {
+  "key": "77:H77.2",
+  "spike": "77",
+  "id": "H77.2",
+  "verdict": "HELD",
+  "measured": "argmax 50/51 (98%)",
+  "bar": ">= 75%"
+ },
+ {
+  "key": "77:H77.3",
+  "spike": "77",
+  "id": "H77.3",
+  "verdict": "HELD",
+  "measured": "exchange rate 2.8 -> 9.2 under noise",
+  "bar": "eta=1 rate > default"
+ },
+ {
+  "key": "78:H78.1",
+  "spike": "78",
+  "id": "H78.1",
+  "verdict": "HELD",
+  "measured": "unselected: 93.5%",
+  "bar": ">= 75%"
+ },
+ {
+  "key": "78:H78.2",
+  "spike": "78",
+  "id": "H78.2",
+  "verdict": "HELD",
+  "measured": "frozen rule beats rivals for LSTM, RNN, GRU+SGD",
+  "bar": "all"
+ },
+ {
+  "key": "78:H78.3",
+  "spike": "78",
+  "id": "H78.3",
+  "verdict": "HELD",
+  "measured": "per-learner LOO 77-100%",
+  "bar": ">= 70%"
+ },
+ {
+  "key": "78:H78.4",
+  "spike": "78",
+  "id": "H78.4",
+  "verdict": "NEITHER",
+  "measured": "frequency flip 12/24",
+  "bar": ">= 80% held, < 50% broken"
+ },
+ {
+  "key": "78:H78.5",
+  "spike": "78",
+  "id": "H78.5",
+  "verdict": "HELD",
+  "measured": "richer model -9.6% (worse)",
+  "bar": "< 10% improvement"
+ },
+ {
+  "key": "78:H78.6",
+  "spike": "78",
+  "id": "H78.6",
+  "verdict": "HELD",
+  "measured": "whitened 93.8%",
+  "bar": ">= 70%"
+ },
+ {
+  "key": "79:H79.1",
+  "spike": "79",
+  "id": "H79.1",
+  "verdict": "NEITHER",
+  "measured": "acc 96.7%; NLL 2.22 vs energy 2.08",
+  "bar": "acc >= 75% and NLL below both"
+ },
+ {
+  "key": "79:H79.2",
+  "spike": "79",
+  "id": "H79.2",
+  "verdict": "NO VERDICT",
+  "measured": "ES 0/18 fitted",
+  "bar": "guard"
+ },
+ {
+  "key": "79:H79.3",
+  "spike": "79",
+  "id": "H79.3",
+  "verdict": "HELD",
+  "measured": "transformer NLL 6.6 < 8.1, 33.2",
+  "bar": "below both"
+ },
+ {
+  "key": "79:H79.4",
+  "spike": "79",
+  "id": "H79.4",
+  "verdict": "BROKEN",
+  "measured": "chord 28.44 vs geodesic 28.33",
+  "bar": "chord < geodesic"
+ },
+ {
+  "key": "82:H82.1",
+  "spike": "82",
+  "id": "H82.1",
+  "verdict": "HELD",
+  "measured": "leading k = 1 in 3/3 models; NLL 0.08 vs 2.73, 9.19",
+  "bar": ">= 2/3 and NLL below rivals"
+ },
+ {
+  "key": "81:H81.1",
+  "spike": "81",
+  "id": "H81.1",
+  "verdict": "BROKEN",
+  "measured": "random 22%",
+  "bar": ">= 60% and NLL below rivals"
+ },
+ {
+  "key": "81:H81.2",
+  "spike": "81",
+  "id": "H81.2",
+  "verdict": "BROKEN",
+  "measured": "discriminating 39%",
+  "bar": "same"
+ },
+ {
+  "key": "81:H81.3",
+  "spike": "81",
+  "id": "H81.3",
+  "verdict": "BROKEN",
+  "measured": "non-permutation 29%",
+  "bar": "same"
+ },
+ {
+  "key": "80:H80.1",
+  "spike": "80",
+  "id": "H80.1",
+  "verdict": "HELD",
+  "measured": "chord 28.6 < geodesic 29.7",
+  "bar": "chord < geodesic"
+ },
+ {
+  "key": "80:H80.2",
+  "spike": "80",
+  "id": "H80.2",
+  "verdict": "HELD",
+  "measured": "ES 7/9",
+  "bar": ">= 75%"
+ },
+ {
+  "key": "80:H80.3",
+  "spike": "80",
+  "id": "H80.3",
+  "verdict": "HELD",
+  "measured": "78%; NLL 14.8 vs 17.4, 21.3",
+  "bar": ">= 70% and below both"
+ },
+ {
+  "key": "83:H83.1",
+  "spike": "83",
+  "id": "H83.1",
+  "verdict": "HELD",
+  "measured": "groups 16/20 invariant",
+  "bar": ">= 80%"
+ },
+ {
+  "key": "83:H83.2",
+  "spike": "83",
+  "id": "H83.2",
+  "verdict": "NEITHER",
+  "measured": "non-groups 17/26",
+  "bar": ">= 80% held, < 50% broken"
+ },
+ {
+  "key": "83:H83.3",
+  "spike": "83",
+  "id": "H83.3",
+  "verdict": "BROKEN",
+  "measured": "learned more invariant than kernel modes 5/26",
+  "bar": ">= 70%"
+ },
+ {
+  "key": "85:H85.1",
+  "spike": "85",
+  "id": "H85.1",
+  "verdict": "HELD",
+  "measured": "gibbs beats energy and cost in 2/3 (margins 0.015, 0.008; Pythia tied)",
+  "bar": ">= 2/3"
+ },
+ {
+  "key": "85:H85.2",
+  "spike": "85",
+  "id": "H85.2",
+  "verdict": "HELD",
+  "measured": "median rho 0.581",
+  "bar": ">= 0.5"
+ },
+ {
+  "key": "84:H84.1",
+  "spike": "84",
+  "id": "H84.1",
+  "verdict": "NEITHER",
+  "measured": "29/37 (78.4%)",
+  "bar": ">= 80% held, < 50% broken"
+ },
+ {
+  "key": "84:H84.2",
+  "spike": "84",
+  "id": "H84.2",
+  "verdict": "HELD",
+  "measured": "27/37 (73%)",
+  "bar": ">= 70%"
+ },
+ {
+  "key": "84:H84.3",
+  "spike": "84",
+  "id": "H84.3",
+  "verdict": "HELD",
+  "measured": "37/37 (vacuous: O is the whole space for minimal automata)",
+  "bar": ">= 80%"
+ },
+ {
+  "key": "86:H86.1",
+  "spike": "86",
+  "id": "H86.1",
+  "verdict": "NEITHER",
+  "measured": "race winner leads 35/60 (58%)",
+  "bar": ">= 75% held, < 50% broken"
+ },
+ {
+  "key": "86:H86.2",
+  "spike": "86",
+  "id": "H86.2",
+  "verdict": "NEITHER",
+  "measured": "energy coef CI [0.035,0.119]; cost coef CI [-0.62,0.70]",
+  "bar": "both CIs exclude 0, right signs"
+ },
+ {
+  "key": "86:H86.3",
+  "spike": "86",
+  "id": "H86.3",
+  "verdict": "HELD",
+  "measured": "energy coef with log-dim covariate CI [0.020,0.154]",
+  "bar": "CI > 0"
+ },
+ {
+  "key": "86:H86.4",
+  "spike": "86",
+  "id": "H86.4",
+  "verdict": "NO VERDICT",
+  "measured": "too few fitted small-init near-tie runs (23/64)",
+  "bar": ">= 5 automata"
+ },
+ {
+  "key": "86:H86.5",
+  "spike": "86",
+  "id": "H86.5",
+  "verdict": "BROKEN",
+  "measured": "cheaper-block share W 0.65 vs D 0.69",
+  "bar": "W - D >= 0.10"
+ },
+ {
+  "key": "86:H86.6",
+  "spike": "86",
+  "id": "H86.6",
+  "verdict": "BROKEN",
+  "measured": "NLL linear 66.0 vs log 59.1",
+  "bar": "linear < log"
+ },
+ {
+  "key": "87:H87.1",
+  "spike": "87",
+  "id": "H87.1",
+  "verdict": "HELD",
+  "measured": "28/33 (85%)",
+  "bar": ">= 75%"
+ },
+ {
+  "key": "87:H87.2",
+  "spike": "87",
+  "id": "H87.2",
+  "verdict": "HELD",
+  "measured": "96% vs kernel top mode",
+  "bar": ">= 70%"
+ },
+ {
+  "key": "87:H87.3",
+  "spike": "87",
+  "id": "H87.3",
+  "verdict": "BROKEN",
+  "measured": "MLP readout 8/30 (27%), median 0.61",
+  "bar": ">= 75% held, < 50% broken"
+ },
+ {
+  "key": "87:H87.4",
+  "spike": "87",
+  "id": "H87.4",
+  "verdict": "HELD",
+  "measured": "97% vs Gibbs mode",
+  "bar": ">= 70%"
+ },
+ {
+  "key": "87:H87.5",
+  "spike": "87",
+  "id": "H87.5",
+  "verdict": "HELD",
+  "measured": "12/12 vs pi-head",
+  "bar": ">= 70%"
+ }
+]

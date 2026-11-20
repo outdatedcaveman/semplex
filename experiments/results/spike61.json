@@ -1,0 +1,1126 @@
+{
+ "verdicts": {
+  "H61.1": "NEITHER",
+  "H61.2": "BROKEN"
+ },
+ "n_words": 6163,
+ "frac_pairs_sparse_beats_dense_by_0.05": 0.12087912087912088,
+ "frac_pairs_sparse_le_dense": 0.34065934065934067,
+ "median_sparse": 0.14806621613976684,
+ "median_dense": 0.14612693870453022,
+ "shuffle_null_sparse": 0.07809150573800872,
+ "n_universal": 0,
+ "frac_universal": 0.0,
+ "universal_atoms": [],
+ "reference_atom_matches": {},
+ "formulas": {
+  "king": [
+   [
+    5,
+    0.124,
+    false
+   ],
+   [
+    230,
+    0.12,
+    false
+   ],
+   [
+    226,
+    0.118,
+    false
+   ],
+   [
+    124,
+    0.106,
+    false
+   ],
+   [
+    128,
+    0.086,
+    false
+   ]
+  ],
+  "queen": [
+   [
+    24,
+    0.214,
+    false
+   ],
+   [
+    151,
+    0.174,
+    false
+   ],
+   [
+    5,
+    0.14,
+    false
+   ],
+   [
+    46,
+    0.089,
+    false
+   ],
+   [
+    110,
+    -0.086,
+    false
+   ]
+  ],
+  "water": [
+   [
+    75,
+    0.22,
+    false
+   ],
+   [
+    238,
+    0.185,
+    false
+   ],
+   [
+    6,
+    0.178,
+    false
+   ],
+   [
+    51,
+    0.175,
+    false
+   ],
+   [
+    141,
+    -0.126,
+    false
+   ]
+  ],
+  "money": [
+   [
+    14,
+    0.197,
+    false
+   ],
+   [
+    253,
+    0.142,
+    false
+   ],
+   [
+    169,
+    0.138,
+    false
+   ],
+   [
+    114,
+    0.135,
+    false
+   ],
+   [
+    65,
+    -0.112,
+    false
+   ]
+  ],
+  "love": [
+   [
+    208,
+    0.291,
+    false
+   ],
+   [
+    249,
+    0.226,
+    false
+   ],
+   [
+    52,
+    0.155,
+    false
+   ],
+   [
+    1,
+    -0.137,
+    false
+   ],
+   [
+    149,
+    0.133,
+    false
+   ]
+  ],
+  "running": [
+   [
+    247,
+    0.273,
+    false
+   ],
+   [
+    130,
+    0.174,
+    false
+   ],
+   [
+    238,
+    0.134,
+    false
+   ],
+   [
+    112,
+    0.131,
+    false
+   ],
+   [
+    140,
+    0.121,
+    false
+   ]
+  ],
+  "happy": [
+   [
+    9,
+    0.226,
+    false
+   ],
+   [
+    190,
+    0.197,
+    false
+   ],
+   [
+    142,
+    -0.131,
+    false
+   ],
+   [
+    208,
+    0.128,
+    false
+   ],
+   [
+    230,
+    0.123,
+    false
+   ]
+  ],
+  "three": [
+   [
+    7,
+    0.706,
+    false
+   ],
+   [
+    238,
+    0.118,
+    false
+   ],
+   [
+    178,
+    0.098,
+    false
+   ],
+   [
+    44,
+    0.078,
+    false
+   ],
+   [
+    197,
+    0.064,
+    false
+   ]
+  ],
+  "red": [
+   [
+    136,
+    0.192,
+    false
+   ],
+   [
+    7,
+    0.13,
+    false
+   ],
+   [
+    238,
+    0.127,
+    false
+   ],
+   [
+    101,
+    0.121,
+    false
+   ],
+   [
+    120,
+    -0.12,
+    false
+   ]
+  ],
+  "doctor": [
+   [
+    126,
+    0.319,
+    false
+   ],
+   [
+    79,
+    0.173,
+    false
+   ],
+   [
+    151,
+    0.151,
+    false
+   ],
+   [
+    144,
+    0.117,
+    false
+   ],
+   [
+    82,
+    0.108,
+    false
+   ]
+  ],
+  "fear": [
+   [
+    190,
+    0.421,
+    false
+   ],
+   [
+    235,
+    0.154,
+    false
+   ],
+   [
+    137,
+    0.148,
+    false
+   ],
+   [
+    249,
+    0.129,
+    false
+   ],
+   [
+    250,
+    -0.093,
+    false
+   ]
+  ],
+  "justice": [
+   [
+    102,
+    1.0,
+    false
+   ],
+   [
+    5,
+    -0.001,
+    false
+   ],
+   [
+    79,
+    0.001,
+    false
+   ],
+   [
+    101,
+    -0.001,
+    false
+   ],
+   [
+    195,
+    0.001,
+    false
+   ]
+  ],
+  "dog": [
+   [
+    59,
+    0.146,
+    false
+   ],
+   [
+    70,
+    0.115,
+    false
+   ],
+   [
+    121,
+    -0.112,
+    false
+   ],
+   [
+    1,
+    -0.109,
+    false
+   ],
+   [
+    201,
+    0.103,
+    false
+   ]
+  ],
+  "computer": [
+   [
+    161,
+    0.129,
+    false
+   ],
+   [
+    110,
+    0.109,
+    false
+   ],
+   [
+    127,
+    0.108,
+    false
+   ],
+   [
+    232,
+    0.107,
+    false
+   ],
+   [
+    143,
+    -0.102,
+    false
+   ]
+  ]
+ },
+ "pairs": [
+  {
+   "pair": [
+    "openai-community/gpt2",
+    "EleutherAI/pythia-410m"
+   ],
+   "sparse": 0.15864475341647644,
+   "dense": 0.1575889150196596
+  },
+  {
+   "pair": [
+    "openai-community/gpt2",
+    "EleutherAI/pythia-6.9b"
+   ],
+   "sparse": 0.1419527408734379,
+   "dense": 0.138319437165744
+  },
+  {
+   "pair": [
+    "openai-community/gpt2",
+    "Qwen/Qwen2.5-0.5B"
+   ],
+   "sparse": 0.14996011367343848,
+   "dense": 0.1443029578319891
+  },
+  {
+   "pair": [
+    "openai-community/gpt2",
+    "Qwen/Qwen2.5-7B"
+   ],
+   "sparse": 0.13843673669117593,
+   "dense": 0.14260582306890862
+  },
+  {
+   "pair": [
+    "openai-community/gpt2",
+    "mistralai/Mistral-7B-v0.1"
+   ],
+   "sparse": 0.15173252937993925,
+   "dense": 0.15621112115706964
+  },
+  {
+   "pair": [
+    "openai-community/gpt2",
+    "allenai/OLMo-2-1124-7B"
+   ],
+   "sparse": 0.16678434078371107,
+   "dense": 0.18066149853793095
+  },
+  {
+   "pair": [
+    "openai-community/gpt2",
+    "HuggingFaceTB/SmolLM2-360M"
+   ],
+   "sparse": 0.1551642383412557,
+   "dense": 0.1420608443400531
+  },
+  {
+   "pair": [
+    "openai-community/gpt2",
+    "tiiuae/falcon-7b"
+   ],
+   "sparse": 0.18958618690121476,
+   "dense": 0.20636930269966675
+  },
+  {
+   "pair": [
+    "openai-community/gpt2",
+    "microsoft/phi-2"
+   ],
+   "sparse": 0.152012804202024,
+   "dense": 0.15402542070176092
+  },
+  {
+   "pair": [
+    "openai-community/gpt2",
+    "bigscience/bloom-560m"
+   ],
+   "sparse": 0.14933092140012802,
+   "dense": 0.1359588870775652
+  },
+  {
+   "pair": [
+    "openai-community/gpt2",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "sparse": 0.1330070300232148,
+   "dense": 0.1386772492689327
+  },
+  {
+   "pair": [
+    "openai-community/gpt2",
+    "01-ai/Yi-6B"
+   ],
+   "sparse": 0.134867419204547,
+   "dense": 0.1481085288026902
+  },
+  {
+   "pair": [
+    "openai-community/gpt2",
+    "internlm/internlm2_5-7b"
+   ],
+   "sparse": 0.1462251550523779,
+   "dense": 0.14453498353999022
+  },
+  {
+   "pair": [
+    "EleutherAI/pythia-410m",
+    "EleutherAI/pythia-6.9b"
+   ],
+   "sparse": 0.13505047866274028,
+   "dense": 0.1667835995614405
+  },
+  {
+   "pair": [
+    "EleutherAI/pythia-410m",
+    "Qwen/Qwen2.5-0.5B"
+   ],
+   "sparse": 0.14806621613976684,
+   "dense": 0.12258483246037016
+  },
+  {
+   "pair": [
+    "EleutherAI/pythia-410m",
+    "Qwen/Qwen2.5-7B"
+   ],
+   "sparse": 0.13969757212039863,
+   "dense": 0.14889988869055631
+  },
+  {
+   "pair": [
+    "EleutherAI/pythia-410m",
+    "mistralai/Mistral-7B-v0.1"
+   ],
+   "sparse": 0.14870016219693272,
+   "dense": 0.15486424404727966
+  },
+  {
+   "pair": [
+    "EleutherAI/pythia-410m",
+    "allenai/OLMo-2-1124-7B"
+   ],
+   "sparse": 0.16204916632543828,
+   "dense": 0.1794842088837032
+  },
+  {
+   "pair": [
+    "EleutherAI/pythia-410m",
+    "HuggingFaceTB/SmolLM2-360M"
+   ],
+   "sparse": 0.1395376684065015,
+   "dense": 0.11848910951468292
+  },
+  {
+   "pair": [
+    "EleutherAI/pythia-410m",
+    "tiiuae/falcon-7b"
+   ],
+   "sparse": 0.15569497834258172,
+   "dense": 0.14754165330471095
+  },
+  {
+   "pair": [
+    "EleutherAI/pythia-410m",
+    "microsoft/phi-2"
+   ],
+   "sparse": 0.14653037072346003,
+   "dense": 0.15937925791154006
+  },
+  {
+   "pair": [
+    "EleutherAI/pythia-410m",
+    "bigscience/bloom-560m"
+   ],
+   "sparse": 0.3188575837547949,
+   "dense": 0.12099528110630223
+  },
+  {
+   "pair": [
+    "EleutherAI/pythia-410m",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "sparse": 0.12028806187264582,
+   "dense": 0.1433359356823969
+  },
+  {
+   "pair": [
+    "EleutherAI/pythia-410m",
+    "01-ai/Yi-6B"
+   ],
+   "sparse": 0.13014158917073512,
+   "dense": 0.14634340320722097
+  },
+  {
+   "pair": [
+    "EleutherAI/pythia-410m",
+    "internlm/internlm2_5-7b"
+   ],
+   "sparse": 0.14200434651528304,
+   "dense": 0.14612693870453022
+  },
+  {
+   "pair": [
+    "EleutherAI/pythia-6.9b",
+    "Qwen/Qwen2.5-0.5B"
+   ],
+   "sparse": 0.14400763730852617,
+   "dense": 0.11298950951017457
+  },
+  {
+   "pair": [
+    "EleutherAI/pythia-6.9b",
+    "Qwen/Qwen2.5-7B"
+   ],
+   "sparse": 0.12481178447865335,
+   "dense": 0.13573910559456687
+  },
+  {
+   "pair": [
+    "EleutherAI/pythia-6.9b",
+    "mistralai/Mistral-7B-v0.1"
+   ],
+   "sparse": 0.36778785702049566,
+   "dense": 0.14802579997133258
+  },
+  {
+   "pair": [
+    "EleutherAI/pythia-6.9b",
+    "allenai/OLMo-2-1124-7B"
+   ],
+   "sparse": 0.3681621328548481,
+   "dense": 0.15946317044817965
+  },
+  {
+   "pair": [
+    "EleutherAI/pythia-6.9b",
+    "HuggingFaceTB/SmolLM2-360M"
+   ],
+   "sparse": 0.13517685764555165,
+   "dense": 0.11132560460298982
+  },
+  {
+   "pair": [
+    "EleutherAI/pythia-6.9b",
+    "tiiuae/falcon-7b"
+   ],
+   "sparse": 0.15235213539918355,
+   "dense": 0.13672306157014744
+  },
+  {
+   "pair": [
+    "EleutherAI/pythia-6.9b",
+    "microsoft/phi-2"
+   ],
+   "sparse": 0.15502102465705017,
+   "dense": 0.14920725937047988
+  },
+  {
+   "pair": [
+    "EleutherAI/pythia-6.9b",
+    "bigscience/bloom-560m"
+   ],
+   "sparse": 0.12926072754496493,
+   "dense": 0.11314081834441075
+  },
+  {
+   "pair": [
+    "EleutherAI/pythia-6.9b",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "sparse": 0.12598098882377531,
+   "dense": 0.13101154498511008
+  },
+  {
+   "pair": [
+    "EleutherAI/pythia-6.9b",
+    "01-ai/Yi-6B"
+   ],
+   "sparse": 0.37352731338770206,
+   "dense": 0.14134447542508471
+  },
+  {
+   "pair": [
+    "EleutherAI/pythia-6.9b",
+    "internlm/internlm2_5-7b"
+   ],
+   "sparse": 0.37878389430526166,
+   "dense": 0.14052865106988727
+  },
+  {
+   "pair": [
+    "Qwen/Qwen2.5-0.5B",
+    "Qwen/Qwen2.5-7B"
+   ],
+   "sparse": 0.1346340021919986,
+   "dense": 0.12326941966014748
+  },
+  {
+   "pair": [
+    "Qwen/Qwen2.5-0.5B",
+    "mistralai/Mistral-7B-v0.1"
+   ],
+   "sparse": 0.15226525942237432,
+   "dense": 0.13432716278192022
+  },
+  {
+   "pair": [
+    "Qwen/Qwen2.5-0.5B",
+    "allenai/OLMo-2-1124-7B"
+   ],
+   "sparse": 0.1623509146473319,
+   "dense": 0.14957012292135896
+  },
+  {
+   "pair": [
+    "Qwen/Qwen2.5-0.5B",
+    "HuggingFaceTB/SmolLM2-360M"
+   ],
+   "sparse": 0.15763294027329228,
+   "dense": 0.16074614660881842
+  },
+  {
+   "pair": [
+    "Qwen/Qwen2.5-0.5B",
+    "tiiuae/falcon-7b"
+   ],
+   "sparse": 0.17293053087896998,
+   "dense": 0.14528853733217997
+  },
+  {
+   "pair": [
+    "Qwen/Qwen2.5-0.5B",
+    "microsoft/phi-2"
+   ],
+   "sparse": 0.1450154100048784,
+   "dense": 0.12691744481588488
+  },
+  {
+   "pair": [
+    "Qwen/Qwen2.5-0.5B",
+    "bigscience/bloom-560m"
+   ],
+   "sparse": 0.14961763163471617,
+   "dense": 0.14376687842831704
+  },
+  {
+   "pair": [
+    "Qwen/Qwen2.5-0.5B",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "sparse": 0.12920891965070141,
+   "dense": 0.11682895270088853
+  },
+  {
+   "pair": [
+    "Qwen/Qwen2.5-0.5B",
+    "01-ai/Yi-6B"
+   ],
+   "sparse": 0.1375907483239756,
+   "dense": 0.1259214960936633
+  },
+  {
+   "pair": [
+    "Qwen/Qwen2.5-0.5B",
+    "internlm/internlm2_5-7b"
+   ],
+   "sparse": 0.13747062169475133,
+   "dense": 0.12848436579680184
+  },
+  {
+   "pair": [
+    "Qwen/Qwen2.5-7B",
+    "mistralai/Mistral-7B-v0.1"
+   ],
+   "sparse": 0.13954455642075464,
+   "dense": 0.1705728859125734
+  },
+  {
+   "pair": [
+    "Qwen/Qwen2.5-7B",
+    "allenai/OLMo-2-1124-7B"
+   ],
+   "sparse": 0.14692749670788433,
+   "dense": 0.17307490887575816
+  },
+  {
+   "pair": [
+    "Qwen/Qwen2.5-7B",
+    "HuggingFaceTB/SmolLM2-360M"
+   ],
+   "sparse": 0.12958139175637115,
+   "dense": 0.11359977487661053
+  },
+  {
+   "pair": [
+    "Qwen/Qwen2.5-7B",
+    "tiiuae/falcon-7b"
+   ],
+   "sparse": 0.1478227810554429,
+   "dense": 0.13895319958514157
+  },
+  {
+   "pair": [
+    "Qwen/Qwen2.5-7B",
+    "microsoft/phi-2"
+   ],
+   "sparse": 0.12114578174980704,
+   "dense": 0.15712085582853919
+  },
+  {
+   "pair": [
+    "Qwen/Qwen2.5-7B",
+    "bigscience/bloom-560m"
+   ],
+   "sparse": 0.13655192284113082,
+   "dense": 0.11918221265982858
+  },
+  {
+   "pair": [
+    "Qwen/Qwen2.5-7B",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "sparse": 0.1177318136913178,
+   "dense": 0.15169584448421813
+  },
+  {
+   "pair": [
+    "Qwen/Qwen2.5-7B",
+    "01-ai/Yi-6B"
+   ],
+   "sparse": 0.1314789538142881,
+   "dense": 0.15064568074247142
+  },
+  {
+   "pair": [
+    "Qwen/Qwen2.5-7B",
+    "internlm/internlm2_5-7b"
+   ],
+   "sparse": 0.1326242127040455,
+   "dense": 0.16317133785679525
+  },
+  {
+   "pair": [
+    "mistralai/Mistral-7B-v0.1",
+    "allenai/OLMo-2-1124-7B"
+   ],
+   "sparse": 0.5399850998311383,
+   "dense": 0.20095571502013898
+  },
+  {
+   "pair": [
+    "mistralai/Mistral-7B-v0.1",
+    "HuggingFaceTB/SmolLM2-360M"
+   ],
+   "sparse": 0.15041200322531162,
+   "dense": 0.12552349810896374
+  },
+  {
+   "pair": [
+    "mistralai/Mistral-7B-v0.1",
+    "tiiuae/falcon-7b"
+   ],
+   "sparse": 0.1620794585447832,
+   "dense": 0.1584608336047727
+  },
+  {
+   "pair": [
+    "mistralai/Mistral-7B-v0.1",
+    "microsoft/phi-2"
+   ],
+   "sparse": 0.16394826399572918,
+   "dense": 0.16380757481493552
+  },
+  {
+   "pair": [
+    "mistralai/Mistral-7B-v0.1",
+    "bigscience/bloom-560m"
+   ],
+   "sparse": 0.15319238930495244,
+   "dense": 0.1322046465645843
+  },
+  {
+   "pair": [
+    "mistralai/Mistral-7B-v0.1",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "sparse": 0.13309976691444733,
+   "dense": 0.17422243308819868
+  },
+  {
+   "pair": [
+    "mistralai/Mistral-7B-v0.1",
+    "01-ai/Yi-6B"
+   ],
+   "sparse": 0.37824823822681625,
+   "dense": 0.19308703943801497
+  },
+  {
+   "pair": [
+    "mistralai/Mistral-7B-v0.1",
+    "internlm/internlm2_5-7b"
+   ],
+   "sparse": 0.3883582758491654,
+   "dense": 0.2389452334742696
+  },
+  {
+   "pair": [
+    "allenai/OLMo-2-1124-7B",
+    "HuggingFaceTB/SmolLM2-360M"
+   ],
+   "sparse": 0.16304402646650484,
+   "dense": 0.14670868748012283
+  },
+  {
+   "pair": [
+    "allenai/OLMo-2-1124-7B",
+    "tiiuae/falcon-7b"
+   ],
+   "sparse": 0.1809439079511199,
+   "dense": 0.18304880439204535
+  },
+  {
+   "pair": [
+    "allenai/OLMo-2-1124-7B",
+    "microsoft/phi-2"
+   ],
+   "sparse": 0.17995437536026287,
+   "dense": 0.1931649793829808
+  },
+  {
+   "pair": [
+    "allenai/OLMo-2-1124-7B",
+    "bigscience/bloom-560m"
+   ],
+   "sparse": 0.16131565582994112,
+   "dense": 0.13629408538323107
+  },
+  {
+   "pair": [
+    "allenai/OLMo-2-1124-7B",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "sparse": 0.14321300204863047,
+   "dense": 0.1725254302303995
+  },
+  {
+   "pair": [
+    "allenai/OLMo-2-1124-7B",
+    "01-ai/Yi-6B"
+   ],
+   "sparse": 0.3863961443166055,
+   "dense": 0.18667469080002724
+  },
+  {
+   "pair": [
+    "allenai/OLMo-2-1124-7B",
+    "internlm/internlm2_5-7b"
+   ],
+   "sparse": 0.3791462156156221,
+   "dense": 0.18510931374310652
+  },
+  {
+   "pair": [
+    "HuggingFaceTB/SmolLM2-360M",
+    "tiiuae/falcon-7b"
+   ],
+   "sparse": 0.18142537473208134,
+   "dense": 0.14417273945283873
+  },
+  {
+   "pair": [
+    "HuggingFaceTB/SmolLM2-360M",
+    "microsoft/phi-2"
+   ],
+   "sparse": 0.14084683104320644,
+   "dense": 0.12353623635612004
+  },
+  {
+   "pair": [
+    "HuggingFaceTB/SmolLM2-360M",
+    "bigscience/bloom-560m"
+   ],
+   "sparse": 0.14408976973441978,
+   "dense": 0.133799361961303
+  },
+  {
+   "pair": [
+    "HuggingFaceTB/SmolLM2-360M",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "sparse": 0.13257656350775765,
+   "dense": 0.11152720309955544
+  },
+  {
+   "pair": [
+    "HuggingFaceTB/SmolLM2-360M",
+    "01-ai/Yi-6B"
+   ],
+   "sparse": 0.14099801766073564,
+   "dense": 0.12429311415449218
+  },
+  {
+   "pair": [
+    "HuggingFaceTB/SmolLM2-360M",
+    "internlm/internlm2_5-7b"
+   ],
+   "sparse": 0.1495041015712402,
+   "dense": 0.12134829478591619
+  },
+  {
+   "pair": [
+    "tiiuae/falcon-7b",
+    "microsoft/phi-2"
+   ],
+   "sparse": 0.1691941252173576,
+   "dense": 0.14925756149687452
+  },
+  {
+   "pair": [
+    "tiiuae/falcon-7b",
+    "bigscience/bloom-560m"
+   ],
+   "sparse": 0.15854755898159653,
+   "dense": 0.13649290882994788
+  },
+  {
+   "pair": [
+    "tiiuae/falcon-7b",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "sparse": 0.14307370428103758,
+   "dense": 0.14150647302808694
+  },
+  {
+   "pair": [
+    "tiiuae/falcon-7b",
+    "01-ai/Yi-6B"
+   ],
+   "sparse": 0.15293617029601242,
+   "dense": 0.15248267193959736
+  },
+  {
+   "pair": [
+    "tiiuae/falcon-7b",
+    "internlm/internlm2_5-7b"
+   ],
+   "sparse": 0.1640412999995783,
+   "dense": 0.1482967322660702
+  },
+  {
+   "pair": [
+    "microsoft/phi-2",
+    "bigscience/bloom-560m"
+   ],
+   "sparse": 0.13567506292829407,
+   "dense": 0.12109292686666841
+  },
+  {
+   "pair": [
+    "microsoft/phi-2",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "sparse": 0.1266445625097623,
+   "dense": 0.14692366628003467
+  },
+  {
+   "pair": [
+    "microsoft/phi-2",
+    "01-ai/Yi-6B"
+   ],
+   "sparse": 0.15413874498658325,
+   "dense": 0.15360283915630527
+  },
+  {
+   "pair": [
+    "microsoft/phi-2",
+    "internlm/internlm2_5-7b"
+   ],
+   "sparse": 0.1622327895950719,
+   "dense": 0.1510268355382262
+  },
+  {
+   "pair": [
+    "bigscience/bloom-560m",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "sparse": 0.11771542582243232,
+   "dense": 0.11347301231483833
+  },
+  {
+   "pair": [
+    "bigscience/bloom-560m",
+    "01-ai/Yi-6B"
+   ],
+   "sparse": 0.12633320965789535,
+   "dense": 0.12242511377272411
+  },
+  {
+   "pair": [
+    "bigscience/bloom-560m",
+    "internlm/internlm2_5-7b"
+   ],
+   "sparse": 0.1447769037909778,
+   "dense": 0.12658022972182015
+  },
+  {
+   "pair": [
+    "stabilityai/stablelm-2-1_6b",
+    "01-ai/Yi-6B"
+   ],
+   "sparse": 0.12664901934748687,
+   "dense": 0.15939135966247847
+  },
+  {
+   "pair": [
+    "stabilityai/stablelm-2-1_6b",
+    "internlm/internlm2_5-7b"
+   ],
+   "sparse": 0.13021592952709496,
+   "dense": 0.16204873018995125
+  },
+  {
+   "pair": [
+    "01-ai/Yi-6B",
+    "internlm/internlm2_5-7b"
+   ],
+   "sparse": 0.3741904248763941,
+   "dense": 0.18515387735889102
+  }
+ ]
+}

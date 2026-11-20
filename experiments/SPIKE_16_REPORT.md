@@ -1,78 +1,57 @@
-# Spike 16 Report — Width-Coarsening (`H-D`), XOR6 Grokking (`H-C`), Depth-3 Separation (`H-E`), and Scaled `ur_compiler` Benchmarks
+# Spike 16: Is symmetry inheritance the kernel limit? Does generalization track the symmetry deficit? Does stabilizer symmetrization help where predicted?
 
-**Date:** 2026-11-13  
-**Script:** [spike16_scale_and_coarsening.py](file:///C:/Users/bruno/Claude%20Code/semplex/experiments/spike16_scale_and_coarsening.py)  
-**Raw output:** [spike16_results.json](file:///C:/Users/bruno/Claude%20Code/semplex/experiments/spike16_results.json)  
-**Trust status:** Untrusted empirical runs (JAX 0.12.0.1 + OR-Tools CP-SAT 9.15.6755 in `%TEMP%\semplex_extras_venv`), except where noted as Lean-certified.
+**Date:** 2026-11-12 · **Status:** complete. Pre-registered in commit `b661527` before any run · **Follows:** Spike 15 F1 and F3; program `charter/PROGRAM_SYMMETRY.md` T4
 
----
+## Setup
 
-## 1. Local Learning Rules Diagnostic (`test_localrules.py`)
+- **Cells:** four, from Spike 15: tanh-W8-AdamW, ReLU-W8-AdamW, tanh-W8-GD, tanh-W64-AdamW. Fresh seeds (base 16 000).
+- **Part 1:** Spike 15's 240 symmetric partial tasks, 5 seeds each. **Kernel prediction:** the completion given by ridgeless regression with the network's Monte Carlo NTK (200,000 units, the same initialization law) on ±1 targets.
+- **Parts 2–3:** 600 *planted* tasks. A random 4-input target f\* (a random member of a random class) and a random set of 8 labelled inputs. Only tasks are kept whose labelled data have a nontrivial stabilizer G_data: the input permutations and negations mapping the labelled set to itself with labels preserved. G_data is computed exactly from the data; nothing about f\* is used. f\* either keeps G_data (38% of tasks) or breaks it (62%). Three seeds each.
+- **Method (part 3):** average the trained network's logits over G_data at test time. This is the simplest form of the stabilizer-consistency method in the program, §3.
 
-Diagnosed the intermittent `0.875 < 0.9` failure in `tests/test_localrules.py::test_search_keeps_a_working_rule_working` (without relaxing the `0.9` assertion):
-- Observed CEM run: `hist: [[0.0419, 0.917], [0.0326, 1.0], [0.035, 0.917], [0.0395, 0.875]]`, `a[bp]: 1.0`.
-- Pure backpropagation (`warm`) across 20 random initialization batches achieved `mean = 0.9521`, `min = 0.875` (`21/24`), `max = 1.0`.
-- **Conclusion:** `cem_search` did not drop backprop (`a[bp] == 1.0`); the failure is Monte-Carlo initialization variance on `rng(1)` generation 3.
+## Hypotheses and kill criteria
 
----
+| # | Hypothesis | Held if | Broken if |
+|---|---|---|---|
+| H16.1 | **Inheritance is not the kernel limit:** when the learned completion is symmetric, it often differs from the kernel completion | P(learned = kernel \| learned symmetric) ≤ 0.5 in every cell | ≥ 0.8 in every cell (then inheritance ≈ kernel proximity) |
+| H16.2 | The kernel completion is a worse model of training than the Curie+simplicity description: it is cheapest less often than the nets (93–98%, Spike 15) | kernel cheapest share ≤ 0.8 | ≥ 0.93 |
+| H16.3 | **T4a, symmetry deficit:** held-out accuracy is higher when f\* keeps G_data than when it breaks it | difference ≥ 0.10 in every cell | ≤ 0 in any |
+| H16.4 | **T4b, error localization:** errors concentrate on free inputs lying in G_data-orbits where f\* is not constant | error rate there ≥ 2× the rate on orbits where f\* is constant, every cell | ≤ 1× in any |
+| H16.5 | **Method, where predicted:** symmetrizing over G_data helps when f\* keeps G_data and hurts when it breaks it | gain > 0 for keeping targets **and** < 0 for breaking targets, every cell | gain ≤ 0 for keeping targets in any cell |
 
-## 2. `H-A` & `H-D` (Cammarata Width-Coarsening) at $n = 8$
+Caveat stated in advance: H16.3 is confounded if keeping targets are simpler than breaking ones. The mean atlas cost of each group is reported; if they differ by more than 0.3 neurons, H16.3 is downgraded to "neither" whatever the accuracy difference.
 
-Target: $f(x_0..x_7) = (x_0 \oplus x_1 \oplus x_2 \oplus x_3) \land ((x_4 \lor x_5) \oplus (x_6 \land x_7))$, canonical encoder code bit $c(x_0..x_3) = x_0 \oplus x_1 \oplus x_2 \oplus x_3$.
+## Results (`results/spike16.json`)
 
-- **`ur_compiler.compile_profile_factored`:** `decomposed=True`, `profile_rank=1`, `circuit_cost={"gates": 36, "depth": 10}`, `atlas_min_neurons=9`, `tnet_nodes=9`, runtime `0.0524s`.
-- **JAX `tanh` MLPs (5 seeds each, 800 Adam steps, L2 `1e-4`):**
+| Cell | Kernel completion symmetric | Kernel completion cheapest | P(learned = kernel \| learned symmetric) | Held-out acc.: f\* keeps / breaks G_data | Error rate on orbits where f\* breaks / keeps | Symmetrization gain: keeps / breaks |
+|---|---|---|---|---|---|---|
+| tanh-W8-AdamW | 0.97 | 0.93 | 0.64 | 0.520 / 0.523 | 0.50 / 0.47 | +0.003 / +0.002 |
+| ReLU-W8-AdamW | 0.94 | 0.92 | 0.67 | 0.513 / 0.516 | 0.50 / 0.48 | 0.000 / 0.000 |
+| tanh-W8-GD | 0.97 | 0.93 | 0.68 | 0.523 / 0.522 | 0.50 / 0.47 | −0.001 / −0.002 |
+| tanh-W64-AdamW | 0.97 | 0.93 | 0.66 | 0.518 / 0.525 | 0.50 / 0.47 | +0.001 / +0.003 |
 
-| Width | Mean Acc (Min–Max) | Max Single-Unit `|corr(h_j, c)|` | Subspace Linear Probe $R^2(H \to c)$ |
-|---:|---:|---:|---:|
-| 4 | 0.8289 (0.6875–0.9453) | 0.1972 | 0.2805 |
-| 8 | 0.9945 (0.9883–1.0000) | 0.3713 | 0.6912 |
-| 16 | 1.0000 (1.0000–1.0000) | 0.3463 | 0.9034 |
-| 32 | 1.0000 (1.0000–1.0000) | 0.3062 | 0.9850 |
+Mean atlas cost: 3.08 (keeping targets) vs 3.29 (breaking), a difference of 0.20, below the 0.3 confound threshold.
 
-- **Finding:** Once accuracy saturates (`width 8 -> 16 -> 32`), **single-unit monosemanticity (`H-A`) degrades steadily (`0.3713 -> 0.3463 -> 0.3062`) while linear-subspace recovery (`R^2`) rises sharply to `0.9850`** (`H-D`). Overparameterization recovers the Ur-Compiler's canonical `profile_rank=1` bit in a distributed linear subspace rather than in isolated neurons.
+## Hypotheses and verdicts
 
----
+| # | Verdict |
+|---|---|
+| H16.1 | **Neither.** Learned symmetric completions equal the kernel's 64–68% of the time: the kernel limit explains most, not all, of symmetry inheritance. |
+| H16.2 | **Broken in 2 of 4 cells, neither in 2.** The kernel completion is cheapest 92–93% of the time, about as often as trained nets. The kernel limit accounts for the simplicity bias on these tasks as well. |
+| H16.3 | **Broken.** Held-out accuracy is at chance (≈0.52) and does not depend on whether f\* keeps the data's stabilizer. |
+| H16.4 | **Neither** (ratio 1.04–1.07). |
+| H16.5 | **Broken.** Symmetrizing over G_data changes nothing (|gain| ≤ 0.003). |
 
-## 3. `H-C` (Longer-Horizon XOR6 Grokking)
+## Findings
 
-Trained 64-wide `tanh` MLPs on `XOR6` ($n = 6$, 64 total points) for 3,000 Adam steps across weight decays `wd in {0.0, 0.01, 0.05}` (3 seeds each):
+**F1. The function-level "Curie" result of Spikes 14–15 is mostly the kernel limit.** Kernel interpolation with the network's own NTK is symmetric on symmetric data (94–97%) and cheap (92–93%). It predicts the trained network's completion in about two thirds of the cases where that completion is symmetric. Kernel methods inheriting the invariances of their kernel is known (for example, work on learning with invariances in random-features and kernel models). Spike 15 F1 should therefore not be presented as a new principle. What remains unexplained by the kernel is the third of symmetric completions that differ from the kernel's choice, and the finite-network deviation from it.
 
-| `n_train` | `wd` | Train Acc Mean | Test Acc Mean (Max) | Grokking Steps (`>=0.95`) |
-|---:|---:|---:|---:|---|
-| 32 | 0.00 | 1.0000 | 0.5833 (0.6563) | `[None, None, None]` |
-| 32 | 0.01 | 1.0000 | 0.4479 (0.5313) | `[None, None, None]` |
-| 32 | 0.05 | 0.7083 | 0.2917 (0.3125) | `[None, None, None]` |
-| 48 | 0.00 | 1.0000 | **0.9375 (1.0000)** | `[None, None, 250]` |
-| 48 | 0.01 | 1.0000 | **0.2292 (0.3125)** | `[None, None, None]` |
-| 48 | 0.05 | 0.5764 | 0.2708 (0.3125) | `[None, None, None]` |
+**F2. A no-transfer lemma kills the stabilizer method, and the data agree.** *Lemma (elementary).* If G maps the labelled set to itself, every G-orbit lies entirely inside the labelled set or entirely outside it. So G-invariance relates unlabelled inputs only to other unlabelled inputs and carries no label information to them. Symmetrizing a predictor over the exact data stabilizer can make its unseen predictions mutually consistent, but cannot make them more accurate on average. This is exactly what was measured (all gains within ±0.003). T4a and the method in `charter/PROGRAM_SYMMETRY.md` §3 are refuted as stated. Any useful symmetry-based generalization must use symmetries that are *not* exact stabilizers of the data: symmetries of a prior over targets, or approximate ones.
 
-- **Findings:**
-  1. `32/64` remains a genuine **sample-complexity barrier** across all weight decays and 3,000-step budgets (`0/9` seeds grok).
-  2. At `48/64`, unregularized Adam (`wd = 0.0`) achieves `0.9375` mean test accuracy (`max = 1.0000`), whereas even moderate L2 decay (`wd = 0.01`) suppresses `tanh` hidden gain and produces **anti-parity test collapse** (`0.2292` < chance, despite `1.0000` train fit), while `wd = 0.05` underfits train (`0.5764`).
+**F3. With 8 random labels on random 4-input targets, nothing generalizes.** Held-out accuracy is ≈ 0.52 in every cell. These tasks carry too little information for any inductive bias to show; the planted design was uninformative about T4a, independently of F2.
 
----
+## What survives, after Spikes 11–16
 
-## 4. `H-E` (Depth-3 vs Depth-2 Separation) & `parity4 >= 5` CP-SAT Check
-
-Using `cerp.netsolve.solve` (OR-Tools CP-SAT, bounded integer weights `|w| <= 4`):
-- `parity4` in depth-2 `[3, 1]` (4 neurons total): **`unsat`** in `13.985s` (supports tightness of `Bounds.lean` `parity4_not_two_halfspaces`; unbounded $\mathbb{R}^4$ Lean mechanization still faces the $\binom{1882}{3} \approx 1.1\times 10^9$ canonical-LTF enumeration barrier without $B_4$ symmetry reduction or a hyperplane-slicing theorem).
-- `parity5` in **depth-3 chain `chain(5, 3)`** (**3 total neurons**): **`sat`** in `0.596s` (explicit witness saved in [spike16_results.json](file:///C:/Users/bruno/Claude%20Code/semplex/experiments/spike16_results.json)).
-- `parity5` in `layered(5, [2, 2, 1], skip=True)` (depth-3, width-2 with skip): **`sat`** in `0.766s`.
-- `parity5` in depth-2 `[3, 1]` (4 neurons, `W=4`): **`unsat`** in `17.539s`.
-- `parity5` in depth-2 `[4, 1]` (5 neurons, `W=4`): **`unknown`** at `25.038s` timeout.
-- **Finding:** Clean concrete **`H-E` separation at $n = 5$** for bounded weights (`|w| <= 4`): a **3-neuron** chained depth-3 circuit computes `parity5`, whereas depth-2 `[3, 1]` (**4 neurons**) is provably **`unsat`**.
-
----
-
-## 5. Scaled Multi-Output & $n = 16$ `ur_compiler` Benchmark
-
-- **`n = 10` 3-output coupled LTS policy** (`out_brake`, `out_left`, `out_right`):
-  - Independent `compile_profile_factored`: `37` `TNode`s, `118` circuit gates (max depth `13`), `0.027s`.
-  - Joint `compile_multi_profile_factored` (`profile_rank=1`): **`27` deduplicated `TNode`s** (`5` shared encoder + `22` decoder, **-27.0% neurons**), `118` per-output circuit gates (max depth `13`), `0.031s`.
-- **`n = 16` symbolic AST CEGAR** (`compile_profile_factored(..., expr_ast=expr16)`):
-  - `decomposed=True`, `profile_rank=1`, **`soundness="cegar-sat"`**, `circuit_cost={"gates": 53, "depth": 9}`, `atlas_min_neurons=17`, **`0.132s`**.
-- **Lean 4.12 LRAT scaling benchmark (measured via `prove_tnet_equivalence_lrat` + `verify_threshold_net_equiv`):**
-  - `xor3` (4 nodes, 73 vars, 173 clauses, 8 LRAT steps): `ok=True` under pure kernel `by decide` (`('propext', 'Classical.choice', 'Quot.sound')`) in **`219.37s`**.
-  - `xor4` (5 nodes, 176 vars, 431 clauses, 16 LRAT steps): timed out at **`>900s`** under kernel `by decide`, succeeded in **`14.78s`** under `native_decide` (`NATIVE_AXIOMS` including `'Lean.ofReduceBool'`).
-  - **Bottleneck diagnosed:** `Cerp.pbToExpr` expands each neuron's pseudo-Boolean condition via a naive `O(2^d)` Shannon `ite` tree; replacing `pbToExpr` with linear-size $O(d \cdot w)$ binary-adder arithmetic PB->CNF in Lean is the highest-leverage next step for scaling kernel-checked `ThresholdNet` LRAT proofs.
+- **Theorem 15** (equivariance of mechanism choice) and its confirmation, in two domains.
+- **The mechanism-level Curie bias in Boolean threshold circuits** (Spike 14). Kernel arguments cannot explain it, because the kernel limit has no circuits. A parameter-free predictor gains about 1.3–1.7 bits per run. It did **not** transfer to modular-addition frequency profiles (Spike 15 arm A). It is a real, original, *domain-limited* finding.
+- **Symmetry inheritance of functions** is real and robust across architectures, but mostly predicted by the kernel limit (F1).

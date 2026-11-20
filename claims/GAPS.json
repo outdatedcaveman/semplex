@@ -1,0 +1,416 @@
+{
+ "goal": "A theory of why trained networks generalize that predicts, explains, scales and is certified; and a verified compiler that makes its predictions computable.",
+ "effective_when": [
+  {
+   "id": "E1",
+   "name": "Predicts",
+   "test": "On tasks outside the class it was fitted on, including real data, the theory predicts held-out behaviour better than the kernel baseline, in a pre-registered test."
+  },
+  {
+   "id": "E2",
+   "name": "Explains",
+   "test": "The pull toward the minimum circuit is derived from the training dynamics (a theorem or a quantitative law verified prospectively), not only observed."
+  },
+  {
+   "id": "E3",
+   "name": "Scales",
+   "test": "The same result holds at n ≥ 8 inputs and beyond width 8, with compiler-computed completions."
+  },
+  {
+   "id": "E4",
+   "name": "Certified",
+   "test": "Every claim the theory rests on is machine-checked or pre-registered and replicated; the ledger shows no claim stated stronger than its support."
+  }
+ ],
+ "gaps": [
+  {
+   "id": "A1",
+   "pillar": "Theory",
+   "serves": "E1",
+   "title": "Other target classes",
+   "status": "CLOSED",
+   "leverage": "HIGH",
+   "have": "The Occam pull holds on three further clean classes at n = 6: cost-4 targets 0.72, symmetric functions 0.90, DNF 0.67 (Spike 45). The class where it weakens is characterized: label noise (0.58).",
+   "claims": [
+    "P128",
+    "P154"
+   ],
+   "missing": "Nothing for clean targets. The noise boundary is tracked as gap A8.",
+   "closes_when": "Pre-registered: Occam sides with the net ≥ 0.65 on at least 3 further target classes, or the class where it fails is characterized.",
+   "next": "Closed by Spike 45"
+  },
+  {
+   "id": "A2",
+   "pillar": "Theory",
+   "serves": "E1",
+   "title": "Real data: the theory currently fails there",
+   "status": "OPEN",
+   "leverage": "HIGH",
+   "have": "Pre-registered test on four real datasets (Spike 45): the Occam pull holds only on Wine (0.74); it is broken on Breast Cancer (0.29) and Diabetes (0.45). The kernel predicts the net better than Occam on 3 of 4, and beats the trained net on 3 of 4. Spike 46: the simpler-circuit predictor beats the kernel on Wine only.",
+   "claims": [
+    "P155",
+    "P156"
+   ],
+   "missing": "A version of the theory that predicts trained nets on noisy real tasks better than the kernel does.",
+   "closes_when": "Pre-registered on the same four datasets plus two new ones: a stated predictor agrees with trained nets more than the kernel does in at least 4 of 6.",
+   "next": "Blocked on A8: no predictor yet beats the kernel on these datasets"
+  },
+  {
+   "id": "A8",
+   "pillar": "Theory",
+   "serves": "E1",
+   "title": "Label noise: where the Occam pull breaks",
+   "status": "PARTIAL",
+   "leverage": "HIGH",
+   "have": "Dose–response measured (Spike 46): the pull is 0.83 with no flipped labels, 0.66 with 2 of 48, 0.57 with 5 or 8. The exact cost–error frontier is computed and certified. The 'one level simpler plus exceptions' predictor (C20′) is not supported.",
+   "claims": [
+    "P157",
+    "P158",
+    "P159"
+   ],
+   "missing": "An account of what noisy-label nets do on held-out inputs: they agree with their best circuit only 0.75 of the time, about as much as with the kernel. Untested: nets that are not forced to fit every label.",
+   "closes_when": "Pre-registered: with early stopping or stronger weight decay chosen without the test labels, the pull toward the clean rule's circuit returns to ≥ 0.65 at 5 and 8 flips; or a predictor agrees with noisy-label nets ≥ 0.85.",
+   "next": "Unscheduled; lower priority than A9"
+  },
+  {
+   "id": "A3",
+   "pillar": "Theory",
+   "serves": "E2",
+   "title": "Mechanism: why feature learning finds small circuits",
+   "status": "OPEN",
+   "leverage": "HIGH",
+   "have": "Correlation (73–81%), one causal arm (lazy regime moves nets back to the kernel), and timing (kernel first, Occam from step ~30). Spike 47 removes one candidate mechanism: the representation does not become the minimum circuit. Spike 49: what nets follow is the consensus of minimum circuits, at a rate independent of n and sample size. Spike 50: training noise resolves exactly the ambiguity minimum circuits leave (seed disagreement tracks circuit disagreement, ρ ≈ 0.78). Spike 51: the nets' own consequence relation is approximately cumulative (≈95%) but violates Rational Monotony 15% of the time and is stubborn under counter-evidence.",
+   "claims": [
+    "P129",
+    "P152"
+   ],
+   "missing": "A derivation. The unit-level selection law (volume × information tilt) is not shown to produce the Occam pull (C18 not supported).",
+   "closes_when": "A stated law that predicts the Occam-sides fraction or S(t) from measurable quantities, confirmed in a prospective test.",
+   "next": "After A8: the mechanism must also explain why noise removes the pull"
+  },
+  {
+   "id": "A4",
+   "pillar": "Theory",
+   "serves": "E1",
+   "title": "One predictor for the net's held-out outputs",
+   "status": "PARTIAL",
+   "leverage": "MEDIUM",
+   "have": "Graded consensus (Spike 50): the majority of minimum circuits agrees with a single net on 0.91–0.93 of held-out inputs (kernel 0.85–0.88), and the share of circuits per value tracks the share of seeds (ρ 0.76–0.79). Seeds themselves split on 15–18% of runs where circuits split evenly.",
+   "claims": [
+    "P173",
+    "P174"
+   ],
+   "missing": "The 0.93 bar is met in one of three cells. Because seeds disagree on split inputs, the right target is the seed distribution q(x), not one net.",
+   "closes_when": "Pre-registered: p̂ predicts q(x) with mean absolute error ≤ 0.10 over held-out inputs at n = 8 and 10, beating every kernel-based predictor of q.",
+   "next": "Report C23's circuit share p(x) under three counting rules (weight vectors, circuits up to symmetry, distinct completions); the census in arXiv:2611.17583 shows outcome shares can change with the counting rule"
+  },
+  {
+   "id": "A5",
+   "pillar": "Theory",
+   "serves": "E2",
+   "title": "Two-phase timing replicated",
+   "status": "PARTIAL",
+   "leverage": "LOW",
+   "have": "One cell (n = 6, tanh, width 8); the first-step criterion fell short (0.77 vs 0.80).",
+   "claims": [
+    "P152"
+   ],
+   "missing": "ReLU, n = 5, another width.",
+   "closes_when": "Two phases in ≥ 3 further cells.",
+   "next": "Unscheduled (cheap)"
+  },
+  {
+   "id": "A6",
+   "pillar": "Theory",
+   "serves": "E3",
+   "title": "Scale: n ≥ 8",
+   "status": "PARTIAL",
+   "leverage": "HIGH",
+   "have": "Run at n = 8 and 10 (Spike 48): the pull is 0.72 and 0.65 at 8 labels per dimension (0.80 at n = 6) and 0.94 with 75% of inputs seen at n = 8. Nets beat their kernel at both sizes. Spike 49 explains the decline: nets follow forced values at a constant 0.98–0.99, and the fraction of forced inputs is what falls (17–28% in sparse cells, 81% with 144 seen).",
+   "claims": [
+    "P129",
+    "P172",
+    "P173"
+   ],
+   "missing": "Widths beyond 8 in the feature-learning regime, and target classes other than two-unit ones at n ≥ 8.",
+   "closes_when": "The consensus law re-measured at width ≥ 32 and on cost-4 targets at n = 8.",
+   "next": "Unscheduled"
+  },
+  {
+   "id": "A7",
+   "pillar": "Theory",
+   "serves": "E1",
+   "title": "Depth on targets that need it",
+   "status": "PARTIAL",
+   "leverage": "MEDIUM",
+   "have": "Depth adds no Occam pull when two layers can represent the target (H-K refuted).",
+   "claims": [
+    "P153"
+   ],
+   "missing": "Targets that need three layers (e.g. parity5).",
+   "closes_when": "The Spike 44 protocol on depth-requiring targets.",
+   "next": "Unscheduled"
+  },
+  {
+   "id": "B1",
+   "pillar": "Compiler",
+   "serves": "E4",
+   "title": "Lean check of nets beyond fan-in 4",
+   "status": "CLOSED",
+   "leverage": "MEDIUM",
+   "have": "A layered pseudo-Boolean encoding (Gemini G2) lets the Lean kernel verify the xor4 net without native evaluation; the test passes here in 3.7 s.",
+   "claims": [
+    "P147",
+    "P162"
+   ],
+   "missing": "Nothing for the stated test. Beyond about 60 LRAT steps the kernel check times out (P168).",
+   "closes_when": "xor4 verified by pure kernel `decide` in under 60 s.",
+   "next": "Closed"
+  },
+  {
+   "id": "B2",
+   "pillar": "Compiler",
+   "serves": "E3",
+   "title": "Care-set compilation at scale",
+   "status": "PARTIAL",
+   "leverage": "HIGH",
+   "have": "n = 8 and 10: cost ≤ 3 certified 100/100 (P163). n = 8 cost 4: 81/81 certified where no two-unit net exists at any weight; 13 further tasks are cost 4 only because weights are capped at 4 (P166). Audit (P170): at n = 6, raising the weight cap from 4 to 16 lowers the cost in only 2–8% of the tasks used by Spikes 36 and 45.",
+   "claims": [
+    "P163",
+    "P166",
+    "P170"
+   ],
+   "missing": "A stated convention for the weight bound in future spikes (use 16 or a certificate). Certified minimality at cost ≥ 5.",
+   "closes_when": "Every reported minimum cost carries a weight-independent certificate or its weight bound; cost-5 certificates at n = 8.",
+   "next": "Convention adopted from Spike 48 on; cost 5 unscheduled"
+  },
+  {
+   "id": "B3",
+   "pillar": "Compiler",
+   "serves": "E4",
+   "title": "Minimality certificates",
+   "status": "PARTIAL",
+   "leverage": "MEDIUM",
+   "have": "parity4 ≥ 5 layered neurons is proved in Lean (Gemini G5).",
+   "claims": [
+    "P141",
+    "P164"
+   ],
+   "missing": "Lower bounds for Ur-Compiler outputs.",
+   "closes_when": "Ur-Compiler outputs carry a certified lower bound.",
+   "next": "Unscheduled"
+  },
+  {
+   "id": "C1",
+   "pillar": "Formal",
+   "serves": "E4",
+   "title": "Theorem 15 in Lean",
+   "status": "PARTIAL",
+   "leverage": "HIGH",
+   "have": "Two halves are proved: step and trajectory equivariance for GD and AdamW in a discrete model (P160), and Gaussian invariance with pushforward for any measurable equivariant step (P169, isolated Mathlib project).",
+   "claims": [
+    "P069",
+    "P160",
+    "P169"
+   ],
+   "missing": "The bridge between them: the scalar structure instantiated on ℝ, measurability of the GD and AdamW steps and of the readout, and AdamW's moment state. Until then the 20 dependent claims stay flagged.",
+   "closes_when": "One theorem in the Mathlib project states Theorem 15 for the concrete AdamW step on ℝⁿ with no equivariance or measurability hypothesis left.",
+   "next": "Gemini G13"
+  },
+  {
+   "id": "C2",
+   "pillar": "Formal",
+   "serves": "E4",
+   "title": "No-transfer lemma in Lean",
+   "status": "CLOSED",
+   "leverage": "MEDIUM",
+   "have": "Proved in Lean (Gemini G4), with a correction: the lemma needs an invariance hypothesis, and a Lean counterexample shows it fails without one. P077 is restated.",
+   "claims": [
+    "P077",
+    "P161"
+   ],
+   "missing": "Nothing.",
+   "closes_when": "Lean proof with standard axioms.",
+   "next": "Closed"
+  },
+  {
+   "id": "C3",
+   "pillar": "Formal",
+   "serves": "E4",
+   "title": "Statistical lift (C1) with real probability",
+   "status": "OPEN",
+   "leverage": "MEDIUM",
+   "have": "Arithmetic scaffolding in Lean; 0/48 false rejections in an exploratory run.",
+   "claims": [
+    "P139",
+    "P137"
+   ],
+   "missing": "A probabilistic statement and proof.",
+   "closes_when": "A proved finite-sample bound, or a pre-registered test of the conjectured rate.",
+   "next": "Unscheduled"
+  },
+  {
+   "id": "C4",
+   "pillar": "Formal",
+   "serves": "E4",
+   "title": "C4 converse and C3 rank bound",
+   "status": "OPEN",
+   "leverage": "LOW",
+   "have": "One inclusion of C4; a lower bound for C3.",
+   "claims": [
+    "P134",
+    "P136"
+   ],
+   "missing": "The converse inclusion for separable queries; the rank bound on the adaptivity gap.",
+   "closes_when": "Proof or counterexample for each.",
+   "next": "Unscheduled"
+  },
+  {
+   "id": "D1",
+   "pillar": "Process",
+   "serves": "E4",
+   "title": "Replicate Gemini's unregistered results",
+   "status": "OPEN",
+   "leverage": "MEDIUM",
+   "have": "Six spikes run without pre-registration; their claims are held as exploratory. The real-data question was re-run under pre-registration in Spike 45.",
+   "claims": [
+    "P131",
+    "P132",
+    "P150"
+   ],
+   "missing": "Pre-registered replications of the ones the theory would use (width compression 86–89%; real-data circuits).",
+   "closes_when": "Each used result is replicated under rule 1 or dropped.",
+   "next": "Width-compression result still to replicate"
+  },
+  {
+   "id": "D2",
+   "pillar": "Process",
+   "serves": "E4",
+   "title": "One intermittently failing test",
+   "status": "CLOSED",
+   "leverage": "LOW",
+   "have": "The test now averages over fixed seeds 0–4 with the bar unchanged (Gemini G6); the full suite passes.",
+   "claims": [
+    "P149"
+   ],
+   "missing": "Nothing.",
+   "closes_when": "The suite passes on every run.",
+   "next": "Closed"
+  },
+  {
+   "id": "A9",
+   "pillar": "Theory",
+   "serves": "E2",
+   "title": "What the hidden layer represents",
+   "status": "OPEN",
+   "leverage": "HIGH",
+   "have": "Ruled out (Spike 47): the layer does not collapse onto a minimum circuit's cells (0.08% of nets) nor onto the class. Minimum circuits are over-represented 700-fold but explain only 56% of the variance; the layer uses more than two directions. Prior art covers the canonical quotient itself.",
+   "claims": [
+    "P132",
+    "P171"
+   ],
+   "missing": "A positive account: how many hyperplanes the layer effectively uses and whether that number falls toward the minimum with weight decay, training time or width.",
+   "closes_when": "Pre-registered dose–response: the effective number of hyperplanes is predicted within ±1 from weight decay and width on fresh targets, or shown not to depend on them.",
+   "next": "Unscheduled; decide against Spike 48 (scale)"
+  },
+  {
+   "id": "A10",
+   "pillar": "Theory",
+   "serves": "E2",
+   "title": "Identifiability of mechanisms",
+   "status": "PARTIAL",
+   "leverage": "MEDIUM",
+   "have": "Census done (P167): at 4 inputs, 50 of 128 cost-3 classes have a single orbit of minimum circuits and no class of cost ≥ 4 does. So for most functions the function does not fix its mechanism.",
+   "claims": [
+    "P069",
+    "P167"
+   ],
+   "missing": "Whether training's choice among orbits follows the Curie law on the full census, and uniqueness up to symmetry proved in Lean for cost-1 functions.",
+   "closes_when": "Pre-registered: orbit chosen by training predicted from orbit size on the census; Lean uniqueness for cost 1.",
+   "next": "Spike 47 found less collapse for one-orbit targets (exploratory; confounded by the number of candidate circuits)"
+  },
+  {
+   "id": "D3",
+   "pillar": "Process",
+   "serves": "E4",
+   "title": "Prior-art reading queue",
+   "status": "CLOSED",
+   "leverage": "HIGH",
+   "have": "Gemini G7 worked through the queue and eight further areas: 53 works, 24 read in full, 9 metadata only (paywalled). Verdicts per claim are in `charter/PRIOR_ART.md`.",
+   "claims": [
+    "P165"
+   ],
+   "missing": "Nothing for the stated test. Three of the four critical flags rest on Gemini's reading alone.",
+   "closes_when": "Every paper in the reading queue has a row in LITERATURE_REVIEW §5 with what was read and a verdict of anticipates / contradicts / orthogonal.",
+   "next": "Closed; spot-checks as needed"
+  },
+  {
+   "id": "A11",
+   "pillar": "Theory",
+   "serves": "E1",
+   "title": "Concept geometry from symmetry (C29) across models and brains",
+   "status": "PARTIAL",
+   "leverage": "HIGH",
+   "have": "Spike 53: circles for cyclic families in 14 models' static weights; category block structure and shared brain–model geometry (THINGS-fMRI, 3 subjects); the tensor-product row refuted for lexical composition (additive instead); shared structure finer than the 17-category skeleton. Spike 54: semantic products in Neuronpedia sparse codes are also mainly additive (tensor residue carries the cycle at p < 0.05 in 71%). Spike 55: fairness verdict readable in only 2 of 7 sources, so C30 untested. Spike 56: small models' own fairness verdicts are nearly invariant under permuting persons (names 3–5% of verdict variance vs 33–40% of state; C30 supported approximately).",
+   "claims": [
+    "P179",
+    "P180",
+    "P181",
+    "P182",
+    "P183",
+    "P184"
+   ],
+   "missing": "A symmetry group that accounts for the residual brain–model agreement; an account of composition (sum plus structured residue) derived from statistics; C30 in larger models and contested cases; a predictive test of geometry from measured co-occurrence symmetry.",
+   "closes_when": "A pre-registered test predicts a family's geometry from its measured co-occurrence symmetry before looking, in activations and cortex, including a product family.",
+   "next": "C30 at scale (larger models, more frames, contested cases); derive additive-plus-residue composition from co-occurrence statistics"
+  },
+  {
+   "id": "A12",
+   "pillar": "Theory",
+   "serves": "E2",
+   "title": "Atlas and periodic table of concepts: closure (C32), the predictive-state geometry law (C37), construction cost",
+   "status": "PARTIAL",
+   "leverage": "HIGH",
+   "have": "FOUNDATIONS §9: abstraction as closed coarse-graining (Rosas et al. 2024: closure ⇔ strong lumpability), Krohn–Rhodes primes as the periodic table (substrate-relative). Spike 57: recurrent nets build reset → simplex, S3 → 2-D, ℤ/n → ordered circle, product → sum, cascade → more interaction than product; the minimal automaton is present as an exact linear, lumpable coarse-graining (exploratory). Construction cost rises with composition (exploratory). Spike 59: the NSM semantic primes are not a privileged basis of 14 models' lexicons (worse spanning than frequency-matched words; universality non-specific). Spike 58: closure, causal power (interventions 100%) and micro-inertness confirmed in all 31 fitted nets; learning cost follows the table (A5 costliest); minimal-faithful geometry refuted for A5, replaced by the readout-induced permutation representation (C31', exploratory). Spike 61: no data-driven word-level elements shared across 14 models (shape shared, CKA 0.59; axes not). Spike 60: A5 through 6 points gives chi5 as predicted; S4 through 6 points keeps only the faithful standard part, so the law is refined to C31'' (post hoc); 2-layer transformers learned neither group. Spike 69: the predictive kernel's top isotypic component is the leading learned constituent (29/34, incl. unfaithful predictions); identity readouts do not give minimal faithful geometry; permutation ties (equal energy, proved) are broken by the generating set. Spike 70: axis-trackers build the double cover S2, not RP2 (C36 supported). Spike 71: multiplicity-weighted predictive energy beats AGF-style dimension discount and minimum-orbit predictors 8/8 where they disagree; geometry robust to reparametrisation; learning passes through stages. Spike 72: the double cover survives degree-2 input encoding (C38 refuted). Spike 73: encoding does not decide the discrete geometry either; post-hoc gated smoothness fits 46/48 cyclic runs. Spike 74: gated smoothness fails prospectively; with several energetic constituents selection is a seed lottery. Spike 75: closure and the energy law hold across gradient, spectral and gradient-free learners; a fixed reservoir shows neither. Spike 76: energy is not a variational principle; under pressure cyclic learners pick the smoothest letter action (post hoc C42). Spike 77: Gibbs rule value^alpha*exp(-lambda*cost) with frozen parameters predicts new automata at 98%; pressure raises the exchange rate. Spike 78: the rule survives loophole tests across 4 recurrent learners and unselected automata; exchange rate is learner-specific; cost is repertoire-based, not usage-weighted. Spike 79: rule holds for unselected non-abelian automata and transformers; cost form (chord vs geodesic) unresolved; ES did not converge. Spike 82: LM number geometry leads with the counting circle (non-discriminating); parity strong secondary. Spike 81: the rule fails beyond groups as generalised; bounded to symmetric systems. Spike 80: rule holds for converged ES and non-abelian disagreement cases; kinetic cost preferred. Spike 83: groups closed all the way down; monoids only partly. Spike 85: the frozen rule predicts the whole Fourier spectrum of three pretrained LMs' number geometry (rho 0.47-0.70), but almost entirely through the energy term (gain over energy <= 0.015). Spike 84: on irreversible automata the top learned direction lies in the head rather than the radical layer (27/37) but head concentration misses its bar (78%); exploratory: the dominant direction is the output vector itself in all 15 automata (C45', lead with the module generator). Spike 86: early isotypic growth rates track predictive energy (robust to a dimension covariate) but not kinetic cost; the growth-rate race predicts the final leader only 58%; weight decay does not raise the exchange rate; the log-linear form beats a linear softmax. Spike 87: on fresh irreversible automata the output vector dominates a linearly read-out GRU (85%) and beats every structural rival, but with a nonlinear readout the alignment drops to 0.61: C45' is a readout effect. Selection.lean (P222): kinetic-cost, heat-kernel and semisimple-HN identities proved.",
+   "claims": [
+    "P185",
+    "P186",
+    "P187",
+    "P188",
+    "P189",
+    "P190",
+    "P191",
+    "P192",
+    "P193",
+    "P194",
+    "P195",
+    "P196",
+    "P197",
+    "P198",
+    "P199",
+    "P200",
+    "P201",
+    "P202",
+    "P203",
+    "P204",
+    "P205",
+    "P206",
+    "P207",
+    "P208",
+    "P209",
+    "P210",
+    "P211",
+    "P212",
+    "P213",
+    "P214",
+    "P215",
+    "P216",
+    "P217",
+    "P218"
+   ],
+   "missing": "Why the leading constituent sometimes defers to the smooth circle (Z7 via {0,2}); what decides the leading abelian count under identity readouts; why ties in permutation readouts depend on the generating set (S4 pairs); a derivation of the leading-component law from training dynamics; a transformer that learns group automata for substrate comparison; the 'coarsest linearly-acting quotient' reconciliation of discrete closure with the continuous double cover (C36); lexical elements as operations.",
+   "closes_when": "For automata sampled from a stated distribution, the minimal automaton, its Krohn–Rhodes cascade and the geometry of each part are predicted before training and recovered from trained nets of two architectures, and the same calculus predicts held-out lexical concepts from their parts.",
+   "next": "Test the Harder-Narasimhan ordering for irreversible automata with nonlinear readouts from the start; test the heat-kernel reading of lambda by input diffusion; measure the cost term after the linear growth phase."
+  }
+ ]
+}

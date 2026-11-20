@@ -1,0 +1,20 @@
+{
+ "automaton": "A5_5",
+ "arch": "gru",
+ "seed": 6002,
+ "first99": 475,
+ "fit": 1.0,
+ "probe_acc": 1.0,
+ "determinism": 1.0,
+ "intervene": 1.0,
+ "rho_readout": 0.5829030674337653,
+ "irrep_scores": {
+  "chi3": -0.02751889918006748,
+  "chi3'": -0.024721537988744272,
+  "chi4": 0.5829030674337653,
+  "chi5": -0.3182778365861585
+ },
+ "rho_minfaith": -0.024721537988744272,
+ "best_irrep": "chi4",
+ "n_states_seen": 60
+}

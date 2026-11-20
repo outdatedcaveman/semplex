@@ -1,0 +1,4386 @@
+{
+ "verdicts": {
+  "H64.1": "BROKEN",
+  "H64.2": "HELD"
+ },
+ "frac_ratio_ge_2": 0.0,
+ "frac_ratio_le_1.2": 1.0,
+ "median_ratio": 0.7144808367683689,
+ "median_holonomy": 0.4465227144482855,
+ "median_noise": 0.6267563118558908,
+ "median_heldout_r2": 0.30553795681144064,
+ "min_r2": -0.5418861892947857,
+ "max_r2": 0.6816837634469644,
+ "median_diag_low": 0.9866075442624636,
+ "median_diag_high": 0.5543032170852824,
+ "triangles": [
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "EleutherAI/pythia-410m",
+    "EleutherAI/pythia-6.9b"
+   ],
+   "holonomy": 0.4133506876846307,
+   "noise": 0.5446113257347182,
+   "ratio": 0.7589829079059128,
+   "diag_low": 0.9917049457680049,
+   "diag_high": 0.5914125978047113
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "EleutherAI/pythia-410m",
+    "Qwen/Qwen2.5-0.5B"
+   ],
+   "holonomy": 0.466993109375649,
+   "noise": 0.6226376196274055,
+   "ratio": 0.750023921868235,
+   "diag_low": 0.9817496346432056,
+   "diag_high": 0.5276149114373383
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "EleutherAI/pythia-410m",
+    "Qwen/Qwen2.5-7B"
+   ],
+   "holonomy": 0.432699211006987,
+   "noise": 0.6164075182352114,
+   "ratio": 0.7019693923361197,
+   "diag_low": 0.9918634705256112,
+   "diag_high": 0.5551667611804275
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "EleutherAI/pythia-410m",
+    "mistralai/Mistral-7B-v0.1"
+   ],
+   "holonomy": 0.42054722321478355,
+   "noise": 0.5541595506032926,
+   "ratio": 0.7588919522490403,
+   "diag_low": 0.9937999244109301,
+   "diag_high": 0.5787481958041202
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "EleutherAI/pythia-410m",
+    "allenai/OLMo-2-1124-7B"
+   ],
+   "holonomy": 0.39970592302471386,
+   "noise": 0.4908198657845557,
+   "ratio": 0.8143637837189008,
+   "diag_low": 0.9945964167901606,
+   "diag_high": 0.5538975335735958
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "EleutherAI/pythia-410m",
+    "HuggingFaceTB/SmolLM2-360M"
+   ],
+   "holonomy": 0.45601262028623035,
+   "noise": 0.6349071548094979,
+   "ratio": 0.7182351259264919,
+   "diag_low": 0.9739370299210246,
+   "diag_high": 0.5029191833120752
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "EleutherAI/pythia-410m",
+    "tiiuae/falcon-7b"
+   ],
+   "holonomy": 0.3658610921110471,
+   "noise": 0.5000634642711489,
+   "ratio": 0.7316293195790577,
+   "diag_low": 0.9957550316704515,
+   "diag_high": 0.5460751577920455
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "EleutherAI/pythia-410m",
+    "microsoft/phi-2"
+   ],
+   "holonomy": 0.41578382363717364,
+   "noise": 0.5574591583794853,
+   "ratio": 0.7458552207588498,
+   "diag_low": 0.9935815896602944,
+   "diag_high": 0.5745631747209082
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "EleutherAI/pythia-410m",
+    "bigscience/bloom-560m"
+   ],
+   "holonomy": 0.4712234859248539,
+   "noise": 0.6698935495636685,
+   "ratio": 0.7034303976083703,
+   "diag_low": 0.986794698078313,
+   "diag_high": 0.4931824701779595
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "EleutherAI/pythia-410m",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "holonomy": 0.43053211824455095,
+   "noise": 0.6023624704869439,
+   "ratio": 0.7147392796508604,
+   "diag_low": 0.9929837143871341,
+   "diag_high": 0.5841027585415909
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "EleutherAI/pythia-410m",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.4252995710770451,
+   "noise": 0.5842698901250588,
+   "ratio": 0.727916290510902,
+   "diag_low": 0.9936300554378412,
+   "diag_high": 0.5487336026622214
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "EleutherAI/pythia-410m",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.4429731263316789,
+   "noise": 0.5801460234293474,
+   "ratio": 0.7635545335865359,
+   "diag_low": 0.9929673377635269,
+   "diag_high": 0.5538721215066302
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "EleutherAI/pythia-6.9b",
+    "Qwen/Qwen2.5-0.5B"
+   ],
+   "holonomy": 0.49574777365266065,
+   "noise": 0.6726451021697252,
+   "ratio": 0.7370123889307248,
+   "diag_low": 0.9829202625450162,
+   "diag_high": 0.47525558272325485
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "EleutherAI/pythia-6.9b",
+    "Qwen/Qwen2.5-7B"
+   ],
+   "holonomy": 0.46699217954906574,
+   "noise": 0.6481626764562095,
+   "ratio": 0.720486070105606,
+   "diag_low": 0.9902682007268637,
+   "diag_high": 0.4955282603624295
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "EleutherAI/pythia-6.9b",
+    "mistralai/Mistral-7B-v0.1"
+   ],
+   "holonomy": 0.4491655305122129,
+   "noise": 0.5913587882471153,
+   "ratio": 0.7595482462408539,
+   "diag_low": 0.9937461117416407,
+   "diag_high": 0.5380241573938143
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "EleutherAI/pythia-6.9b",
+    "allenai/OLMo-2-1124-7B"
+   ],
+   "holonomy": 0.4338451066143224,
+   "noise": 0.5476717474450483,
+   "ratio": 0.7921626569898114,
+   "diag_low": 0.9941251338706638,
+   "diag_high": 0.4957537764265514
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "EleutherAI/pythia-6.9b",
+    "HuggingFaceTB/SmolLM2-360M"
+   ],
+   "holonomy": 0.47405022079584097,
+   "noise": 0.665478287262469,
+   "ratio": 0.7123451356255481,
+   "diag_low": 0.9766239652692598,
+   "diag_high": 0.5237959058265145
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "EleutherAI/pythia-6.9b",
+    "tiiuae/falcon-7b"
+   ],
+   "holonomy": 0.39711738634152544,
+   "noise": 0.5295008142393562,
+   "ratio": 0.7499844677519456,
+   "diag_low": 0.9948216728777843,
+   "diag_high": 0.5298152062221287
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "EleutherAI/pythia-6.9b",
+    "microsoft/phi-2"
+   ],
+   "holonomy": 0.44132699910046863,
+   "noise": 0.604123660301821,
+   "ratio": 0.7305242752452057,
+   "diag_low": 0.9927103927634375,
+   "diag_high": 0.5253193503998224
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "EleutherAI/pythia-6.9b",
+    "bigscience/bloom-560m"
+   ],
+   "holonomy": 0.5054807355192747,
+   "noise": 0.7035486114430849,
+   "ratio": 0.7184730767678684,
+   "diag_low": 0.9858492632285534,
+   "diag_high": 0.41265994224779534
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "EleutherAI/pythia-6.9b",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "holonomy": 0.4756391601858793,
+   "noise": 0.6474713522361794,
+   "ratio": 0.7346103554128824,
+   "diag_low": 0.9926188180649849,
+   "diag_high": 0.471757161622722
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "EleutherAI/pythia-6.9b",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.44393412830114587,
+   "noise": 0.6111368967175944,
+   "ratio": 0.7264070140184765,
+   "diag_low": 0.9925862667952433,
+   "diag_high": 0.5234170614766898
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "EleutherAI/pythia-6.9b",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.46896847129607516,
+   "noise": 0.6318515215827112,
+   "ratio": 0.7422130916474905,
+   "diag_low": 0.9930932373482657,
+   "diag_high": 0.5161391776421739
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "Qwen/Qwen2.5-0.5B",
+    "Qwen/Qwen2.5-7B"
+   ],
+   "holonomy": 0.5004545028882051,
+   "noise": 0.6973980190724207,
+   "ratio": 0.7176024152661608,
+   "diag_low": 0.982431087652688,
+   "diag_high": 0.4880682045100959
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "Qwen/Qwen2.5-0.5B",
+    "mistralai/Mistral-7B-v0.1"
+   ],
+   "holonomy": 0.4822557862349158,
+   "noise": 0.6363370880364982,
+   "ratio": 0.7578621383251123,
+   "diag_low": 0.9853601773819978,
+   "diag_high": 0.5223004287621619
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "Qwen/Qwen2.5-0.5B",
+    "allenai/OLMo-2-1124-7B"
+   ],
+   "holonomy": 0.4481365235069219,
+   "noise": 0.5784984682621774,
+   "ratio": 0.7746546414429311,
+   "diag_low": 0.9865046225444001,
+   "diag_high": 0.5536438264733867
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "Qwen/Qwen2.5-0.5B",
+    "HuggingFaceTB/SmolLM2-360M"
+   ],
+   "holonomy": 0.4638785668259845,
+   "noise": 0.5901717486839094,
+   "ratio": 0.7860060530861391,
+   "diag_low": 0.9589362943975624,
+   "diag_high": 0.590613709652331
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "Qwen/Qwen2.5-0.5B",
+    "tiiuae/falcon-7b"
+   ],
+   "holonomy": 0.40489948037655077,
+   "noise": 0.542691824346207,
+   "ratio": 0.7460946751212666,
+   "diag_low": 0.9871713246441258,
+   "diag_high": 0.5394662221464067
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "Qwen/Qwen2.5-0.5B",
+    "microsoft/phi-2"
+   ],
+   "holonomy": 0.483824438320442,
+   "noise": 0.6521806663889625,
+   "ratio": 0.7418564567381511,
+   "diag_low": 0.9844843230177698,
+   "diag_high": 0.508543725128838
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "Qwen/Qwen2.5-0.5B",
+    "bigscience/bloom-560m"
+   ],
+   "holonomy": 0.5019237587402682,
+   "noise": 0.678640757994926,
+   "ratio": 0.739601553291942,
+   "diag_low": 0.9697558574466232,
+   "diag_high": 0.5422285287118391
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "Qwen/Qwen2.5-0.5B",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "holonomy": 0.5007793712256344,
+   "noise": 0.6859394520911078,
+   "ratio": 0.7300635204739906,
+   "diag_low": 0.9852500341824563,
+   "diag_high": 0.5055796472078344
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "Qwen/Qwen2.5-0.5B",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.46718588564705166,
+   "noise": 0.6569942164847591,
+   "ratio": 0.7110958877944543,
+   "diag_low": 0.9860790977399561,
+   "diag_high": 0.5174050862235167
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "Qwen/Qwen2.5-0.5B",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.4916630014768737,
+   "noise": 0.6613111670578226,
+   "ratio": 0.7434669577171749,
+   "diag_low": 0.9841928962807022,
+   "diag_high": 0.46565720469838134
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "Qwen/Qwen2.5-7B",
+    "mistralai/Mistral-7B-v0.1"
+   ],
+   "holonomy": 0.4392844118955197,
+   "noise": 0.5912155051791795,
+   "ratio": 0.7430190988688395,
+   "diag_low": 0.9942628773359985,
+   "diag_high": 0.5594138217771099
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "Qwen/Qwen2.5-7B",
+    "allenai/OLMo-2-1124-7B"
+   ],
+   "holonomy": 0.41233201793875424,
+   "noise": 0.5521872667177035,
+   "ratio": 0.7467249659517269,
+   "diag_low": 0.9953196903526906,
+   "diag_high": 0.5854466596071932
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "Qwen/Qwen2.5-7B",
+    "HuggingFaceTB/SmolLM2-360M"
+   ],
+   "holonomy": 0.4958596839957142,
+   "noise": 0.7050946809306967,
+   "ratio": 0.7032526232380583,
+   "diag_low": 0.9756076790175836,
+   "diag_high": 0.4540749931879185
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "Qwen/Qwen2.5-7B",
+    "tiiuae/falcon-7b"
+   ],
+   "holonomy": 0.40569090006050407,
+   "noise": 0.5763674898468482,
+   "ratio": 0.7038754045067738,
+   "diag_low": 0.9947316191618026,
+   "diag_high": 0.495765988584962
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "Qwen/Qwen2.5-7B",
+    "microsoft/phi-2"
+   ],
+   "holonomy": 0.4388184267412341,
+   "noise": 0.6116480414938794,
+   "ratio": 0.7174361674885298,
+   "diag_low": 0.9939561130005048,
+   "diag_high": 0.5840211952278036
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "Qwen/Qwen2.5-7B",
+    "bigscience/bloom-560m"
+   ],
+   "holonomy": 0.5079912226132623,
+   "noise": 0.7343404005973019,
+   "ratio": 0.6917653205517083,
+   "diag_low": 0.9867901308758205,
+   "diag_high": 0.4500168868172797
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "Qwen/Qwen2.5-7B",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "holonomy": 0.46884689664976215,
+   "noise": 0.6597555850326822,
+   "ratio": 0.7106372530768905,
+   "diag_low": 0.9932376499077651,
+   "diag_high": 0.5206295536661655
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "Qwen/Qwen2.5-7B",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.45271451078556424,
+   "noise": 0.6376747507503048,
+   "ratio": 0.7099457995677083,
+   "diag_low": 0.993953263205195,
+   "diag_high": 0.5411402507959853
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "Qwen/Qwen2.5-7B",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.4440759404129932,
+   "noise": 0.6287364020589462,
+   "ratio": 0.7062990769402907,
+   "diag_low": 0.9939739918454267,
+   "diag_high": 0.5718894738389604
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "mistralai/Mistral-7B-v0.1",
+    "allenai/OLMo-2-1124-7B"
+   ],
+   "holonomy": 0.4041470657502747,
+   "noise": 0.49281670166526154,
+   "ratio": 0.8200758301912942,
+   "diag_low": 0.9969113138759897,
+   "diag_high": 0.613471994217002
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "mistralai/Mistral-7B-v0.1",
+    "HuggingFaceTB/SmolLM2-360M"
+   ],
+   "holonomy": 0.46587331113452923,
+   "noise": 0.636940893427933,
+   "ratio": 0.7314231445044448,
+   "diag_low": 0.9805811008266582,
+   "diag_high": 0.5146139950942272
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "mistralai/Mistral-7B-v0.1",
+    "tiiuae/falcon-7b"
+   ],
+   "holonomy": 0.3842875645039663,
+   "noise": 0.5048045177671683,
+   "ratio": 0.7612601531454831,
+   "diag_low": 0.9966262054899147,
+   "diag_high": 0.5580298750830215
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "mistralai/Mistral-7B-v0.1",
+    "microsoft/phi-2"
+   ],
+   "holonomy": 0.44013084617903214,
+   "noise": 0.5690467967457651,
+   "ratio": 0.773452813891633,
+   "diag_low": 0.9952596170988366,
+   "diag_high": 0.5787512436422662
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "mistralai/Mistral-7B-v0.1",
+    "bigscience/bloom-560m"
+   ],
+   "holonomy": 0.4892537309160834,
+   "noise": 0.6656911926274651,
+   "ratio": 0.7349559921095127,
+   "diag_low": 0.9894393331251563,
+   "diag_high": 0.48190238382453465
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "mistralai/Mistral-7B-v0.1",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "holonomy": 0.4258351482324943,
+   "noise": 0.5884269046471147,
+   "ratio": 0.7236840206820111,
+   "diag_low": 0.9955857429414673,
+   "diag_high": 0.5878310031965908
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "mistralai/Mistral-7B-v0.1",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.4096681718647732,
+   "noise": 0.5512223318995753,
+   "ratio": 0.7431995188819905,
+   "diag_low": 0.9964479183183856,
+   "diag_high": 0.6175178201156064
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "mistralai/Mistral-7B-v0.1",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.3684284546855205,
+   "noise": 0.5282097210480325,
+   "ratio": 0.697504116271305,
+   "diag_low": 0.9973345034901119,
+   "diag_high": 0.6986761402353743
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "allenai/OLMo-2-1124-7B",
+    "HuggingFaceTB/SmolLM2-360M"
+   ],
+   "holonomy": 0.44703086029218,
+   "noise": 0.5642688121055237,
+   "ratio": 0.7922303177170474,
+   "diag_low": 0.9797449206837342,
+   "diag_high": 0.5068377315529369
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "allenai/OLMo-2-1124-7B",
+    "tiiuae/falcon-7b"
+   ],
+   "holonomy": 0.35788411351886895,
+   "noise": 0.43502752857647176,
+   "ratio": 0.8226700381237091,
+   "diag_low": 0.996629585406545,
+   "diag_high": 0.5872660845058253
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "allenai/OLMo-2-1124-7B",
+    "microsoft/phi-2"
+   ],
+   "holonomy": 0.3997038948468687,
+   "noise": 0.51480393511067,
+   "ratio": 0.7764196572447378,
+   "diag_low": 0.9959138639860206,
+   "diag_high": 0.5938490959888136
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "allenai/OLMo-2-1124-7B",
+    "bigscience/bloom-560m"
+   ],
+   "holonomy": 0.4562945916539627,
+   "noise": 0.6187849282006276,
+   "ratio": 0.7374041785096923,
+   "diag_low": 0.9901188768066937,
+   "diag_high": 0.5459220963337947
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "allenai/OLMo-2-1124-7B",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "holonomy": 0.41119717461250077,
+   "noise": 0.5473918767941023,
+   "ratio": 0.7511934174484832,
+   "diag_low": 0.9961646275579961,
+   "diag_high": 0.6242095898279024
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "allenai/OLMo-2-1124-7B",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.39708125459226906,
+   "noise": 0.5235078766224731,
+   "ratio": 0.7585010127338038,
+   "diag_low": 0.9961775974560632,
+   "diag_high": 0.5868901197906168
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "allenai/OLMo-2-1124-7B",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.42039151619244636,
+   "noise": 0.536595399325853,
+   "ratio": 0.7834422671543618,
+   "diag_low": 0.9965080576924882,
+   "diag_high": 0.5899806708614895
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "HuggingFaceTB/SmolLM2-360M",
+    "tiiuae/falcon-7b"
+   ],
+   "holonomy": 0.39538736343247716,
+   "noise": 0.5321263606367945,
+   "ratio": 0.7430328446035221,
+   "diag_low": 0.9849580366472972,
+   "diag_high": 0.5821684373780162
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "HuggingFaceTB/SmolLM2-360M",
+    "microsoft/phi-2"
+   ],
+   "holonomy": 0.47754052384551493,
+   "noise": 0.6507255331099481,
+   "ratio": 0.7338585925209555,
+   "diag_low": 0.9785238235732759,
+   "diag_high": 0.4711731247562615
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "HuggingFaceTB/SmolLM2-360M",
+    "bigscience/bloom-560m"
+   ],
+   "holonomy": 0.49335372586402426,
+   "noise": 0.675560757076683,
+   "ratio": 0.7302877212686048,
+   "diag_low": 0.9627922601653294,
+   "diag_high": 0.5551992797012835
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "HuggingFaceTB/SmolLM2-360M",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "holonomy": 0.48486027439324764,
+   "noise": 0.7080284739958661,
+   "ratio": 0.6848033549510588,
+   "diag_low": 0.9802779730996833,
+   "diag_high": 0.5072909092094887
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "HuggingFaceTB/SmolLM2-360M",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.4734377250044663,
+   "noise": 0.6583726625064499,
+   "ratio": 0.7191029518176997,
+   "diag_low": 0.9789188699884911,
+   "diag_high": 0.4933110506589983
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "HuggingFaceTB/SmolLM2-360M",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.4915368495760118,
+   "noise": 0.6831333081473007,
+   "ratio": 0.7195328403896595,
+   "diag_low": 0.9783026848872916,
+   "diag_high": 0.4599790353074543
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "tiiuae/falcon-7b",
+    "microsoft/phi-2"
+   ],
+   "holonomy": 0.3752284139299902,
+   "noise": 0.5228127748839316,
+   "ratio": 0.7177108746305859,
+   "diag_low": 0.9959842941883925,
+   "diag_high": 0.5568955316503676
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "tiiuae/falcon-7b",
+    "bigscience/bloom-560m"
+   ],
+   "holonomy": 0.42065411711273687,
+   "noise": 0.6036833168046777,
+   "ratio": 0.6968125595043401,
+   "diag_low": 0.9899992871764645,
+   "diag_high": 0.5200894163000891
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "tiiuae/falcon-7b",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "holonomy": 0.3965836777204966,
+   "noise": 0.5702780789882113,
+   "ratio": 0.6954215712168286,
+   "diag_low": 0.9961326728507885,
+   "diag_high": 0.5546767785447744
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "tiiuae/falcon-7b",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.3758722525777961,
+   "noise": 0.5248230550925019,
+   "ratio": 0.7161885304591797,
+   "diag_low": 0.9965460713046044,
+   "diag_high": 0.5539296556257903
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "tiiuae/falcon-7b",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.3937024220987131,
+   "noise": 0.5353456147502909,
+   "ratio": 0.7354172916543895,
+   "diag_low": 0.9962346300853919,
+   "diag_high": 0.5436326744998128
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "microsoft/phi-2",
+    "bigscience/bloom-560m"
+   ],
+   "holonomy": 0.4831545887046161,
+   "noise": 0.695358516809408,
+   "ratio": 0.6948280304691296,
+   "diag_low": 0.9889352738343975,
+   "diag_high": 0.4906473070636636
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "microsoft/phi-2",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "holonomy": 0.4425826385295727,
+   "noise": 0.6210708821355693,
+   "ratio": 0.712612120870552,
+   "diag_low": 0.9949115974249247,
+   "diag_high": 0.570753864580209
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "microsoft/phi-2",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.43863991044813966,
+   "noise": 0.5965467508056712,
+   "ratio": 0.7352984654693548,
+   "diag_low": 0.9951358661431895,
+   "diag_high": 0.5612340651805958
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "microsoft/phi-2",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.4338081371448058,
+   "noise": 0.6038935518709667,
+   "ratio": 0.7183519939909826,
+   "diag_low": 0.9951145526147779,
+   "diag_high": 0.6053621009404538
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "bigscience/bloom-560m",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "holonomy": 0.506428019009233,
+   "noise": 0.7338573381162993,
+   "ratio": 0.6900905567138662,
+   "diag_low": 0.9879747868330713,
+   "diag_high": 0.49393894710597525
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "bigscience/bloom-560m",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.48083510872145213,
+   "noise": 0.6979168317620139,
+   "ratio": 0.688957604744249,
+   "diag_low": 0.9877087325091363,
+   "diag_high": 0.5062548943580447
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "bigscience/bloom-560m",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.5047155553555696,
+   "noise": 0.7117100839566551,
+   "ratio": 0.7091589212136383,
+   "diag_low": 0.9867457273317632,
+   "diag_high": 0.47362426996890306
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "stabilityai/stablelm-2-1_6b",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.44191042862302654,
+   "noise": 0.6198924067241656,
+   "ratio": 0.7128824677145369,
+   "diag_low": 0.9948655288123474,
+   "diag_high": 0.5628489651017261
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "stabilityai/stablelm-2-1_6b",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.4488696291835814,
+   "noise": 0.6262870396476788,
+   "ratio": 0.7167155006689832,
+   "diag_low": 0.9950323030422765,
+   "diag_high": 0.5741271487883906
+  },
+  {
+   "triangle": [
+    "openai-community/gpt2",
+    "01-ai/Yi-6B",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.41498975139745103,
+   "noise": 0.5808802773003203,
+   "ratio": 0.7144152893710619,
+   "diag_low": 0.9959254998533063,
+   "diag_high": 0.6213255422135874
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "EleutherAI/pythia-6.9b",
+    "Qwen/Qwen2.5-0.5B"
+   ],
+   "holonomy": 0.4682637045547211,
+   "noise": 0.6804157639244235,
+   "ratio": 0.6882023159691713,
+   "diag_low": 0.9891072730568764,
+   "diag_high": 0.47690523790154193
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "EleutherAI/pythia-6.9b",
+    "Qwen/Qwen2.5-7B"
+   ],
+   "holonomy": 0.4247243498026632,
+   "noise": 0.6186432847486065,
+   "ratio": 0.6865415988072275,
+   "diag_low": 0.9967308051768958,
+   "diag_high": 0.5277071477951023
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "EleutherAI/pythia-6.9b",
+    "mistralai/Mistral-7B-v0.1"
+   ],
+   "holonomy": 0.4185597805313867,
+   "noise": 0.5638289174443226,
+   "ratio": 0.742352454053971,
+   "diag_low": 0.9968215410919987,
+   "diag_high": 0.5126145838909842
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "EleutherAI/pythia-6.9b",
+    "allenai/OLMo-2-1124-7B"
+   ],
+   "holonomy": 0.40850226232148806,
+   "noise": 0.5332084781186688,
+   "ratio": 0.7661210935032684,
+   "diag_low": 0.9976344036288851,
+   "diag_high": 0.5278381903482778
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "EleutherAI/pythia-6.9b",
+    "HuggingFaceTB/SmolLM2-360M"
+   ],
+   "holonomy": 0.4632667414062639,
+   "noise": 0.6874533457184242,
+   "ratio": 0.6738882635331802,
+   "diag_low": 0.9846672752898508,
+   "diag_high": 0.519387553941423
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "EleutherAI/pythia-6.9b",
+    "tiiuae/falcon-7b"
+   ],
+   "holonomy": 0.44473578867449803,
+   "noise": 0.5944798656914926,
+   "ratio": 0.7481090855065144,
+   "diag_low": 0.9951805018165683,
+   "diag_high": 0.48341190452244365
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "EleutherAI/pythia-6.9b",
+    "microsoft/phi-2"
+   ],
+   "holonomy": 0.41217968263854776,
+   "noise": 0.5746655523960338,
+   "ratio": 0.71725141853377,
+   "diag_low": 0.9972944417320566,
+   "diag_high": 0.5609710164265913
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "EleutherAI/pythia-6.9b",
+    "bigscience/bloom-560m"
+   ],
+   "holonomy": 0.47900809250018556,
+   "noise": 0.7073805697682318,
+   "ratio": 0.6771575485274202,
+   "diag_low": 0.9912321167755644,
+   "diag_high": 0.48518689584657326
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "EleutherAI/pythia-6.9b",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "holonomy": 0.43133747175288695,
+   "noise": 0.6036521649417181,
+   "ratio": 0.714546384165676,
+   "diag_low": 0.9965135722795542,
+   "diag_high": 0.5384753328882257
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "EleutherAI/pythia-6.9b",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.42262684713906123,
+   "noise": 0.5929073665123349,
+   "ratio": 0.7128041765193162,
+   "diag_low": 0.9966746205195598,
+   "diag_high": 0.518534112791533
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "EleutherAI/pythia-6.9b",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.4262684652900307,
+   "noise": 0.5917943562194035,
+   "ratio": 0.7202982941797349,
+   "diag_low": 0.996693473251451,
+   "diag_high": 0.5316433365566205
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "Qwen/Qwen2.5-0.5B",
+    "Qwen/Qwen2.5-7B"
+   ],
+   "holonomy": 0.48963574838728563,
+   "noise": 0.7103357091467261,
+   "ratio": 0.689301892165113,
+   "diag_low": 0.9861626297724695,
+   "diag_high": 0.4671395422499754
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "Qwen/Qwen2.5-0.5B",
+    "mistralai/Mistral-7B-v0.1"
+   ],
+   "holonomy": 0.45650238050688446,
+   "noise": 0.654775446538191,
+   "ratio": 0.6971892164259066,
+   "diag_low": 0.9869854774669085,
+   "diag_high": 0.5652945486800189
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "Qwen/Qwen2.5-0.5B",
+    "allenai/OLMo-2-1124-7B"
+   ],
+   "holonomy": 0.43975358823998584,
+   "noise": 0.612074815720249,
+   "ratio": 0.7184637840759924,
+   "diag_low": 0.988081390225158,
+   "diag_high": 0.5548349454742585
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "Qwen/Qwen2.5-0.5B",
+    "HuggingFaceTB/SmolLM2-360M"
+   ],
+   "holonomy": 0.4912351402312601,
+   "noise": 0.6585146989517141,
+   "ratio": 0.745974449793231,
+   "diag_low": 0.9553541845235238,
+   "diag_high": 0.5743655368900398
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "Qwen/Qwen2.5-0.5B",
+    "tiiuae/falcon-7b"
+   ],
+   "holonomy": 0.4875664876115862,
+   "noise": 0.6505057868411515,
+   "ratio": 0.7495190626653814,
+   "diag_low": 0.9834934794362766,
+   "diag_high": 0.49837588499295743
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "Qwen/Qwen2.5-0.5B",
+    "microsoft/phi-2"
+   ],
+   "holonomy": 0.46844095528187923,
+   "noise": 0.6679991660585342,
+   "ratio": 0.7012597905561331,
+   "diag_low": 0.9857504311012535,
+   "diag_high": 0.5067665985918348
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "Qwen/Qwen2.5-0.5B",
+    "bigscience/bloom-560m"
+   ],
+   "holonomy": 0.5203488900110422,
+   "noise": 0.7221966936390944,
+   "ratio": 0.7205085464861983,
+   "diag_low": 0.9683235585441613,
+   "diag_high": 0.4689500960199911
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "Qwen/Qwen2.5-0.5B",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "holonomy": 0.4867847761367181,
+   "noise": 0.6865113839380255,
+   "ratio": 0.7090702172255055,
+   "diag_low": 0.9859930274228148,
+   "diag_high": 0.48323113094644493
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "Qwen/Qwen2.5-0.5B",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.46516899703243486,
+   "noise": 0.6821293156715815,
+   "ratio": 0.6819366743891645,
+   "diag_low": 0.9862872001716235,
+   "diag_high": 0.5165736044887045
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "Qwen/Qwen2.5-0.5B",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.4883296583576386,
+   "noise": 0.6662768482179966,
+   "ratio": 0.7329230479247627,
+   "diag_low": 0.9867629836730858,
+   "diag_high": 0.5172508980594555
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "Qwen/Qwen2.5-7B",
+    "mistralai/Mistral-7B-v0.1"
+   ],
+   "holonomy": 0.4096092236754544,
+   "noise": 0.5704666945865653,
+   "ratio": 0.7180247813981686,
+   "diag_low": 0.9961577748182922,
+   "diag_high": 0.5685440804245805
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "Qwen/Qwen2.5-7B",
+    "allenai/OLMo-2-1124-7B"
+   ],
+   "holonomy": 0.40146103022855323,
+   "noise": 0.5449553743860053,
+   "ratio": 0.7366860647642471,
+   "diag_low": 0.9972671386696299,
+   "diag_high": 0.5458623264935312
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "Qwen/Qwen2.5-7B",
+    "HuggingFaceTB/SmolLM2-360M"
+   ],
+   "holonomy": 0.48110706081063503,
+   "noise": 0.7311551854136958,
+   "ratio": 0.6580095038762793,
+   "diag_low": 0.9812716064788649,
+   "diag_high": 0.4807326402701122
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "Qwen/Qwen2.5-7B",
+    "tiiuae/falcon-7b"
+   ],
+   "holonomy": 0.4598237680967215,
+   "noise": 0.6425988843311972,
+   "ratio": 0.7155688864528547,
+   "diag_low": 0.993414550172149,
+   "diag_high": 0.49737070681682616
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "Qwen/Qwen2.5-7B",
+    "microsoft/phi-2"
+   ],
+   "holonomy": 0.41422935765435714,
+   "noise": 0.5891409603790726,
+   "ratio": 0.7031073809361827,
+   "diag_low": 0.996019765751794,
+   "diag_high": 0.573426833081904
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "Qwen/Qwen2.5-7B",
+    "bigscience/bloom-560m"
+   ],
+   "holonomy": 0.49470598304573066,
+   "noise": 0.7432099906018824,
+   "ratio": 0.6656341939713393,
+   "diag_low": 0.9878767995798146,
+   "diag_high": 0.4540723668817717
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "Qwen/Qwen2.5-7B",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "holonomy": 0.426230011722209,
+   "noise": 0.623019149475361,
+   "ratio": 0.6841362935330858,
+   "diag_low": 0.9954959085855282,
+   "diag_high": 0.5315340544520574
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "Qwen/Qwen2.5-7B",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.4178420470226722,
+   "noise": 0.6264012857891917,
+   "ratio": 0.6670517071117447,
+   "diag_low": 0.9955871569823923,
+   "diag_high": 0.5530622737598304
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "Qwen/Qwen2.5-7B",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.4290189341549085,
+   "noise": 0.5949725391643622,
+   "ratio": 0.721073504934303,
+   "diag_low": 0.99556609983024,
+   "diag_high": 0.5972136364144944
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "mistralai/Mistral-7B-v0.1",
+    "allenai/OLMo-2-1124-7B"
+   ],
+   "holonomy": 0.3701254249517647,
+   "noise": 0.49043557893256673,
+   "ratio": 0.7546871410865885,
+   "diag_low": 0.9973096212711633,
+   "diag_high": 0.6530233847231675
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "mistralai/Mistral-7B-v0.1",
+    "HuggingFaceTB/SmolLM2-360M"
+   ],
+   "holonomy": 0.4674884949654629,
+   "noise": 0.6698628746967694,
+   "ratio": 0.6978868550926689,
+   "diag_low": 0.9801892279478314,
+   "diag_high": 0.5050184052985527
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "mistralai/Mistral-7B-v0.1",
+    "tiiuae/falcon-7b"
+   ],
+   "holonomy": 0.42181283095308575,
+   "noise": 0.5840844262991075,
+   "ratio": 0.7221778427235054,
+   "diag_low": 0.9938896221174988,
+   "diag_high": 0.5798796983281572
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "mistralai/Mistral-7B-v0.1",
+    "microsoft/phi-2"
+   ],
+   "holonomy": 0.39936847925024255,
+   "noise": 0.5498919662218799,
+   "ratio": 0.7262671647926904,
+   "diag_low": 0.9961683311765186,
+   "diag_high": 0.6002176431026282
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "mistralai/Mistral-7B-v0.1",
+    "bigscience/bloom-560m"
+   ],
+   "holonomy": 0.48001911764927707,
+   "noise": 0.6795904672804736,
+   "ratio": 0.7063358607282649,
+   "diag_low": 0.98907953010016,
+   "diag_high": 0.49289877980324537
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "mistralai/Mistral-7B-v0.1",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "holonomy": 0.4021833966489703,
+   "noise": 0.5520098041153269,
+   "ratio": 0.7285801695017458,
+   "diag_low": 0.9964499507968725,
+   "diag_high": 0.5960956589647384
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "mistralai/Mistral-7B-v0.1",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.3913789589069561,
+   "noise": 0.5433127233687488,
+   "ratio": 0.7203566971158992,
+   "diag_low": 0.9965539882563912,
+   "diag_high": 0.6260830740809817
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "mistralai/Mistral-7B-v0.1",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.34367968041186303,
+   "noise": 0.49323578701364673,
+   "ratio": 0.696785775607872,
+   "diag_low": 0.9973895857547158,
+   "diag_high": 0.6906653677069752
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "allenai/OLMo-2-1124-7B",
+    "HuggingFaceTB/SmolLM2-360M"
+   ],
+   "holonomy": 0.4259457443885963,
+   "noise": 0.6144843105971048,
+   "ratio": 0.6931759477710628,
+   "diag_low": 0.9839464091125862,
+   "diag_high": 0.5528779666460051
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "allenai/OLMo-2-1124-7B",
+    "tiiuae/falcon-7b"
+   ],
+   "holonomy": 0.3937641705015528,
+   "noise": 0.5401343101351194,
+   "ratio": 0.7290115867719072,
+   "diag_low": 0.9950336950590992,
+   "diag_high": 0.6119220319689973
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "allenai/OLMo-2-1124-7B",
+    "microsoft/phi-2"
+   ],
+   "holonomy": 0.37396617163219953,
+   "noise": 0.5096656901469374,
+   "ratio": 0.7337479819847879,
+   "diag_low": 0.9970076175374183,
+   "diag_high": 0.6086040946375028
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "allenai/OLMo-2-1124-7B",
+    "bigscience/bloom-560m"
+   ],
+   "holonomy": 0.45304562696082795,
+   "noise": 0.6463453667535225,
+   "ratio": 0.7009342841527515,
+   "diag_low": 0.9914247963176427,
+   "diag_high": 0.5208767959566818
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "allenai/OLMo-2-1124-7B",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "holonomy": 0.3888576462585251,
+   "noise": 0.5237132564541408,
+   "ratio": 0.7425010565730745,
+   "diag_low": 0.9970392570166053,
+   "diag_high": 0.585573444935158
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "allenai/OLMo-2-1124-7B",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.37064648180830745,
+   "noise": 0.5306338281283106,
+   "ratio": 0.6984976497176557,
+   "diag_low": 0.9968622824356681,
+   "diag_high": 0.6156660673483267
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "allenai/OLMo-2-1124-7B",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.3867139889302474,
+   "noise": 0.5180538207925668,
+   "ratio": 0.7464745426230357,
+   "diag_low": 0.9970371626586386,
+   "diag_high": 0.6057624651621978
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "HuggingFaceTB/SmolLM2-360M",
+    "tiiuae/falcon-7b"
+   ],
+   "holonomy": 0.4860430484696776,
+   "noise": 0.6565199156034036,
+   "ratio": 0.7403325274953133,
+   "diag_low": 0.9721470360770041,
+   "diag_high": 0.5045473482158025
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "HuggingFaceTB/SmolLM2-360M",
+    "microsoft/phi-2"
+   ],
+   "holonomy": 0.46598588059954943,
+   "noise": 0.680840331562622,
+   "ratio": 0.6844275507739793,
+   "diag_low": 0.9805245896177823,
+   "diag_high": 0.4899848362427773
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "HuggingFaceTB/SmolLM2-360M",
+    "bigscience/bloom-560m"
+   ],
+   "holonomy": 0.5174878635123854,
+   "noise": 0.7325392110945753,
+   "ratio": 0.7064302574863457,
+   "diag_low": 0.9606491320812407,
+   "diag_high": 0.4943394891862596
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "HuggingFaceTB/SmolLM2-360M",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "holonomy": 0.4888417387991482,
+   "noise": 0.7220151256920438,
+   "ratio": 0.6770519361773738,
+   "diag_low": 0.9798187562024097,
+   "diag_high": 0.48613108009337375
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "HuggingFaceTB/SmolLM2-360M",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.47021670086371964,
+   "noise": 0.6973737440839874,
+   "ratio": 0.6742678583079686,
+   "diag_low": 0.9811669952249127,
+   "diag_high": 0.46494906976044653
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "HuggingFaceTB/SmolLM2-360M",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.4845384901306047,
+   "noise": 0.7017692419121345,
+   "ratio": 0.690452731741799,
+   "diag_low": 0.9802688045231535,
+   "diag_high": 0.46363248879897845
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "tiiuae/falcon-7b",
+    "microsoft/phi-2"
+   ],
+   "holonomy": 0.43174487378962856,
+   "noise": 0.5972750471379829,
+   "ratio": 0.7228577116329565,
+   "diag_low": 0.9936002240568094,
+   "diag_high": 0.5350685827736337
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "tiiuae/falcon-7b",
+    "bigscience/bloom-560m"
+   ],
+   "holonomy": 0.5013914477511284,
+   "noise": 0.6985480319835612,
+   "ratio": 0.7177623080941234,
+   "diag_low": 0.9835397721973728,
+   "diag_high": 0.4384759876331496
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "tiiuae/falcon-7b",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "holonomy": 0.45775060855690125,
+   "noise": 0.6233161764501507,
+   "ratio": 0.7343794784275257,
+   "diag_low": 0.9936886521146999,
+   "diag_high": 0.4939798875222384
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "tiiuae/falcon-7b",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.439102799324221,
+   "noise": 0.6096058251602278,
+   "ratio": 0.7203061079818389,
+   "diag_low": 0.9932818483830452,
+   "diag_high": 0.4885234434339662
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "tiiuae/falcon-7b",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.4462442884477684,
+   "noise": 0.5964128822693151,
+   "ratio": 0.7482136984530512,
+   "diag_low": 0.9935648163462306,
+   "diag_high": 0.5268192278963071
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "microsoft/phi-2",
+    "bigscience/bloom-560m"
+   ],
+   "holonomy": 0.48031573604491296,
+   "noise": 0.7066110490509783,
+   "ratio": 0.6797455781225135,
+   "diag_low": 0.9890363673327275,
+   "diag_high": 0.5017867078665849
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "microsoft/phi-2",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "holonomy": 0.4071489139569472,
+   "noise": 0.5841873935890262,
+   "ratio": 0.6969491612196189,
+   "diag_low": 0.9956781492294711,
+   "diag_high": 0.5824044846127668
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "microsoft/phi-2",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.4175022712581025,
+   "noise": 0.5867605564037115,
+   "ratio": 0.7115377247185759,
+   "diag_low": 0.9958811289578137,
+   "diag_high": 0.5333500639020539
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "microsoft/phi-2",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.41130960721102566,
+   "noise": 0.5709997571255979,
+   "ratio": 0.7203323680583518,
+   "diag_low": 0.9960540023240281,
+   "diag_high": 0.5759988022682626
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "bigscience/bloom-560m",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "holonomy": 0.49685530101028896,
+   "noise": 0.7309062761714341,
+   "ratio": 0.6797797709617034,
+   "diag_low": 0.9892914205208541,
+   "diag_high": 0.44722146412524033
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "bigscience/bloom-560m",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.48601341663579656,
+   "noise": 0.7180803230552162,
+   "ratio": 0.6768231923804225,
+   "diag_low": 0.9871316503783427,
+   "diag_high": 0.4555894172097934
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "bigscience/bloom-560m",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.49390476690730273,
+   "noise": 0.712752457659541,
+   "ratio": 0.6929541408094663,
+   "diag_low": 0.9877295521166661,
+   "diag_high": 0.46918579470960176
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "stabilityai/stablelm-2-1_6b",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.41493029936961856,
+   "noise": 0.5937913814352442,
+   "ratio": 0.6987812762904991,
+   "diag_low": 0.9961985013430539,
+   "diag_high": 0.5745926905629364
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "stabilityai/stablelm-2-1_6b",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.41426704359802163,
+   "noise": 0.5774863121970258,
+   "ratio": 0.7173625328398826,
+   "diag_low": 0.996154638776906,
+   "diag_high": 0.5783840700842583
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-410m",
+    "01-ai/Yi-6B",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.3970812382889415,
+   "noise": 0.558167480030384,
+   "ratio": 0.7114015998698567,
+   "diag_low": 0.9962459904770331,
+   "diag_high": 0.6037178716462116
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-6.9b",
+    "Qwen/Qwen2.5-0.5B",
+    "Qwen/Qwen2.5-7B"
+   ],
+   "holonomy": 0.5046713177415059,
+   "noise": 0.7417100038258765,
+   "ratio": 0.680415951164631,
+   "diag_low": 0.9806071735816364,
+   "diag_high": 0.5289375715569311
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-6.9b",
+    "Qwen/Qwen2.5-0.5B",
+    "mistralai/Mistral-7B-v0.1"
+   ],
+   "holonomy": 0.48862351544160665,
+   "noise": 0.6904662032090751,
+   "ratio": 0.7076718790443824,
+   "diag_low": 0.9831125262612014,
+   "diag_high": 0.5367185743060268
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-6.9b",
+    "Qwen/Qwen2.5-0.5B",
+    "allenai/OLMo-2-1124-7B"
+   ],
+   "holonomy": 0.46339415349962143,
+   "noise": 0.6626281504827087,
+   "ratio": 0.6993275989890406,
+   "diag_low": 0.9835127950571277,
+   "diag_high": 0.5792448675232801
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-6.9b",
+    "Qwen/Qwen2.5-0.5B",
+    "HuggingFaceTB/SmolLM2-360M"
+   ],
+   "holonomy": 0.49979555325391084,
+   "noise": 0.6919509721052349,
+   "ratio": 0.7222990838979554,
+   "diag_low": 0.9528611141034884,
+   "diag_high": 0.566846628870825
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-6.9b",
+    "Qwen/Qwen2.5-0.5B",
+    "tiiuae/falcon-7b"
+   ],
+   "holonomy": 0.4904161137819418,
+   "noise": 0.6773962696734602,
+   "ratio": 0.7239722681353818,
+   "diag_low": 0.9755641378029166,
+   "diag_high": 0.5551345758210549
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-6.9b",
+    "Qwen/Qwen2.5-0.5B",
+    "microsoft/phi-2"
+   ],
+   "holonomy": 0.4901119715741214,
+   "noise": 0.7112157569982671,
+   "ratio": 0.6891185505263145,
+   "diag_low": 0.9793748552950228,
+   "diag_high": 0.5096209071318065
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-6.9b",
+    "Qwen/Qwen2.5-0.5B",
+    "bigscience/bloom-560m"
+   ],
+   "holonomy": 0.5249613016079945,
+   "noise": 0.7570942006726356,
+   "ratio": 0.6933896748140402,
+   "diag_low": 0.9621782519983175,
+   "diag_high": 0.5278529432286783
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-6.9b",
+    "Qwen/Qwen2.5-0.5B",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "holonomy": 0.5069312560242052,
+   "noise": 0.7301210652106476,
+   "ratio": 0.6943112316283467,
+   "diag_low": 0.9818044937103534,
+   "diag_high": 0.4947606675146561
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-6.9b",
+    "Qwen/Qwen2.5-0.5B",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.4801433973079634,
+   "noise": 0.7090963889302065,
+   "ratio": 0.6771200711264966,
+   "diag_low": 0.9833982636718284,
+   "diag_high": 0.5296142048952474
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-6.9b",
+    "Qwen/Qwen2.5-0.5B",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.4940611412630639,
+   "noise": 0.7155362036747162,
+   "ratio": 0.6904767903088029,
+   "diag_low": 0.9814607586353032,
+   "diag_high": 0.5230991397389462
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-6.9b",
+    "Qwen/Qwen2.5-7B",
+    "mistralai/Mistral-7B-v0.1"
+   ],
+   "holonomy": 0.43257737777114486,
+   "noise": 0.5906164072674719,
+   "ratio": 0.7324167978544557,
+   "diag_low": 0.9957310100965422,
+   "diag_high": 0.5526267866975807
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-6.9b",
+    "Qwen/Qwen2.5-7B",
+    "allenai/OLMo-2-1124-7B"
+   ],
+   "holonomy": 0.409310571955081,
+   "noise": 0.580344418739162,
+   "ratio": 0.7052890641118532,
+   "diag_low": 0.9954260751209987,
+   "diag_high": 0.60044795785033
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-6.9b",
+    "Qwen/Qwen2.5-7B",
+    "HuggingFaceTB/SmolLM2-360M"
+   ],
+   "holonomy": 0.5086548523553838,
+   "noise": 0.7450672739663143,
+   "ratio": 0.682696543155888,
+   "diag_low": 0.9767521226783458,
+   "diag_high": 0.46708101179091055
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-6.9b",
+    "Qwen/Qwen2.5-7B",
+    "tiiuae/falcon-7b"
+   ],
+   "holonomy": 0.4802078748467892,
+   "noise": 0.6511712924521007,
+   "ratio": 0.7374524651393667,
+   "diag_low": 0.9906880212668461,
+   "diag_high": 0.46546460888596564
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-6.9b",
+    "Qwen/Qwen2.5-7B",
+    "microsoft/phi-2"
+   ],
+   "holonomy": 0.4331040539129291,
+   "noise": 0.6181220242479984,
+   "ratio": 0.7006772723231137,
+   "diag_low": 0.9939072791350261,
+   "diag_high": 0.5643610001504149
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-6.9b",
+    "Qwen/Qwen2.5-7B",
+    "bigscience/bloom-560m"
+   ],
+   "holonomy": 0.5127155790526947,
+   "noise": 0.761161909869177,
+   "ratio": 0.6735959490416652,
+   "diag_low": 0.9866521111810617,
+   "diag_high": 0.48578863635130914
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-6.9b",
+    "Qwen/Qwen2.5-7B",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "holonomy": 0.45017720261771776,
+   "noise": 0.6521614437523702,
+   "ratio": 0.6902849086378263,
+   "diag_low": 0.9948583050807132,
+   "diag_high": 0.5755132846725741
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-6.9b",
+    "Qwen/Qwen2.5-7B",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.442993442092226,
+   "noise": 0.6366149973492435,
+   "ratio": 0.6958576909698566,
+   "diag_low": 0.995071049048713,
+   "diag_high": 0.5521849655210662
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-6.9b",
+    "Qwen/Qwen2.5-7B",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.43503889621442426,
+   "noise": 0.6304302825641803,
+   "ratio": 0.6900666231402607,
+   "diag_low": 0.9953052600251568,
+   "diag_high": 0.543515322235511
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-6.9b",
+    "mistralai/Mistral-7B-v0.1",
+    "allenai/OLMo-2-1124-7B"
+   ],
+   "holonomy": 0.3989446235614648,
+   "noise": 0.5317951895896534,
+   "ratio": 0.7501847165434131,
+   "diag_low": 0.9964902331979228,
+   "diag_high": 0.6434712279092629
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-6.9b",
+    "mistralai/Mistral-7B-v0.1",
+    "HuggingFaceTB/SmolLM2-360M"
+   ],
+   "holonomy": 0.4937206119062853,
+   "noise": 0.6868110298863492,
+   "ratio": 0.7188594685032712,
+   "diag_low": 0.9763545075064999,
+   "diag_high": 0.5005795601495868
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-6.9b",
+    "mistralai/Mistral-7B-v0.1",
+    "tiiuae/falcon-7b"
+   ],
+   "holonomy": 0.43621344344184054,
+   "noise": 0.5955679015137286,
+   "ratio": 0.7324327626340105,
+   "diag_low": 0.9922152880772532,
+   "diag_high": 0.5785723968000305
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-6.9b",
+    "mistralai/Mistral-7B-v0.1",
+    "microsoft/phi-2"
+   ],
+   "holonomy": 0.4218690388004219,
+   "noise": 0.5829448708734825,
+   "ratio": 0.7236859948150756,
+   "diag_low": 0.9956063645963837,
+   "diag_high": 0.5765123518769726
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-6.9b",
+    "mistralai/Mistral-7B-v0.1",
+    "bigscience/bloom-560m"
+   ],
+   "holonomy": 0.48034944952680386,
+   "noise": 0.7009317715883653,
+   "ratio": 0.685301293217591,
+   "diag_low": 0.9876935604368968,
+   "diag_high": 0.5420608009636844
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-6.9b",
+    "mistralai/Mistral-7B-v0.1",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "holonomy": 0.4123913303113762,
+   "noise": 0.5867983420578863,
+   "ratio": 0.7027820304759735,
+   "diag_low": 0.9959382200421895,
+   "diag_high": 0.6015986391005392
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-6.9b",
+    "mistralai/Mistral-7B-v0.1",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.3850976887507742,
+   "noise": 0.5572652704809983,
+   "ratio": 0.6910491450837781,
+   "diag_low": 0.9966967290161288,
+   "diag_high": 0.6643314419293358
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-6.9b",
+    "mistralai/Mistral-7B-v0.1",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.36848340277749114,
+   "noise": 0.5377614180131409,
+   "ratio": 0.6852172551517758,
+   "diag_low": 0.997431678335384,
+   "diag_high": 0.6607322602933585
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-6.9b",
+    "allenai/OLMo-2-1124-7B",
+    "HuggingFaceTB/SmolLM2-360M"
+   ],
+   "holonomy": 0.4601068008761283,
+   "noise": 0.6457645710590022,
+   "ratio": 0.712499293855019,
+   "diag_low": 0.9783035008124481,
+   "diag_high": 0.5755671092746919
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-6.9b",
+    "allenai/OLMo-2-1124-7B",
+    "tiiuae/falcon-7b"
+   ],
+   "holonomy": 0.42801501214003707,
+   "noise": 0.5672031158605708,
+   "ratio": 0.7546062427577552,
+   "diag_low": 0.9932332867462984,
+   "diag_high": 0.5984774038452629
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-6.9b",
+    "allenai/OLMo-2-1124-7B",
+    "microsoft/phi-2"
+   ],
+   "holonomy": 0.3892269365581623,
+   "noise": 0.560027193146708,
+   "ratio": 0.695014351662381,
+   "diag_low": 0.9951536244867671,
+   "diag_high": 0.6372364749397882
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-6.9b",
+    "allenai/OLMo-2-1124-7B",
+    "bigscience/bloom-560m"
+   ],
+   "holonomy": 0.480457521229122,
+   "noise": 0.6809201654494802,
+   "ratio": 0.7056003708040701,
+   "diag_low": 0.9886688198885853,
+   "diag_high": 0.5277919705076333
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-6.9b",
+    "allenai/OLMo-2-1124-7B",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "holonomy": 0.40611069324683124,
+   "noise": 0.5747354511222823,
+   "ratio": 0.7066045646807091,
+   "diag_low": 0.995848358234549,
+   "diag_high": 0.6136345278985156
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-6.9b",
+    "allenai/OLMo-2-1124-7B",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.39860418424916794,
+   "noise": 0.5597820283400399,
+   "ratio": 0.7120703489377398,
+   "diag_low": 0.9960312961648421,
+   "diag_high": 0.6117353286015382
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-6.9b",
+    "allenai/OLMo-2-1124-7B",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.40472736778760604,
+   "noise": 0.5750768259448468,
+   "ratio": 0.7037796508712416,
+   "diag_low": 0.9961296327166451,
+   "diag_high": 0.6446882056234284
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-6.9b",
+    "HuggingFaceTB/SmolLM2-360M",
+    "tiiuae/falcon-7b"
+   ],
+   "holonomy": 0.494281405050597,
+   "noise": 0.6646102275239625,
+   "ratio": 0.7437162182894269,
+   "diag_low": 0.9667210680637284,
+   "diag_high": 0.5273775768366791
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-6.9b",
+    "HuggingFaceTB/SmolLM2-360M",
+    "microsoft/phi-2"
+   ],
+   "holonomy": 0.4973258368154914,
+   "noise": 0.7057825102125169,
+   "ratio": 0.7046446031451566,
+   "diag_low": 0.9770616224363742,
+   "diag_high": 0.5340356173776103
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-6.9b",
+    "HuggingFaceTB/SmolLM2-360M",
+    "bigscience/bloom-560m"
+   ],
+   "holonomy": 0.5262082558193164,
+   "noise": 0.7504783059301706,
+   "ratio": 0.7011638466579182,
+   "diag_low": 0.9589326436962524,
+   "diag_high": 0.5193768059579453
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-6.9b",
+    "HuggingFaceTB/SmolLM2-360M",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "holonomy": 0.5121433510554443,
+   "noise": 0.7470375886177244,
+   "ratio": 0.6855657049373982,
+   "diag_low": 0.9766890956949794,
+   "diag_high": 0.4615262421877092
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-6.9b",
+    "HuggingFaceTB/SmolLM2-360M",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.47882986327859534,
+   "noise": 0.7062774610058405,
+   "ratio": 0.6779628258229745,
+   "diag_low": 0.977389416072486,
+   "diag_high": 0.5695887936595672
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-6.9b",
+    "HuggingFaceTB/SmolLM2-360M",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.5020364403131061,
+   "noise": 0.7317975927014989,
+   "ratio": 0.6860318280903219,
+   "diag_low": 0.9767042497751205,
+   "diag_high": 0.47501829729881395
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-6.9b",
+    "tiiuae/falcon-7b",
+    "microsoft/phi-2"
+   ],
+   "holonomy": 0.45081473476649686,
+   "noise": 0.6179613782147237,
+   "ratio": 0.7295192720116106,
+   "diag_low": 0.9906909487891239,
+   "diag_high": 0.5618051866746723
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-6.9b",
+    "tiiuae/falcon-7b",
+    "bigscience/bloom-560m"
+   ],
+   "holonomy": 0.5077027680869152,
+   "noise": 0.7107226837949128,
+   "ratio": 0.7143472125809041,
+   "diag_low": 0.9810518068361256,
+   "diag_high": 0.49823264281726926
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-6.9b",
+    "tiiuae/falcon-7b",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "holonomy": 0.46292571082383804,
+   "noise": 0.6448532866442591,
+   "ratio": 0.7178775706220699,
+   "diag_low": 0.9913174376923243,
+   "diag_high": 0.5325162797407389
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-6.9b",
+    "tiiuae/falcon-7b",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.4284486433173998,
+   "noise": 0.6121032294051396,
+   "ratio": 0.6999614162038961,
+   "diag_low": 0.9915766118816917,
+   "diag_high": 0.5881374790857787
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-6.9b",
+    "tiiuae/falcon-7b",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.4484876296657181,
+   "noise": 0.6239466021370336,
+   "ratio": 0.7187916852654316,
+   "diag_low": 0.991621282582667,
+   "diag_high": 0.5500451812147158
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-6.9b",
+    "microsoft/phi-2",
+    "bigscience/bloom-560m"
+   ],
+   "holonomy": 0.5079491561572148,
+   "noise": 0.7350874741195692,
+   "ratio": 0.6910050491141846,
+   "diag_low": 0.9860436579889023,
+   "diag_high": 0.47740474354100304
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-6.9b",
+    "microsoft/phi-2",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "holonomy": 0.44618833163153754,
+   "noise": 0.6264859583373236,
+   "ratio": 0.7122080322689259,
+   "diag_low": 0.9942825205211755,
+   "diag_high": 0.5571094371238321
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-6.9b",
+    "microsoft/phi-2",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.41992548233193533,
+   "noise": 0.6092914668893199,
+   "ratio": 0.6892029597522927,
+   "diag_low": 0.9947711019770658,
+   "diag_high": 0.6039859469509539
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-6.9b",
+    "microsoft/phi-2",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.43024691627533845,
+   "noise": 0.619305093240058,
+   "ratio": 0.6947252993260369,
+   "diag_low": 0.9946593560546954,
+   "diag_high": 0.5405592087604927
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-6.9b",
+    "bigscience/bloom-560m",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "holonomy": 0.5263203642551096,
+   "noise": 0.7599028404694007,
+   "ratio": 0.6926153400479402,
+   "diag_low": 0.9863809102078485,
+   "diag_high": 0.42484982463323695
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-6.9b",
+    "bigscience/bloom-560m",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.4871101046236736,
+   "noise": 0.7311676200935087,
+   "ratio": 0.6662085289846087,
+   "diag_low": 0.9880980626864152,
+   "diag_high": 0.5127720541588501
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-6.9b",
+    "bigscience/bloom-560m",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.5004104243834494,
+   "noise": 0.7466811494985505,
+   "ratio": 0.6701795334186629,
+   "diag_low": 0.9858944731601406,
+   "diag_high": 0.4634085702306088
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-6.9b",
+    "stabilityai/stablelm-2-1_6b",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.43194115090264756,
+   "noise": 0.6178270536160004,
+   "ratio": 0.6991295515057083,
+   "diag_low": 0.9957234073457035,
+   "diag_high": 0.5925275594245907
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-6.9b",
+    "stabilityai/stablelm-2-1_6b",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.4134365012603017,
+   "noise": 0.627026665374458,
+   "ratio": 0.6593603176563455,
+   "diag_low": 0.9955621536373507,
+   "diag_high": 0.5981847372340129
+  },
+  {
+   "triangle": [
+    "EleutherAI/pythia-6.9b",
+    "01-ai/Yi-6B",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.4066602408058091,
+   "noise": 0.5890342349869077,
+   "ratio": 0.6903847291912462,
+   "diag_low": 0.9962242562686359,
+   "diag_high": 0.5921719792406768
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-0.5B",
+    "Qwen/Qwen2.5-7B",
+    "mistralai/Mistral-7B-v0.1"
+   ],
+   "holonomy": 0.47229218479145985,
+   "noise": 0.6594153549735492,
+   "ratio": 0.7162286732167538,
+   "diag_low": 0.9818025357770435,
+   "diag_high": 0.5712134669975937
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-0.5B",
+    "Qwen/Qwen2.5-7B",
+    "allenai/OLMo-2-1124-7B"
+   ],
+   "holonomy": 0.4439636245110381,
+   "noise": 0.6342688514041588,
+   "ratio": 0.6999612601630703,
+   "diag_low": 0.981898687031914,
+   "diag_high": 0.6016982317927728
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-0.5B",
+    "Qwen/Qwen2.5-7B",
+    "HuggingFaceTB/SmolLM2-360M"
+   ],
+   "holonomy": 0.502304582101963,
+   "noise": 0.7009620400065265,
+   "ratio": 0.7165931297753102,
+   "diag_low": 0.9737665971320213,
+   "diag_high": 0.45426405030848144
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-0.5B",
+    "Qwen/Qwen2.5-7B",
+    "tiiuae/falcon-7b"
+   ],
+   "holonomy": 0.5028641020190109,
+   "noise": 0.684798183929758,
+   "ratio": 0.7343245262907871,
+   "diag_low": 0.9765013773890647,
+   "diag_high": 0.5383280434347721
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-0.5B",
+    "Qwen/Qwen2.5-7B",
+    "microsoft/phi-2"
+   ],
+   "holonomy": 0.4727809444630246,
+   "noise": 0.687917333844123,
+   "ratio": 0.687264183068475,
+   "diag_low": 0.974704520543954,
+   "diag_high": 0.5823276162062081
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-0.5B",
+    "Qwen/Qwen2.5-7B",
+    "bigscience/bloom-560m"
+   ],
+   "holonomy": 0.5323472097751694,
+   "noise": 0.7587629929377222,
+   "ratio": 0.7015988058590825,
+   "diag_low": 0.9779163464483904,
+   "diag_high": 0.44461356298790267
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-0.5B",
+    "Qwen/Qwen2.5-7B",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "holonomy": 0.490750196578909,
+   "noise": 0.7123128002172645,
+   "ratio": 0.6889532189077944,
+   "diag_low": 0.9787516202993211,
+   "diag_high": 0.5581277361337109
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-0.5B",
+    "Qwen/Qwen2.5-7B",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.47385764936133556,
+   "noise": 0.7030028061696983,
+   "ratio": 0.6740480197271798,
+   "diag_low": 0.9807243481252925,
+   "diag_high": 0.5559599470277964
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-0.5B",
+    "Qwen/Qwen2.5-7B",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.48251043196302235,
+   "noise": 0.6828760152404142,
+   "ratio": 0.7065857069136469,
+   "diag_low": 0.9816081107500848,
+   "diag_high": 0.5604371121331646
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-0.5B",
+    "mistralai/Mistral-7B-v0.1",
+    "allenai/OLMo-2-1124-7B"
+   ],
+   "holonomy": 0.40912946098430203,
+   "noise": 0.5807529478951997,
+   "ratio": 0.7044810748995661,
+   "diag_low": 0.9895862315455806,
+   "diag_high": 0.6546090136033773
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-0.5B",
+    "mistralai/Mistral-7B-v0.1",
+    "HuggingFaceTB/SmolLM2-360M"
+   ],
+   "holonomy": 0.47590945401516616,
+   "noise": 0.6300019530814792,
+   "ratio": 0.7554094899029876,
+   "diag_low": 0.9800781203002074,
+   "diag_high": 0.503061226732378
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-0.5B",
+    "mistralai/Mistral-7B-v0.1",
+    "tiiuae/falcon-7b"
+   ],
+   "holonomy": 0.48019803763278235,
+   "noise": 0.6233748127985568,
+   "ratio": 0.7703199227395767,
+   "diag_low": 0.9818704079498306,
+   "diag_high": 0.5732422057567985
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-0.5B",
+    "mistralai/Mistral-7B-v0.1",
+    "microsoft/phi-2"
+   ],
+   "holonomy": 0.46247376612173724,
+   "noise": 0.6480360137668882,
+   "ratio": 0.7136544208916428,
+   "diag_low": 0.9794928564509978,
+   "diag_high": 0.5738682110474445
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-0.5B",
+    "mistralai/Mistral-7B-v0.1",
+    "bigscience/bloom-560m"
+   ],
+   "holonomy": 0.5004425277635044,
+   "noise": 0.6903837383343667,
+   "ratio": 0.7248758914439117,
+   "diag_low": 0.9846627341599268,
+   "diag_high": 0.5280790465744167
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-0.5B",
+    "mistralai/Mistral-7B-v0.1",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "holonomy": 0.44597647031736243,
+   "noise": 0.6444981010030075,
+   "ratio": 0.6919748399930217,
+   "diag_low": 0.9838267473225428,
+   "diag_high": 0.6266127870613211
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-0.5B",
+    "mistralai/Mistral-7B-v0.1",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.436519995660048,
+   "noise": 0.6232570927275255,
+   "ratio": 0.700385123175622,
+   "diag_low": 0.9867559275542324,
+   "diag_high": 0.6229394377155438
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-0.5B",
+    "mistralai/Mistral-7B-v0.1",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.37648800210650224,
+   "noise": 0.5890969232975101,
+   "ratio": 0.6390934788779494,
+   "diag_low": 0.9922129780777355,
+   "diag_high": 0.7242703500686439
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-0.5B",
+    "allenai/OLMo-2-1124-7B",
+    "HuggingFaceTB/SmolLM2-360M"
+   ],
+   "holonomy": 0.44680114044880265,
+   "noise": 0.5671872821268535,
+   "ratio": 0.7877488697796188,
+   "diag_low": 0.9790931080064523,
+   "diag_high": 0.5521658112780945
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-0.5B",
+    "allenai/OLMo-2-1124-7B",
+    "tiiuae/falcon-7b"
+   ],
+   "holonomy": 0.43952474334746044,
+   "noise": 0.5788876127700512,
+   "ratio": 0.7592574683784965,
+   "diag_low": 0.9810500071884816,
+   "diag_high": 0.6271300228300734
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-0.5B",
+    "allenai/OLMo-2-1124-7B",
+    "microsoft/phi-2"
+   ],
+   "holonomy": 0.4177842792846682,
+   "noise": 0.6109442457241552,
+   "ratio": 0.6838337249407538,
+   "diag_low": 0.9815634659215104,
+   "diag_high": 0.6675992613427081
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-0.5B",
+    "allenai/OLMo-2-1124-7B",
+    "bigscience/bloom-560m"
+   ],
+   "holonomy": 0.49198106717344764,
+   "noise": 0.6545785599214029,
+   "ratio": 0.7515997273612524,
+   "diag_low": 0.9824292123233085,
+   "diag_high": 0.5011958244113978
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-0.5B",
+    "allenai/OLMo-2-1124-7B",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "holonomy": 0.4404986612075428,
+   "noise": 0.617140833513576,
+   "ratio": 0.7137733192918803,
+   "diag_low": 0.9829994198667361,
+   "diag_high": 0.6252473410715208
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-0.5B",
+    "allenai/OLMo-2-1124-7B",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.414353022008134,
+   "noise": 0.6088983518304969,
+   "ratio": 0.6804962121550958,
+   "diag_low": 0.9858461352774022,
+   "diag_high": 0.6566917361440847
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-0.5B",
+    "allenai/OLMo-2-1124-7B",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.42714119748644036,
+   "noise": 0.6066775582897287,
+   "ratio": 0.704066256695871,
+   "diag_low": 0.98795454990001,
+   "diag_high": 0.6333261794697124
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-0.5B",
+    "HuggingFaceTB/SmolLM2-360M",
+    "tiiuae/falcon-7b"
+   ],
+   "holonomy": 0.4659903875559797,
+   "noise": 0.5708094738183516,
+   "ratio": 0.816367647927777,
+   "diag_low": 0.9697678885774549,
+   "diag_high": 0.5283570443391663
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-0.5B",
+    "HuggingFaceTB/SmolLM2-360M",
+    "microsoft/phi-2"
+   ],
+   "holonomy": 0.4859803716450042,
+   "noise": 0.6545812198163187,
+   "ratio": 0.7424294448615171,
+   "diag_low": 0.9709326873759825,
+   "diag_high": 0.45481480866572666
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-0.5B",
+    "HuggingFaceTB/SmolLM2-360M",
+    "bigscience/bloom-560m"
+   ],
+   "holonomy": 0.471061137099664,
+   "noise": 0.6314774060562345,
+   "ratio": 0.7459667322724686,
+   "diag_low": 0.9827488818743689,
+   "diag_high": 0.49091602453935124
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-0.5B",
+    "HuggingFaceTB/SmolLM2-360M",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "holonomy": 0.5062346842468736,
+   "noise": 0.6923383101602454,
+   "ratio": 0.7311955395472812,
+   "diag_low": 0.9756239660390635,
+   "diag_high": 0.457994388779668
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-0.5B",
+    "HuggingFaceTB/SmolLM2-360M",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.46699667240090603,
+   "noise": 0.6534174338268949,
+   "ratio": 0.7146988253218601,
+   "diag_low": 0.9775341640304784,
+   "diag_high": 0.5047131280087217
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-0.5B",
+    "HuggingFaceTB/SmolLM2-360M",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.4899855535597871,
+   "noise": 0.666030951211697,
+   "ratio": 0.7356798549202046,
+   "diag_low": 0.9794699671766697,
+   "diag_high": 0.5050559460446453
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-0.5B",
+    "tiiuae/falcon-7b",
+    "microsoft/phi-2"
+   ],
+   "holonomy": 0.48900179505675045,
+   "noise": 0.6487879841555467,
+   "ratio": 0.7537158624989461,
+   "diag_low": 0.9764882478997496,
+   "diag_high": 0.5735106134151691
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-0.5B",
+    "tiiuae/falcon-7b",
+    "bigscience/bloom-560m"
+   ],
+   "holonomy": 0.5202161329359017,
+   "noise": 0.6703541763527502,
+   "ratio": 0.7760317624427783,
+   "diag_low": 0.9786996814719291,
+   "diag_high": 0.45499197109064904
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-0.5B",
+    "tiiuae/falcon-7b",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "holonomy": 0.4918421483958677,
+   "noise": 0.6676862287099394,
+   "ratio": 0.7366366524380376,
+   "diag_low": 0.9780414246383196,
+   "diag_high": 0.5609454671465013
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-0.5B",
+    "tiiuae/falcon-7b",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.4582433607424611,
+   "noise": 0.6414817348588405,
+   "ratio": 0.7143513771959518,
+   "diag_low": 0.9789391194745475,
+   "diag_high": 0.6019104033818444
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-0.5B",
+    "tiiuae/falcon-7b",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.4750008455569603,
+   "noise": 0.6372447217606731,
+   "ratio": 0.7453978500513246,
+   "diag_low": 0.9830058349007504,
+   "diag_high": 0.5695489350928372
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-0.5B",
+    "microsoft/phi-2",
+    "bigscience/bloom-560m"
+   ],
+   "holonomy": 0.5261083159133907,
+   "noise": 0.7285825305642641,
+   "ratio": 0.7220984498570621,
+   "diag_low": 0.9751967380297295,
+   "diag_high": 0.44614352444675665
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-0.5B",
+    "microsoft/phi-2",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "holonomy": 0.4854295944387131,
+   "noise": 0.6846055181269293,
+   "ratio": 0.709064682631892,
+   "diag_low": 0.9763252400428839,
+   "diag_high": 0.5735902994596842
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-0.5B",
+    "microsoft/phi-2",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.4680971447424361,
+   "noise": 0.6740144398130162,
+   "ratio": 0.6944912706503658,
+   "diag_low": 0.9787812008345631,
+   "diag_high": 0.582985197755701
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-0.5B",
+    "microsoft/phi-2",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.46466021912925487,
+   "noise": 0.6682373772467183,
+   "ratio": 0.6953520335000639,
+   "diag_low": 0.9807093974307912,
+   "diag_high": 0.5911019317311637
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-0.5B",
+    "bigscience/bloom-560m",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "holonomy": 0.5313004950764656,
+   "noise": 0.747563235775291,
+   "ratio": 0.7107097696229787,
+   "diag_low": 0.9819280951441796,
+   "diag_high": 0.47662279620375053
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-0.5B",
+    "bigscience/bloom-560m",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.5060886380979512,
+   "noise": 0.7230932631402908,
+   "ratio": 0.6998940024694471,
+   "diag_low": 0.9823681622920355,
+   "diag_high": 0.48998163197273237
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-0.5B",
+    "bigscience/bloom-560m",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.5150248590922785,
+   "noise": 0.7250748498784978,
+   "ratio": 0.7103057831596037,
+   "diag_low": 0.9836297405304022,
+   "diag_high": 0.506054305922016
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-0.5B",
+    "stabilityai/stablelm-2-1_6b",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.46196969094901297,
+   "noise": 0.6750475516032662,
+   "ratio": 0.6843513317718368,
+   "diag_low": 0.9834640201080065,
+   "diag_high": 0.6063925063278875
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-0.5B",
+    "stabilityai/stablelm-2-1_6b",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.46946627463859547,
+   "noise": 0.668643693023818,
+   "ratio": 0.7021172554780569,
+   "diag_low": 0.9854553014840611,
+   "diag_high": 0.6041999524244102
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-0.5B",
+    "01-ai/Yi-6B",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.42433952125985785,
+   "noise": 0.6385472520595772,
+   "ratio": 0.6645389513324012,
+   "diag_low": 0.9865629773438653,
+   "diag_high": 0.6635185245795967
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-7B",
+    "mistralai/Mistral-7B-v0.1",
+    "allenai/OLMo-2-1124-7B"
+   ],
+   "holonomy": 0.3672105928690855,
+   "noise": 0.4603748769362533,
+   "ratio": 0.797633865932984,
+   "diag_low": 0.955617901486171,
+   "diag_high": 0.6597411360261718
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-7B",
+    "mistralai/Mistral-7B-v0.1",
+    "HuggingFaceTB/SmolLM2-360M"
+   ],
+   "holonomy": 0.47513177094336667,
+   "noise": 0.6709538121959208,
+   "ratio": 0.708143783233512,
+   "diag_low": 0.9194862570816935,
+   "diag_high": 0.5331588254701329
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-7B",
+    "mistralai/Mistral-7B-v0.1",
+    "tiiuae/falcon-7b"
+   ],
+   "holonomy": 0.44394397325241325,
+   "noise": 0.5750669225867553,
+   "ratio": 0.7719866259312442,
+   "diag_low": 0.9476646145061673,
+   "diag_high": 0.591594395950594
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-7B",
+    "mistralai/Mistral-7B-v0.1",
+    "microsoft/phi-2"
+   ],
+   "holonomy": 0.39528909775327675,
+   "noise": 0.5226328742743314,
+   "ratio": 0.7563418170013325,
+   "diag_low": 0.9484485990015512,
+   "diag_high": 0.6149509060401872
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-7B",
+    "mistralai/Mistral-7B-v0.1",
+    "bigscience/bloom-560m"
+   ],
+   "holonomy": 0.4688391540537928,
+   "noise": 0.6780508777190961,
+   "ratio": 0.6914512899547106,
+   "diag_low": 0.9248787562384367,
+   "diag_high": 0.5648022175989578
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-7B",
+    "mistralai/Mistral-7B-v0.1",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "holonomy": 0.38605145981894207,
+   "noise": 0.5334445081963761,
+   "ratio": 0.723695630730583,
+   "diag_low": 0.954399880571836,
+   "diag_high": 0.6287796322445904
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-7B",
+    "mistralai/Mistral-7B-v0.1",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.3853568295684375,
+   "noise": 0.517549835249545,
+   "ratio": 0.7445791754191776,
+   "diag_low": 0.9544989700291517,
+   "diag_high": 0.6780599386050543
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-7B",
+    "mistralai/Mistral-7B-v0.1",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.36361819755351793,
+   "noise": 0.4576384268381154,
+   "ratio": 0.7945534645458081,
+   "diag_low": 0.9487925449987732,
+   "diag_high": 0.6688835876886158
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-7B",
+    "allenai/OLMo-2-1124-7B",
+    "HuggingFaceTB/SmolLM2-360M"
+   ],
+   "holonomy": 0.43369174606700406,
+   "noise": 0.6329434303397009,
+   "ratio": 0.685198274092586,
+   "diag_low": 0.9311432053457737,
+   "diag_high": 0.5991983461700916
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-7B",
+    "allenai/OLMo-2-1124-7B",
+    "tiiuae/falcon-7b"
+   ],
+   "holonomy": 0.4071586790822168,
+   "noise": 0.5503236249974687,
+   "ratio": 0.739853171093808,
+   "diag_low": 0.9582545663114934,
+   "diag_high": 0.6469998482104122
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-7B",
+    "allenai/OLMo-2-1124-7B",
+    "microsoft/phi-2"
+   ],
+   "holonomy": 0.34170675784895815,
+   "noise": 0.5020823969298343,
+   "ratio": 0.6805790442733077,
+   "diag_low": 0.9491605609129279,
+   "diag_high": 0.7165628051080435
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-7B",
+    "allenai/OLMo-2-1124-7B",
+    "bigscience/bloom-560m"
+   ],
+   "holonomy": 0.45566843389291156,
+   "noise": 0.6612380762765098,
+   "ratio": 0.6891140275206487,
+   "diag_low": 0.9325152409852911,
+   "diag_high": 0.5591113005185887
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-7B",
+    "allenai/OLMo-2-1124-7B",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "holonomy": 0.3904357478390456,
+   "noise": 0.5250594873994777,
+   "ratio": 0.7436028815950008,
+   "diag_low": 0.9593009565801767,
+   "diag_high": 0.6190839998482791
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-7B",
+    "allenai/OLMo-2-1124-7B",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.38950484592462387,
+   "noise": 0.5251714453238483,
+   "ratio": 0.7416717900274161,
+   "diag_low": 0.9439090871675833,
+   "diag_high": 0.6849629987033299
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-7B",
+    "allenai/OLMo-2-1124-7B",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.38893922818427973,
+   "noise": 0.5060581193920715,
+   "ratio": 0.7685663232743171,
+   "diag_low": 0.9508474655041239,
+   "diag_high": 0.617278434303631
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-7B",
+    "HuggingFaceTB/SmolLM2-360M",
+    "tiiuae/falcon-7b"
+   ],
+   "holonomy": 0.5067685662429877,
+   "noise": 0.6871493256936106,
+   "ratio": 0.7374940894127401,
+   "diag_low": 0.9116879410154124,
+   "diag_high": 0.5101034049898067
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-7B",
+    "HuggingFaceTB/SmolLM2-360M",
+    "microsoft/phi-2"
+   ],
+   "holonomy": 0.47269159875075173,
+   "noise": 0.6970767186244462,
+   "ratio": 0.6781055601505706,
+   "diag_low": 0.9299517216537292,
+   "diag_high": 0.5373085189381871
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-7B",
+    "HuggingFaceTB/SmolLM2-360M",
+    "bigscience/bloom-560m"
+   ],
+   "holonomy": 0.538983975810769,
+   "noise": 0.7655925372920291,
+   "ratio": 0.7040089206161865,
+   "diag_low": 0.9032006524201297,
+   "diag_high": 0.5286462663877161
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-7B",
+    "HuggingFaceTB/SmolLM2-360M",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "holonomy": 0.5033427769582639,
+   "noise": 0.7434799990736602,
+   "ratio": 0.6770091698302636,
+   "diag_low": 0.9224937649296917,
+   "diag_high": 0.4921133417634329
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-7B",
+    "HuggingFaceTB/SmolLM2-360M",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.49078827016893023,
+   "noise": 0.71456819362411,
+   "ratio": 0.6868319560653486,
+   "diag_low": 0.9250493663304009,
+   "diag_high": 0.5359502154995681
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-7B",
+    "HuggingFaceTB/SmolLM2-360M",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.4861781618066259,
+   "noise": 0.7143107900843061,
+   "ratio": 0.6806255324090023,
+   "diag_low": 0.9329313096589738,
+   "diag_high": 0.48499162231664983
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-7B",
+    "tiiuae/falcon-7b",
+    "microsoft/phi-2"
+   ],
+   "holonomy": 0.4454866555810659,
+   "noise": 0.6059657397119315,
+   "ratio": 0.7351680571790159,
+   "diag_low": 0.9241584369639264,
+   "diag_high": 0.6379558973021382
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-7B",
+    "tiiuae/falcon-7b",
+    "bigscience/bloom-560m"
+   ],
+   "holonomy": 0.5091511980969531,
+   "noise": 0.7249635794709383,
+   "ratio": 0.7023127954490072,
+   "diag_low": 0.9278745815065323,
+   "diag_high": 0.5360225710196893
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-7B",
+    "tiiuae/falcon-7b",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "holonomy": 0.4578042252502873,
+   "noise": 0.6387991267401139,
+   "ratio": 0.7166638244897575,
+   "diag_low": 0.9439652500604243,
+   "diag_high": 0.574207218566106
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-7B",
+    "tiiuae/falcon-7b",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.4421960315161353,
+   "noise": 0.6196623497323454,
+   "ratio": 0.7136080346129401,
+   "diag_low": 0.9438010768296039,
+   "diag_high": 0.6274489313319801
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-7B",
+    "tiiuae/falcon-7b",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.4413986549053696,
+   "noise": 0.6012925771026533,
+   "ratio": 0.7340829933944346,
+   "diag_low": 0.9441006702028572,
+   "diag_high": 0.5885835945817872
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-7B",
+    "microsoft/phi-2",
+    "bigscience/bloom-560m"
+   ],
+   "holonomy": 0.4866042477581512,
+   "noise": 0.7198045648374101,
+   "ratio": 0.6760227310701561,
+   "diag_low": 0.921669053388732,
+   "diag_high": 0.5497321234954673
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-7B",
+    "microsoft/phi-2",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "holonomy": 0.40528623186588125,
+   "noise": 0.5848356843391798,
+   "ratio": 0.6929916260561702,
+   "diag_low": 0.9542760760377651,
+   "diag_high": 0.6436316362525795
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-7B",
+    "microsoft/phi-2",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.4033617817710527,
+   "noise": 0.5812630338378338,
+   "ratio": 0.6939401928036358,
+   "diag_low": 0.9472255812464458,
+   "diag_high": 0.6487706605589727
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-7B",
+    "microsoft/phi-2",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.39476284737557715,
+   "noise": 0.5595549643494288,
+   "ratio": 0.7054943169605358,
+   "diag_low": 0.9490667310243048,
+   "diag_high": 0.6111196035383455
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-7B",
+    "bigscience/bloom-560m",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "holonomy": 0.4987666684455575,
+   "noise": 0.749751755046422,
+   "ratio": 0.6652424153574347,
+   "diag_low": 0.9287281390529658,
+   "diag_high": 0.49698336227201767
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-7B",
+    "bigscience/bloom-560m",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.4930898399387427,
+   "noise": 0.7323687302954117,
+   "ratio": 0.6732808482140515,
+   "diag_low": 0.9356753806083049,
+   "diag_high": 0.548552874380357
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-7B",
+    "bigscience/bloom-560m",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.4823345542059862,
+   "noise": 0.7226499458178729,
+   "ratio": 0.6674525570746357,
+   "diag_low": 0.9395349906131296,
+   "diag_high": 0.5236945060258102
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-7B",
+    "stabilityai/stablelm-2-1_6b",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.4182249743510469,
+   "noise": 0.596029564158099,
+   "ratio": 0.7016849490373789,
+   "diag_low": 0.9373198022881464,
+   "diag_high": 0.6180592571941435
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-7B",
+    "stabilityai/stablelm-2-1_6b",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.4020659158730532,
+   "noise": 0.5741391373126097,
+   "ratio": 0.700293517273557,
+   "diag_low": 0.9532480709513196,
+   "diag_high": 0.5966132444299836
+  },
+  {
+   "triangle": [
+    "Qwen/Qwen2.5-7B",
+    "01-ai/Yi-6B",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.3917630019555892,
+   "noise": 0.5481944373027222,
+   "ratio": 0.7146424248359367,
+   "diag_low": 0.9601254571729281,
+   "diag_high": 0.6619264820972232
+  },
+  {
+   "triangle": [
+    "mistralai/Mistral-7B-v0.1",
+    "allenai/OLMo-2-1124-7B",
+    "HuggingFaceTB/SmolLM2-360M"
+   ],
+   "holonomy": 0.4197075830302281,
+   "noise": 0.5705862745255799,
+   "ratio": 0.7355725185979956,
+   "diag_low": 0.9852310090697306,
+   "diag_high": 0.5858421015042873
+  },
+  {
+   "triangle": [
+    "mistralai/Mistral-7B-v0.1",
+    "allenai/OLMo-2-1124-7B",
+    "tiiuae/falcon-7b"
+   ],
+   "holonomy": 0.39196831202755555,
+   "noise": 0.49183363860041257,
+   "ratio": 0.7969530370939267,
+   "diag_low": 0.9918569524142922,
+   "diag_high": 0.6411515697473381
+  },
+  {
+   "triangle": [
+    "mistralai/Mistral-7B-v0.1",
+    "allenai/OLMo-2-1124-7B",
+    "microsoft/phi-2"
+   ],
+   "holonomy": 0.35466801802499814,
+   "noise": 0.4671228762894247,
+   "ratio": 0.759260648594845,
+   "diag_low": 0.9942359940607448,
+   "diag_high": 0.624398070275477
+  },
+  {
+   "triangle": [
+    "mistralai/Mistral-7B-v0.1",
+    "allenai/OLMo-2-1124-7B",
+    "bigscience/bloom-560m"
+   ],
+   "holonomy": 0.42022769332557847,
+   "noise": 0.5979471979472856,
+   "ratio": 0.7027839494326475,
+   "diag_low": 0.991450211555388,
+   "diag_high": 0.5710549435727461
+  },
+  {
+   "triangle": [
+    "mistralai/Mistral-7B-v0.1",
+    "allenai/OLMo-2-1124-7B",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "holonomy": 0.36089625377050444,
+   "noise": 0.4506355217487301,
+   "ratio": 0.8008606431424121,
+   "diag_low": 0.9970795130559233,
+   "diag_high": 0.5630727885494177
+  },
+  {
+   "triangle": [
+    "mistralai/Mistral-7B-v0.1",
+    "allenai/OLMo-2-1124-7B",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.3374952031370026,
+   "noise": 0.4352449154747958,
+   "ratio": 0.7754144646786719,
+   "diag_low": 0.9967297925486629,
+   "diag_high": 0.6651430756307394
+  },
+  {
+   "triangle": [
+    "mistralai/Mistral-7B-v0.1",
+    "allenai/OLMo-2-1124-7B",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.3250983779304747,
+   "noise": 0.3952302928180373,
+   "ratio": 0.8225543027395142,
+   "diag_low": 0.9982173130835348,
+   "diag_high": 0.6021688634392325
+  },
+  {
+   "triangle": [
+    "mistralai/Mistral-7B-v0.1",
+    "HuggingFaceTB/SmolLM2-360M",
+    "tiiuae/falcon-7b"
+   ],
+   "holonomy": 0.45615880696211897,
+   "noise": 0.6178965126610636,
+   "ratio": 0.7382446698033671,
+   "diag_low": 0.9714693597917619,
+   "diag_high": 0.610297120990086
+  },
+  {
+   "triangle": [
+    "mistralai/Mistral-7B-v0.1",
+    "HuggingFaceTB/SmolLM2-360M",
+    "microsoft/phi-2"
+   ],
+   "holonomy": 0.469153562706389,
+   "noise": 0.6500851241362751,
+   "ratio": 0.7216802004656271,
+   "diag_low": 0.9789895002640825,
+   "diag_high": 0.5074414388233861
+  },
+  {
+   "triangle": [
+    "mistralai/Mistral-7B-v0.1",
+    "HuggingFaceTB/SmolLM2-360M",
+    "bigscience/bloom-560m"
+   ],
+   "holonomy": 0.5107844856519819,
+   "noise": 0.6906624790021181,
+   "ratio": 0.7395573108155126,
+   "diag_low": 0.9693937048620122,
+   "diag_high": 0.519907434892305
+  },
+  {
+   "triangle": [
+    "mistralai/Mistral-7B-v0.1",
+    "HuggingFaceTB/SmolLM2-360M",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "holonomy": 0.458515257575655,
+   "noise": 0.6713606228436928,
+   "ratio": 0.6829641804631238,
+   "diag_low": 0.9852732335048272,
+   "diag_high": 0.5146928408013243
+  },
+  {
+   "triangle": [
+    "mistralai/Mistral-7B-v0.1",
+    "HuggingFaceTB/SmolLM2-360M",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.4374857850180618,
+   "noise": 0.6283458136498556,
+   "ratio": 0.6962500195184714,
+   "diag_low": 0.9859368759173177,
+   "diag_high": 0.5816811301996934
+  },
+  {
+   "triangle": [
+    "mistralai/Mistral-7B-v0.1",
+    "HuggingFaceTB/SmolLM2-360M",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.40258949010714523,
+   "noise": 0.6171950564596337,
+   "ratio": 0.6522889091440345,
+   "diag_low": 0.9883110432340672,
+   "diag_high": 0.5521918982141892
+  },
+  {
+   "triangle": [
+    "mistralai/Mistral-7B-v0.1",
+    "tiiuae/falcon-7b",
+    "microsoft/phi-2"
+   ],
+   "holonomy": 0.4290603377937137,
+   "noise": 0.563899033375172,
+   "ratio": 0.7608814918968877,
+   "diag_low": 0.9906658541474669,
+   "diag_high": 0.5502810871829804
+  },
+  {
+   "triangle": [
+    "mistralai/Mistral-7B-v0.1",
+    "tiiuae/falcon-7b",
+    "bigscience/bloom-560m"
+   ],
+   "holonomy": 0.48221777775089264,
+   "noise": 0.6561614461892695,
+   "ratio": 0.7349072100340944,
+   "diag_low": 0.9833704518565025,
+   "diag_high": 0.5230824705698649
+  },
+  {
+   "triangle": [
+    "mistralai/Mistral-7B-v0.1",
+    "tiiuae/falcon-7b",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "holonomy": 0.418619501778092,
+   "noise": 0.5657913275830652,
+   "ratio": 0.7398832067050966,
+   "diag_low": 0.9920119235076348,
+   "diag_high": 0.5767858559510994
+  },
+  {
+   "triangle": [
+    "mistralai/Mistral-7B-v0.1",
+    "tiiuae/falcon-7b",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.3961486723552225,
+   "noise": 0.5313051016409135,
+   "ratio": 0.7456142828889352,
+   "diag_low": 0.9922212610452882,
+   "diag_high": 0.6171087249602124
+  },
+  {
+   "triangle": [
+    "mistralai/Mistral-7B-v0.1",
+    "tiiuae/falcon-7b",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.3784881803444708,
+   "noise": 0.4963219935967669,
+   "ratio": 0.7625859527232047,
+   "diag_low": 0.9931897356521758,
+   "diag_high": 0.5460356981942291
+  },
+  {
+   "triangle": [
+    "mistralai/Mistral-7B-v0.1",
+    "microsoft/phi-2",
+    "bigscience/bloom-560m"
+   ],
+   "holonomy": 0.4652601590117484,
+   "noise": 0.6709449127045994,
+   "ratio": 0.693440176983041,
+   "diag_low": 0.9906535497225663,
+   "diag_high": 0.4878924473620376
+  },
+  {
+   "triangle": [
+    "mistralai/Mistral-7B-v0.1",
+    "microsoft/phi-2",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "holonomy": 0.3790297580076404,
+   "noise": 0.5302462561284926,
+   "ratio": 0.7148183577477094,
+   "diag_low": 0.9967048434822325,
+   "diag_high": 0.550216612218061
+  },
+  {
+   "triangle": [
+    "mistralai/Mistral-7B-v0.1",
+    "microsoft/phi-2",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.36584899526363307,
+   "noise": 0.5130723246071098,
+   "ratio": 0.7130554070399052,
+   "diag_low": 0.9969554636362332,
+   "diag_high": 0.6072429948132367
+  },
+  {
+   "triangle": [
+    "mistralai/Mistral-7B-v0.1",
+    "microsoft/phi-2",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.3369732091618777,
+   "noise": 0.47429666728192416,
+   "ratio": 0.7104692746271801,
+   "diag_low": 0.997247436777932,
+   "diag_high": 0.5646546978483551
+  },
+  {
+   "triangle": [
+    "mistralai/Mistral-7B-v0.1",
+    "bigscience/bloom-560m",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "holonomy": 0.449787533795594,
+   "noise": 0.674865926259468,
+   "ratio": 0.666484284202345,
+   "diag_low": 0.9938347081715836,
+   "diag_high": 0.49121252332898263
+  },
+  {
+   "triangle": [
+    "mistralai/Mistral-7B-v0.1",
+    "bigscience/bloom-560m",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.4374875545332987,
+   "noise": 0.6449251605069751,
+   "ratio": 0.6783539879098376,
+   "diag_low": 0.9923939819743284,
+   "diag_high": 0.5464207262027663
+  },
+  {
+   "triangle": [
+    "mistralai/Mistral-7B-v0.1",
+    "bigscience/bloom-560m",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.394935937035162,
+   "noise": 0.6231103629585033,
+   "ratio": 0.6338137840622997,
+   "diag_low": 0.9945472545181887,
+   "diag_high": 0.5618895251441276
+  },
+  {
+   "triangle": [
+    "mistralai/Mistral-7B-v0.1",
+    "stabilityai/stablelm-2-1_6b",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.37690054254640803,
+   "noise": 0.49182882899371044,
+   "ratio": 0.7663246241940564,
+   "diag_low": 0.9980437725594394,
+   "diag_high": 0.6037983887119523
+  },
+  {
+   "triangle": [
+    "mistralai/Mistral-7B-v0.1",
+    "stabilityai/stablelm-2-1_6b",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.32626462851655896,
+   "noise": 0.450287884989334,
+   "ratio": 0.7245689688593048,
+   "diag_low": 0.9988279291102204,
+   "diag_high": 0.599439159996523
+  },
+  {
+   "triangle": [
+    "mistralai/Mistral-7B-v0.1",
+    "01-ai/Yi-6B",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.32083355019385607,
+   "noise": 0.3998609167864782,
+   "ratio": 0.8023628634983049,
+   "diag_low": 0.9986917787025817,
+   "diag_high": 0.61001768704739
+  },
+  {
+   "triangle": [
+    "allenai/OLMo-2-1124-7B",
+    "HuggingFaceTB/SmolLM2-360M",
+    "tiiuae/falcon-7b"
+   ],
+   "holonomy": 0.4334228655897026,
+   "noise": 0.5579254553871572,
+   "ratio": 0.7768472676855022,
+   "diag_low": 0.9771516656132029,
+   "diag_high": 0.6396926928270947
+  },
+  {
+   "triangle": [
+    "allenai/OLMo-2-1124-7B",
+    "HuggingFaceTB/SmolLM2-360M",
+    "microsoft/phi-2"
+   ],
+   "holonomy": 0.41993022734646984,
+   "noise": 0.5990683327393832,
+   "ratio": 0.7009721669416884,
+   "diag_low": 0.9830162521457325,
+   "diag_high": 0.556203544630529
+  },
+  {
+   "triangle": [
+    "allenai/OLMo-2-1124-7B",
+    "HuggingFaceTB/SmolLM2-360M",
+    "bigscience/bloom-560m"
+   ],
+   "holonomy": 0.485616541782282,
+   "noise": 0.6417383012388178,
+   "ratio": 0.7567205211919611,
+   "diag_low": 0.968019257339916,
+   "diag_high": 0.5397631529840983
+  },
+  {
+   "triangle": [
+    "allenai/OLMo-2-1124-7B",
+    "HuggingFaceTB/SmolLM2-360M",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "holonomy": 0.447112516858726,
+   "noise": 0.6318070073382452,
+   "ratio": 0.707672614683995,
+   "diag_low": 0.985239432018895,
+   "diag_high": 0.4908736592706384
+  },
+  {
+   "triangle": [
+    "allenai/OLMo-2-1124-7B",
+    "HuggingFaceTB/SmolLM2-360M",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.4289948032755471,
+   "noise": 0.6000802139558655,
+   "ratio": 0.7148957644304177,
+   "diag_low": 0.984652090341366,
+   "diag_high": 0.5707156646375212
+  },
+  {
+   "triangle": [
+    "allenai/OLMo-2-1124-7B",
+    "HuggingFaceTB/SmolLM2-360M",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.4349234426566065,
+   "noise": 0.6204209980612319,
+   "ratio": 0.7010134151095933,
+   "diag_low": 0.9855436241282359,
+   "diag_high": 0.552011181111487
+  },
+  {
+   "triangle": [
+    "allenai/OLMo-2-1124-7B",
+    "tiiuae/falcon-7b",
+    "microsoft/phi-2"
+   ],
+   "holonomy": 0.3963553379366246,
+   "noise": 0.5253285423202568,
+   "ratio": 0.7544903922143904,
+   "diag_low": 0.9951321467252683,
+   "diag_high": 0.5757467631690099
+  },
+  {
+   "triangle": [
+    "allenai/OLMo-2-1124-7B",
+    "tiiuae/falcon-7b",
+    "bigscience/bloom-560m"
+   ],
+   "holonomy": 0.45606116301179717,
+   "noise": 0.6221551170791176,
+   "ratio": 0.7330344965302298,
+   "diag_low": 0.9874406738264125,
+   "diag_high": 0.563701350460299
+  },
+  {
+   "triangle": [
+    "allenai/OLMo-2-1124-7B",
+    "tiiuae/falcon-7b",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "holonomy": 0.40951107498107125,
+   "noise": 0.5387862227747199,
+   "ratio": 0.7600622615628725,
+   "diag_low": 0.9956336734143352,
+   "diag_high": 0.5723879759356403
+  },
+  {
+   "triangle": [
+    "allenai/OLMo-2-1124-7B",
+    "tiiuae/falcon-7b",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.377903466221491,
+   "noise": 0.5189206794363508,
+   "ratio": 0.728249000660309,
+   "diag_low": 0.9957653456368417,
+   "diag_high": 0.6317539144753451
+  },
+  {
+   "triangle": [
+    "allenai/OLMo-2-1124-7B",
+    "tiiuae/falcon-7b",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.4113829454686308,
+   "noise": 0.5215781411370285,
+   "ratio": 0.788727350750983,
+   "diag_low": 0.9956813665995883,
+   "diag_high": 0.5569994677402343
+  },
+  {
+   "triangle": [
+    "allenai/OLMo-2-1124-7B",
+    "microsoft/phi-2",
+    "bigscience/bloom-560m"
+   ],
+   "holonomy": 0.4253989082232887,
+   "noise": 0.6430269880684051,
+   "ratio": 0.66155684927183,
+   "diag_low": 0.9919266790646815,
+   "diag_high": 0.5550071470529426
+  },
+  {
+   "triangle": [
+    "allenai/OLMo-2-1124-7B",
+    "microsoft/phi-2",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "holonomy": 0.3642375517978048,
+   "noise": 0.5080544703863268,
+   "ratio": 0.7169261821883725,
+   "diag_low": 0.9974319599427052,
+   "diag_high": 0.5863256411263031
+  },
+  {
+   "triangle": [
+    "allenai/OLMo-2-1124-7B",
+    "microsoft/phi-2",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.35904227082688756,
+   "noise": 0.5069755970975047,
+   "ratio": 0.7082042466786311,
+   "diag_low": 0.9976075044091666,
+   "diag_high": 0.5865221456224539
+  },
+  {
+   "triangle": [
+    "allenai/OLMo-2-1124-7B",
+    "microsoft/phi-2",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.3558348221098242,
+   "noise": 0.5073983147749257,
+   "ratio": 0.7012928733664936,
+   "diag_low": 0.9978679901881233,
+   "diag_high": 0.6079995111116532
+  },
+  {
+   "triangle": [
+    "allenai/OLMo-2-1124-7B",
+    "bigscience/bloom-560m",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "holonomy": 0.4394395546195347,
+   "noise": 0.656462839675607,
+   "ratio": 0.6694050722454983,
+   "diag_low": 0.9908810374269001,
+   "diag_high": 0.5371781422899085
+  },
+  {
+   "triangle": [
+    "allenai/OLMo-2-1124-7B",
+    "bigscience/bloom-560m",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.4340480763779833,
+   "noise": 0.6389449875671923,
+   "ratio": 0.6793199490157018,
+   "diag_low": 0.991896081398643,
+   "diag_high": 0.5664080349579402
+  },
+  {
+   "triangle": [
+    "allenai/OLMo-2-1124-7B",
+    "bigscience/bloom-560m",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.44429898622693875,
+   "noise": 0.6475364347862104,
+   "ratio": 0.6861374315927533,
+   "diag_low": 0.9914320877384757,
+   "diag_high": 0.49309852747358907
+  },
+  {
+   "triangle": [
+    "allenai/OLMo-2-1124-7B",
+    "stabilityai/stablelm-2-1_6b",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.3770431585628264,
+   "noise": 0.49785485108887156,
+   "ratio": 0.7573355120236055,
+   "diag_low": 0.9974353316856197,
+   "diag_high": 0.5750287471352366
+  },
+  {
+   "triangle": [
+    "allenai/OLMo-2-1124-7B",
+    "stabilityai/stablelm-2-1_6b",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.3741877097931741,
+   "noise": 0.4974311113698379,
+   "ratio": 0.7522402625013278,
+   "diag_low": 0.9976517401204001,
+   "diag_high": 0.6050429476010728
+  },
+  {
+   "triangle": [
+    "allenai/OLMo-2-1124-7B",
+    "01-ai/Yi-6B",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.3627532766679197,
+   "noise": 0.4705210696633756,
+   "ratio": 0.7709607498075355,
+   "diag_low": 0.9979140435737591,
+   "diag_high": 0.6066671859790194
+  },
+  {
+   "triangle": [
+    "HuggingFaceTB/SmolLM2-360M",
+    "tiiuae/falcon-7b",
+    "microsoft/phi-2"
+   ],
+   "holonomy": 0.4852242805107627,
+   "noise": 0.6414523187512519,
+   "ratio": 0.7564463738401846,
+   "diag_low": 0.9510595234028163,
+   "diag_high": 0.5331844641278807
+  },
+  {
+   "triangle": [
+    "HuggingFaceTB/SmolLM2-360M",
+    "tiiuae/falcon-7b",
+    "bigscience/bloom-560m"
+   ],
+   "holonomy": 0.503619564174408,
+   "noise": 0.6615398029300521,
+   "ratio": 0.7612838440616977,
+   "diag_low": 0.9616722312805284,
+   "diag_high": 0.48117678258176666
+  },
+  {
+   "triangle": [
+    "HuggingFaceTB/SmolLM2-360M",
+    "tiiuae/falcon-7b",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "holonomy": 0.49410255325901664,
+   "noise": 0.6848557651650687,
+   "ratio": 0.7214695099192522,
+   "diag_low": 0.9570426520616697,
+   "diag_high": 0.4932516920203537
+  },
+  {
+   "triangle": [
+    "HuggingFaceTB/SmolLM2-360M",
+    "tiiuae/falcon-7b",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.470492682874083,
+   "noise": 0.6369796773963686,
+   "ratio": 0.7386306024663217,
+   "diag_low": 0.9638175468138657,
+   "diag_high": 0.5620028094339636
+  },
+  {
+   "triangle": [
+    "HuggingFaceTB/SmolLM2-360M",
+    "tiiuae/falcon-7b",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.48468088757827854,
+   "noise": 0.6541029150323349,
+   "ratio": 0.7409856712751676,
+   "diag_low": 0.9629795684880404,
+   "diag_high": 0.5094693479296902
+  },
+  {
+   "triangle": [
+    "HuggingFaceTB/SmolLM2-360M",
+    "microsoft/phi-2",
+    "bigscience/bloom-560m"
+   ],
+   "holonomy": 0.5297733439380018,
+   "noise": 0.7270163294644176,
+   "ratio": 0.7286952472281856,
+   "diag_low": 0.9594258939976055,
+   "diag_high": 0.442800469625795
+  },
+  {
+   "triangle": [
+    "HuggingFaceTB/SmolLM2-360M",
+    "microsoft/phi-2",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "holonomy": 0.4926732036178702,
+   "noise": 0.7080729375411131,
+   "ratio": 0.6957944266712833,
+   "diag_low": 0.9616661156374752,
+   "diag_high": 0.5592742770703979
+  },
+  {
+   "triangle": [
+    "HuggingFaceTB/SmolLM2-360M",
+    "microsoft/phi-2",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.47494219674712557,
+   "noise": 0.6767568312859927,
+   "ratio": 0.7017915073640657,
+   "diag_low": 0.9625710329183395,
+   "diag_high": 0.5611744886103777
+  },
+  {
+   "triangle": [
+    "HuggingFaceTB/SmolLM2-360M",
+    "microsoft/phi-2",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.48634350677248933,
+   "noise": 0.6912098312009621,
+   "ratio": 0.7036119638626638,
+   "diag_low": 0.9643312974854195,
+   "diag_high": 0.5531315556108123
+  },
+  {
+   "triangle": [
+    "HuggingFaceTB/SmolLM2-360M",
+    "bigscience/bloom-560m",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "holonomy": 0.5321410607174922,
+   "noise": 0.7676316311692096,
+   "ratio": 0.6932245091398428,
+   "diag_low": 0.9617050291256228,
+   "diag_high": 0.4759102512817553
+  },
+  {
+   "triangle": [
+    "HuggingFaceTB/SmolLM2-360M",
+    "bigscience/bloom-560m",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.5092548444428453,
+   "noise": 0.7240809147292143,
+   "ratio": 0.7033120664881661,
+   "diag_low": 0.9690702655789345,
+   "diag_high": 0.4800684030148617
+  },
+  {
+   "triangle": [
+    "HuggingFaceTB/SmolLM2-360M",
+    "bigscience/bloom-560m",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.5298477877308445,
+   "noise": 0.7447740171260233,
+   "ratio": 0.7114208814311911,
+   "diag_low": 0.96775401686431,
+   "diag_high": 0.48461536120405124
+  },
+  {
+   "triangle": [
+    "HuggingFaceTB/SmolLM2-360M",
+    "stabilityai/stablelm-2-1_6b",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.47141181397185117,
+   "noise": 0.7014847330951391,
+   "ratio": 0.6720200622069928,
+   "diag_low": 0.9684993936073425,
+   "diag_high": 0.5701802855997101
+  },
+  {
+   "triangle": [
+    "HuggingFaceTB/SmolLM2-360M",
+    "stabilityai/stablelm-2-1_6b",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.481070538765486,
+   "noise": 0.7148437009892513,
+   "ratio": 0.6729730402600548,
+   "diag_low": 0.9695535942156578,
+   "diag_high": 0.5926037195210853
+  },
+  {
+   "triangle": [
+    "HuggingFaceTB/SmolLM2-360M",
+    "01-ai/Yi-6B",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.4475316036618444,
+   "noise": 0.6653431414870534,
+   "ratio": 0.6726327751145124,
+   "diag_low": 0.9761121960438517,
+   "diag_high": 0.618187799559287
+  },
+  {
+   "triangle": [
+    "tiiuae/falcon-7b",
+    "microsoft/phi-2",
+    "bigscience/bloom-560m"
+   ],
+   "holonomy": 0.49933147024398855,
+   "noise": 0.6948679770826958,
+   "ratio": 0.7185990529314081,
+   "diag_low": 0.9808731035374054,
+   "diag_high": 0.4707796729145003
+  },
+  {
+   "triangle": [
+    "tiiuae/falcon-7b",
+    "microsoft/phi-2",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "holonomy": 0.4418758899633448,
+   "noise": 0.6095224393281006,
+   "ratio": 0.7249542616518617,
+   "diag_low": 0.9883352136536863,
+   "diag_high": 0.5605530621404352
+  },
+  {
+   "triangle": [
+    "tiiuae/falcon-7b",
+    "microsoft/phi-2",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.42729464561975705,
+   "noise": 0.5884063535464759,
+   "ratio": 0.7261897208355123,
+   "diag_low": 0.9918573836875427,
+   "diag_high": 0.5681028838184303
+  },
+  {
+   "triangle": [
+    "tiiuae/falcon-7b",
+    "microsoft/phi-2",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.4312790961530282,
+   "noise": 0.586457494676095,
+   "ratio": 0.7353970237710526,
+   "diag_low": 0.9908024994314354,
+   "diag_high": 0.5658343177906932
+  },
+  {
+   "triangle": [
+    "tiiuae/falcon-7b",
+    "bigscience/bloom-560m",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "holonomy": 0.5126922205417863,
+   "noise": 0.7194236392304216,
+   "ratio": 0.7126430000134844,
+   "diag_low": 0.9830246290465077,
+   "diag_high": 0.4492899683808128
+  },
+  {
+   "triangle": [
+    "tiiuae/falcon-7b",
+    "bigscience/bloom-560m",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.4662111513165038,
+   "noise": 0.6860591312870662,
+   "ratio": 0.6795495170246894,
+   "diag_low": 0.9827386805965311,
+   "diag_high": 0.5491248314982031
+  },
+  {
+   "triangle": [
+    "tiiuae/falcon-7b",
+    "bigscience/bloom-560m",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.4984227856648596,
+   "noise": 0.6921065172678255,
+   "ratio": 0.7201532903236398,
+   "diag_low": 0.9830823276761957,
+   "diag_high": 0.4485113356234404
+  },
+  {
+   "triangle": [
+    "tiiuae/falcon-7b",
+    "stabilityai/stablelm-2-1_6b",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.43078472804093265,
+   "noise": 0.5952531799260887,
+   "ratio": 0.7237000029036758,
+   "diag_low": 0.992618126710383,
+   "diag_high": 0.5475821183352054
+  },
+  {
+   "triangle": [
+    "tiiuae/falcon-7b",
+    "stabilityai/stablelm-2-1_6b",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.4307129273533305,
+   "noise": 0.5926096256405802,
+   "ratio": 0.7268071740950077,
+   "diag_low": 0.993585104301813,
+   "diag_high": 0.5666680061221401
+  },
+  {
+   "triangle": [
+    "tiiuae/falcon-7b",
+    "01-ai/Yi-6B",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.3975484210258965,
+   "noise": 0.5485782136732607,
+   "ratio": 0.7246886790562208,
+   "diag_low": 0.9940214873735157,
+   "diag_high": 0.6117532675900366
+  },
+  {
+   "triangle": [
+    "microsoft/phi-2",
+    "bigscience/bloom-560m",
+    "stabilityai/stablelm-2-1_6b"
+   ],
+   "holonomy": 0.4873208233699616,
+   "noise": 0.7271278447675001,
+   "ratio": 0.6701996449135886,
+   "diag_low": 0.9265158123679511,
+   "diag_high": 0.49846939963508996
+  },
+  {
+   "triangle": [
+    "microsoft/phi-2",
+    "bigscience/bloom-560m",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.4798339008881273,
+   "noise": 0.7083350161138839,
+   "ratio": 0.6774109566411454,
+   "diag_low": 0.9251058774723674,
+   "diag_high": 0.5425702730676896
+  },
+  {
+   "triangle": [
+    "microsoft/phi-2",
+    "bigscience/bloom-560m",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.48576516231455796,
+   "noise": 0.712556315454491,
+   "ratio": 0.6817217836385627,
+   "diag_low": 0.9277985817276297,
+   "diag_high": 0.5029559222265073
+  },
+  {
+   "triangle": [
+    "microsoft/phi-2",
+    "stabilityai/stablelm-2-1_6b",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.39901286977254896,
+   "noise": 0.571672760409222,
+   "ratio": 0.6979742562631855,
+   "diag_low": 0.9510949800512365,
+   "diag_high": 0.5904144946933161
+  },
+  {
+   "triangle": [
+    "microsoft/phi-2",
+    "stabilityai/stablelm-2-1_6b",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.3983492907817606,
+   "noise": 0.5668626581478416,
+   "ratio": 0.702726286616446,
+   "diag_low": 0.9500981210611663,
+   "diag_high": 0.592247388933047
+  },
+  {
+   "triangle": [
+    "microsoft/phi-2",
+    "01-ai/Yi-6B",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.38943127805847866,
+   "noise": 0.5394460073033448,
+   "ratio": 0.7219096495036085,
+   "diag_low": 0.9411984885475309,
+   "diag_high": 0.6258129258734592
+  },
+  {
+   "triangle": [
+    "bigscience/bloom-560m",
+    "stabilityai/stablelm-2-1_6b",
+    "01-ai/Yi-6B"
+   ],
+   "holonomy": 0.46885538885309874,
+   "noise": 0.7162276470413784,
+   "ratio": 0.6546178310623239,
+   "diag_low": 0.9624173629777002,
+   "diag_high": 0.6006405583921184
+  },
+  {
+   "triangle": [
+    "bigscience/bloom-560m",
+    "stabilityai/stablelm-2-1_6b",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.4720994311843145,
+   "noise": 0.7198121380258182,
+   "ratio": 0.6558647822737622,
+   "diag_low": 0.9638165503825193,
+   "diag_high": 0.6188920058796867
+  },
+  {
+   "triangle": [
+    "bigscience/bloom-560m",
+    "01-ai/Yi-6B",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.4460936948032059,
+   "noise": 0.6827888119556592,
+   "ratio": 0.6533406625769016,
+   "diag_low": 0.9606414335802244,
+   "diag_high": 0.6374227614789403
+  },
+  {
+   "triangle": [
+    "stabilityai/stablelm-2-1_6b",
+    "01-ai/Yi-6B",
+    "internlm/internlm2_5-7b"
+   ],
+   "holonomy": 0.37360407190746986,
+   "noise": 0.5241855113988309,
+   "ratio": 0.7127325417875011,
+   "diag_low": 0.9974118026517507,
+   "diag_high": 0.6248138866205838
+  }
+ ]
+}

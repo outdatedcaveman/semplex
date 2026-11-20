@@ -1,5 +1,8 @@
 # Claude Code Handoff — `semplex` Honest State, Verified Assets & Next Work Packages
 
+> **Read at merge (2026-11-13).** This handoff is kept as written. Its numbers are Gemini's originals: Spikes 11–16 are now **37–42** and claims P058–P078 are now **P131–P151** (add 73). See `claims/REGISTER.md` for the corrected statuses (C1 and C4 downgraded; Gemini's spikes marked not pre-registered).
+
+
 **Updated:** 2026-11-13  
 **Purpose:** Grounded, scientifically unvarnished handoff separating what is formally Lean-proved, what works in code, what failed or hit hard bottlenecks empirically, and the highest-leverage next steps toward a unified, publishable theory and scaled Ur-Compiler.
 

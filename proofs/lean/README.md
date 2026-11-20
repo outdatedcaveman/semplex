@@ -15,3 +15,7 @@ lean Cerp.lean && lean Theory.lean                       # proofs
 mkdir -p build && lean --root=. -o build/Cerp.olean Cerp.lean && lean --root=. -o build/Theory.olean Theory.lean
 LEAN_PATH=build lean Audit.lean && LEAN_PATH=build lean AuditTheory.lean   # axiom audit
 ```
+
+## Test timeout
+
+`tests/test_lean.py` allows 600 s per Lean file by default. `Bounds.lean` takes about 170 s on a fast host and about 600 s on a memory-constrained one. Set `SEMPLEX_LEAN_TIMEOUT` (seconds) to raise the limit; what is checked does not change.

@@ -1,0 +1,119 @@
+{
+ "arm1": {
+  "units": 353,
+  "pre_settling_observations": 1631,
+  "median_DHprime_minus_DH": 0.16246742121908309,
+  "positive": 1142,
+  "negative": 489,
+  "sign_test_p": 1.517391841685203e-60,
+  "share_last_pre_settling_closer_to_own_H": 0.8923512747875354,
+  "units_with_pre_settling_obs": 353,
+  "settle_checkpoint_histogram": {
+   "1": 0,
+   "3": 3,
+   "10": 10,
+   "30": 71,
+   "100": 112,
+   "300": 52,
+   "1000": 48,
+   "3000": 57
+  }
+ },
+ "arm2": {
+  "tic-tac-toe@0.1": {
+   "acc_base": 0.911136890951276,
+   "acc_csp": 0.909860788863109,
+   "gain": -0.001276102088167086,
+   "voided_runs": 0,
+   "mean_labelled_after": 96.0,
+   "runs_with_any_decoy": 0,
+   "runs_with_a_board_symmetry": 0
+  },
+  "tic-tac-toe@0.2": {
+   "acc_base": 0.9744125326370756,
+   "acc_csp": 0.9917754569190601,
+   "gain": 0.017362924281984493,
+   "voided_runs": 0,
+   "mean_labelled_after": 767.3,
+   "runs_with_any_decoy": 0,
+   "runs_with_a_board_symmetry": 10
+  },
+  "tic-tac-toe@0.3": {
+   "acc_base": 0.9815201192250372,
+   "acc_csp": 0.9949329359165425,
+   "gain": 0.013412816691505292,
+   "voided_runs": 0,
+   "mean_labelled_after": 874.6,
+   "runs_with_any_decoy": 0,
+   "runs_with_a_board_symmetry": 10
+  },
+  "MONK-1@0.15": {
+   "acc_base": 0.9160762942779291,
+   "acc_csp": 0.9316076294277928,
+   "gain": 0.015531335149863712,
+   "voided_runs": 0,
+   "mean_labelled_after": 65.0
+  },
+  "MONK-1@0.3": {
+   "acc_base": 1.0,
+   "acc_csp": 1.0,
+   "gain": 0.0,
+   "voided_runs": 0,
+   "mean_labelled_after": 377.4
+  },
+  "MONK-2@0.15": {
+   "acc_base": 0.7752043596730245,
+   "acc_csp": 0.7697547683923707,
+   "gain": -0.005449591280653809,
+   "voided_runs": 0,
+   "mean_labelled_after": 65.0
+  },
+  "MONK-2@0.3": {
+   "acc_base": 0.9963576158940397,
+   "acc_csp": 1.0,
+   "gain": 0.0036423841059602946,
+   "voided_runs": 0,
+   "mean_labelled_after": 413.2
+  },
+  "MONK-3@0.15": {
+   "acc_base": 0.9831062670299728,
+   "acc_csp": 0.9839237057220709,
+   "gain": 0.0008174386920980492,
+   "voided_runs": 0,
+   "mean_labelled_after": 65.0
+  },
+  "MONK-3@0.3": {
+   "acc_base": 0.9980132450331126,
+   "acc_csp": 0.9940397350993377,
+   "gain": -0.003973509933774877,
+   "voided_runs": 0,
+   "mean_labelled_after": 146.9
+  }
+ },
+ "arm3": {
+  "fit_params": {
+   "a_log_stabilizer": 0.13113884253726468,
+   "b_agreement": 9.919786304308806,
+   "c_log_solid_angle": 0.879561909976921
+  },
+  "a_bootstrap_95": [
+   -0.18205415607386569,
+   0.5964444394313535
+  ],
+  "train_elements": 64,
+  "test_elements": 64,
+  "heldout_spike14": {
+   "universal": 1.6929943975330295,
+   "curie": 1.3587919685540495
+  },
+  "fresh_heldout": {
+   "universal": 1.6047431323556505,
+   "curie": 1.2336083072284174
+  },
+  "fresh_heldout_seeds20_39": {
+   "universal": 1.6321714241653449,
+   "curie": 1.188583236373861,
+   "oracle_per_element_product": 2.754630317785011
+  }
+ }
+}

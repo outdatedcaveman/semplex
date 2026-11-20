@@ -1,0 +1,14 @@
+{
+ "automaton": "Z7_s2_01",
+ "seed": 7461,
+ "labels": [
+  "r0_tr2_ker1",
+  "r1_tr2_ker1",
+  "r2_tr2_ker1"
+ ],
+ "fit": 0.9938799738883972,
+ "final_leader": "r2_tr2_ker1",
+ "final_leader_white": "r2_tr2_ker1",
+ "first_step": 50,
+ "first_leader": "r1_tr2_ker1"
+}

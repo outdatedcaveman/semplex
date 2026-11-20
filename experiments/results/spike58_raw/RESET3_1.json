@@ -1,0 +1,10 @@
+{
+ "automaton": "RESET3",
+ "seed": 5821,
+ "first99": 50,
+ "fit": 1.0,
+ "probe_acc": 1.0,
+ "determinism": 1.0,
+ "intervene_diff": 1.0,
+ "intervene_same": 1.0
+}

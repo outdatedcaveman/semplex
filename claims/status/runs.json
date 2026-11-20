@@ -1,0 +1,442 @@
+[
+ {
+  "spike": "43",
+  "date": "2026-11-13",
+  "commit": "f93de55",
+  "question": "Does training follow the kernel first and turn toward Occam later? (H-J)",
+  "overall": "NEITHER",
+  "learned": "The move toward the minimum circuit is a later phase: kernel-like change for about 10 steps, Occam from step ~30. Plain gradient descent shows the same shape.",
+  "moved": "A5: OPEN → PARTIAL (Two phases seen in one cell); A3: OPEN → OPEN (Adds timing evidence, no derivation)",
+  "claims": "P152"
+ },
+ {
+  "spike": "44",
+  "date": "2026-11-13",
+  "commit": "f02ab44",
+  "question": "Does depth raise agreement with Occam? (H-K)",
+  "overall": "BROKEN",
+  "learned": "For targets two layers can represent, a third layer adds no pull toward the minimum circuit; three-layer nets stay closer to their kernel.",
+  "moved": "A7: OPEN → PARTIAL (Negative for two-layer-representable targets; depth-requiring targets untested)",
+  "claims": "P153"
+ },
+ {
+  "spike": "45",
+  "date": "2026-11-14",
+  "commit": "031662a",
+  "question": "Does the pull toward the minimum circuit hold on other target classes and on real data?",
+  "overall": "BROKEN",
+  "learned": "The theory holds for clean, structured targets, including classes it was not built on, and fails on real data. Label noise is the likely boundary: the noisy synthetic class is the weakest, real cell labels are noisy, and the exact-fit minimum circuit generalizes worst on all four real datasets. On real tasks the kernel also beats the trained net on 3 of 4.",
+  "moved": "A1: OPEN → CLOSED (Three further clean classes held; the failing condition (noise) is characterized); A2: OPEN → OPEN (Tested and failed: the gap is now a theory that predicts on real data); A8: new → OPEN (Opened by this run: the noise boundary and conjecture C20)",
+  "claims": "P154 P155 P156"
+ },
+ {
+  "spike": "46",
+  "date": "2026-11-14",
+  "commit": "e670ebe",
+  "question": "Under label noise, do nets follow a simpler circuit plus memorized exceptions? (C20′, exact cost–error frontier)",
+  "overall": "NEITHER",
+  "learned": "Label noise removes the pull toward the minimum circuit quickly: two flipped labels in 48 take it from 0.83 to 0.66. Noise does not move the net to a simpler circuit; it makes the net less like any circuit (best agreement 0.89 → 0.75). Exploratory: a two-part-code circuit from the compiler generalizes better than the trained net under noise.",
+  "moved": "A8: OPEN → PARTIAL (Dose–response established; the proposed predictor is not supported); A2: OPEN → OPEN (Still no predictor that beats the kernel on real data)",
+  "claims": "P157 P158 P159"
+ },
+ {
+  "spike": "47",
+  "date": "2026-11-15",
+  "commit": "72078bc",
+  "question": "Does the hidden layer collapse onto the cells of a minimum circuit? (C21)",
+  "overall": "BROKEN",
+  "learned": "A width-8 hidden layer does not reduce to a minimum circuit: the best one explains 56% of the representation, and even the best two-hyperplane partition of any kind explains 73%. Minimum circuits are strongly over-represented but sit inside a richer representation. The function-level pull toward the minimum circuit does not come from the representation becoming that circuit.",
+  "moved": "A9: OPEN → OPEN (One account ruled out; the question becomes how many directions the layer uses); A3: OPEN → OPEN (One candidate mechanism removed)",
+  "claims": "P171"
+ },
+ {
+  "spike": "48",
+  "date": "2026-11-15",
+  "commit": "24f68c2",
+  "question": "Does the pull toward the minimum circuit hold at 8 and 10 inputs?",
+  "overall": "NEITHER",
+  "learned": "The effect is not an artifact of small inputs, and it is not constant: at a fixed number of labels per dimension it shrinks from 0.80 (6 inputs) to 0.72 (8) to 0.65 (10). With three quarters of the inputs seen at 8 inputs it is 0.94. The pull appears to track how well the seen data pin down the minimum circuit.",
+  "moved": "A6: OPEN → PARTIAL (Measured at 8 and 10 inputs; the sample-size dependence is not yet a curve)",
+  "claims": "P172"
+ },
+ {
+  "spike": "49",
+  "date": "2026-11-15",
+  "commit": "708ddc1",
+  "question": "Do trained nets output what every minimum circuit agrees on? (C22, consensus law)",
+  "overall": "NEITHER",
+  "learned": "Nets contradict the consensus of minimum circuits about 2% of the time, the same at 8 and 10 inputs and from 48 to 144 seen inputs. The shrinking pull of Spike 48 is a shrinking share of forced inputs (17% to 81%), not weaker adherence. Caveat: forced inputs are mostly the easy ones, where the kernel is also right 87–97% of the time.",
+  "moved": "A4: OPEN → PARTIAL (A predictor that reaches 0.98–0.99 on the forced share of inputs); A6: PARTIAL → PARTIAL (The decline with input size is explained)",
+  "claims": "P173"
+ },
+ {
+  "spike": "50",
+  "date": "2026-11-16",
+  "commit": "2f8329e",
+  "question": "Does the share of minimum circuits predict the net on all held-out inputs? (C23, graded consensus)",
+  "overall": "NEITHER",
+  "learned": "Where minimum circuits disagree is where independently trained nets disagree: training noise resolves the ambiguity the minimum circuits leave. The majority of minimum circuits predicts a single net at 0.91–0.93 and generalizes better than any one net.",
+  "moved": "A4: PARTIAL → PARTIAL (Graded law holds; the single-net 0.93 bar is met in one of three cells)",
+  "claims": "P174"
+ },
+ {
+  "spike": "51",
+  "date": "2026-11-16",
+  "commit": "16c77ac",
+  "question": "Do trained nets reason like a rational nonmonotonic logic? (C24)",
+  "overall": "NEITHER",
+  "learned": "Nets are approximately cumulative but not rational, and stubborn: under counter-evidence they retract in the logic's direction but only about half as much. The kernel reasons as lawfully, so rationality is not what separates nets from kernels; which conclusions they draw is.",
+  "moved": "A3: OPEN → OPEN (The nets' logic is characterized: cumulative, not rational, stubborn)",
+  "claims": "P177"
+ },
+ {
+  "spike": "52",
+  "date": "2026-11-16",
+  "commit": "e33c8d7",
+  "question": "What is the canonical form of a moral verdict concept? (Moral Machine pilot)",
+  "overall": "NO VERDICT",
+  "learned": "The machinery runs on 5.45 million real moral judgments and returns definite answers: the population's verdict over the observed situations is a single weighted rule, the same in three cultural clusters, which agree on 87.5% of situations. The hypotheses could not be tested because the experiment's design leaves only 24 feature combinations observed.",
+  "moved": "",
+  "claims": "P178"
+ },
+ {
+  "spike": "53",
+  "date": "2026-11-16",
+  "commit": "a754694",
+  "question": "Does a concept family's symmetry group fix its geometry, in open-model weights and human object cortex? (C29)",
+  "overall": "MIXED",
+  "learned": "Weekdays and months are circles already in the static weights of 14 open models, and object cortex and model weights share category geometry and finer structure beyond it. But composition of two factors in the lexicon is additive (a direct sum), not the tensor product C29 predicted.",
+  "moved": "A11: new → OPEN (Spike 53 opens the concept-geometry front: cyclic and taxonomic rows supported, tensor row refuted, shared brain–model grain finer than the taxonomy)",
+  "claims": "P179 P180 P181"
+ },
+ {
+  "spike": "54",
+  "date": "2026-11-16",
+  "commit": "7d45a9b",
+  "question": "Do semantic product concepts compose as tensor products in model activations? (C29 product row, Neuronpedia)",
+  "overall": "MIXED",
+  "learned": "In published sparse codes, a two-word product at its last token is mostly that word plus an additive trace of the other; the tensor part is small but carries the cyclic structure more often than chance. Composition is a sum with a structured residue, in context as in the lexicon.",
+  "moved": "A11: OPEN → OPEN (Tensor row refuted in context as well; semantic products tested)",
+  "claims": "P182"
+ },
+ {
+  "spike": "55",
+  "date": "2026-11-16",
+  "commit": "17b75ab",
+  "question": "Does a model's fairness verdict factor through the quotient by persons? (C30)",
+  "overall": "BROKEN",
+  "learned": "A fairness verdict is not generally readable from sparse codes right after a case is stated (2 of 7 sources), so impartiality could not be tested. Where it is readable, it depends on names less than the state does, the direction C30 predicts.",
+  "moved": "A11: OPEN → OPEN (C30 attempted; needs the models' own verdicts)",
+  "claims": "P183"
+ },
+ {
+  "spike": "56",
+  "date": "2026-11-16",
+  "commit": "a3b20d4",
+  "question": "Is a model's own fairness verdict invariant under permuting persons? (C30)",
+  "overall": "HELD",
+  "learned": "Where small models judge fairness correctly, their verdict is nearly invariant under swapping who is who, although their internal state carries the names: impartiality appears as an approximate symmetry of the verdict. Small residual name effects are real and measure bias; weaker models are more name-driven.",
+  "moved": "A11: OPEN → PARTIAL (C30 supported in behaviour (approximate invariance); C29 cyclic and taxonomic rows supported; tensor row refuted)",
+  "claims": "P184"
+ },
+ {
+  "spike": "57",
+  "date": "2026-11-16",
+  "commit": "48984fb",
+  "question": "Do trained networks build the minimal automaton, in the geometry of its Krohn–Rhodes parts? (C31 economy, C32 closure)",
+  "overall": "MIXED",
+  "learned": "Recurrent nets build each Krohn–Rhodes part in a recognisable geometry (simplex for a reset, a 2-D representation for S3, ordered circles for cyclic groups) and keep a product as a sum. Every cascade carries more interaction than its product, but far less than a linear fibred representation needs. The minimal automaton is present exactly, as a linearly readable, deterministic coarse-graining of a richer microstate, not as clusters: Plato's form as Aristotle's macrostate.",
+  "moved": "A12: new → OPEN (Atlas and periodic table of concepts opened: first exact dynamic-scale test)",
+  "claims": "P185 P186"
+ },
+ {
+  "spike": "59",
+  "date": "2026-11-16",
+  "commit": "a465bfd",
+  "question": "Are semantic primes the elements of the lexicon? (spanning and universality in 14 models' embedding weights)",
+  "overall": "BROKEN",
+  "learned": "Semantic primes are not a privileged basis of model lexicons: they span concrete nouns worse than ordinary words of the same frequency and abstract words no better. Decompositions agree across models, but any common dictionary agrees as much (exploratory control), so the agreement is shared geometry. The lexicon's elements, if any, must be learned from data.",
+  "moved": "A12: OPEN → OPEN (Lexical scale opened: the NSM prime list is not the element set; data-driven elements next)",
+  "claims": "P187"
+ },
+ {
+  "spike": "58",
+  "date": "2026-11-16",
+  "commit": "bf117b6",
+  "question": "Does the learned abstraction have causal power, and is its geometry the character of the minimal faithful representation?",
+  "overall": "MIXED",
+  "learned": "Abstractions learned by recurrent nets are closed macrostates with causal power: writing a macrostate sets the future exactly, and micro-detail within it is inert. Learning cost follows the periodic table, with the non-solvable A5 costliest. The geometry is not the minimal faithful representation but, in all non-abelian cases, the permutation representation on what the readout distinguishes (exploratory).",
+  "moved": "A12: OPEN → PARTIAL (Closure, causal power and the cost law confirmed prospectively; economy law revised to C31')",
+  "claims": "P188 P189 P190"
+ },
+ {
+  "spike": "61",
+  "date": "2026-11-16",
+  "commit": "5a79341",
+  "question": "Do language models share a discrete set of lexical elements? (data-driven atoms across 14 models)",
+  "overall": "BROKEN",
+  "learned": "Models' lexicons share their shape (CKA about 0.6) but no preferred axes: neither sparse atoms nor principal directions line up across models, and no atom is universal. The elements of meaning, if any, are operations on representations, not a basis of word directions.",
+  "moved": "A12: PARTIAL → PARTIAL (Lexical scale: no word-level elements; redirect to operations)",
+  "claims": "P191"
+ },
+ {
+  "spike": "60",
+  "date": "2026-11-16",
+  "commit": "5b097d0",
+  "question": "Is a learned group concept shaped by what its readout distinguishes? (C31' prospective, GRU and transformer)",
+  "overall": "MIXED",
+  "learned": "The sharp prediction held: A5 read out through 6 points is represented by chi5, the readout's representation, and the minimal faithful characters are anti-correlated. But S4 through 6 points keeps only the faithful standard part of the readout's representation, dropping the unfaithful chi2. The geometry appears to be the faithful constituents of the readout's permutation representation (C31'', post hoc). A small transformer learned neither group, so the substrate and Barrington tests stay open.",
+  "moved": "A12: PARTIAL → PARTIAL (Economy law refined to C31'' (faithful constituents of the readout representation); transformer arm failed to train)",
+  "claims": "P192 P193 P194"
+ },
+ {
+  "spike": "64",
+  "date": "2026-11-17",
+  "commit": "see report",
+  "question": "Is there a global frame for semantic space? (holonomy of model-to-model alignments)",
+  "overall": "MIXED",
+  "learned": "There is no gluing obstruction: models' lexicons are rotated copies of a common frame in their leading dimensions, so a shared basis can be recovered after alignment. Spike 61's missing atoms reflect arbitrary per-model rotations, not the absence of a global frame.",
+  "moved": "A12: PARTIAL → PARTIAL (Common frame recoverable up to rotation; next learn atoms in the aligned space)",
+  "claims": "P195"
+ },
+ {
+  "spike": "62",
+  "date": "2026-11-17",
+  "commit": "d8a9728",
+  "question": "The sufficiency law C31''' prospective on five new readouts",
+  "overall": "BROKEN",
+  "learned": "Networks do not compress a group concept to its smallest faithful, readout-sufficient part; they keep unfaithful constituents. What they build matches the exact predictive-state kernel, the geometry of expected future outputs, in every fitted case but one.",
+  "moved": "A12: PARTIAL → PARTIAL (Economy/sufficiency refuted; predictive-state law is the candidate explanation)",
+  "claims": "P196"
+ },
+ {
+  "spike": "63",
+  "date": "2026-11-17",
+  "commit": "see report",
+  "question": "Can a deeper transformer learn group automata, and does it obey the Barrington split and the readout geometry?",
+  "overall": "MIXED",
+  "learned": "A deeper transformer learns both groups at length 30 but rarely, with no Barrington gap at this length. Its geometry is the same predictive-state character as the recurrent nets', although it does not build a closed, linearly decodable macrostate: geometry is substrate-independent, closure is not.",
+  "moved": "A12: PARTIAL → PARTIAL (Substrate independence of geometry (transformer); closure architecture-dependent)",
+  "claims": "P197"
+ },
+ {
+  "spike": "68",
+  "date": "2026-11-17",
+  "commit": "56a3fc1",
+  "question": "Do concepts in context share shape and axes across models? (C34, with a tied-basis control)",
+  "overall": "HELD",
+  "learned": "Independently trained models share a concept space's shape and a common frame up to rotation, but not their coordinates; a model and its fine-tune share coordinates. Shared axes come from shared training history, shared shape from the concepts themselves.",
+  "moved": "A12: PARTIAL → PARTIAL (C34 confirmed in context)",
+  "claims": "P198"
+ },
+ {
+  "spike": "65",
+  "date": "2026-11-17",
+  "commit": "49242c1",
+  "question": "Continuous sufficiency: is a tracked direction a sphere and a tracked axis a projective plane?",
+  "overall": "NO VERDICT",
+  "learned": "No verdict (fit guard). Exploratory: signed tracking is a degree-1 sphere as predicted; unsigned tracking does not collapse to the projective plane: networks keep the signed direction (the double cover), where the rotation acts linearly, and fit worse. Learners appear to prefer the simplest linear representation of the dynamics over the minimal quotient (conjecture C36).",
+  "moved": "A12: PARTIAL → PARTIAL (Continuous scale opened; linearising-cover conjecture C36)",
+  "claims": ""
+ },
+ {
+  "spike": "66",
+  "date": "2026-11-17",
+  "commit": "52a41f6",
+  "question": "Formal test of the predictive-state law (extension pairs, p-primary readout, S4_6 anomaly)",
+  "overall": "MIXED",
+  "learned": "The predictive-state law is not universal: for identity-only readouts it predicts equidistant states, but networks build compact structured geometry. Closure discards the unobservable part exactly: a mod-3 readout of a mod-6 counter leaves no trace of the 2-part. The S4 6-point anomaly replicates.",
+  "moved": "A12: PARTIAL → PARTIAL (Geometry law: two regimes (C37); closure confirmed arithmetically)",
+  "claims": "P199 P200"
+ },
+ {
+  "spike": "69",
+  "date": "2026-11-17",
+  "commit": "2335972",
+  "question": "Formal two-regime test of C37 with predictive-kernel structure (tau) computed beforehand; S4_6 anomaly variants",
+  "overall": "MIXED",
+  "learned": "The predictive kernel's top isotypic component decides the leading constituent of the learned geometry, even when unfaithful (A4 on pairs, Z8 via {0,1,4}); the full Gram is not the kernel. Identity readouts do not give minimal faithful geometry (abelian counts lead in Q8, A4, S3). Permutation-readout ties have equal energy (proved) and are broken by the generating set, so the S4_6 anomaly is dynamical and does not generalise.",
+  "moved": "A12: PARTIAL → PARTIAL (Geometry law narrowed to the leading isotypic component (P201); degenerate regime and ties open (P202))",
+  "claims": "P201 P202"
+ },
+ {
+  "spike": "70",
+  "date": "2026-11-17",
+  "commit": "9f126ec",
+  "question": "Direction vs axis with a passable guard: does the network lift to the double cover (C36)?",
+  "overall": "HELD",
+  "learned": "Networks asked only for the axis build the double cover S2 (signed direction), not the minimal quotient RP2: continuous closure keeps a bit the readout cannot see when dropping it would break linearity of the dynamics.",
+  "moved": "A12: PARTIAL → PARTIAL (C36 linearising cover supported (P203))",
+  "claims": "P203"
+ },
+ {
+  "spike": "71",
+  "date": "2026-11-17",
+  "commit": "1b5a15d",
+  "question": "Which constituent does a recurrent learner select: predictive energy vs AGF vs orbit size; emergence order; reparametrisation-invariant geometry",
+  "overall": "MIXED",
+  "learned": "Multiplicity-weighted predictive energy, not dimension or orbit size, selects the leading constituent of a non-abelian group concept (8/8 against AGF and orbit predictors); geometry is reparametrisation-robust; learning passes through stages; ties and cyclic counters are decided by the letters, with a pull to the smooth circle.",
+  "moved": "A12: PARTIAL → PARTIAL (Leading-constituent law sharpened to multiplicity-weighted energy (P204); stage dynamics and tie-breaking open (P205))",
+  "claims": "P204 P205"
+ },
+ {
+  "spike": "72",
+  "date": "2026-11-18",
+  "commit": "bc6f04e",
+  "question": "Does the input encoding decide whether a recurrent network lifts to a cover (C38)?",
+  "overall": "BROKEN",
+  "learned": "The double cover survives degree-2 input encoding, so it is not an encoding effect; unfitted discrete A5 networks lead with the readout's chi5 even when fed chi3. Candidate post-hoc explanation: a smoothness pull toward the lowest-frequency faithful representation when letters are near-identity.",
+  "moved": "A12: PARTIAL → PARTIAL (C38 refuted (P206); C40 smoothness pull proposed)",
+  "claims": "P206"
+ },
+ {
+  "spike": "73",
+  "date": "2026-11-18",
+  "commit": "4bca70d",
+  "question": "Smoothness pull (C40): letter step vs readout spectrum; A5 icosahedral letters with fit repaired; large-step axis tracking",
+  "overall": "MIXED",
+  "learned": "Input encoding decides nothing here (A5 with chi3 letters still builds chi5); cyclic geometry follows neither smoothness nor energy alone; post-hoc gated smoothness (smoothest among sufficiently energetic constituents) fits 46/48 cyclic runs.",
+  "moved": "A12: PARTIAL → PARTIAL (C38 refuted on both sides (P207); gated smoothness C41 proposed)",
+  "claims": "P207"
+ },
+ {
+  "spike": "74",
+  "date": "2026-11-18",
+  "commit": "609b0a1",
+  "question": "Prospective test of gated smoothness (C41) with theta fixed",
+  "overall": "MIXED",
+  "learned": "The post-hoc gated-smoothness law does not generalise; when several constituents carry predictive energy the leader is a seed lottery. The robust shape law is: geometry lies in the readout's energetic constituents, and a clearly dominant (multiplicity-weighted) one leads.",
+  "moved": "A12: PARTIAL → PARTIAL (C41 refuted (P208); selection reframed as a distribution over seeds)",
+  "claims": "P208"
+ },
+ {
+  "spike": "75",
+  "date": "2026-11-18",
+  "commit": "015d439",
+  "question": "Are closure and the predictive-energy shape law substrate-independent (gradient RNN, Hankel spectral learner, fixed reservoir, evolution strategies)?",
+  "overall": "HELD",
+  "learned": "Closure and the energy law are properties of adaptive predictive compression: gradient, spectral (no neurons) and gradient-free learners reach the same minimal automaton and the same leading constituent (the top of the Hankel realisation); a fixed reservoir reaches neither, and its geometry ignores the readout.",
+  "moved": "A12: PARTIAL → PARTIAL (Laws shown substrate-independent across adaptive learners (P209, P210))",
+  "claims": "P209 P210"
+ },
+ {
+  "spike": "76",
+  "date": "2026-11-18",
+  "commit": "e352fc3",
+  "question": "Is predictive energy a variational principle (width, state-noise, acquisition-order interventions)?",
+  "overall": "BROKEN",
+  "learned": "Energy is not the variational principle: under width or noise pressure cyclic learners trade energy for the smoothest letter action (k = 1 circle), while S4 keeps the energetic constituent when costs are equal. Post-hoc C42: learned constituent = predictive value minus implementation cost of the letter actions.",
+  "moved": "A12: PARTIAL → PARTIAL (Variational-energy picture refuted (P211); C42 value-minus-cost proposed)",
+  "claims": "P211"
+ },
+ {
+  "spike": "77",
+  "date": "2026-11-18",
+  "commit": "8550e70",
+  "question": "Does one exchange rate between predictive value and dynamical cost predict which representation a learner builds (C43)?",
+  "overall": "HELD",
+  "learned": "A two-parameter Gibbs rule, value^alpha * exp(-lambda * cost), with parameters frozen in advance, predicts the leading representation of new automata in 98% of runs in both directions; resource pressure raises the exchange rate toward dynamical cost, like a temperature.",
+  "moved": "A12: PARTIAL → PARTIAL (Selection law with one exchange rate supported prospectively (P212))",
+  "claims": "P212"
+ },
+ {
+  "spike": "78",
+  "date": "2026-11-18",
+  "commit": "0f3143e",
+  "question": "Does the Gibbs selection rule survive its loopholes (other learners, unselected automata, usage-weighted cost, richer rival, invariant geometry)?",
+  "overall": "MIXED",
+  "learned": "The rule holds across recurrent learners, optimisers, unselected automata and invariant geometry, with learner-specific exchange rates; its cost depends on the repertoire of actions, not on their usage frequencies.",
+  "moved": "A12: PARTIAL → PARTIAL (Selection rule robust to loopholes (P213); usage-weighting refuted)",
+  "claims": "P213"
+ },
+ {
+  "spike": "79",
+  "date": "2026-11-19",
+  "commit": "26bdec6",
+  "question": "Last loopholes of the selection rule: unselected non-abelian automata, transformer and ES substrates, derived cost",
+  "overall": "MIXED",
+  "learned": "The rule holds for unselected non-abelian automata and for transformers; the cost index is the mean minimum kinetic cost of input actions, but chord and geodesic forms are indistinguishable on these data.",
+  "moved": "A12: PARTIAL → PARTIAL (Rule generalises to non-abelian and non-recurrent learners (P214); cost form unresolved)",
+  "claims": "P214"
+ },
+ {
+  "spike": "82",
+  "date": "2026-11-19",
+  "commit": "ad98065",
+  "question": "Does the selection rule predict number-concept geometry in pretrained LMs?",
+  "overall": "HELD",
+  "learned": "Pretrained LMs lead with the counting circle as predicted (non-discriminating); parity is a strong secondary mode despite maximal counting cost, pointing to a richer action repertoire in text.",
+  "moved": "A12: PARTIAL → PARTIAL (First LM test (P215), weak)",
+  "claims": "P215"
+ },
+ {
+  "spike": "81",
+  "date": "2026-11-19",
+  "commit": "63b3236",
+  "question": "Does the selection rule extend beyond groups (random automata with merges and resets)?",
+  "overall": "BROKEN",
+  "learned": "Without symmetry, no rule (Gibbs, energy, smoothness) predicts the leading learned mode beyond chance-plus-a-little; the selection rule is a law of symmetric systems, and irreversible concepts need a different account.",
+  "moved": "A12: PARTIAL → PARTIAL (Rule bounded to symmetric systems (P216))",
+  "claims": "P216"
+ },
+ {
+  "spike": "80",
+  "date": "2026-11-19",
+  "commit": "0011aa5",
+  "question": "Targeted tests: cost form, gradient-free learner at convergence, non-abelian energy/cost disagreement",
+  "overall": "HELD",
+  "learned": "The rule holds for a converged gradient-free learner and in non-abelian groups where cost and energy disagree; the kinetic (minimum-dissipation) cost form is preferred.",
+  "moved": "A12: PARTIAL → PARTIAL (Remaining loopholes for symmetric systems closed (P217))",
+  "claims": "P217"
+ },
+ {
+  "spike": "83",
+  "date": "2026-11-19",
+  "commit": "bf8b42c",
+  "question": "Is a learned concept's dominant geometry closed under the inputs (invariant subspace), for groups and for monoids?",
+  "overall": "MIXED",
+  "learned": "Symmetric concepts are closed all the way down (dominant geometry = invariant block); irreversible concepts only partly; Spike 81's failure is not due to non-invariant candidates.",
+  "moved": "A12: PARTIAL → PARTIAL (Connecting principle partly supported (P218))",
+  "claims": "P218"
+ },
+ {
+  "spike": "85",
+  "date": "2026-11-19",
+  "commit": "6e25314",
+  "question": "Does the frozen selection rule predict a language model's whole number spectrum from the model's own repertoire?",
+  "overall": "HELD",
+  "learned": "The predictive-energy term predicts the whole LM number spectrum (rho 0.47-0.70); the cost term adds almost nothing with a transition-derived repertoire, and its low-k bias misses parity and decimal modes.",
+  "moved": "A12: PARTIAL → PARTIAL (Value term extends to pretrained LMs' whole spectrum (P219))",
+  "claims": "P219"
+ },
+ {
+  "spike": "84",
+  "date": "2026-11-19",
+  "commit": "f5fd824",
+  "question": "Do learners on irreversible automata concentrate their geometry on the head of the observable module?",
+  "overall": "MIXED",
+  "learned": "The learner's dominant direction is the output vector (generator of the cyclic observable module), not the pi-orthogonal head; the head as a quotient is the right object and its canonical lift is the generator (exploratory C45').",
+  "moved": "A12: PARTIAL → PARTIAL (Candidate connecting principle for irreversible concepts: lead with the module generator (P220, exploratory))",
+  "claims": "P220"
+ },
+ {
+  "spike": "86",
+  "date": "2026-11-20",
+  "commit": "59c68b0",
+  "question": "Is the Gibbs selection rule the outcome of a race between linearly growing representations?",
+  "overall": "MIXED",
+  "learned": "Value enters through early growth rates (not a dimension artefact); cost does not act on early growth, the race winner is a weak predictor of the leader, weight decay is not the pressure that raises the exchange rate, and the log-linear form stands.",
+  "moved": "A12: PARTIAL → PARTIAL (Mechanism of the value term located in early growth; cost term mechanism open (P221))",
+  "claims": "P221"
+ },
+ {
+  "spike": "87",
+  "date": "2026-11-20",
+  "commit": "7ce4b01",
+  "question": "On irreversible automata, does a learner lead with the output vector (generator of its observable module), independent of the readout?",
+  "overall": "MIXED",
+  "learned": "The generator lead is real against all structural rivals but is largely produced by the linear readout; C45' is refuted as a substrate-general principle.",
+  "moved": "A12: PARTIAL → PARTIAL (Irreversible-case candidate C45' refuted as substrate-general (P223))",
+  "claims": "P223"
+ }
+]

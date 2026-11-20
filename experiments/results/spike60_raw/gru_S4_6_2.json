@@ -1,0 +1,20 @@
+{
+ "automaton": "S4_6",
+ "arch": "gru",
+ "seed": 6032,
+ "first99": 625,
+ "fit": 1.0,
+ "probe_acc": 1.0,
+ "determinism": 1.0,
+ "intervene": 1.0,
+ "rho_readout": 0.41017379526484227,
+ "irrep_scores": {
+  "sign": -0.0622690559694332,
+  "chi2": 0.0429003367335366,
+  "std": 0.46757089382167416,
+  "std_sign": -0.4666218670422268
+ },
+ "rho_minfaith": 0.46757089382167416,
+ "best_irrep": "std",
+ "n_states_seen": 24
+}

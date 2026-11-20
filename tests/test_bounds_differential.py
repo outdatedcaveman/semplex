@@ -89,3 +89,24 @@ def test_point_selector_one_bit_flip_matches_lean_theorem():
                     assert flipped == [fi or pi for fi, pi in zip(f, p)]
                 else:
                     assert flipped == [fi and (not pi) for fi, pi in zip(f, p)]
+
+
+def test_parity4_five_neuron_matches_atlas_and_lean():
+    from cerp import atlas
+
+    cert = bounds.parity4_five_neuron_cert()
+    assert kernel_bounds.check_parity4_needs_5_neurons(cert).ok
+
+    ltfs4, _ = atlas.ltfs(4)
+    expected_canon = {(0xFFFF ^ f) if (f & 1) else f for f in ltfs4} - {0}
+    cert_canon = {entry[0] for orb in cert["orbits"] for entry in orb}
+    assert cert_canon == expected_canon
+    assert len(cert_canon) == 940
+    assert [len(o) for o in cert["orbits"]] == [192, 192, 96, 96, 96, 64, 64, 32, 32, 24, 16, 16, 16, 4]
+
+    for crt in cert["const_reps"]:
+        if crt["kind"] == "single":
+            assert _lean_not_threshold_pred(4, crt["pos"], crt["neg"])
+        else:
+            for w in crt["wits"]:
+                assert _lean_not_threshold_pred(4, w["pos"], w["neg"])

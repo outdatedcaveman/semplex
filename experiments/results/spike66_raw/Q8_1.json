@@ -1,0 +1,9 @@
+{
+ "automaton": "Q8",
+ "seed": 6641,
+ "fit": 1.0,
+ "rho_predictive": -0.13818783528996664,
+ "rho_onestep": 0.015315893354825638,
+ "n_macro": 8,
+ "probe_macro": 1.0
+}

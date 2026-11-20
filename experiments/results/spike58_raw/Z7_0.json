@@ -1,0 +1,20 @@
+{
+ "automaton": "Z7",
+ "seed": 5810,
+ "first99": 125,
+ "fit": 1.0,
+ "probe_acc": 1.0,
+ "determinism": 1.0,
+ "intervene_diff": 1.0,
+ "intervene_same": 1.0,
+ "char_scores": {
+  "k=1": 0.9072221051385091,
+  "k=2": -0.42602884204672853,
+  "k=3": -0.46191894730495514
+ },
+ "char_best": "k=1",
+ "char_hit": true,
+ "h1_top": 0.49500036239624023,
+ "h1_second": 0.4466285705566406,
+ "h1_ratio": 1.1083042936086982
+}
