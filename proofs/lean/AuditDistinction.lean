@@ -27,3 +27,5 @@ import Distinction
 #print axioms FirstOrder.contextSat_update_fresh
 #print axioms FirstOrder.forall_intro_fresh_sound
 #print axioms FirstOrder.exists_intro_semantic
+
+#print axioms FirstOrder.exists_elim_fresh_sound
