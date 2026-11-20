@@ -22,3 +22,8 @@ import Distinction
 #print axioms Admissibility.descendObservation_mk
 #print axioms Admissibility.descendUnary_mk
 #print axioms Admissibility.descendBinary_mk
+
+#print axioms FirstOrder.satisfaction_depends_only_on_free_variables
+#print axioms FirstOrder.contextSat_update_fresh
+#print axioms FirstOrder.forall_intro_fresh_sound
+#print axioms FirstOrder.exists_intro_semantic
