@@ -421,6 +421,12 @@ theorem persistent_contraction_preserves_support
     | mk bToken bFormula bMode bOrigins =>
       simp_all [supports, hasPersistent, linearCount, mergePersistent]
 
+/-- The merged occurrence records the exact concatenation of both origin trails. -/
+theorem mergePersistent_records_origins
+    (a b : ResourceOccurrence) :
+    (mergePersistent a b).origins = a.origins ++ b.origins := by
+  rfl
+
 /-- Persistent contraction preserves the complete recorded provenance list. -/
 theorem mergePersistent_preserves_origin_count
     (a b : ResourceOccurrence) :
