@@ -432,7 +432,7 @@ theorem linear_contraction_counterexample_occurrences (A : Nat) :
     a.token ≠ b.token ∧
       supports [a, b] A 2 ∧
       ¬ supports [mergeLinear a b] A 2 := by
-  simp [supports, hasPersistent, linearCount, mergeLinear, ResourceMode]
+  change 1 ≠ 2 ∧ (false = true ∨ 2 ≤ 2) ∧ ¬ (false = true ∨ 2 ≤ 1)\n  decide
 
 
 end Resources
