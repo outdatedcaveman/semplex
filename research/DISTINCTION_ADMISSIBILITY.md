@@ -144,7 +144,7 @@ Keep at least these notions separate:
 5. module-relative accessibility/fitness;
 6. Markov-blanket/boundary identity (a proposed formal analogy, not yet defined).
 
-The binary dyadic example is now formalized in `SynesismConservation.lean`: value is preserved under partition while configuration changes. It does not prove the general molarity theory.
+The binary dyadic example is now formalized in `SynesismConservation.lean`: value is preserved under partition while configuration changes. It does not prove the general molarity theory. The resource fragment now records occurrence IDs, formula labels, linear/persistent modes, and provenance. It proves that merging two persistent occurrences of the same formula preserves support for every finite demand, while merging two distinct linear occurrences can destroy a two-use entailment. The merged provenance trail is explicitly concatenated; this remains a capacity semantics, not a linear-logic sequent calculus.
 
 The generic fibration and finite gluing fragments are mathematical scaffolds only. They do not yet formalize Synesism modules as fitness-indexed partial reality-slices or prove that the module family satisfies descent.
 
@@ -153,7 +153,7 @@ The generic fibration and finite gluing fragments are mathematical scaffolds onl
 **CI passed:** https://github.com/outdatedcaveman/semplex/actions/runs/44691446320
 
 - Lean 4.12.0 compiled and axiom-audited `Distinction.lean`, `SmallFibration.lean`, `ModuleDescent.lean`, and `SynesismConservation.lean`.
-- The finite Python reference suite passed **9/9** tests.
+- The finite Python reference suite now passes **11/11** tests.
 - Audited theorem dependencies are limited to `propext` and `Quot.sound`; no `sorryAx`, `Classical.choice`, or custom axiom dependency appears.
 - The FOL syntax is a fragment (equality, unary predicates, falsity, implication, ∀ and ∃); the resource semantics is not full linear logic, the dependent-type fragment is not full HoTT, and the fibration/gluing examples are finite standard constructions.
 - No Synesism canon or CSIR v0.1 schema was changed.
