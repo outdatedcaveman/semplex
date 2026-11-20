@@ -1,0 +1,8 @@
+import PredictiveKernel
+
+#print axioms PredictiveKernel.conj_mem_iff_smul_coset_eq
+#print axioms PredictiveKernel.card_conj_mem_eq_card_mul_fixedCosets
+#print axioms PredictiveKernel.card_filter_conj_mem_eq
+#print axioms PredictiveKernel.cosetInner_cosetOneHot_eq
+#print axioms PredictiveKernel.predictive_kernel_coset_expectation
+#print axioms PredictiveKernel.predictive_kernel_coset_expectation_card_quotient
