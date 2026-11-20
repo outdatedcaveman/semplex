@@ -29,3 +29,7 @@ import Distinction
 #print axioms FirstOrder.exists_intro_semantic
 
 #print axioms FirstOrder.exists_elim_fresh_sound
+
+#print axioms Resources.persistent_contraction_preserves_support
+#print axioms Resources.mergePersistent_preserves_origin_count
+#print axioms Resources.linear_contraction_counterexample_occurrences
