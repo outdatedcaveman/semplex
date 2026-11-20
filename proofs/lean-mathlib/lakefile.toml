@@ -1,6 +1,6 @@
 name = "CerpMathlib"
 version = "0.1.0"
-defaultTargets = ["CerpMathlib"]
+defaultTargets = ["CerpMathlib", "MasterPrinciple"]
 
 [[require]]
 name = "mathlib"
@@ -9,3 +9,6 @@ rev = "v4.12.0"
 
 [[lean_lib]]
 name = "CerpMathlib"
+
+[[lean_lib]]
+name = "MasterPrinciple"
