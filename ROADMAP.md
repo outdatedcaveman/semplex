@@ -84,21 +84,21 @@ Implemented:
 - recursive first-order syntax/semantics with equality, unary predicates, falsity, implication, ∀ and ∃; Lean proofs of Tarski free-variable invariance and semantic soundness of ∀-introduction / ∃-elimination under eigenvariable freshness;
 - explicit nonempty-domain existential witness and empty-domain countermodel; variables and constants have separate semantic clauses;
 - Lean identity-type substitution fragment;
-- occurrence-sensitive resource fragment with token IDs, linear/persistent modes, provenance, a verified persistent-contraction preservation theorem, and a verified linear-contraction counterexample;
+- well-formed occurrence-sensitive resource fragment with unique token IDs, linear/persistent modes, provenance, a context-independent persistent-contraction preservation theorem, and a linear-contraction theorem showing an exact one-unit capacity loss without persistent backup;
 - small split fibration with discrete Boolean fibers, reindexing, cartesian factorization, and cleavage coherence;
 - finite two-module overlap model proving compatible local sections glue uniquely and incompatible sections do not glue;
 - dyadic Synesism molarity model: the value relation is a proved equivalence, but order/multiplicity do not descend through its quotient; binary partition conserves value while changing configuration, with synod-anchor preservation;
-- finite Python reference model with **9 adversarial tests**;
+- finite Python reference model with **15 distinction-specific tests**, including malformed duplicate-token rejection;
 - prior-art/novelty analysis, updated claim register, and architecture review.
 
-**Verification:** GitHub Actions passed with Lean 4.12.0 compilation and axiom audits for Distinction, SmallFibration, ModuleDescent, and SynesismConservation, plus 11/11 Python tests. The audited theorem dependencies are limited to `propext` and `Quot.sound`; no `sorryAx`, custom axioms, or `Classical.choice` dependency appears. See https://github.com/outdatedcaveman/semplex/actions/runs/44693971714. Source reconciliation and module semantics design are in `research/SYNESISM_IDENTITY_MODULE_RECONCILIATION.md` and `research/SYNESISM_MODULE_SEMANTICS_DESIGN.md`.
+**Verification:** local Lean 4.12.0 suite passed 9/9; distinction-specific Python tests passed 15/15; the full fast Python suite passed 122 tests (2 skipped, 19 slow tests excluded). The new linear-capacity theorem's audit includes standard `Classical.choice` in addition to `propext` and `Quot.sound`; no `sorryAx` or custom research axiom appears. The earlier GitHub CI run is at https://github.com/outdatedcaveman/semplex/actions/runs/44693971714. Source reconciliation and module semantics design are in `research/SYNESISM_IDENTITY_MODULE_RECONCILIATION.md` and `research/SYNESISM_MODULE_SEMANTICS_DESIGN.md`.
 
 **Scope:** these are small formal fragments and standard constructions, not full FOL, full linear logic, full HoTT, a new fibration theorem, a general sheaf theorem, or a proof of Synesism's ontology. No Synesism canon or CSIR v0.1 schema changes.
 
 Next gates:
 1. Generalize the protected interface to additional operation classes only where existing Semplex fragments require them.
 2. Generalize the finite overlap model to multiple modules/covers and test descent conditions against the available Synesism module definitions; match the exact P8 source before claiming alignment.
-3. Replace the Boolean persistent flag with occurrence-sensitive resources, copy permissions, and provenance-aware judgments.
+3. Upgrade the occurrence-sensitive capacity fragment to a syntax-directed linear sequent calculus with cut/substitution and explicit exponential rules; compare its structural rules directly with classical FOL and dependent type theory.
 4. Complete the four-system comparison, including eigenparameter side conditions and the exact structural rules each system requires.
 5. Integrate typed transformation/loss certificates into CSIR only after multiple existing fragments require the same fields.
 6. Continue prior-art comparison before any novelty claim.

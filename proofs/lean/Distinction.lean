@@ -391,8 +391,11 @@ def linearCount (Γ : List ResourceOccurrence) (A : Nat) : Nat :=
 def hasPersistent (Γ : List ResourceOccurrence) (A : Nat) : Bool :=
   Γ.any fun o => o.formula == A && decide (o.mode = .persistent)
 
+def wellFormed (Γ : List ResourceOccurrence) : Prop :=
+  (Γ.map ResourceOccurrence.token).Nodup
+
 def supports (Γ : List ResourceOccurrence) (A demand : Nat) : Prop :=
-  hasPersistent Γ A = true ∨ demand ≤ linearCount Γ A
+  wellFormed Γ ∧ (hasPersistent Γ A = true ∨ demand ≤ linearCount Γ A)
 
 def mergePersistent (a b : ResourceOccurrence) : ResourceOccurrence :=
   { token := a.token
@@ -406,20 +409,88 @@ def mergeLinear (a b : ResourceOccurrence) : ResourceOccurrence :=
     mode := .linear
     origins := a.origins ++ b.origins }
 
+/-- Replacing two distinct occurrences by their persistent merge preserves token uniqueness. -/
+theorem wellFormed_mergePersistent
+    (Γ Δ : List ResourceOccurrence) (a b : ResourceOccurrence)
+    (hWell : wellFormed (Γ ++ [a, b] ++ Δ)) :
+    wellFormed (Γ ++ [mergePersistent a b] ++ Δ) := by
+  unfold wellFormed at hWell ⊢
+  simp only [List.map_append, List.map_cons, List.map_nil, List.append_assoc] at hWell
+  simp only [List.map_append, List.map_cons, List.map_nil, mergePersistent, List.append_assoc]
+  apply List.Nodup.sublist
+  · apply List.Sublist.append
+    · exact List.Sublist.refl _
+    · apply List.Sublist.append
+      · exact List.Sublist.cons₂ a.token (List.Sublist.cons b.token (List.Sublist.refl []))
+      · exact List.Sublist.refl _
+  · exact hWell
+
+/-- Replacing two distinct occurrences by their linear merge preserves token uniqueness. -/
+theorem wellFormed_mergeLinear
+    (Γ Δ : List ResourceOccurrence) (a b : ResourceOccurrence)
+    (hWell : wellFormed (Γ ++ [a, b] ++ Δ)) :
+    wellFormed (Γ ++ [mergeLinear a b] ++ Δ) := by
+  unfold wellFormed at hWell ⊢
+  simp only [List.map_append, List.map_cons, List.map_nil, List.append_assoc] at hWell
+  simp only [List.map_append, List.map_cons, List.map_nil, mergeLinear, List.append_assoc]
+  apply List.Nodup.sublist
+  · apply List.Sublist.append
+    · exact List.Sublist.refl _
+    · apply List.Sublist.append
+      · exact List.Sublist.cons₂ a.token (List.Sublist.cons b.token (List.Sublist.refl []))
+      · exact List.Sublist.refl _
+  · exact hWell
+
 /-- Contracting two persistent occurrences of the same formula preserves
 support for every formula and every finite demand. -/
 theorem persistent_contraction_preserves_support
     (Γ : List ResourceOccurrence) (a b : ResourceOccurrence)
+    (hWell : wellFormed (Γ ++ [a, b]))
     (hFormula : a.formula = b.formula)
     (ha : a.mode = .persistent) (hb : b.mode = .persistent)
     (A demand : Nat) :
     supports (Γ ++ [a, b]) A demand ↔
       supports (Γ ++ [mergePersistent a b]) A demand := by
+  have hWellOut := wellFormed_mergePersistent Γ [] a b (by simpa using hWell)
   cases a with
   | mk aToken aFormula aMode aOrigins =>
     cases b with
     | mk bToken bFormula bMode bOrigins =>
-      simp_all [supports, hasPersistent, linearCount, mergePersistent]
+      simp_all [supports, wellFormed, hasPersistent, linearCount, mergePersistent]
+
+/-- Persistent contraction is context-independent: the occurrences may be
+surrounded by arbitrary assumptions, and every formula/demand is preserved. -/
+theorem persistent_contraction_preserves_support_context
+    (Γ Δ : List ResourceOccurrence) (a b : ResourceOccurrence)
+    (hWell : wellFormed (Γ ++ a :: b :: Δ))
+    (hFormula : a.formula = b.formula)
+    (ha : a.mode = .persistent) (hb : b.mode = .persistent)
+    (A demand : Nat) :
+    supports (Γ ++ a :: b :: Δ) A demand ↔
+      supports (Γ ++ mergePersistent a b :: Δ) A demand := by
+  have hWellOut := wellFormed_mergePersistent Γ Δ a b (by simpa [List.append_assoc] using hWell)
+  cases a with
+  | mk aToken aFormula aMode aOrigins =>
+    cases b with
+    | mk bToken bFormula bMode bOrigins =>
+      simp_all [supports, wellFormed, hasPersistent, linearCount, mergePersistent,
+        List.append_assoc]
+
+/-- If no persistent occurrence supplies A in the surrounding context, then
+merging two linear A-occurrences loses exactly one unit of A-capacity. -/
+theorem linear_contraction_loses_one_capacity
+    (Γ Δ : List ResourceOccurrence) (a b : ResourceOccurrence)
+    (hWell : wellFormed (Γ ++ a :: b :: Δ))
+    (hFormula : a.formula = b.formula)
+    (ha : a.mode = .linear) (hb : b.mode = .linear)
+    (hNoPersistent : hasPersistent (Γ ++ Δ) a.formula = false) :
+    let background := linearCount (Γ ++ Δ) a.formula
+    supports (Γ ++ a :: b :: Δ) a.formula (background + 2) ∧
+      ¬ supports (Γ ++ mergeLinear a b :: Δ) a.formula (background + 2) := by
+  have hWellOut := wellFormed_mergeLinear Γ Δ a b (by simpa [List.append_assoc] using hWell)
+  simp_all [supports, wellFormed, hasPersistent, linearCount, mergeLinear,
+    List.append_assoc]
+  omega
 
 /-- The merged occurrence records the exact concatenation of both origin trails. -/
 theorem mergePersistent_records_origins
@@ -442,7 +513,7 @@ theorem linear_contraction_counterexample_occurrences (A : Nat) :
     a.token ≠ b.token ∧
       supports [a, b] A 2 ∧
       ¬ supports [mergeLinear a b] A 2 := by
-  simp [supports, hasPersistent, linearCount, mergeLinear]
+  simp [supports, wellFormed, hasPersistent, linearCount, mergeLinear]
 
 
 end Resources

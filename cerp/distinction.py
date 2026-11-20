@@ -219,12 +219,20 @@ class ResourceOccurrence:
     origins: tuple[int, ...]
 
 
+def resource_context_well_formed(context: Sequence[ResourceOccurrence]) -> bool:
+    """A linear resource occurrence token may appear only once in a context."""
+    tokens = [occurrence.token for occurrence in context]
+    return len(tokens) == len(set(tokens))
+
+
 def resource_supports(
     context: Sequence[ResourceOccurrence], formula: Hashable, demand: int
 ) -> bool:
     """Persistent occurrences are reusable; linear occurrences count individually."""
     if demand < 0:
         raise ValueError("resource demand must be nonnegative")
+    if not resource_context_well_formed(context):
+        raise ValueError("resource context contains duplicate occurrence tokens")
     return any(
         item.formula == formula and item.mode is ResourceMode.PERSISTENT
         for item in context
@@ -238,6 +246,8 @@ def merge_persistent_occurrences(
     left: ResourceOccurrence, right: ResourceOccurrence
 ) -> ResourceOccurrence:
     """Contract two persistent occurrences while retaining both provenance trails."""
+    if left.token == right.token:
+        raise ValueError("cannot contract two references to the same occurrence token")
     if left.formula != right.formula:
         raise ValueError("only occurrences of the same formula can be contracted")
     if left.mode is not ResourceMode.PERSISTENT or right.mode is not ResourceMode.PERSISTENT:
@@ -254,6 +264,8 @@ def merge_linear_occurrences(
     left: ResourceOccurrence, right: ResourceOccurrence
 ) -> ResourceOccurrence:
     """A deliberately unsafe merge, included to exhibit lost linear capacity."""
+    if left.token == right.token:
+        raise ValueError("cannot contract two references to the same occurrence token")
     if left.formula != right.formula:
         raise ValueError("only occurrences of the same formula can be merged")
     if left.mode is not ResourceMode.LINEAR or right.mode is not ResourceMode.LINEAR:

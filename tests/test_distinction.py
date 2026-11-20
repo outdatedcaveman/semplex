@@ -14,6 +14,12 @@ from cerp.distinction import (
     persistent_contraction,
     preserves_through,
     run_demonstrator,
+    resource_context_well_formed,
+    resource_supports,
+    ResourceMode,
+    ResourceOccurrence,
+    merge_linear_occurrences,
+    merge_persistent_occurrences,
     tarski_satisfaction_invariant,
 )
 
@@ -117,3 +123,60 @@ def test_persistent_contraction_preserves_support_and_provenance():
             assert resource_supports(before, formula, demand) == resource_supports(
                 after, formula, demand
             )
+
+
+def test_persistent_contraction_is_context_independent_for_multiple_demands():
+    prefix = [ResourceOccurrence(20, "B", ResourceMode.LINEAR, (20,))]
+    suffix = [ResourceOccurrence(21, "C", ResourceMode.LINEAR, (21,))]
+    left = ResourceOccurrence(22, "A", ResourceMode.PERSISTENT, (22,))
+    right = ResourceOccurrence(23, "A", ResourceMode.PERSISTENT, (23,))
+    before = prefix + [left, right] + suffix
+    after = prefix + [merge_persistent_occurrences(left, right)] + suffix
+    for formula in ("A", "B", "C", "D"):
+        for demand in range(7):
+            assert resource_supports(before, formula, demand) == resource_supports(
+                after, formula, demand
+            )
+
+
+def test_linear_contraction_loses_exactly_one_capacity_without_persistent_backup():
+    contexts = [
+        [],
+        [ResourceOccurrence(30, "A", ResourceMode.LINEAR, (30,))],
+        [ResourceOccurrence(31, "B", ResourceMode.LINEAR, (31,))],
+        [ResourceOccurrence(32, "A", ResourceMode.LINEAR, (32,)),
+         ResourceOccurrence(33, "C", ResourceMode.LINEAR, (33,))],
+    ]
+    for i, background in enumerate(contexts):
+        left = ResourceOccurrence(100 + 2 * i, "A", ResourceMode.LINEAR, (100 + 2 * i,))
+        right = ResourceOccurrence(101 + 2 * i, "A", ResourceMode.LINEAR, (101 + 2 * i,))
+        merged = merge_linear_occurrences(left, right)
+        before = background + [left, right]
+        after = background + [merged]
+        available_before = sum(
+            item.formula == "A" and item.mode is ResourceMode.LINEAR for item in before
+        )
+        assert resource_supports(before, "A", available_before)
+        assert not resource_supports(after, "A", available_before)
+
+
+def test_duplicate_occurrence_tokens_are_rejected_as_malformed_contexts():
+    occurrence = ResourceOccurrence(501, "A", ResourceMode.LINEAR, (501,))
+    assert not resource_context_well_formed([occurrence, occurrence])
+    try:
+        resource_supports([occurrence, occurrence], "A", 2)
+    except ValueError as error:
+        assert "duplicate occurrence tokens" in str(error)
+    else:
+        raise AssertionError("duplicate token IDs must not count as two linear resources")
+
+
+def test_contraction_rejects_two_references_to_the_same_occurrence_token():
+    occurrence = ResourceOccurrence(502, "A", ResourceMode.PERSISTENT, (502,))
+    for merge in (merge_persistent_occurrences, merge_linear_occurrences):
+        try:
+            merge(occurrence, occurrence)
+        except ValueError as error:
+            assert "same occurrence token" in str(error)
+        else:
+            raise AssertionError("a single occurrence token cannot be contracted with itself")

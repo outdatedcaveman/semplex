@@ -35,3 +35,8 @@ import Distinction
 #print axioms Resources.linear_contraction_counterexample_occurrences
 
 #print axioms Resources.mergePersistent_records_origins
+#print axioms Resources.persistent_contraction_preserves_support_context
+#print axioms Resources.linear_contraction_loses_one_capacity
+
+#print axioms Resources.wellFormed_mergePersistent
+#print axioms Resources.wellFormed_mergeLinear

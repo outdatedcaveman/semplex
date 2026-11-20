@@ -1,6 +1,6 @@
 # Distinction Admissibility: a formal core
 
-**Status:** initial formal core verified in Lean 4.12.0 CI; 9 finite Python tests pass. The universal DAP remains a research schema, not a theorem.
+**Status:** Lean 4.12.0 proof suite passes locally (9 tests); distinction-specific Python suite passes 15/15; full fast suite passes 122 tests (2 skipped, 19 slow tests excluded). The universal DAP remains a research schema, not a theorem.
 **Program:** Semplex / CERP, Spike 17.
 **Synesism status:** interpretation proposal only; no canon change.
 
@@ -144,17 +144,17 @@ Keep at least these notions separate:
 5. module-relative accessibility/fitness;
 6. Markov-blanket/boundary identity (a proposed formal analogy, not yet defined).
 
-The binary dyadic example is now formalized in `SynesismConservation.lean`: value is preserved under partition while configuration changes. It does not prove the general molarity theory. The resource fragment now records occurrence IDs, formula labels, linear/persistent modes, and provenance. It proves that merging two persistent occurrences of the same formula preserves support for every finite demand, while merging two distinct linear occurrences can destroy a two-use entailment. The merged provenance trail is explicitly concatenated; this remains a capacity semantics, not a linear-logic sequent calculus.
+The binary dyadic example is now formalized in `SynesismConservation.lean`: value is preserved under partition while configuration changes. It does not prove the general molarity theory. The resource fragment records occurrence IDs, formula labels, linear/persistent modes, and provenance. Contexts are required to have unique occurrence-token IDs: the Lean support judgment includes a `Nodup` invariant, and the Python reference model rejects duplicate IDs and refuses to merge a token with itself. Lean proves that persistent contraction preserves well-formedness and support for every formula and finite demand even in arbitrary prefix/suffix contexts; the merged provenance trail is exactly the concatenation of both source trails. It also proves that, absent a persistent backup, merging two distinct linear occurrences loses exactly one unit of capacity. This remains a capacity semantics, not a linear-logic sequent calculus.
 
 The generic fibration and finite gluing fragments are mathematical scaffolds only. They do not yet formalize Synesism modules as fitness-indexed partial reality-slices or prove that the module family satisfies descent.
 
 ## 9. Verification status
 
-**CI passed:** https://github.com/outdatedcaveman/semplex/actions/runs/44693971714
+**Baseline CI passed before the latest local extension:** https://github.com/outdatedcaveman/semplex/actions/runs/44693971714. The current local verification additionally passes Lean 9/9, targeted Python 15/15, and fast Python 122 passed (2 skipped, 19 slow tests excluded).
 
 - Lean 4.12.0 compiled and axiom-audited `Distinction.lean`, `SmallFibration.lean`, `ModuleDescent.lean`, and `SynesismConservation.lean`.
-- The finite Python reference suite now passes **11/11** tests.
-- Audited theorem dependencies are limited to `propext` and `Quot.sound`; no `sorryAx`, `Classical.choice`, or custom axiom dependency appears.
+- The distinction-specific Python suite now passes **15/15** tests. The complete fast suite passes **122 tests**, with 2 skipped and 19 slow tests excluded. The Lean verification suite passes **9/9** tests locally.
+- The new persistent-context theorem depends on `propext` and `Quot.sound`; the exact linear-capacity theorem additionally reports Lean's standard `Classical.choice` dependency (introduced by the arithmetic proof). No `sorryAx` or custom research axiom appears. `Quot.sound` is Lean's standard quotient axiom.
 - The FOL syntax is a fragment (equality, unary predicates, falsity, implication, ∀ and ∃); the resource semantics is not full linear logic, the dependent-type fragment is not full HoTT, and the fibration/gluing examples are finite standard constructions.
 - No Synesism canon or CSIR v0.1 schema was changed.
 
@@ -165,7 +165,7 @@ The generic fibration and finite gluing fragments are mathematical scaffolds onl
 3. Define contextual fitness and modules as interaction-generated partial reality-slices.
 4. Resolve the unitarity accounting law, especially how overlapping modules share/count reality-content.
 5. Formalize the relation between modules and Markov blankets without identifying them by analogy alone.
-6. Extend the four-system comparison beyond the now-verified FOL eigenvariable soundness fragment; formalize occurrence-sensitive linear contexts and compare actual structural rules.
+6. Upgrade the occurrence-sensitive capacity semantics to a syntax-directed linear sequent calculus with cut/substitution and explicit exponential rules; then compare the actual structural rules across all four systems.
 7. Compare all candidate results with existing quotient algebra, linear logic, categorical logic, HoTT, fibrations, sheaf theory, and active inference before claiming novelty.
 
 ## 11. Literature anchors

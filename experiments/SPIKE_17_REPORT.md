@@ -1,6 +1,6 @@
 # Spike 17 — Distinction admissibility, identity, and controlled contraction
 
-**Status:** initial formal core passes Lean 4.12.0 CI and axiom audit; finite Python demonstrator passes.  
+**Status:** local Lean 4.12.0 verification passes 9/9 tests; distinction Python suite passes 15/15; fast suite passes 122 tests (2 skipped, 19 slow excluded).
 **Date:** 2026-11-20  
 **Branch:** `research/distinction-calculus-2026-11-20`  
 **Pull request:** https://github.com/outdatedcaveman/semplex/pull/4
@@ -39,7 +39,7 @@ This is a scoped schema for exact quotients and total deterministic operations, 
 | System | Formal fragment | Result and boundary |
 |---|---|---|
 | Classical FOL | Recursive syntax/semantics with variables, constants, equality, unary predicates, falsity, implication, and universal quantification | Lean proves satisfaction depends only on the assignment restricted to free variables. The syntax is a small fragment, not full FOL. |
-| Linear/resource logic | Natural-number linear resource count plus a Boolean persistent-use permission | Lean proves a contraction counterexample and safe cases. This is a resource semantics fragment, not a complete linear-logic sequent calculus or full exponential modality. |
+| Linear/resource logic | Well-formed occurrence-sensitive contexts with unique token IDs, formula labels, linear/persistent modes, and provenance | Lean proves merges preserve token uniqueness; persistent contraction preserves support in arbitrary surrounding contexts; and linear contraction loses exactly one capacity unit without persistent backup. The Python model rejects duplicate token IDs. This is a capacity semantics fragment, not a complete linear-logic sequent calculus or full exponential modality. |
 | Dependent type theory | Lean identity type Eq, reflexivity, and equality elimination | Substitution follows by identity elimination. This is not a full Martin-Löf type theory or HoTT development. |
 | Contextual/fibrational semantics | Two-object context preorder; discrete fibers Bool and Bool × Bool; Grothendieck total category | Lean proves reindexing laws, category laws, cartesian factorization, and cleavage coherence. This is a standard small set-valued fibration, not a new construction. |
 
@@ -75,22 +75,23 @@ This is a finite matching-family/sheaf-style example, not a general sheaf theore
 
 ## Verification
 
-**CI passed.** Lean 4.12.0 compile and axiom-audit jobs both passed, and the finite Python test suite passed **9/9**.
+**Local verification passed.** The Lean 4.12.0 verification suite passed **9/9**; the distinction-specific Python suite passed **15/15**; and the full fast Python suite passed **122 tests** (2 skipped, 19 slow tests excluded).
 
-CI run: https://github.com/outdatedcaveman/semplex/actions/runs/44693971714
+Baseline CI run (before the local occurrence-sensitive extension): https://github.com/outdatedcaveman/semplex/actions/runs/44693971714. The local runs below include the new extension.
 
-The axiom audit reports only:
-- `propext` for some extensionality/equality-of-propositions results;
-- `Quot.sound` for quotient construction/descent results.
+The axiom audit reports standard dependencies:
+- `propext` for extensionality/equality-of-propositions results;
+- `Quot.sound` for quotient construction/descent results;
+- `Classical.choice` for the new exact linear-capacity theorem's arithmetic proof.
 
-No audited theorem depends on `sorryAx`, `Classical.choice`, or an unapproved custom axiom. The use of `Quot.sound` is expected for Lean's quotient primitive; it is not an extra research axiom.
+No audited theorem depends on `sorryAx` or a custom research axiom. `Quot.sound` and `Classical.choice` are standard Lean axioms; the latter should be removed from the proof if a constructive arithmetic discharge is practical, but it does not invalidate the theorem.
 
 The verification covers:
 - `Distinction.lean` and `AuditDistinction.lean`;
 - `SynesismConservation.lean` and `AuditSynesismConservation.lean` (dyadic partition/value conservation, non-identity, and synod-anchored coherent evolution);
 - `SmallFibration.lean` and `AuditFibration.lean`;
 - `ModuleDescent.lean` and `AuditModuleDescent.lean`;
-- the finite Python reference model and nine adversarial tests.
+- the finite Python reference model and 15 distinction-specific tests; the full fast suite additionally passes 122 tests.
 
 The repository test harness `tests/test_lean.py` also compiles these modules and checks their axiom outputs when Lean 4.12.0 is available.
 
@@ -101,7 +102,8 @@ The repository test harness `tests/test_lean.py` also compiles these modules and
 3. **Names carry inferential commitments through their semantics.** Variables, interpreted constants, and fresh proof parameters have different roles. The slide's existential import uses nonempty-domain semantics or a witness term/parameter. Lean now proves semantic soundness of ∀-introduction and ∃-elimination under explicit eigenvariable freshness conditions.
 4. **Molarity-equivalence is not identity.** Even when the dyadic value relation is a genuine equivalence relation, order and multiplicity do not descend through its quotient. This is a direct DAP counterexample to treating equal semonic value as structural identity.
 5. **Module-relative descriptions have a concrete gluing test.** Local profiles can be assembled only when overlap restrictions agree. This is a generic matching-family example, not yet a derivation from Synesism's module ontology.
-6. **Occurrence-sensitive contraction is more precise than the original Boolean flag.** Two persistent occurrences of the same formula can be merged without changing resource support at any finite demand, while merging two distinct linear occurrences destroys support for a two-use demand. The merged token records both provenance trails. This is still a small capacity semantics, not full linear logic.\n7. **No novelty claim is warranted.** Quotient descent, congruence, free-variable invariance, linear contraction control, identity types, Grothendieck fibrations, and finite gluing are established mathematics. The possible value is the typed integration with PFT and CSIR, which still needs comparative evaluation.
+6. **Occurrence-sensitive contraction is more precise than the original Boolean flag.** Contexts must have unique token IDs; duplicate references to one token are rejected rather than counted as multiple linear resources. Two distinct persistent occurrences of the same formula can be merged without changing support at any finite demand, even inside arbitrary prefix/suffix contexts; the merged provenance is exactly the concatenation of both source trails. If no persistent occurrence supplies the formula, merging two distinct linear occurrences loses exactly one unit of capacity at the pre-merge demand. This is still a capacity semantics, not full linear logic.
+7. **No novelty claim is warranted.** Quotient descent, congruence, free-variable invariance, linear contraction control, identity types, Grothendieck fibrations, and finite gluing are established mathematics. The possible value is the typed integration with PFT and CSIR, which still needs comparative evaluation.
 
 ## Kill criteria / unresolved work
 
@@ -118,7 +120,7 @@ The repository test harness `tests/test_lean.py` also compiles these modules and
 3. Extend modules to fitness-indexed partial reality-slices with an explicit reality-share/overlap measure; do not assume the generic fibration is already that semantics.
 4. Extend the protected interface from total unary/binary operations to typed partial, stateful, effectful, stochastic, and higher-order operations only where Semplex fragments require them.
 5. Generalize the finite overlap model to multiple modules/covers and explicit transition maps; derive the exact descent conditions and test them against the available Synesism module definitions.
-6. Replace the toy Boolean persistent flag with occurrence-sensitive resource contexts, explicit copy permissions, and provenance-aware judgments; compare directly with linear logic's exponential rules.
-8. The FOL fragment now includes ∃ and machine-checked eigenvariable soundness for ∀-introduction and ∃-elimination. Complete a syntax-directed comparison of all four systems, with occurrence-sensitive linear contexts and explicit structural rules.
+6. Upgrade the occurrence-sensitive capacity semantics to a syntax-directed linear sequent calculus with cut/substitution and explicit exponential rules; compare its structural rules directly with classical FOL and dependent type theory.
+7. The FOL fragment now includes ∃ and machine-checked eigenvariable soundness for ∀-introduction and ∃-elimination. Complete the syntax-directed comparison of all four systems, with explicit structural rules.
 8. Design a CSIR transformation/certificate representation only after at least three existing fragments need the same typed preservation and loss-accounting fields.
 9. Continue the literature and novelty audit before any paper-level claim.
