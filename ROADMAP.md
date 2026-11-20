@@ -102,3 +102,5 @@ Next gates:
 4. Complete the four-system comparison, including eigenparameter side conditions and the exact structural rules each system requires.
 5. Integrate typed transformation/loss certificates into CSIR only after multiple existing fragments require the same fields.
 6. Continue prior-art comparison before any novelty claim.
+
+- **Q-LRAT-Chunk** (Spike 17 verification): the full unfiltered pytest run was stopped after ~14 minutes to avoid excessive laptop load. It was spending several minutes in a generated pure-kernel Lean claim for a 3-input threshold-network/LRAT certificate; the Lean process reached ~1.25 GB working set. This is a performance/verification-engineering issue, not a reported theorem failure. Next: split the LRAT certificate into independently checked chunks or improve the kernel checker so pure-kernel proof terms remain tractable; compare with native execution only as a separately disclosed trust mode. Previous independent runs remain: 122 fast tests (2 skipped), 9/9 Lean suite, and 10 slow non-Lean tests (1 skipped). The unfiltered suite is **incomplete**, not passed.
