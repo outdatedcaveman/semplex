@@ -14,12 +14,13 @@ on:
       - 'proofs/lean/SynesismConservation.lean'
       - 'proofs/lean/AuditSynesismConservation.lean'
       - '.github/workflows/spike17.yml'
-  push:
-    branches:
-      - 'research/distinction-calculus-2026-11-20'
-
 permissions:
   contents: read
+
+# A PR update already covers pushes to its head branch; avoid running both events.
+concurrency:
+  group: spike17-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   finite-reference-model:
