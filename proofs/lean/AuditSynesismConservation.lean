@@ -1,0 +1,22 @@
+import SynesismConservation
+
+#print axioms SynesismConservation.binaryPartition_preserves_molarity
+#print axioms SynesismConservation.binaryPartition_changes_order
+#print axioms SynesismConservation.each_first_order_offspring_has_half_value
+#print axioms SynesismConservation.parent_and_two_offspring_are_value_equivalent
+#print axioms SynesismConservation.parent_and_two_offspring_are_not_structurally_identical
+#print axioms SynesismConservation.binary_partition_is_coherent
+#print axioms SynesismConservation.binary_partition_changes_state
+
+
+
+
+#check Nat.mul_left_cancel
+#check Nat.mul_right_cancel
+
+#print axioms SynesismConservation.molarityEquivalent_refl
+#print axioms SynesismConservation.molarityEquivalent_symm
+#print axioms SynesismConservation.molarityEquivalent_trans
+#print axioms SynesismConservation.molaritySetoid
+#print axioms SynesismConservation.order_not_constant_on_molarity_classes
+#print axioms SynesismConservation.count_not_constant_on_molarity_classes
