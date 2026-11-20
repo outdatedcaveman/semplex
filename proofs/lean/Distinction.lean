@@ -415,7 +415,11 @@ theorem persistent_contraction_preserves_support
     (A demand : Nat) :
     supports (Γ ++ [a, b]) A demand ↔
       supports (Γ ++ [mergePersistent a b]) A demand := by
-  cases a with\n  | mk aToken aFormula aMode aOrigins =>\n    cases b with\n    | mk bToken bFormula bMode bOrigins =>\n      simp_all [supports, hasPersistent, linearCount, mergePersistent, ResourceMode]
+  cases a with
+  | mk aToken aFormula aMode aOrigins =>
+    cases b with
+    | mk bToken bFormula bMode bOrigins =>
+      simp_all [supports, hasPersistent, linearCount, mergePersistent, ResourceMode]
 
 /-- Persistent contraction preserves the complete recorded provenance list. -/
 theorem mergePersistent_preserves_origin_count
@@ -432,7 +436,8 @@ theorem linear_contraction_counterexample_occurrences (A : Nat) :
     a.token ≠ b.token ∧
       supports [a, b] A 2 ∧
       ¬ supports [mergeLinear a b] A 2 := by
-  change 1 ≠ 2 ∧ (false = true ∨ 2 ≤ 2) ∧ ¬ (false = true ∨ 2 ≤ 1)\n  decide
+  change 1 ≠ 2 ∧ (false = true ∨ 2 ≤ 2) ∧ ¬ (false = true ∨ 2 ≤ 1)
+  decide
 
 
 end Resources
