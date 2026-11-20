@@ -91,7 +91,7 @@ Implemented:
 - finite Python reference model with **9 adversarial tests**;
 - prior-art/novelty analysis, updated claim register, and architecture review.
 
-**Verification:** GitHub Actions passed with Lean 4.12.0 compilation and axiom audits for Distinction, SmallFibration, ModuleDescent, and SynesismConservation, plus 11/11 Python tests. The audited theorem dependencies are limited to `propext` and `Quot.sound`; no `sorryAx`, custom axioms, or `Classical.choice` dependency appears. See https://github.com/outdatedcaveman/semplex/actions/runs/44693854708. Source reconciliation and module semantics design are in `research/SYNESISM_IDENTITY_MODULE_RECONCILIATION.md` and `research/SYNESISM_MODULE_SEMANTICS_DESIGN.md`.
+**Verification:** GitHub Actions passed with Lean 4.12.0 compilation and axiom audits for Distinction, SmallFibration, ModuleDescent, and SynesismConservation, plus 11/11 Python tests. The audited theorem dependencies are limited to `propext` and `Quot.sound`; no `sorryAx`, custom axioms, or `Classical.choice` dependency appears. See https://github.com/outdatedcaveman/semplex/actions/runs/44693971714. Source reconciliation and module semantics design are in `research/SYNESISM_IDENTITY_MODULE_RECONCILIATION.md` and `research/SYNESISM_MODULE_SEMANTICS_DESIGN.md`.
 
 **Scope:** these are small formal fragments and standard constructions, not full FOL, full linear logic, full HoTT, a new fibration theorem, a general sheaf theorem, or a proof of Synesism's ontology. No Synesism canon or CSIR v0.1 schema changes.
 
