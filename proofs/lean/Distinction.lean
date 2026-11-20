@@ -272,6 +272,39 @@ theorem forall_intro_fresh_sound {α : Type u} (I : Interpretation α)
   apply hDerive (update s x a)
   exact contextSat_update_fresh I Γ s x a hFresh hΓ
 
+
+/-- Semantic soundness of existential elimination with a fresh eigenvariable.
+
+The eigenvariable may occur in the temporary witness assumption, but must not
+occur free in the persistent context or the conclusion. -/
+theorem exists_elim_fresh_sound {α : Type u} (I : Interpretation α)
+    (Γ : List Formula) (φ ψ : Formula) (x : Nat)
+    (hFreshContext : ∀ χ, χ ∈ Γ → ¬ Formula.free χ x)
+    (hFreshConclusion : ¬ Formula.free ψ x)
+    (hMinor : ∀ s, ContextSat I s (φ :: Γ) → Formula.sat I s ψ) :
+    ∀ s, ContextSat I s Γ → Formula.sat I s (.ex x φ) →
+      Formula.sat I s ψ := by
+  intro s hΓ hExists
+  rcases hExists with ⟨witness, hWitness⟩
+  have hΓ' := contextSat_update_fresh I Γ s x witness hFreshContext hΓ
+  have hMinorContext : ContextSat I (update s x witness) (φ :: Γ) := by
+    intro χ hχ
+    rcases List.mem_cons.mp hχ with hEq | hIn
+    · cases hEq
+      exact hWitness
+    · exact hΓ' χ hIn
+  have hConclusion := hMinor (update s x witness) hMinorContext
+  have hAgree : AgreeOn (Formula.free ψ) (update s x witness) s := by
+    intro v hv
+    by_cases hvx : v = x
+    · subst v
+      exact False.elim (hFreshConclusion hv)
+    · simp [update, hvx]
+  have hInvariant :=
+    satisfaction_depends_only_on_free_variables I ψ
+      (update s x witness) s hAgree
+  exact hInvariant.mp hConclusion
+
 /-- Existential introduction is witnessed by an element of the interpreted domain. -/
 theorem exists_intro_semantic {α : Type u} (I : Interpretation α)
     (s : Nat → α) (x : Nat) (φ : Formula) (witness : α)
