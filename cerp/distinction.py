@@ -302,6 +302,20 @@ def run_demonstrator() -> dict[str, object]:
         "linear_resource_fragment": {
             "linear_contraction_fails_for_two_token_demand": not linear_contraction_counterexample(),
             "persistent_permission_allows_reuse": persistent_contraction(),
+            "occurrence_sensitive_persistent_contraction": (
+                resource_supports(
+                    [ResourceOccurrence(1, "A", ResourceMode.PERSISTENT, (1,)),
+                     ResourceOccurrence(2, "A", ResourceMode.PERSISTENT, (2,))],
+                    "A", 7
+                )
+                == resource_supports(
+                    [merge_persistent_occurrences(
+                        ResourceOccurrence(1, "A", ResourceMode.PERSISTENT, (1,)),
+                        ResourceOccurrence(2, "A", ResourceMode.PERSISTENT, (2,))
+                    )],
+                    "A", 7
+                )
+            ),
         },
         "dependent_type_theory": {
             "status": "formal_fragment_in_Lean_source; compiled_and_axiom_audited_in_CI"
