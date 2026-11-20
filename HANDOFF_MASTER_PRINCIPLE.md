@@ -44,6 +44,7 @@ Verified with `lake build MasterPrinciple` (`BUILD EXIT: 0` in `113.46s`, Lean `
 5. `spec`: exact Hankel-SVD spectral realization (400 random suffixes len 0..8, 12 monoids).
 6. `grp`: `gru_lin` + `gru_mlp` (`steps=2500, lr=0.004`, 3 seeds each × 6 fresh groups = 36 runs).
 7. `noise`: `GRUCell`-based `gru_mlp` with state noise $\eta = 0.20$ during training (`steps=2500, lr=0.004`, 2 seeds × [first 6 monoids + 6 groups] = 24 runs).
+- Execution infra note (committed before any completed run in `master_principle_raw/`): switched `torch.set_num_threads(4)` -> `1` (1.73x faster on CPU for `batch=64, T=30`) and added deterministic `part="k/K"` job sharding matching `experiments/spike87.py`; zero changes to seeds, hyperparameters, automata, operators, or criteria.
 
 ### Pre-Registered Hypotheses and Numeric Kill Criteria
 

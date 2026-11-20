@@ -491,9 +491,9 @@ def _ops_from_row(A: dict) -> dict:
     return {k: np.array(A[k]) for k in ("G", "Wo", "Wo_heat", "Wc", "WcWo_noheat", "o", "k1", "Lkin", "g1_w", "o_w", "k1_w")}
 
 
-def run(which: str | None = None):
+def run(which: str | None = None, part: str = "0/1"):
     import torch
-    torch.set_num_threads(4)
+    torch.set_num_threads(1)
     RAW.mkdir(parents=True, exist_ok=True)
     P = json.loads(PRED.read_text())
     monoids = P["monoids"]
@@ -501,6 +501,15 @@ def run(which: str | None = None):
 
     arms = {"gru_mlp", "gru_lin", "lstm_mlp", "rnn_mlp", "spec", "grp", "noise"}
     sel = arms if which is None else {x.strip() for x in which.split(",")}
+
+    k, K = map(int, part.split("/"))
+    job_idx = 0
+
+    def take() -> bool:
+        nonlocal job_idx
+        ok = (job_idx % K) == k
+        job_idx += 1
+        return ok
 
     def run_monoid_arm(tag: str, arch: str, n_seeds: int, steps: int, lr: float,
                        seed_base: int, clip_norm: float | None = None, save_step0: bool = False):
@@ -510,6 +519,8 @@ def run(which: str | None = None):
             pi = np.array(A["pi"], float)
             ops = _ops_from_row(A)
             for s_idx in range(n_seeds):
+                if not take():
+                    continue
                 pth = RAW / f"{tag}_{A['id']}_{s_idx}.json"
                 if pth.exists():
                     continue
@@ -541,6 +552,8 @@ def run(which: str | None = None):
 
     if "spec" in sel:
         for A in monoids:
+            if not take():
+                continue
             pth = RAW / f"spec_{A['id']}_0.json"
             if pth.exists():
                 continue
@@ -566,6 +579,8 @@ def run(which: str | None = None):
                 irs = S69.real_irreps(grp_list)
                 labels = [S69.irrep_label(ir, k) for k, ir in enumerate(irs)]
                 for s_idx in range(3):
+                    if not take():
+                        continue
                     pth = RAW / f"grp_{arch}_{g['name']}_{s_idx}.json"
                     if pth.exists():
                         continue
@@ -600,6 +615,8 @@ def run(which: str | None = None):
             pi = np.array(A["pi"], float)
             ops = _ops_from_row(A)
             for s_idx in range(2):
+                if not take():
+                    continue
                 pth = RAW / f"noise_m_{A['id']}_{s_idx}.json"
                 if pth.exists():
                     continue
@@ -618,6 +635,8 @@ def run(which: str | None = None):
             pi = np.array(g["pi"], float)
             Lkin = np.array(g["Lkin"], float)
             for s_idx in range(2):
+                if not take():
+                    continue
                 pth = RAW / f"noise_g_{g['name']}_{s_idx}.json"
                 if pth.exists():
                     continue
@@ -802,6 +821,7 @@ def analyse():
 if __name__ == "__main__":
     cmd = sys.argv[1]
     if cmd == "run":
-        run(sys.argv[2] if len(sys.argv) > 2 else None)
+        run(sys.argv[2] if len(sys.argv) > 2 else None,
+            sys.argv[3] if len(sys.argv) > 3 else "0/1")
     else:
         {"predict": predict, "analyse": analyse}[cmd]()
