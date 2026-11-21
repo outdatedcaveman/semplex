@@ -1,0 +1,13 @@
+# G15 Handoff — Extending the `n = 5` Orbit Census Beyond `cost <= 3` (`gemini/G15`)
+
+**Branch:** `gemini/G15` (cut from `origin/claude/practical-shannon-oqg60y` @ `7be5346`)
+**Target:** Complete `100%` of `n = 5, cost <= 3` up to weight bound `|w| <= 4` (`54 + 11,487 = 11,541` NPN classes vs G9's partial `3,725/7,295` at `|w| <= 3`), and extend the `n = 5` circuit & `G_f`-orbit census to **`cost = 4` (`|w| <= 3`)** using a bitset + `G_f`-symmetry exact enumerator, cross-checked against independent brute force (`enumerate_class_bruteforce`) and `W = 4` cost-collapse audits.
+
+## Pre-Registered Scope & Criteria (Rule 5 — Committed Prior to Execution)
+
+1. **`H15.1` (`n = 5, cost <= 3, |w| <= 4` completeness):** `enumerate_n5_cost_le3_parallel(W=4, workers=3, time_limit=1500.0)` finishes all `11,541 / 11,541` NPN classes (`stopped_reason == "completed"`), preserving `n = 4` untouched (`222` classes, `65/222` unoriented 1-orbit, `15/222` oriented 1-orbit).
+2. **`H15.2` (Exact symmetric `cost = 4` slice at `n = 5`):** Enumerate 100% of all `64` symmetric 5-variable Boolean functions reduced mod NPN (`<= 24` NPN classes), partition strictly into `cost 1`, `cost 3`, `cost 4 (W=3)`, and `cost >= 5 (W=3)`, compute exact unoriented and oriented orbit counts on every `cost = 4` symmetric class, and check whether any drop to `cost <= 3` when `|w| = 4` is permitted.
+3. **`H15.3` (Deterministic general `cost = 4, |w| <= 3` stream):** Process sorted general `cost = 4 (W=3)` NPN classes (discovered via `AND3`, `AND_OR`, `MAJ3` combinations excluding `cost <= 3 (W=3)`) on 3 workers up to `time_limit = 1200.0s` (`max_general_discover = 1500`), verifying `cost3_circuits_at_W == 0` and `num_circuits > 0` on every completed class, auditing exact `drops_to_cost3_at_W4` fraction, and reporting exact `classes_discovered`, `classes_completed`, `stopped_at_rep`, and `stopped_reason`.
+4. **`H15.4` (Brute-force & equivariance verification):** `_enumerate_cost4_circuits_for_rep_fast` matches `_enumerate_cost4_circuits_for_rep` on all `78` `n = 4, cost = 4` classes + `parity3` (`|w| <= 3`), and matches literal brute force `enumerate_class_bruteforce` on closed `n = 5, |w|_1 <= 2` (`92` LTFs) `cost = 3` (`5` classes) and `cost = 4` (`3` classes) samples.
+
+*(Status: Pre-registered; full `experiments/g15_orbits.py` run pending.)*
