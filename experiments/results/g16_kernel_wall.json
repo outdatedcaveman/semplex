@@ -1,0 +1,395 @@
+{
+  "timeout_sec": 150.0,
+  "cerp_compile_seconds": 0.012,
+  "n_benchmarks": 15,
+  "n_under_120s": 15,
+  "all_standard_axioms": true,
+  "verdicts": {
+    "H16.1_w4_rot_or_under_120s": true,
+    "H16.2_all_5_g10_timeouts_under_120s": true,
+    "H16.3_all_15_under_120s_std_axioms": true,
+    "H16.4_w8_par8_249_steps_under_120s": true
+  },
+  "results": [
+    {
+      "name": "baseline_xor4",
+      "axis": "baseline",
+      "shape": "[4]->[4]->1",
+      "n_inputs": 4,
+      "nodes": 5,
+      "miter_vars": 42,
+      "miter_clauses": 120,
+      "lrat_steps": 16,
+      "lrat_hints": 317,
+      "sat_seconds": 0.1163,
+      "lean_status": "ok",
+      "lean_seconds": 8.968,
+      "under_120s": true,
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "g10_lean_status": "ok",
+      "g10_lean_seconds": 16.461,
+      "stage_breakdown": {
+        "base_eq_rfl": {
+          "status": "ok",
+          "seconds": 3.559
+        },
+        "full_verify": {
+          "status": "ok",
+          "seconds": 7.77
+        }
+      }
+    },
+    {
+      "name": "n6_1hidden_w2_eq3",
+      "axis": "depth",
+      "shape": "[6]->[2]->1",
+      "n_inputs": 6,
+      "nodes": 3,
+      "miter_vars": 49,
+      "miter_clauses": 140,
+      "lrat_steps": 19,
+      "lrat_hints": 435,
+      "sat_seconds": 0.2214,
+      "lean_status": "ok",
+      "lean_seconds": 11.613,
+      "under_120s": true,
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "g10_lean_status": "ok",
+      "g10_lean_seconds": 18.848
+    },
+    {
+      "name": "n6_2hidden_w2_cmp_xor",
+      "axis": "core_n6_2h",
+      "shape": "[6]->[2]->[2]->1",
+      "n_inputs": 6,
+      "nodes": 5,
+      "miter_vars": 86,
+      "miter_clauses": 238,
+      "lrat_steps": 30,
+      "lrat_hints": 966,
+      "sat_seconds": 0.3584,
+      "lean_status": "ok",
+      "lean_seconds": 13.737,
+      "under_120s": true,
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "g10_lean_status": "ok",
+      "g10_lean_seconds": 53.725,
+      "stage_breakdown": {
+        "base_eq_rfl": {
+          "status": "ok",
+          "seconds": 5.171
+        },
+        "full_verify": {
+          "status": "ok",
+          "seconds": 14.281
+        }
+      }
+    },
+    {
+      "name": "n6_3hidden_w2_d4",
+      "axis": "depth",
+      "shape": "[6]->[2]->[2]->[2]->1",
+      "n_inputs": 6,
+      "nodes": 7,
+      "miter_vars": 90,
+      "miter_clauses": 248,
+      "lrat_steps": 31,
+      "lrat_hints": 1049,
+      "sat_seconds": 0.5309,
+      "lean_status": "ok",
+      "lean_seconds": 14.215,
+      "under_120s": true,
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "g10_lean_status": "ok",
+      "g10_lean_seconds": 63.004
+    },
+    {
+      "name": "n6_4hidden_w2_d5",
+      "axis": "depth",
+      "shape": "[6]->[2]->[2]->[2]->[2]->1",
+      "n_inputs": 6,
+      "nodes": 9,
+      "miter_vars": 92,
+      "miter_clauses": 252,
+      "lrat_steps": 31,
+      "lrat_hints": 1058,
+      "sat_seconds": 0.4269,
+      "lean_status": "ok",
+      "lean_seconds": 18.159,
+      "under_120s": true,
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "g10_lean_status": "ok",
+      "g10_lean_seconds": 56.276
+    },
+    {
+      "name": "n6_2hidden_w4_rot_xor",
+      "axis": "width",
+      "shape": "[6]->[4]->[2]->1",
+      "n_inputs": 6,
+      "nodes": 7,
+      "miter_vars": 104,
+      "miter_clauses": 324,
+      "lrat_steps": 47,
+      "lrat_hints": 1412,
+      "sat_seconds": 1.4064,
+      "lean_status": "ok",
+      "lean_seconds": 21.362,
+      "under_120s": true,
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "g10_lean_status": "ok",
+      "g10_lean_seconds": 104.442
+    },
+    {
+      "name": "n8_1hidden_w2_eq4",
+      "axis": "core_n8_1h",
+      "shape": "[8]->[2]->1",
+      "n_inputs": 8,
+      "nodes": 3,
+      "miter_vars": 98,
+      "miter_clauses": 297,
+      "lrat_steps": 41,
+      "lrat_hints": 1160,
+      "sat_seconds": 0.8873,
+      "lean_status": "ok",
+      "lean_seconds": 18.238,
+      "under_120s": true,
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "g10_lean_status": "ok",
+      "g10_lean_seconds": 75.414,
+      "stage_breakdown": {
+        "base_eq_rfl": {
+          "status": "ok",
+          "seconds": 6.897
+        },
+        "full_verify": {
+          "status": "ok",
+          "seconds": 20.092
+        }
+      }
+    },
+    {
+      "name": "n8_factored_parity",
+      "axis": "control",
+      "shape": "balanced(13)",
+      "n_inputs": 8,
+      "nodes": 13,
+      "miter_vars": 91,
+      "miter_clauses": 256,
+      "lrat_steps": 53,
+      "lrat_hints": 1088,
+      "sat_seconds": 0.5086,
+      "lean_status": "ok",
+      "lean_seconds": 17.014,
+      "under_120s": true,
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "g10_lean_status": "ok",
+      "g10_lean_seconds": 97.087
+    },
+    {
+      "name": "n8_1hidden_w3_or",
+      "axis": "width",
+      "shape": "[8]->[3]->1",
+      "n_inputs": 8,
+      "nodes": 4,
+      "miter_vars": 170,
+      "miter_clauses": 515,
+      "lrat_steps": 67,
+      "lrat_hints": 2217,
+      "sat_seconds": 5.1189,
+      "lean_status": "ok",
+      "lean_seconds": 35.328,
+      "under_120s": true,
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "g10_lean_status": "timeout_150s",
+      "g10_lean_seconds": 150.0
+    },
+    {
+      "name": "n8_1hidden_w4_rot_or",
+      "axis": "width",
+      "shape": "[8]->[4]->1",
+      "n_inputs": 8,
+      "nodes": 5,
+      "miter_vars": 206,
+      "miter_clauses": 673,
+      "lrat_steps": 104,
+      "lrat_hints": 3451,
+      "sat_seconds": 12.2931,
+      "lean_status": "ok",
+      "lean_seconds": 48.558,
+      "under_120s": true,
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "g10_lean_status": "timeout_150s",
+      "g10_lean_seconds": 150.0,
+      "stage_breakdown": {
+        "base_eq_rfl": {
+          "status": "ok",
+          "seconds": 16.394
+        },
+        "full_verify": {
+          "status": "ok",
+          "seconds": 46.087
+        }
+      }
+    },
+    {
+      "name": "n8_1hidden_w8_par8",
+      "axis": "width",
+      "shape": "[8]->[8]->1",
+      "n_inputs": 8,
+      "nodes": 9,
+      "miter_vars": 156,
+      "miter_clauses": 512,
+      "lrat_steps": 249,
+      "lrat_hints": 7955,
+      "sat_seconds": 22.0248,
+      "lean_status": "ok",
+      "lean_seconds": 63.08,
+      "under_120s": true,
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "g10_lean_status": "timeout_150s",
+      "g10_lean_seconds": 150.0,
+      "stage_breakdown": {
+        "base_eq_rfl": {
+          "status": "ok",
+          "seconds": 10.954
+        },
+        "full_verify": {
+          "status": "ok",
+          "seconds": 63.108
+        }
+      }
+    },
+    {
+      "name": "n8_1hidden_w2_scale2",
+      "axis": "weight_scale",
+      "shape": "[8]->[2]->1",
+      "n_inputs": 8,
+      "nodes": 3,
+      "miter_vars": 98,
+      "miter_clauses": 297,
+      "lrat_steps": 41,
+      "lrat_hints": 1160,
+      "sat_seconds": 0.9282,
+      "lean_status": "ok",
+      "lean_seconds": 22.77,
+      "under_120s": true,
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "g10_lean_status": "ok",
+      "g10_lean_seconds": 73.308
+    },
+    {
+      "name": "n8_1hidden_w2_super53",
+      "axis": "weight_super53",
+      "shape": "[8]->[2]->1",
+      "n_inputs": 8,
+      "nodes": 3,
+      "miter_vars": 98,
+      "miter_clauses": 297,
+      "lrat_steps": 41,
+      "lrat_hints": 1160,
+      "sat_seconds": 1.1149,
+      "lean_status": "ok",
+      "lean_seconds": 22.053,
+      "under_120s": true,
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "g10_lean_status": "ok",
+      "g10_lean_seconds": 80.313
+    },
+    {
+      "name": "n8_1hidden_w2_nonsup_17",
+      "axis": "weight_nonsup",
+      "shape": "[8]->[2]->1",
+      "n_inputs": 8,
+      "nodes": 3,
+      "miter_vars": 152,
+      "miter_clauses": 469,
+      "lrat_steps": 64,
+      "lrat_hints": 1768,
+      "sat_seconds": 3.8799,
+      "lean_status": "ok",
+      "lean_seconds": 35.712,
+      "under_120s": true,
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "g10_lean_status": "timeout_150s",
+      "g10_lean_seconds": 150.0
+    },
+    {
+      "name": "n8_1hidden_w2_nonsup_5",
+      "axis": "weight_nonsup_colliding",
+      "shape": "[8]->[2]->1",
+      "n_inputs": 8,
+      "nodes": 3,
+      "miter_vars": 176,
+      "miter_clauses": 517,
+      "lrat_steps": 61,
+      "lrat_hints": 2335,
+      "sat_seconds": 3.6344,
+      "lean_status": "ok",
+      "lean_seconds": 33.341,
+      "under_120s": true,
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "g10_lean_status": "timeout_150s",
+      "g10_lean_seconds": 150.0
+    }
+  ]
+}
