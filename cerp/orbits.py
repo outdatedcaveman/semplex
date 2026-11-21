@@ -500,6 +500,9 @@ def _enumerate_cost4_circuits_for_rep_fast(
             # AND_OR: a & (b | c) == target
             bad = a & ntarget
             cands_mask = _intersect_bitsets(all_mask, zero_l, bad)
+            if not cands_mask:
+                continue
+            sup_cands = cands_mask & sup_mask
             jm = cands_mask
             while jm:
                 j_lsb = jm & -jm
@@ -508,8 +511,14 @@ def _enumerate_cost4_circuits_for_rep_fast(
                 hb = h_ints[j]
                 if hb == ha:
                     continue
+                tail_mask = ~((1 << (j + 1)) - 1)
                 rem_t = target & ~l_ints[j]
-                k_mask = _intersect_bitsets(cands_mask, one_l, rem_t) & (~((1 << (j + 1)) - 1))
+                if rem_t == 0:
+                    k_mask = cands_mask & tail_mask
+                elif rem_t == target:
+                    k_mask = sup_cands & tail_mask
+                else:
+                    k_mask = _intersect_bitsets(cands_mask, one_l, rem_t) & tail_mask
                 while k_mask:
                     k_lsb = k_mask & -k_mask
                     k = k_lsb.bit_length() - 1
@@ -1321,14 +1330,18 @@ def enumerate_n5_cost4(
         if rep not in cost_le3_W3_set and rep not in sym_cost4_set:
             general_reps_set.add(rep)
 
-    general_reps = sorted(general_reps_set)
+    # Process balanced Hamming weights first (w=16..12) to avoid stalling on degenerate tiny-weight reps
+    general_reps = sorted(
+        general_reps_set,
+        key=lambda r: (-min(r.bit_count(), 32 - r.bit_count()), r),
+    )
     disc_sec = round(time.perf_counter() - t0, 3)
 
     general_rows: list[dict] = []
     completed_general = 0
     stopped_reason = "completed"
     stopped_at_rep: str | None = None
-    chunk_sz = max(6, workers * 4)
+    chunk_sz = max(2, workers)
 
     with ProcessPoolExecutor(
         max_workers=workers,
@@ -1341,7 +1354,7 @@ def enumerate_n5_cost4(
                 stopped_at_rep = hex(general_reps[start])
                 break
             chunk = [(rep, False) for rep in general_reps[start:start + chunk_sz]]
-            for row in pool.map(_n5_cost4_worker, chunk, chunksize=2):
+            for row in pool.map(_n5_cost4_worker, chunk, chunksize=1):
                 if row["cost3_circuits_at_W"] != 0:
                     raise AssertionError(f"General rep {row['rep_hex']} had cost3 circuits")
                 if row["num_circuits"] == 0:
@@ -1351,7 +1364,9 @@ def enumerate_n5_cost4(
                 general_rows.append(row)
                 completed_general += 1
             print(
-                f"[n=5 W={W} cost=4 general] {completed_general}/{len(general_reps)} elapsed={time.perf_counter()-t0:.1f}s",
+                f"[n=5 W={W} cost=4 general] {completed_general}/{len(general_reps)} "
+                f"last={general_rows[-1]['rep_hex']}(w={general_rows[-1]['rep'].bit_count()},c4={general_rows[-1]['num_circuits']}) "
+                f"elapsed={time.perf_counter()-t0:.1f}s",
                 flush=True,
             )
 

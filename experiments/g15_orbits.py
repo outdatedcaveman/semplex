@@ -2,12 +2,13 @@
 
 Produces `experiments/results/g15_orbits.json` with:
 1. Complete n = 5, cost <= 3, |w| <= 4 enumeration (54 cost-1 + 11,487 cost-3 = 11,541 NPN classes).
-2. Comparison against |w| <= 3 cost <= 3 (21 cost-1 + 7,274 cost-3 = 7,295 NPN classes) showing how many
+2. Comparison against |w| <= 3 cost <= 3 (42 cost-1 + 7,253 cost-3 = 7,295 NPN classes) showing how many
    W = 3 cost-4 functions drop to cost <= 3 when |w| = 4 is permitted.
 3. Exact n = 5, cost = 4, |w| <= 3 census across:
    - Slice 1 (exhaustive): ALL 64 symmetric 5-variable Boolean functions reduced mod NPN.
    - Slice 2 (time-bounded deterministic catalog): general cost = 4 (W = 3) NPN classes
-     cross-checked against W = 4 cost <= 3 collapse and cost = 3 non-existence.
+     ordered balanced-Hamming-weight first (-min(w, 32-w), rep), cross-checked against
+     W = 4 cost <= 3 collapse and cost = 3 non-existence.
 """
 
 from __future__ import annotations
@@ -16,6 +17,7 @@ import json
 import pathlib
 import sys
 import time
+from collections import Counter
 
 import numpy as np
 
@@ -28,10 +30,26 @@ from experiments.g9_orbits import summarize_rows
 
 OUT = ROOT / "experiments" / "results" / "g15_orbits.json"
 
-WORKERS = 3
-W4_COST3_TIME_LIMIT = 1500.0  # 25 min cap for 100% cost<=3 W=4
-W3_COST4_TIME_LIMIT = 1200.0  # 20 min cap for symmetric + general cost=4 W=3
+WORKERS = 2
+W4_COST3_TIME_LIMIT = 900.0   # 15 min cap for 100% cost<=3 W=4
+W3_COST4_TIME_LIMIT = 900.0   # 15 min cap for symmetric + general cost=4 W=3
 MAX_GENERAL_DISCOVER = 1500
+
+
+def _compact_orbit_rows(rows: list[dict]) -> list[dict]:
+    """Compress large orbit_sizes lists (>64 entries) into exact histograms for JSON size hygiene."""
+    compacted: list[dict] = []
+    for r in rows:
+        rc = dict(r)
+        for fld, hist_fld in (("orbit_sizes", "orbit_size_hist"), ("oriented_orbit_sizes", "oriented_orbit_size_hist")):
+            vals = rc.get(fld, [])
+            if len(vals) > 64:
+                rc[hist_fld] = {str(k): v for k, v in sorted(Counter(vals).items())}
+                rc[f"{fld}_min"] = vals[0]
+                rc[f"{fld}_max"] = vals[-1]
+                del rc[fld]
+        compacted.append(rc)
+    return compacted
 
 
 def _symmetric_signature_map() -> dict[int, list[str]]:
@@ -69,7 +87,7 @@ def main() -> None:
     c1_w4 = set(w4_res.pop("cost1_reps"))
     c3_w4 = set(w4_res.pop("cost3_reps"))
     cost_le3_W4_set = c1_w4 | c3_w4
-    w4_summary = summarize_rows(w4_rows, extra=w4_res)
+    w4_summary = summarize_rows(_compact_orbit_rows(w4_rows), extra=w4_res)
     print(
         f"[G15 Step 2] Done W=4 cost<=3: {w4_summary['total_classes']} classes "
         f"({w4_summary['one_orbit_unoriented_count']}/{w4_summary['total_classes']} 1-orbit unoriented, "
@@ -113,7 +131,7 @@ def main() -> None:
         r["hamming_signatures"] = sym_sigs.get(r["rep"], [])
 
     sym_summary = summarize_rows(
-        sym_rows,
+        _compact_orbit_rows(sym_rows),
         extra={
             "slice": "exhaustive_symmetric",
             "symmetric_total_npn_classes": len(sym_all_reps),
@@ -126,7 +144,7 @@ def main() -> None:
     true_c4_rows = [r for r in gen_rows if not r.get("drops_to_cost3_at_W4", False)]
     drop_c3_rows = [r for r in gen_rows if r.get("drops_to_cost3_at_W4", False)]
     gen_summary = summarize_rows(
-        gen_rows,
+        _compact_orbit_rows(gen_rows),
         extra={
             "slice": "deterministic_general_w3",
             "general_classes_discovered": c4_res["general_classes_discovered"],
