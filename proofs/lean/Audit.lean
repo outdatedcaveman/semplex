@@ -16,3 +16,7 @@ open Cerp
 #print axioms eval_pbToExpr
 #print axioms tseitinTNetMiter_lrat_unsat_implies_equiv
 #print axioms tseitinTNetMiterPB_lrat_unsat_implies_equiv
+#print axioms tseitinTNetMiterPB_sat_of_ne
+#print axioms bm_base_sound
+#print axioms bm_rup_sound
+#print axioms bm_empty_false

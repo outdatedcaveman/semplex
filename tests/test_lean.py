@@ -209,3 +209,47 @@ def test_tnet_lean_n8_one_hidden_layer_kernel_decide():
         net, expr, vs, lrat_steps=lrat_steps, name="t_tnet_n8_1h_eq4", native=False, pb=True
     )
     assert r.ok and set(r.axioms) <= set(lean_bridge.ALLOWED_AXIOMS)
+
+
+def test_tnet_lean_n8_w4_rot_or_kernel_decide():
+    import time
+    from cerp import sat
+
+    vs = [f"x{i}" for i in range(8)]
+    _not = lambda a: ["not", a]
+    _and = lambda a, b: ["and", a, b]
+    _or = lambda a, b: ["or", a, b]
+    _xor = lambda a, b: ["xor", a, b]
+    _iff = lambda a, b: _not(_xor(a, b))
+    a4 = [["var", f"x{i}"] for i in range(4)]
+    b4 = [["var", f"x{i}"] for i in range(4, 8)]
+    eq4_ab = _and(_and(_iff(a4[0], b4[0]), _iff(a4[1], b4[1])), _and(_iff(a4[2], b4[2]), _iff(a4[3], b4[3])))
+    eq4_ac = _and(_and(_iff(a4[0], b4[1]), _iff(a4[1], b4[2])), _and(_iff(a4[2], b4[3]), _iff(a4[3], b4[0])))
+    expr = {"kind": "expr", "body": _or(eq4_ab, eq4_ac)}
+    net = {
+        "inputs": vs,
+        "nodes": [
+            {"id": "h0", "in": vs, "w": [8, 4, 2, 1, -8, -4, -2, -1], "t": 0},
+            {"id": "h1", "in": vs, "w": [8, 4, 2, 1, -8, -4, -2, -1], "t": 1},
+            {"id": "h2", "in": vs, "w": [8, 4, 2, 1, -1, -8, -4, -2], "t": 0},
+            {"id": "h3", "in": vs, "w": [8, 4, 2, 1, -1, -8, -4, -2], "t": 1},
+            {"id": "out", "in": ["h0", "h1", "h2", "h3"], "w": [1, -1, 1, -1], "t": 1},
+        ],
+        "output": "out",
+    }
+    status, lrat_steps, _ = sat.prove_tnet_equivalence_lrat(net, expr, vs, pb=True)
+    assert status == "unsat" and len(lrat_steps) >= 100
+
+    bad, _ = lean_bridge.verify_threshold_net_equiv(
+        net, expr, vs, lrat_steps=lrat_steps[:-1], name="t_tnet_n8_w4_trunc", native=False, pb=True, reflected=True
+    )
+    assert not bad.ok
+
+    t0 = time.perf_counter()
+    r, _ = lean_bridge.verify_threshold_net_equiv(
+        net, expr, vs, lrat_steps=lrat_steps, name="t_tnet_n8_w4_rot_or", native=False, pb=True, reflected=True
+    )
+    dt = time.perf_counter() - t0
+    assert r.ok and dt < 120.0
+    assert "Lean.ofReduceBool" not in r.axioms and "sorryAx" not in r.axioms
+    assert set(r.axioms) <= set(lean_bridge.ALLOWED_AXIOMS)

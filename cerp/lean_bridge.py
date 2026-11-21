@@ -245,24 +245,191 @@ def tnet_to_lean(net, vars_):
     return "[" + ", ".join(items) + "]"
 
 
-def verify_threshold_net_equiv(net, ref_expr, vars_, lrat_steps=None, name="tnet_equiv", native=False, pb=True):
-    """Prove `∀ σ, evalTNet n tns σ = eval σ eSpec` in Lean (exhaustive or LRAT)."""
+def _enc_bitmask_lit(lit: int) -> int:
+    """Encode signed nonzero DIMACS literal to unsigned `Nat` matching `Cerp.encLit`."""
+    il = int(lit)
+    if il == 0:
+        raise ValueError("DIMACS clause literal cannot be 0")
+    return 2 * il if il > 0 else 2 * (-il) + 1
+
+
+def _build_bitmask_lrat(clauses, lrat_steps):
+    """Extract per-step bitmasks, used clause IDs, and unit literal sequences."""
+    db = [[_enc_bitmask_lit(l) for l in c] for c in clauses]
+    out_steps = []
+    for cl, hints in lrat_steps:
+        u_cl = [_enc_bitmask_lit(l) for l in cl]
+        c_mask = 0
+        for u in u_cl:
+            c_mask |= 1 << u
+        f_mask = c_mask
+        cids = []
+        us = []
+        for cid in hints:
+            ic = int(cid)
+            if ic < 0 or ic >= len(db):
+                raise ValueError(f"LRAT hint cid={ic} out of range [0, {len(db)})")
+            rem = [u for u in db[ic] if not ((f_mask >> u) & 1)]
+            if not rem:
+                cids.append(ic)
+                break
+            elif len(rem) == 1:
+                u = rem[0]
+                cids.append(ic)
+                us.append(u)
+                f_mask |= 1 << (u ^ 1)
+            else:
+                raise ValueError(f"LRAT hint cid={ic} not unit/conflict under trail (rem={rem})")
+        if not cids or len(cids) != len(us) + 1:
+            raise ValueError("LRAT step hints did not end in conflict")
+        out_steps.append((c_mask, cids, us))
+        db.append(u_cl)
+        if not cl:
+            break
+    if not out_steps or out_steps[-1][0] != 0:
+        raise ValueError("LRAT derivation did not terminate in empty clause")
+    return out_steps
+
+
+def _make_mtree_chunks(cmasks: list[int], chunk_levels: int):
+    """Mirror `Cerp.cnfToMTree`'s bottom-up pairing, splitting top `chunk_levels` into named chunks."""
+    nodes = [("leaf", i, cmasks[i]) for i in range(len(cmasks))]
+    while len(nodes) > 1:
+        nxt = []
+        for k in range(0, len(nodes), 2):
+            if k + 1 < len(nodes):
+                nxt.append(("bin", nodes[k], nodes[k + 1]))
+            else:
+                nxt.append(nodes[k])
+        nodes = nxt
+    root = nodes[0]
+
+    subtrees = []
+
+    def _cut(node, depth: int, rpath: str) -> str:
+        if depth >= chunk_levels or node[0] == "leaf":
+            sid = len(subtrees)
+            subtrees.append((sid, node, rpath))
+            return f"b{sid}"
+        return f"(.b {_cut(node[1], depth + 1, rpath + '.1')} {_cut(node[2], depth + 1, rpath + '.2')})"
+
+    top_expr = _cut(root, 0, "")
+    cid_loc: dict[int, tuple[int, str]] = {}
+    sub_defs: list[tuple[int, str, str]] = []
+
+    def _render_sub(node, spath: str) -> str:
+        if node[0] == "leaf":
+            cid_loc[node[1]] = (cur_sid, spath)
+            return f"(.l {node[2]})"
+        return f"(.b {_render_sub(node[1], spath + '.1')} {_render_sub(node[2], spath + '.2')})"
+
+    for cur_sid, node, rpath in subtrees:
+        sub_defs.append((cur_sid, _render_sub(node, ""), rpath))
+    return top_expr, sub_defs, cid_loc
+
+
+def _render_reflected_tnet_body(net, ref_expr, vars_, lrat_steps, name: str) -> str:
+    """Render a self-contained reflected bitmask LRAT proof inside standard Lean 4 kernel."""
+    from . import sat
+
     n = len(vars_)
-    defs = [
+    tns_idx = sat._tnet_to_indexed_nodes(net, vars_)
+    _, clauses = sat._lean_tnet_miter_pb(vars_, tns_idx, ref_expr["body"])
+    bm_steps = _build_bitmask_lrat(clauses, lrat_steps)
+    cmasks = []
+    for cl in clauses:
+        m = 0
+        for l in cl:
+            m |= 1 << _enc_bitmask_lit(l)
+        cmasks.append(m)
+
+    n_base = len(clauses)
+    used_base = sorted({cid for _, cids, _ in bm_steps for cid in cids if cid < n_base})
+    chunk_levels = max(1, min(4, len(cmasks).bit_length() - 5))
+    top_expr, sub_defs, cid_loc = _make_mtree_chunks(cmasks, chunk_levels)
+
+    max_u = max((u for _, _, us in bm_steps for u in us), default=0)
+    ubits = max(10, max_u.bit_length())
+    umask = (1 << ubits) - 1
+
+    ns_scope = f"_Refl_{re.sub(r'[^A-Za-z0-9_]', '_', name)}"
+    lines = [
         f"def tns : List TNode := {tnet_to_lean(net, vars_)}",
         f"def eSpec : Expr := {expr_to_lean(ref_expr['body'], vars_)}",
+        f"namespace {ns_scope}",
     ]
+    for sid, expr_s, _ in sub_defs:
+        lines.append(f"def b{sid} : MTree := {expr_s}")
+    lines.append(f"def baseMT : MTree := {top_expr}")
+    lines.append(f"theorem base_eq : cnfToMTree (tseitinTNetMiterPB {n} tns eSpec) = some baseMT := rfl")
+    for cid in used_base:
+        sid, sp = cid_loc[cid]
+        lines.append(f"theorem c{cid} (τ : Nat → Bool) (h : MTreeSat τ b{sid}) : BmSat τ {cmasks[cid]} := h{sp}")
+
+    lines.append("structure HBase (τ : Nat → Bool) : Prop where")
+    for sid, _, _ in sub_defs:
+        lines.append(f"  h{sid} : MTreeSat τ b{sid}")
+
+    for s_idx, (cm, cids, us) in enumerate(bm_steps):
+        cid_new = n_base + s_idx
+        upack = 0
+        for u in reversed(us):
+            upack = (upack << ubits) | u
+        chain = "BmList.nil"
+        for cid in reversed(cids):
+            if cid < n_base:
+                sid, _ = cid_loc[cid]
+                ref = f"(c{cid} τ hb.h{sid})"
+            else:
+                ref = f"(c{cid} τ hb)"
+            chain = f"BmList.cons {ref} ({chain})"
+        lines.append(
+            f"theorem c{cid_new} (τ : Nat → Bool) (hb : HBase τ) : BmSat τ {cm} := "
+            f"bm_rup_sound {ubits} {umask} {cm} {upack} ({chain}) rfl"
+        )
+    lines.append(f"end {ns_scope}")
+
+    last_cid = n_base + len(bm_steps) - 1
+    hb_fields = ", ".join(f"h{sid} := hmt{rpath}" for sid, _, rpath in sub_defs)
+    lines.append("")
+    lines.append(f"theorem {name} : ∀ σ, evalTNet {n} tns σ = eval σ eSpec := fun σ =>")
+    lines.append(f"  if heq : evalTNet {n} tns σ = eval σ eSpec then heq")
+    lines.append(
+        f"  else False.elim <| (tseitinTNetMiterPB_sat_of_ne {n} tns eSpec σ (by decide) (by decide) (by decide) heq).elim fun τ hsat =>"
+    )
+    lines.append(
+        f"    have hmt : MTreeSat τ {ns_scope}.baseMT := bm_base_sound τ (tseitinTNetMiterPB {n} tns eSpec) {ns_scope}.baseMT hsat {ns_scope}.base_eq"
+    )
+    lines.append(f"    have hb : {ns_scope}.HBase τ := {{ {hb_fields} }}")
+    lines.append(f"    bm_empty_false ({ns_scope}.c{last_cid} τ hb)")
+    return "\n".join(lines) + "\n"
+
+
+def verify_threshold_net_equiv(net, ref_expr, vars_, lrat_steps=None, name="tnet_equiv", native=False, pb=True, reflected=True):
+    """Prove `∀ σ, evalTNet n tns σ = eval σ eSpec` in Lean (exhaustive, reflected bitmask LRAT, or tree LRAT)."""
+    n = len(vars_)
     stmt = f"∀ σ, evalTNet {n} tns σ = eval σ eSpec"
-    dec = "native_decide" if native else "decide"
-    if lrat_steps is None:
-        proof = f"(decideTNetEquivExpr_correct {n} tns eSpec (by decide) (by decide)).mp (by {dec})"
+    if lrat_steps is not None and pb and reflected and not native:
+        try:
+            body = _render_reflected_tnet_body(net, ref_expr, vars_, lrat_steps, name)
+        except ValueError as exc:
+            sha = hashlib.sha256(str(exc).encode()).hexdigest()
+            return LeanCheck(False, name, stmt, (), version(), sha, f"error: {exc}", _TOKEN), ""
     else:
-        fmt_step = lambda c, hs: f"([" + ", ".join(str(l) for l in c) + "], [" + ", ".join(str(h) for h in hs) + "])"
-        Ls = "[" + ", ".join(fmt_step(c, hs) for c, hs in lrat_steps) + "]"
-        defs.append(f"def Ls : List (Clause × List Nat) := {Ls}")
-        thm = "tseitinTNetMiterPB_lrat_unsat_implies_equiv" if pb else "tseitinTNetMiter_lrat_unsat_implies_equiv"
-        proof = f"{thm} {n} tns eSpec Ls (by decide) (by decide) (by decide) (by {dec}) (by {dec})"
-    body = "\n".join(defs) + f"\n\ntheorem {name} : {stmt} :=\n  {proof}\n"
+        defs = [
+            f"def tns : List TNode := {tnet_to_lean(net, vars_)}",
+            f"def eSpec : Expr := {expr_to_lean(ref_expr['body'], vars_)}",
+        ]
+        dec = "native_decide" if native else "decide"
+        if lrat_steps is None:
+            proof = f"(decideTNetEquivExpr_correct {n} tns eSpec (by decide) (by decide)).mp (by {dec})"
+        else:
+            fmt_step = lambda c, hs: f"([" + ", ".join(str(l) for l in c) + "], [" + ", ".join(str(h) for h in hs) + "])"
+            Ls = "[" + ", ".join(fmt_step(c, hs) for c, hs in lrat_steps) + "]"
+            defs.append(f"def Ls : List (Clause × List Nat) := {Ls}")
+            thm = "tseitinTNetMiterPB_lrat_unsat_implies_equiv" if pb else "tseitinTNetMiter_lrat_unsat_implies_equiv"
+            proof = f"{thm} {n} tns eSpec Ls (by decide) (by decide) (by decide) (by {dec}) (by {dec})"
+        body = "\n".join(defs) + f"\n\ntheorem {name} : {stmt} :=\n  {proof}\n"
     ok, ax, log, sha, text = _check(
         body, name, stmt, renders=("eSpec",),
         allowed=NATIVE_AXIOMS if native else ALLOWED_AXIOMS,

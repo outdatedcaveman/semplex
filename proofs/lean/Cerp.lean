@@ -2779,18 +2779,12 @@ theorem tseitinTNetGoPB_complete :
       rw [hlen_eq]
       rfl
 
-theorem tseitinTNetMiterPB_lrat_unsat_implies_equiv (n : Nat) (ns : List TNode) (e : Expr)
-    (Ls : List (Clause × List Nat))
+theorem tseitinTNetMiterPB_sat_of_ne (n : Nat) (ns : List TNode) (e : Expr) (σ : Nat → Bool)
     (hne : 1 ≤ ns.length)
     (ht : tnetScoped n ns = true)
     (hs : Scoped n e = true)
-    (hw : wellFormed (tseitinTNetMiterPB n ns e) = true)
-    (hchk : checkLratT (bOfListAux (tseitinTNetMiterPB n ns e) 0 .leaf) (tseitinTNetMiterPB n ns e).length Ls = true) :
-    ∀ σ, evalTNet n ns σ = eval σ e := by
-  intro σ
-  by_cases heq : evalTNet n ns σ = eval σ e
-  · exact heq
-  exfalso
+    (hneq : evalTNet n ns σ ≠ eval σ e) :
+    ∃ τ, cnfSat τ (tseitinTNetMiterPB n ns e) = true := by
   let m := ns.length
   let nxt0 := n + m + 1
   let σ0 : Nat → Bool := fun i => match i with | 0 => false | j + 1 => evalTNetEnv σ n ns j
@@ -2849,12 +2843,378 @@ theorem tseitinTNetMiterPB_lrat_unsat_implies_equiv (n : Nat) (ns : List TNode) 
     cases h1 : evalTNet n ns σ <;> cases h2 : eval σ e <;> simp_all
   have hunit : cnfSat τ' [[(nxt2 : Int)]] = true := by
     simp [cnfSat, clauseSat, hn2_lit]
-  have hsat_miter : cnfSat τ' (tseitinTNetMiterPB n ns e) = true := by
-    dsimp only [tseitinTNetMiterPB]
-    rw [cnfSat_append, cnfSat_append, cnfSat_append, Bool.and_eq_true, Bool.and_eq_true, Bool.and_eq_true]
-    exact ⟨⟨⟨hcNetS', hcSpecS'⟩, hxor⟩, hunit⟩
+  refine ⟨τ', ?_⟩
+  dsimp only [tseitinTNetMiterPB]
+  rw [cnfSat_append, cnfSat_append, cnfSat_append, Bool.and_eq_true, Bool.and_eq_true, Bool.and_eq_true]
+  exact ⟨⟨⟨hcNetS', hcSpecS'⟩, hxor⟩, hunit⟩
+
+theorem tseitinTNetMiterPB_lrat_unsat_implies_equiv (n : Nat) (ns : List TNode) (e : Expr)
+    (Ls : List (Clause × List Nat))
+    (hne : 1 ≤ ns.length)
+    (ht : tnetScoped n ns = true)
+    (hs : Scoped n e = true)
+    (hw : wellFormed (tseitinTNetMiterPB n ns e) = true)
+    (hchk : checkLratT (bOfListAux (tseitinTNetMiterPB n ns e) 0 .leaf) (tseitinTNetMiterPB n ns e).length Ls = true) :
+    ∀ σ, evalTNet n ns σ = eval σ e := by
+  intro σ
+  by_cases heq : evalTNet n ns σ = eval σ e
+  · exact heq
+  exfalso
+  obtain ⟨τ', hsat_miter⟩ := tseitinTNetMiterPB_sat_of_ne n ns e σ hne ht hs heq
   have h_unsat := checkLratT_unsat (tseitinTNetMiterPB n ns e) Ls hw hchk τ'
   rw [hsat_miter] at h_unsat
   exact Bool.false_ne_true h_unsat.symm
+
+/-! ## Part F3: Reflected bitmask LRAT checker (G16) -/
+
+def uLitTrue (σ : Nat → Bool) (u : Nat) : Bool :=
+  if Nat.beq (u % 2) 0 then σ (u / 2) else !(σ (u / 2))
+
+def encLit : Int → Nat
+  | .ofNat 0 => 0
+  | .ofNat (k + 1) => 2 * (k + 1)
+  | .negSucc k => 2 * (k + 1) + 1
+
+theorem encLit_spec : ∀ (l : Int), encLit l ≠ 0 → 2 ≤ encLit l ∧ ∀ σ, uLitTrue σ (encLit l) = litTrue σ l := by
+  intro l
+  cases l with
+  | ofNat n =>
+      cases n with
+      | zero => intro h; exact absurd rfl h
+      | succ k =>
+          intro _
+          refine ⟨by dsimp only [encLit]; omega, fun σ => ?_⟩
+          have hm : (2 * (k + 1)) % 2 = 0 := by omega
+          have hd : (2 * (k + 1)) / 2 = k + 1 := by omega
+          have hgt : (0 : Int) < Int.ofNat (k + 1) := Int.ofNat_pos.mpr (Nat.succ_pos k)
+          have hna : (Int.ofNat (k + 1)).natAbs = k + 1 := rfl
+          simp only [encLit, uLitTrue, hm, hd, ↓reduceIte, litTrue, hgt, hna, Nat.beq_refl]
+  | negSucc k =>
+      intro _
+      refine ⟨by dsimp only [encLit]; omega, fun σ => ?_⟩
+      have hm : (2 * (k + 1) + 1) % 2 = 1 := by omega
+      have hd : (2 * (k + 1) + 1) / 2 = k + 1 := by omega
+      have hgt : ¬ ((0 : Int) < Int.negSucc k) := Int.not_lt.mpr (Int.le_of_lt (Int.negSucc_lt_zero k))
+      have hna : (Int.negSucc k).natAbs = k + 1 := rfl
+      simp [encLit, uLitTrue, hm, hd, litTrue, hgt, hna]
+
+theorem testBit_one_shiftLeft (u v : Nat) :
+    (Nat.shiftLeft 1 u).testBit v = decide (u = v) := by
+  change (1 <<< u).testBit v = decide (u = v)
+  rw [Nat.shiftLeft_eq, Nat.one_mul, Nat.testBit_two_pow]
+
+theorem testBit_lor_eq (a b v : Nat) :
+    (Nat.lor a b).testBit v = (a.testBit v || b.testBit v) := by
+  change (a ||| b).testBit v = (a.testBit v || b.testBit v)
+  exact Nat.testBit_or a b v
+
+theorem testBit_land_eq (a b v : Nat) :
+    (Nat.land a b).testBit v = (a.testBit v && b.testBit v) := by
+  change (a &&& b).testBit v = (a.testBit v && b.testBit v)
+  exact Nat.testBit_and a b v
+
+/-- Balanced binary tree of bitmask-encoded CNF clauses (`cm.testBit u = true` iff `u ∈ C`). -/
+inductive MTree where
+  | l : Nat → MTree
+  | b : MTree → MTree → MTree
+
+def encCM : Clause → Nat → Nat
+  | [], a => a
+  | l :: ls, a =>
+      match encLit l with
+      | 0 => 0
+      | u => encCM ls (Nat.lor a (Nat.shiftLeft 1 u))
+
+def cnfToMTList : CNF → Option (List MTree)
+  | [] => some []
+  | c :: cs =>
+      let cm := encCM c 0
+      match Nat.beq cm 0 with
+      | true => none
+      | false =>
+          match cnfToMTList cs with
+          | none => none
+          | some rs => some (.l cm :: rs)
+
+def pairMT : List MTree → List MTree
+  | x :: y :: rs => .b x y :: pairMT rs
+  | [x] => [x]
+  | [] => []
+
+def mergeMT : Nat → List MTree → Option MTree
+  | _, [] => none
+  | _, [t] => some t
+  | 0, _ => none
+  | k + 1, ts => mergeMT k (pairMT ts)
+
+def cnfToMTree (F : CNF) : Option MTree :=
+  match cnfToMTList F with
+  | none => none
+  | some ts => mergeMT 20 ts
+
+def BmSat (σ : Nat → Bool) (cm : Nat) : Prop :=
+  ∃ u, 2 ≤ u ∧ cm.testBit u = true ∧ uLitTrue σ u = true
+
+def MaskFalse (σ : Nat → Bool) (fm : Nat) : Prop :=
+  ∀ u, fm.testBit u = true → 2 ≤ u ∧ uLitTrue σ u = false
+
+def MTreeSat (σ : Nat → Bool) : MTree → Prop
+  | .l m => BmSat σ m
+  | .b x y => MTreeSat σ x ∧ MTreeSat σ y
+
+inductive BmList (σ : Nat → Bool) : List Nat → Prop where
+  | nil : BmList σ []
+  | cons {m : Nat} {ms : List Nat} : BmSat σ m → BmList σ ms → BmList σ (m :: ms)
+
+def flipU (u : Nat) : Nat :=
+  match Nat.beq (u % 2) 0 with
+  | true => Nat.add u 1
+  | false => Nat.sub u 1
+
+def checkStepLin (ubits umask : Nat) : Nat → Nat → List Nat → Bool
+  | _, _, [] => false
+  | fm, _, [cm] => Nat.beq (Nat.lor fm cm) fm
+  | fm, upack, cm :: cms =>
+      let u := Nat.land upack umask
+      match Nat.ble 2 u with
+      | false => false
+      | true =>
+          let f1 := Nat.lor fm (Nat.shiftLeft 1 u)
+          match Nat.beq (Nat.lor f1 cm) f1 with
+          | false => false
+          | true =>
+              let fnext := Nat.lor fm (Nat.shiftLeft 1 (flipU u))
+              checkStepLin ubits umask fnext (Nat.shiftRight upack ubits) cms
+
+def bmStepOk (ubits umask cm upack : Nat) (cms : List Nat) : Bool :=
+  match Nat.beq (Nat.land cm 3) 0 with
+  | false => false
+  | true => checkStepLin ubits umask cm upack cms
+
+theorem flipU_spec (σ : Nat → Bool) {u : Nat} (hu : 2 ≤ u) (ht : uLitTrue σ u = true) :
+    2 ≤ flipU u ∧ uLitTrue σ (flipU u) = false := by
+  unfold uLitTrue at ht
+  unfold flipU uLitTrue
+  cases hm : Nat.beq (u % 2) 0 with
+  | true =>
+      have hm0 : u % 2 = 0 := Nat.eq_of_beq_eq_true hm
+      have hst : σ (u / 2) = true := by simpa [hm] using ht
+      have hm1 : Nat.beq ((u + 1) % 2) 0 = false := by
+        have : (u + 1) % 2 = 1 := by omega
+        rw [this]; rfl
+      have hd : (u + 1) / 2 = u / 2 := by omega
+      change 2 ≤ u + 1 ∧ (if Nat.beq ((u + 1) % 2) 0 then σ ((u + 1) / 2) else !(σ ((u + 1) / 2))) = false
+      rw [hm1, hd]; simp [hst]; omega
+  | false =>
+      have hne0 : u % 2 ≠ 0 := fun hz => by simp [hz] at hm
+      have hlt2 : u % 2 < 2 := Nat.mod_lt u (by omega)
+      have hm1 : u % 2 = 1 := by omega
+      have hst : !(σ (u / 2)) = true := by simpa [hm] using ht
+      have hsf : σ (u / 2) = false := by cases hsv : σ (u / 2) <;> simp [hsv] at hst ⊢
+      have hm0' : Nat.beq ((u - 1) % 2) 0 = true := by
+        have : (u - 1) % 2 = 0 := by omega
+        rw [this]; rfl
+      have hd : (u - 1) / 2 = u / 2 := by omega
+      change 2 ≤ u - 1 ∧ (if Nat.beq ((u - 1) % 2) 0 then σ ((u - 1) / 2) else !(σ ((u - 1) / 2))) = false
+      rw [hm0', hd]; exact ⟨by omega, by simp [hsf]⟩
+
+theorem bm_ge_two_of_land3 {cm : Nat} (h : Nat.beq (Nat.land cm 3) 0 = true)
+    {u : Nat} (ht : cm.testBit u = true) : 2 ≤ u := by
+  if h2 : 2 ≤ u then exact h2
+  else
+    exfalso
+    have h01 : u = 0 ∨ u = 1 := by omega
+    have heq : Nat.land cm 3 = 0 := Nat.eq_of_beq_eq_true h
+    have hbit := congrArg (fun x => x.testBit u) heq
+    dsimp only at hbit
+    rw [testBit_land_eq, Nat.zero_testBit, ht] at hbit
+    rcases h01 with rfl | rfl <;> simp at hbit
+
+theorem encCM_sat (σ : Nat → Bool) :
+    ∀ (c : Clause) (acc : Nat), encCM c acc ≠ 0 →
+      (BmSat σ acc ∨ clauseSat σ c = true) → BmSat σ (encCM c acc) := by
+  intro c
+  induction c with
+  | nil =>
+      intro acc _ h
+      rcases h with hb | hc
+      · exact hb
+      · simp [clauseSat] at hc
+  | cons l ls ih =>
+      intro acc hnz h
+      dsimp only [encCM] at hnz ⊢
+      cases hel : encLit l with
+      | zero => rw [hel] at hnz; exact absurd rfl hnz
+      | succ u' =>
+          have hnzu : encLit l ≠ 0 := by rw [hel]; exact Nat.succ_ne_zero u'
+          obtain ⟨hle, hev⟩ := encLit_spec l hnzu
+          rw [hel] at hle hev hnz
+          change encCM ls (Nat.lor acc (Nat.shiftLeft 1 (u' + 1))) ≠ 0 at hnz
+          change BmSat σ (encCM ls (Nat.lor acc (Nat.shiftLeft 1 (u' + 1))))
+          apply ih (Nat.lor acc (Nat.shiftLeft 1 (u' + 1))) hnz
+          rcases h with ⟨w, hw2, hwb, hwt⟩ | hcs
+          · exact Or.inl ⟨w, hw2, by rw [testBit_lor_eq, hwb]; simp, hwt⟩
+          · simp only [clauseSat, List.any_cons, Bool.or_eq_true] at hcs
+            rcases hcs with hlt | hls
+            · refine Or.inl ⟨u' + 1, hle, ?_, ?_⟩
+              · rw [testBit_lor_eq, testBit_one_shiftLeft]; simp
+              · rw [hev σ]; exact hlt
+            · exact Or.inr hls
+
+theorem cnfToMTList_sat (σ : Nat → Bool) :
+    ∀ (F : CNF) (ts : List MTree),
+      cnfToMTList F = some ts → cnfSat σ F = true → ∀ t ∈ ts, MTreeSat σ t := by
+  intro F
+  induction F with
+  | nil =>
+      intro ts h _ t ht
+      simp [cnfToMTList] at h; subst h; cases ht
+  | cons c cs ih =>
+      intro ts h hsat t ht
+      dsimp only [cnfToMTList] at h
+      cases hbeq : Nat.beq (encCM c 0) 0 with
+      | true => simp [hbeq] at h
+      | false =>
+          simp only [hbeq] at h
+          cases hrec : cnfToMTList cs with
+          | none => simp [hrec] at h
+          | some rs =>
+              simp [hrec] at h; subst h
+              simp only [cnfSat, List.all_cons, Bool.and_eq_true] at hsat
+              cases List.mem_cons.mp ht with
+              | inl he =>
+                  rw [he]
+                  have hnz : encCM c 0 ≠ 0 := fun hz => by simp [hz] at hbeq
+                  exact encCM_sat σ c 0 hnz (Or.inr hsat.1)
+              | inr hr => exact ih rs hrec hsat.2 t hr
+
+theorem pairMT_sat (σ : Nat → Bool) :
+    ∀ (ts : List MTree), (∀ t ∈ ts, MTreeSat σ t) → ∀ t ∈ pairMT ts, MTreeSat σ t
+  | [], _, _, hm => by cases hm
+  | [x], h, t, hm => by simp [pairMT] at hm; subst hm; exact h t (List.mem_cons_self _ _)
+  | x :: y :: rs, h, t, hm => by
+      dsimp only [pairMT] at hm
+      cases List.mem_cons.mp hm with
+      | inl he =>
+          rw [he]
+          exact ⟨h x (List.mem_cons_self _ _), h y (List.mem_cons_of_mem _ (List.mem_cons_self _ _))⟩
+      | inr hr =>
+          exact pairMT_sat σ rs (fun z hz => h z (List.mem_cons_of_mem _ (List.mem_cons_of_mem _ hz))) t hr
+
+theorem mergeMT_sat (σ : Nat → Bool) :
+    ∀ (k : Nat) (ts : List MTree) (mt : MTree),
+      mergeMT k ts = some mt → (∀ t ∈ ts, MTreeSat σ t) → MTreeSat σ mt := by
+  intro k
+  induction k with
+  | zero =>
+      intro ts mt hm hall
+      cases ts with
+      | nil => simp [mergeMT] at hm
+      | cons t rest =>
+          cases rest with
+          | nil => simp [mergeMT] at hm; subst hm; exact hall t (List.mem_cons_self _ _)
+          | cons _ _ => simp [mergeMT] at hm
+  | succ k ih =>
+      intro ts mt hm hall
+      cases ts with
+      | nil => simp [mergeMT] at hm
+      | cons t rest =>
+          cases rest with
+          | nil => simp [mergeMT] at hm; subst hm; exact hall t (List.mem_cons_self _ _)
+          | cons t2 rs => exact ih (pairMT (t :: t2 :: rs)) mt hm (pairMT_sat σ (t :: t2 :: rs) hall)
+
+theorem bm_base_sound (σ : Nat → Bool) (F : CNF) (mt : MTree)
+    (hsat : cnfSat σ F = true) (hmt : cnfToMTree F = some mt) : MTreeSat σ mt := by
+  dsimp only [cnfToMTree] at hmt
+  cases hl : cnfToMTList F with
+  | none => rw [hl] at hmt; cases hmt
+  | some ts =>
+      rw [hl] at hmt
+      exact mergeMT_sat σ 20 ts mt hmt (cnfToMTList_sat σ F ts hl hsat)
+
+theorem checkStepLin_sound (σ : Nat → Bool) (ubits umask : Nat) :
+    ∀ {cms : List Nat} (fm upack : Nat),
+      MaskFalse σ fm → BmList σ cms → checkStepLin ubits umask fm upack cms = true → False := by
+  intro cms
+  induction cms with
+  | nil => intro fm upack _ _ h; simp [checkStepLin] at h
+  | cons cm rest ih =>
+      cases rest with
+      | nil =>
+          intro fm upack hfm hlist hchk
+          dsimp only [checkStepLin] at hchk
+          cases hlist with
+          | cons hcm _ =>
+              obtain ⟨u, _, hubit, hut⟩ := hcm
+              have heq : Nat.lor fm cm = fm := Nat.eq_of_beq_eq_true hchk
+              have hbit := congrArg (fun x => x.testBit u) heq
+              dsimp only at hbit
+              rw [testBit_lor_eq, hubit, Bool.or_true] at hbit
+              have huf := (hfm u hbit.symm).2
+              rw [hut] at huf; cases huf
+      | cons cm2 rest2 =>
+          intro fm upack hfm hlist hchk
+          dsimp only [checkStepLin] at hchk
+          cases hlist with
+          | cons hcm hrest =>
+              cases hble : Nat.ble 2 (Nat.land upack umask) with
+              | false => simp [hble] at hchk
+              | true =>
+                  simp only [hble] at hchk
+                  cases hbeq : Nat.beq (Nat.lor (Nat.lor fm (Nat.shiftLeft 1 (Nat.land upack umask))) cm)
+                      (Nat.lor fm (Nat.shiftLeft 1 (Nat.land upack umask))) with
+                  | false => simp [hbeq] at hchk
+                  | true =>
+                      simp only [hbeq] at hchk
+                      have hu2 : 2 ≤ Nat.land upack umask := Nat.le_of_ble_eq_true hble
+                      have hut : uLitTrue σ (Nat.land upack umask) = true := by
+                        obtain ⟨w, _, hwbit, hwt⟩ := hcm
+                        have heq := Nat.eq_of_beq_eq_true hbeq
+                        have hbit := congrArg (fun x => x.testBit w) heq
+                        dsimp only at hbit
+                        rw [testBit_lor_eq, hwbit, Bool.or_true, testBit_lor_eq, testBit_one_shiftLeft] at hbit
+                        cases hfmw : fm.testBit w with
+                        | true =>
+                            have hwf := (hfm w hfmw).2
+                            rw [hwt] at hwf; cases hwf
+                        | false =>
+                            rw [hfmw, Bool.false_or] at hbit
+                            have hde : decide (Nat.land upack umask = w) = true := hbit.symm
+                            have hwu : Nat.land upack umask = w := of_decide_eq_true hde
+                            rw [hwu]; exact hwt
+                      obtain ⟨hf2, hff⟩ := flipU_spec σ hu2 hut
+                      have hfm_next : MaskFalse σ (Nat.lor fm (Nat.shiftLeft 1 (flipU (Nat.land upack umask)))) := by
+                        intro w hwbit
+                        rw [testBit_lor_eq, testBit_one_shiftLeft, Bool.or_eq_true] at hwbit
+                        rcases hwbit with hfmw | hde
+                        · exact hfm w hfmw
+                        · have heq : flipU (Nat.land upack umask) = w := of_decide_eq_true hde
+                          subst heq; exact ⟨hf2, hff⟩
+                      exact ih (Nat.lor fm (Nat.shiftLeft 1 (flipU (Nat.land upack umask))))
+                        (Nat.shiftRight upack ubits) hfm_next hrest hchk
+
+theorem bm_rup_sound {σ : Nat → Bool} {cms : List Nat} (ubits umask cm upack : Nat)
+    (hl : BmList σ cms) (hchk : bmStepOk ubits umask cm upack cms = true) : BmSat σ cm := by
+  by_cases hsat : BmSat σ cm
+  · exact hsat
+  exfalso
+  dsimp only [bmStepOk] at hchk
+  cases h3 : Nat.beq (Nat.land cm 3) 0 with
+  | false => simp [h3] at hchk
+  | true =>
+      simp only [h3] at hchk
+      have hfm : MaskFalse σ cm := by
+        intro u hubit
+        have hu2 : 2 ≤ u := bm_ge_two_of_land3 h3 hubit
+        refine ⟨hu2, ?_⟩
+        cases hut : uLitTrue σ u with
+        | false => rfl
+        | true => exact absurd ⟨u, hu2, hubit, hut⟩ hsat
+      exact checkStepLin_sound σ ubits umask cm upack hfm hl hchk
+
+theorem bm_empty_false {σ : Nat → Bool} (h : BmSat σ 0) : False := by
+  obtain ⟨u, _, hb, _⟩ := h
+  rw [Nat.zero_testBit] at hb
+  cases hb
 
 end Cerp
