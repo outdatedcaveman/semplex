@@ -1,6 +1,6 @@
 # Pre-Registered Master Principle Protocol & Handoff (`gemini/master-principle`)
 
-**Date:** 2026-11-20 · **Branch:** `gemini/master-principle` (cut from `origin/claude/practical-shannon-oqg60y` @ `7be5346`) · **Status:** PRE-REGISTRATION (committed before any neural training run in `experiments/master_principle.py`).
+**Date:** 2026-11-20 · **Branch:** `gemini/master-principle` (cut from `origin/claude/practical-shannon-oqg60y` @ `7be5346`) · **Status:** COMPLETE — 180/180 runs executed (0 errors), pre-registered verdicts: 5 HELD / 2 NEITHER / 1 BROKEN.
 
 ## 1. Candidate Master Principle
 
@@ -67,6 +67,61 @@ Anything in between is **NEITHER** (`NO VERDICT` if fewer than the minimum autom
 - Whether optimal global constants $(\gamma_c, \gamma_o)$ or nonlinear spectral transformations of $W_c + W_o$ improve on $(\gamma_c=0.6, \gamma_o=0.7)$ without tuning.
 - Why finite-width gradient dynamics concretely induce the $\approx e^{-\frac{\lambda_0}{2}\mathcal{L}}$ damping factor from initialization to convergence.
 
-## 5. Results (Pending — to be populated after runs)
+## 5. Results (`experiments/results/master_principle.json`, `master_principle_raw/`: 384 files / 180 JSON / 0.479 MB)
 
-*Pending execution after pre-registration commit.*
+### 5.1 Pre-Registered Verdicts (`5 HELD / 2 NEITHER / 1 BROKEN`)
+
+| ID | Pre-Registered Verdict | Observed Result | Thresholds (Held / Broken) |
+|---|---|---|---|
+| **HM.1a** | **NEITHER** | `gru_mlp` median $\cos(G, \mathcal{G}(\lambda_0)) = 0.840$ (mean $0.835$; `36/36` fitted across `12/12` monoids; `u1_G = 0.700` vs `u1_o = 0.451`, `u1_k1 = 0.392`) | Held $\ge 0.85$ / Broken $< 0.70$ ($\ge 8$ monoids) |
+| **HM.1b** | **BROKEN** | Fails `all_rivals_beaten_median` strictly because `WcWo_noheat` ($\lambda=0$) achieved median `0.870 > 0.840` (pairwise $\mathcal{G} > W_c+W_o = 50.0\%$, though mean `0.835 > 0.822`). Meanwhile $\mathcal{G}(\lambda_0)$ beat `Wo_heat` `36/36 = 100%` (`21/21 = 100%` across 7 monoids with $\|W_c\|/\|W_o\|\ge 0.25$), beat `o` `36/36 = 100%`, beat `Wo` `30/36 = 83.3%`, beat `k1` `25/36 = 69.4%` | Beats all 5 medians & $\ge 70\%$ both pairwise tests / Any median loss or $< 50\%$ pairwise |
+| **HM.2** | **HELD** | `gru_lin` median $\cos(G, \mathcal{G}(\lambda_0)) = 0.936$, beat `o` in `19/22 = 86.4%` (`22/24` fitted across `11/12` monoids; `u1_G = 0.927`; note `WcWo_noheat` median `0.942`, mean `0.922 < 0.935`) | Held $\ge 0.90$ & $\ge 70\%$ / Broken $< 0.75$ or $< 50\%$ |
+| **HM.3a** | **HELD** | `lstm_mlp` median $\cos_G = 0.877$ (`24/24` fitted, `12/12` monoids; beats all 5 rivals in median & mean) AND `rnn_mlp` median $\cos_G = 0.821$ (`22/24` fitted, `11/12` monoids; beats all 5 rivals in median & mean) | Held both $\ge 0.80$ / Broken either $< 0.65$ ($\ge 6$ monoids each) |
+| **HM.3b** | **HELD** | `spec` (Hankel-SVD) closer to $W_o$ than $\mathcal{G}(\lambda_0)$ on `10/12 = 83.3%` of monoids (median $\cos_{W_o} = 0.930$ vs $\cos_G = 0.893$) | Held $\ge 75\%$ / Broken $< 50\%$ ($\ge 8$ monoids) |
+| **HM.4** | **HELD** | Across `25/36` fitted group runs (`6/6` fresh groups), `lead_G` matched learned leading irrep in `88.0%` (`gru_lin = 93.3%`, `gru_mlp = 80.0%`) vs energy-only `16.0%` and smooth-only `72.0%`; `3/3` fitted (`6/6` total) on 3-way discriminator `Z12_s1_045` | Held $\ge 75\%$ & beats E,S / Broken $< 50\%$ ($\ge 4$ groups) |
+| **HM.5a** | **NEITHER** | Noise ($\eta=0.20$) lowered `kin_norm` in `5/10 = 50.0%` fitted pairs (`4/6` monoids lowered [`515, 103, 512, 409`], `2/6` slightly raised [`65, 127`]; `1/4` groups lowered [`Z11_s2_035`], `3/4` groups raised [`Z7_s3_015, Z8_s3_047, Z7_s2_013`]) | Held $\ge 75\%$ / Broken $< 50\%$ ($\ge 8$ pairs) |
+| **HM.5b** | **HELD** | `36/36` `gru_mlp` runs: at step 0, $\cos(G_0, W_c) > \cos(G_0, W_o)$ in `97.2%` (`35/36`; median `0.860` vs `0.243`), and training raises $\cos_{W_o}$ in `100.0%` (`36/36`) | Held $\ge 75\%$ & $\ge 80\%$ / Broken $< 50\%$ either |
+
+### 5.2 Full Arm-by-Arm Summary (`fit >= 0.99`, except `noise` `fit >= 0.90`)
+
+| Arm | Fitted / Total (Automata) | `cos_G` med (mean) | `cos_Wo_heat` med (mean) | `cos_WcWo_noheat` med (mean) | `cos_Wo` med (mean) | `cos_Wc` med (mean) | `cos_o` med (mean) | `cos_k1` med (mean) | `u1_G` med (mean) | `u1_o` med | `u1_k1` med |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| `gru_mlp` | `36/36` (`12/12`) | `0.840` (`0.835`) | `0.761` (`0.779`) | `0.870` (`0.822`) | `0.768` (`0.761`) | `0.708` (`0.655`) | `0.605` (`0.568`) | `0.810` (`0.708`) | `0.700` (`0.637`) | `0.451` | `0.392` |
+| `gru_lin` | `22/24` (`11/12`) | `0.936` (`0.935`) | `0.906` (`0.904`) | `0.942` (`0.922`) | `0.924` (`0.900`) | `0.486` (`0.570`) | `0.855` (`0.817`) | `0.689` (`0.644`) | `0.927` (`0.883`) | `0.925` | `0.342` |
+| `lstm_mlp` | `24/24` (`12/12`) | `0.877` (`0.867`) | `0.839` (`0.817`) | `0.844` (`0.832`) | `0.781` (`0.779`) | `0.641` (`0.624`) | `0.591` (`0.573`) | `0.808` (`0.742`) | `0.800` (`0.738`) | `0.598` | `0.456` |
+| `rnn_mlp` | `22/24` (`11/12`) | `0.821` (`0.796`) | `0.707` (`0.707`) | `0.778` (`0.749`) | `0.672` (`0.647`) | `0.774` (`0.730`) | `0.461` (`0.468`) | `0.725` (`0.643`) | `0.561` (`0.489`) | `0.276` | `0.289` |
+| `spec` | `12/12` (`12/12`) | `0.893` (`0.881`) | `0.894` (`0.882`) | `0.927` (`0.924`) | `0.930` (`0.932`) | `0.490` (`0.492`) | `0.656` (`0.678`) | `0.922` (`0.910`) | `0.858` (`0.784`) | `0.744` | `0.745` |
+
+- `grp`: `25/36` fitted across `6/6` groups (`gru_lin`: `15/18` across `6` groups, median `cos_G = 0.906`, mean `0.871`; `gru_mlp`: `10/18` across `4` groups, median `cos_G = 0.684`, mean `0.622`). Runs below `0.99`: `gru_lin` (`Z11_s1_048`: `0.9899, 0.9749`; `Z11_s2_035`: `0.8146`); `gru_mlp` (`Z11_s1_048`: `0.8848, 0.9279, 0.8957`; `Z11_s2_035`: `0.9314, 0.8715`; `Z12_s1_045`: `0.9720, 0.9815, 0.8534`).
+- `noise`: `19/24` fitted at `>= 0.90` (`monoid`: `12/12` across `6/6`; `group`: `7/12` across `4/6`; below `0.90`: `Z11_s1_048`: `0.7009, 0.7037`; `Z11_s2_035`: `0.7988`; `Z12_s1_045`: `0.6963, 0.8547`).
+- `gru_lin` below `0.99`: `mixed id=409` (`0.9738, 0.9516`). `rnn_mlp` below `0.99`: `mixed id=76` (`0.9446, 0.7784`). Zero NaN crashes in any arm.
+
+### 5.3 Post-Hoc Exploratory Diagnostics (Explicitly NOT Pre-Registered)
+
+1. **Architecture-ordered kinetic exchange rate $\lambda^* > 0$:** An exploratory sweep $\lambda \in \{0, 0.25, 0.5, 0.75, 1.0, 1.48, 2.0, 3.0\}$ on saved fitted centroids reveals a strictly positive kinetic optimum ordered monotonically by recurrent state stiffness/gating:
+   - `SPEC` (no recurrence): peaks at $\lambda = 0$ ($W_o$: median `0.930`, mean `0.932` vs $\lambda_0$: `0.893` / `0.881`).
+   - `GRU-LIN`: MED `0.00:0.942, 0.25:0.945, 0.50:0.946, 0.75:0.945, 1.00:0.944, 1.48:0.936`; MN `0.00:0.922, 0.25:0.934, 0.50:0.941, 0.75:0.944, 1.00:0.944, 1.48:0.935` (`+0.022` mean at $\lambda \approx 0.75\text{--}1.0$).
+   - `GRU-MLP`: MED `0.00:0.870, 0.25:0.867, 0.50:0.863, 0.75:0.855, 1.00:0.852, 1.48:0.840`; MN `0.00:0.822, 0.25:0.832, 0.50:0.838, 0.75:0.841, 1.00:0.841, 1.48:0.835` (`+0.019` mean at $\lambda \approx 0.75\text{--}1.0$, while median peaks at `0.00`).
+   - `LSTM-MLP`: MED `0.00:0.844, 0.50:0.877, 0.75:0.884, 1.00:0.885, 1.48:0.877`; MN `0.00:0.832, 0.75:0.864, 1.00:0.867, 1.48:0.867` (`+0.041` median / `+0.035` mean over $\lambda = 0$).
+   - `RNN-MLP`: MED `0.00:0.778, 0.50:0.796, 1.00:0.821, 1.48:0.821`; MN `0.00:0.749, 1.00:0.792, 1.48:0.796` (`+0.043` median / `+0.047` mean over $\lambda = 0$).
+   - **Scientific conclusion:** On irreversible monoids, $W_c + W_o$ already captures the dominant transition geometry (explaining why $\mathcal{G}(\lambda_0)$ beat `Wo_heat` `36/36`), and **the kinetic damping rate $\lambda^*$ is substrate-dependent rather than one fixed universal constant $\lambda_0 = 1.476$**—frozen $\lambda_0$ over-damped `GRU-MLP` relative to $\lambda = 0$ (`HM.1b` BROKEN), while accurately matching `LSTM-MLP` and `RNN-MLP` (`HM.3a` HELD).
+
+2. **Why `HM.5a` failed on group automata (mechanism test of noise):** Inspecting irrep variance shares ($\operatorname{Tr}(P_\rho G)/\operatorname{Tr}(G)$) explains why isotropic state noise $\eta = 0.20$ raised `kin_norm` on `3/4` fitted groups: noiseless `GRU-MLP` already placed `>90%` variance in the lowest-Dirichlet-energy irrep (`r0` on `Z7_s3_015`: `0.905–0.929`; `r1` on `Z7_s2_013`: `0.907–0.926`; `r2` on `Z8_s3_047` s=0,1: `0.907–0.919`), whereas adding $\eta = 0.20$ forced the network to amplify higher-frequency output-carrying modes (`r2` on `Z7_s3_015`: `0.024 -> 0.072`; `r0` on `Z7_s2_013`: `0.023 -> 0.078`; `r0_tr2_ker2` on `Z8_s3_047`: `0.663–0.865`) to preserve readout SNR under additive state perturbation. Thus **isotropic state noise is NOT the physical mechanism that lowers Dirichlet energy in noiseless training**.
+
+### 5.4 What Broke and What This Does NOT Show
+
+- **Pre-registered failures:** `HM.1b` is **BROKEN** (frozen $\lambda_0$ lost on median to unsmoothed `Wc + Wo` on `GRU-MLP`), `HM.1a` is **NEITHER** (`0.840 < 0.85`), and `HM.5a` is **NEITHER** (`5/10`, refuted on 3/4 fitted groups).
+- Does **not** yield an architecture-free constant $\lambda_0$: $\lambda^*$ varies monotonically with recurrent architecture (`0` in SPEC, `~0.75` in GRU, `~1.0–1.5` in LSTM/RNN).
+- Does **not** test non-recurrent bounded-window sequence architectures (e.g., Causal Transformers) at parity `>= 0.99` fit, nor derive $\mathcal{G}(\lambda)$ or $\lambda^*(\text{arch})$ analytically from SGD/AdamW training dynamics.
+
+## 6. Verification & Rule 7 Acceptance Output
+
+- **Mathlib build & axiom audit (`proofs/lean-mathlib/`):**
+  - `lake build MasterPrinciple` -> `exit 0` in `113.46s`.
+  - `lake env lean AuditMasterPrinciple.lean` -> `exit 0` in `82.22s`; all 18 audited declarations depend only on `[propext, Classical.choice, Quot.sound]` (zero `sorryAx`).
+  - `proofs/lean-mathlib/.lake` removed prior to commit; `git diff origin/claude/practical-shannon-oqg60y -- proofs/lean/` empty.
+- **Rule 7 checks:**
+  - `python -m cerp.register check` -> `0 problem(s), 46 status note(s)` (`exit 0`; `claims/LEDGER_CHECK.md` reverted after LF/CRLF-only check).
+  - `python -m cerp.status --check` -> `exit 0`.
+  - `SEMPLEX_LEAN_TIMEOUT=900` (`%TEMP%\semplex_extras_venv\Scripts\python.exe -m pytest -q`) -> `167 passed in 1111.59s (0:18:31)` (`exit 0`).
+  - Standalone Lean `v4.12.0` (`Cerp.lean`, `Theory.lean`, `Bounds.lean`, `Closure.lean`, `Inference.lean` + `Audit*.lean`, `.olean` compiled to `%TEMP%`, `leftover .olean in proofs/lean: 0`) -> `leanOk: True`, standard axioms only (`[propext, Classical.choice, Quot.sound]` max, zero `sorryAx`, zero `Lean.ofReduceBool`).
