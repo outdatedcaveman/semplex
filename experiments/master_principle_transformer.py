@@ -484,14 +484,15 @@ def train_one(Dl: np.ndarray, O: np.ndarray, s0: int, m: int, arch: str,
 def run_spec_one(Dl: np.ndarray, O: np.ndarray, m: int, seed: int = 42) -> np.ndarray:
     rng = np.random.default_rng(seed)
     L = Dl.shape[0]
+    O_2d = O[:, None] if O.ndim == 1 else O
     sufs = [rng.integers(0, L, size=rng.integers(0, 9)) for _ in range(400)]
-    F = np.zeros((m, len(sufs)))
+    F = np.zeros((m, len(sufs), O_2d.shape[1]))
     for j, s in enumerate(sufs):
         q = np.arange(m)
         for a in s:
             q = Dl[a, q]
-        F[:, j] = O[q]
-    return F
+        F[:, j, :] = O_2d[q]
+    return F.reshape(m, -1)
 
 
 def _ops_from_item(row: dict) -> dict:
