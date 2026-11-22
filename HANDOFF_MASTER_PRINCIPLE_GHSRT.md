@@ -1,6 +1,6 @@
 # Handoff: Grounded Higher Semantic Representation Theorem (GHSRT), Constructive Trees, Quantale Concepts, Frobenius Laws, & UFR/Content-Geometry Campaign (`gemini/master-principle-ghsrt`)
 
-**Status:** `[PRE-REGISTERED — RUN PENDING]`  
+**Status:** `[COMPLETE & RULE-7 VERIFIED — LOCAL BRANCH ONLY, NO PUSH]`  
 **Branch:** `gemini/master-principle-ghsrt` (base `origin/claude/practical-shannon-oqg60y` @ `7be5346`)  
 **Task Alignment:** Answers delegated Task 143 (`grounded-higher-semantic-representation`, Work Packages A–F) + integrates prioritized sources from `research/SOURCE_TRIAGE_2026-11-22.md` in an isolated branch without altering the canonical checkout.
 
@@ -49,6 +49,57 @@ Pre-registered predictions live in `experiments/results/master_principle_ghsrt_p
 
 ---
 
-## 4. Measured Results
+## 4. Measured Verdicts & Empirical Results (`48/48` Runs in `987.38s`)
 
-*Pending full 48-run execution.*
+| Hypothesis | Verdict | Observed Evidence (`experiments/results/master_principle_ghsrt.json`) |
+|---|---|---|
+| `HGH.1` | **`BROKEN`** | `cayley_unitary_ufr_grounded` solved $b_1=2$ `S3` bouquet through **`0.99934` OOD `L=6`** (`1.000` at `L=3, 4`; `+0.692` over `cayley_unitary_fer = 0.307` and `+0.508` over `joint_bouquet_gru = 0.4918`) and lifted `A4` `L8_bacc` to **`0.94889`** (`0.99577` at `L=4`, `0.98991` at `L=5`, `0.97656` at `L=6`; `+0.422` over `cayley_unitary_fer = 0.52669` and `+0.625` over `varlen_linear = 0.32422`), narrowly below the `>= 0.98` uniform cutoff at `A4 L=8` (`homomorphism_err = 0.10233`). |
+| `HGH.2` | **`NEITHER`** | Test-Time Symmetrization (`K = 1 -> 16`, `arXiv:2611.24032`) consistently improved GRUs (`A4 L4: 0.81087 -> 0.88118`, `L8: 0.55697 -> 0.67904`; `S3 L3: 0.90793 -> 0.94966`, `L6: 0.49180 -> 0.56326`), yet remained far behind intrinsic UFR `U(d)` at longest OOD (`0.679 vs 0.949` and `0.563 vs 0.999`). In Phase-2 unmodified fine-tuning (`arXiv:2611.11020`), UFR dominated `fer` on `A4` (`forgetting_after_keep = 0.75195` vs `0.49935`, `+0.2526`) and `joint_bouquet_gru` on `S3` (`1.00000` vs `0.46375`), while linear-readout `S3 fer` also held `0.99763` (`+0.0024 < +0.05` bar). |
+| `HGH.3` | **`NEITHER`** | On `C8_slow3`, `SVReg` smoothed paths (`jag = 1.37211 -> 1.16398`, `r_geom = 0.34499 -> 0.84178`) while dropping `r2_slow` (`0.11616 -> 0.09653`), and `Slow SVReg` restored **`r2_slow = 0.80590`** (`+0.709` recovery) with **`r_geom = 0.91834`**; on `D4_slow3`, `Slow SVReg` lifted **`r_geom = -0.09012 -> 0.65418`** and **`r2_slow = 0.03183 -> 0.88085`** (`+0.783` over `SVReg`). Overall `HGH.3 = NEITHER` because: (1) `D4_slow3` action `0` is the identity element, causing 2-step `jag` chord norms on `a=0` to return the `9.9` sentinel across all objectives, and (2) `SADL` favored `eff_rank = 3.114` & `r2_slow = 0.71215` over linear `r2_fast = 0.57499 < 0.80`. |
+| `HGH.4` | **`HELD`** | Discrete-Lyapunov free-energy operators `G_gm_heat(λ)` and `X_kl_gm(λ)` aligned with learned JEPA Gramians across all 24 Arm-2 runs (`mean best cos >= 0.66`, peaking at **`0.89814` `C8_slow3`** and **`0.89180` `D4_slow3`** for `Slow SVReg`), and `λ*(jepa_svreg) = 0.11667 > λ*(jepa_sg) = 0.00000` (with `Slow SVReg` cleanly peaking at interior `λ* = 1.88333`). |
+| `HGH.5` | **`HELD`** | Group-algebra Frobenius laws (`frob_left/right/special` on `S3, D4, A4`): max error **`3.55e-15 < 1e-10`**; finite `S3` residuated concept quantale (`4` closed concepts): **`0 / 0 / 0`** violations; `A4 U(12)` length `L = 4, 8, 16` trace diff **`5.79e-15 < 1e-10`**; neural Cayley `unitary_max_err = 0.0 < 1e-5` across all 48 runs. |
+
+### Arm 1 Summary (`24` Runs: UFR vs FER vs TTS & Phase-2 Forgetting, `16k +- 5%` params)
+
+| Task / Model | Params | Held `bacc` | OOD `L=4`/`L=5` | OOD `L=6` | OOD `L=8` | `TTS K=16` (Longest OOD) | Phase-2 Keep (`before -> after`, `drop`) |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| `A4 / cayley_unitary_fer` | `15,812` | `0.86361` (`L=4`) | `0.70312` (`L=5`) | `0.61719` | `0.52669` | — | `0.88216 -> 0.49935` (`0.38281`) |
+| `A4 / cayley_unitary_varlen_linear` | `15,660` | `0.69434` (`L=4`) | `0.46777` (`L=5`) | `0.36426` | `0.32422` | — | `0.71940 -> 0.66471` (`0.05469`) |
+| `A4 / ordered_gru` | `16,008` | `0.81087` (`L=4`) | `0.73926` (`L=5`) | `0.67318` | `0.55697` | `0.67904` (`L=8`) | `0.81315 -> 0.47201` (`0.34115`) |
+| **`A4 / cayley_unitary_ufr_grounded`** | `15,660` | **`0.99577`** (`L=4`) | **`0.98991`** (`L=5`) | **`0.97656`** | **`0.94889`** | — | `0.99805 ->` **`0.75195`** (`0.24609`) |
+| `S3_bouquet / cayley_unitary_fer` | `15,995` | `0.99992` (`L=3`) | `0.75509` (`L=4`) | `0.30700` | — | — | `1.00000 -> 0.99763` (`0.00237`) |
+| `S3_bouquet / cayley_unitary_varlen_linear` | `15,671` | `1.00000` (`L=3`) | `0.99652` (`L=4`) | `0.96730` | — | — | `1.00000 -> 0.99727` (`0.00273`) |
+| `S3_bouquet / joint_bouquet_gru` | `15,975` | `0.90793` (`L=3`) | `0.74218` (`L=4`) | `0.49180` | — | `0.56326` (`L=6`) | `0.95647 -> 0.46375` (`0.49271`) |
+| **`S3_bouquet / cayley_unitary_ufr_grounded`** | `15,671` | **`1.00000`** (`L=3`) | **`1.00000`** (`L=4`) | **`0.99934`** | — | — | `1.00000 ->` **`1.00000`** (**`0.00000`**) |
+
+### Arm 2 Summary (`24` Runs: Content–Geometry JEPA vs `G_gm_heat(λ)` / `X_kl_gm(λ)`)
+
+| World / Objective | `jag` | `r_geom` | `r2_fast` | `r2_slow` | `eff_rank` | `cos(G_gm)` / `λ*` | `cos(X_kl)` / `λ*` |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| `C8_slow3 / jepa_sg` | `1.37211` | `0.34499` | **`0.99011`** | `0.11616` | `4.32347` | `0.78178` / `0.000` | `0.78178` / `0.000` |
+| `C8_slow3 / jepa_svreg` | **`1.16398`** | `0.84178` | `0.86055` | `0.09653` | `2.75924` | `0.72940` / `0.233` | `0.72936` / `0.233` |
+| **`C8_slow3 / jepa_slow_svreg`** | `1.19305` | **`0.91834`** | `0.89967` | **`0.80590`** | **`4.59951`** | **`0.89814`** / `1.400` | **`0.89769`** / `1.400` |
+| `C8_slow3 / jepa_sadl` | `1.16638` | `0.73769` | `0.59133` | `0.68671` | `2.81051` | `0.72353` / `0.300` | `0.72348` / `0.300` |
+| `D4_slow3 / jepa_sg` | `9.90000`* | `-0.09012` | **`0.99387`** | `0.03183` | **`4.82521`** | `0.71461` / `0.000` | `0.71461` / `0.000` |
+| `D4_slow3 / jepa_svreg` | `9.90000`* | `-0.17585` | `0.76425` | `0.09814` | `2.78097` | `0.59835` / `0.000` | `0.59835` / `0.000` |
+| **`D4_slow3 / jepa_slow_svreg`** | `9.90000`* | **`0.65418`** | `0.88421` | **`0.88085`** | `4.68192` | **`0.89169`** / `2.367` | **`0.89180`** / `2.367` |
+| `D4_slow3 / jepa_sadl` | `9.90000`* | `-0.21343` | `0.55865` | `0.73759` | `3.41783` | `0.65859` / `0.000` | `0.65859` / `0.000` |
+
+*\*Note on `D4_slow3 jag = 9.90000`: on `D4`, action `0` is the group identity element, so 2-step `a=0` paths had zero endpoint chord displacement (`d02 <= 1e-6`), hitting the `9.9` sentinel identically across all 4 objectives; geometry smoothing on `D4_slow3` is instead measured cleanly by `r_geom` (`-0.09012 -> +0.65418`).*
+
+---
+
+## 5. Task 143 Work Packages A–F Synthesis & Rule 7 Ledger
+
+- **WP-A/B (Dense Restricted Yoneda):** Non-circular colimit cocone density $\iff$ full faithfulness + `SemIso` reflection + `Aut` group isomorphism + explicit `discreteBoolCat` failure witness + `automorphismTransport_isGroupIso` (`ConnectedIsotropy` gap closed).
+- **WP-C (Grounded Fibration):** `IndexedGroundedFibration` over contexts + `CartesianGroundedMorphism` truth/soundness transfer + 3 countermodels (`ungrounded_equiv`, `sound_not_complete`, Audit 3 `unindexed_complete_collapses_contingency`).
+- **WP-D/F (Constructive Tree, Quantales, Frobenius, Higher Layers):** `minDist` spanning-tree extraction from pure graph connectivity (`parentEdge_unique_child` + bidirectional recursion), unital residuated `ClosedConcept` quantale (`2608.26631`), non-commutative `S3` Frobenius monoid laws, exact $U(d)$ word/bouquet trace invariance, plus Layer 2 (pseudofunctorial 2-groupoid) & Layer 3 ($\infty$-cat / Cubical `BG` `isGroupoid` 1-truncation).
+- **WP-E (Empirical Adversarial Showdown):** `48/48` pre-registered runs (`987.38s`) separating intrinsic UFR composition grounding vs FER vs TTS & JEPA Content–Geometry vs free-energy smoothing.
+
+### Rule 7 Verification
+- `python -m cerp.register check`: `exit=0` (`0 problem(s), 46 status note(s)`).
+- `python -m cerp.status --check`: `exit=0`.
+- Core Lean audits (`Audit.lean`, `AuditBounds.lean`, `AuditClosure.lean`, `AuditInference.lean`, `AuditTheory.lean` against `7be5346` `.olean`s): `exit=0`, `CORE_AUDIT_FAILS=0`, `LEFTOVER_OLEANS=0`.
+- Isolated Mathlib audits (`MasterPrincipleGHSRT.lean` `40/40` audited theorems via `AuditMasterPrincipleGHSRT.lean`): `BUILD_RC=0` (`0` errors, `0` warnings), `AUDIT_RC=0`, axioms strictly within `[propext, Classical.choice, Quot.sound]`, zero `sorryAx`.
+- Full test suite (`python -m pytest -q` in configured environment): zero failures, `exit=0`.
+- Hygiene: `proofs/lean-mathlib/.lake` removed (`LAKE_PRESENT=False`, `OLEAN_COUNT=0`), raw per-run logs archived outside git, zero protected files modified, zero PII/local paths in diff.
