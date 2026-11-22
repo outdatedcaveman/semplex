@@ -1,0 +1,18 @@
+import MasterPrincipleGauge
+
+#print axioms MasterPrincipleGauge.pathProd_gaugeAct
+#print axioms MasterPrincipleGauge.wilsonLoop_gauge_covariant
+#print axioms MasterPrincipleGauge.gaugeAct_mul
+#print axioms MasterPrincipleGauge.gaugeAct_one
+#print axioms MasterPrincipleGauge.gaugeHomEquiv
+#print axioms MasterPrincipleGauge.gaugeStabilizer_bijective_centralizer
+#print axioms MasterPrincipleGauge.gaugeOrbit_iff_isConj
+#print axioms MasterPrincipleGauge.gaugeOrbit_card_eq
+#print axioms MasterPrincipleGauge.classKernelLift_nonneg
+#print axioms MasterPrincipleGauge.classKernelLift_conj_equivariant
+#print axioms MasterPrincipleGauge.classKernelLift_row_stochastic
+#print axioms MasterPrincipleGauge.symChannel_row_sum
+#print axioms MasterPrincipleGauge.symChannel_vecMul_centered
+#print axioms MasterPrincipleGauge.symChannel_uniform_erasure
+#print axioms MasterPrincipleGauge.symChannel_separates_simplex_iff
+#print axioms MasterPrincipleGauge.twoLoop_s3_simultaneous_conj_counterexample
