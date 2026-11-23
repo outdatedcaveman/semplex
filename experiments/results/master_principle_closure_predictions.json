@@ -1,0 +1,31 @@
+{
+  "branch": "gemini/master-principle-closure",
+  "base_commit": "7be5346",
+  "pre_registered_hypotheses": {
+    "HMC.1": {
+      "claim": "Exact semidirect generator parameterization (`semidirect_exact_etf` / `semidirect_exact_linear`) achieves `homomorphism_err <= 1e-5` on both `A4` and `S3_bouquet` (5+ orders tighter than Phase-3 `0.0178` / `0.0025`) AND `>= 0.995` OOD balanced accuracy across ALL lengths through `A4 L=32` and `S3 L=16`, while Augmented-Lagrangian `spectral_alm_gen` reduces `homomorphism_err` vs soft baselines.",
+      "held_criterion": "max(semidirect_hom_err_A4, semidirect_hom_err_S3) <= 1e-5 and min(semidirect_bacc_all_lengths_incl_L32) >= 0.995 and spectral_alm_A4_hom_err < 0.0178"
+    },
+    "HMC.2": {
+      "claim": "With NO replay and NO kept-label masking, Phase-1 feature whitening + bias-free plain SGD head (`semidirect_exact_etf`) achieves `forgetting_after_keep >= 0.98` and `forgetting_drop <= 0.02` on BOTH `A4` and `S3_bouquet`, beating unconstrained `semidirect_exact_linear` (`nn.Linear` + bias) on `A4 forgetting_after_keep` by `>= +0.25` AND beating `cayley_ufr_soft_etf` on `A4 L=32` by `>= +0.55`.",
+      "held_criterion": "min(etf_A4_keep_after, etf_S3_keep_after) >= 0.98 and max(etf_A4_drop, etf_S3_drop) <= 0.02 and (etf_A4_keep_after - lin_A4_keep_after) >= 0.25 and (etf_A4_L32 - cayley_etf_A4_L32) >= 0.55"
+    },
+    "HMC.3": {
+      "claim": "In stochastic POMDPs (`noisy_hidden_bit_pomdp` and `stochastic_s3_holonomy_pomdp`), `active_interventional_probe` achieves strictly higher TV separability (`>= +0.30` mean TV gap) and strictly higher held-out classification accuracy (`>= +0.25`) than `passive_sampling_probe` across noise levels `0.0, 0.15, 0.30`, with `0` TV data-processing inequality violations.",
+      "held_criterion": "min(active_minus_passive_tv_gap) >= 0.30 and min(active_minus_passive_acc) >= 0.25 and dpi_violations == 0"
+    },
+    "HMC.4": {
+      "claim": "Exact generator-norm MDL compression holds both algebraically and on trained models: `semidirect_exact` generator Frobenius squared ratio vs full Cayley bank satisfies `< 0.40` (`0.1667` `A4`, `0.3333` `S3`) while cutting total parameter count by `>= 2x` vs full Cayley banks on `A4`.",
+      "held_criterion": "a4_mdl_ratio < 0.25 and s3_mdl_ratio < 0.40 and a4_param_ratio <= 0.50"
+    },
+    "HMC.5": {
+      "claim": "Exact float64 algebraic closure audits pass: semidirect `S3`/`A4` presentation `hom_err < 1e-14`, `unitary_err < 1e-14`, trace gauge invariance `< 1e-14`, 50-channel random TV DPI max excess `<= 1e-14`, 50-trial amortized Matrix-KL variational optimality `min_gap >= -1e-12`, and neural `max_unitary_err < 1e-5`.",
+      "held_criterion": "f64_pres_hom_err < 1e-14 and f64_trace_err < 1e-14 and dpi_max_excess <= 1e-14 and amortized_min_gap >= -1e-12 and max_neural_unitary_err < 1e-5"
+    }
+  },
+  "design": {
+    "arm1_runs": 27,
+    "arm2_runs": 12,
+    "total_runs": 39
+  }
+}
