@@ -1,0 +1,15 @@
+import MasterPrincipleHankel
+
+#print axioms MasterPrincipleHankel.trace_matG_eq_dirichletFlow
+#print axioms MasterPrincipleHankel.trace_mul_matG_eq_moment1
+#print axioms MasterPrincipleHankel.matNormDirichlet_hasDerivAt_neg_var
+#print axioms MasterPrincipleHankel.matNormDirichlet_strictAnti
+#print axioms MasterPrincipleHankel.matLambda_unique_of_dirichlet
+#print axioms MasterPrincipleHankel.concat_interface_gram
+#print axioms MasterPrincipleHankel.interface_sum_quadForm_eq_zero_iff
+#print axioms MasterPrincipleHankel.hankel_collapse_of_wc_zero
+#print axioms MasterPrincipleHankel.trace_hankel_eq_trace_wc_wo
+#print axioms MasterPrincipleHankel.trace_wc_wo_am_gm
+#print axioms MasterPrincipleHankel.variational_nuclear_norm_bound
+#print axioms MasterPrincipleHankel.contractive_ssm_lag_weight
+#print axioms MasterPrincipleHankel.contractive_ssm_geom_sum

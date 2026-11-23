@@ -1,6 +1,6 @@
 name = "CerpMathlib"
 version = "0.1.0"
-defaultTargets = ["CerpMathlib"]
+defaultTargets = ["CerpMathlib", "MasterPrinciple", "MasterPrincipleMech", "MasterPrincipleWindow", "MasterPrincipleHankel", "MasterPrincipleVariational", "MasterPrincipleGauge", "MasterPrincipleFreeEnergy", "MasterPrincipleBouquet", "MasterPrincipleGHSRT", "MasterPrincipleLieLyapunov", "MasterPrincipleClosure", "MasterPrincipleA5ERMoE"]
 
 [[require]]
 name = "mathlib"
@@ -9,3 +9,39 @@ rev = "v4.12.0"
 
 [[lean_lib]]
 name = "CerpMathlib"
+
+[[lean_lib]]
+name = "MasterPrinciple"
+
+[[lean_lib]]
+name = "MasterPrincipleMech"
+
+[[lean_lib]]
+name = "MasterPrincipleWindow"
+
+[[lean_lib]]
+name = "MasterPrincipleHankel"
+
+[[lean_lib]]
+name = "MasterPrincipleVariational"
+
+[[lean_lib]]
+name = "MasterPrincipleGauge"
+
+[[lean_lib]]
+name = "MasterPrincipleFreeEnergy"
+
+[[lean_lib]]
+name = "MasterPrincipleBouquet"
+
+[[lean_lib]]
+name = "MasterPrincipleGHSRT"
+
+[[lean_lib]]
+name = "MasterPrincipleLieLyapunov"
+
+[[lean_lib]]
+name = "MasterPrincipleClosure"
+
+[[lean_lib]]
+name = "MasterPrincipleA5ERMoE"

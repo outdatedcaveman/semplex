@@ -1,0 +1,20 @@
+import MasterPrinciple
+
+#print axioms MasterPrinciple.pastStep_adjoint
+#print axioms MasterPrinciple.pastStep_const_of_bijective
+#print axioms MasterPrinciple.pastOp_of_bijective
+#print axioms MasterPrinciple.wcOp_eq_zero_of_bijective
+#print axioms MasterPrinciple.pastKernel_eq_one_of_bijective
+#print axioms MasterPrinciple.pastForm_eq_zero_of_bijective
+#print axioms MasterPrinciple.wcOp_smul
+#print axioms MasterPrinciple.woOp_smul
+#print axioms MasterPrinciple.kineticOp_inner_eq_dirichlet
+#print axioms MasterPrinciple.kineticOp_selfAdjoint
+#print axioms MasterPrinciple.kineticForm_nonneg
+#print axioms MasterPrinciple.kineticForm_const
+#print axioms MasterPrinciple.kineticOp_const
+#print axioms MasterPrinciple.piInner_constOne_kineticOp
+#print axioms MasterPrinciple.heatApply_eigenmode
+#print axioms MasterPrinciple.masterOperator_eigenvalue_on_commuting_mode
+#print axioms MasterPrinciple.group_master_reduces_to_gibbs
+#print axioms MasterPrinciple.hypercube_kineticForm_eq_totalInfluence

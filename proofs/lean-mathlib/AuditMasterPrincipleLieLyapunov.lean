@@ -1,0 +1,42 @@
+/-
+  Axiom audit for `Semplex.LieLyapunov` (`MasterPrincipleLieLyapunov.lean`).
+-/
+import MasterPrincipleLieLyapunov
+
+#print axioms Semplex.LieLyapunov.KanRetractObstruction.kan_comparison_at_1_is_id
+#print axioms Semplex.LieLyapunov.KanRetractObstruction.extension_factors_identity
+#print axioms Semplex.LieLyapunov.KanRetractObstruction.extraMidFunctor_restricts_to_v
+#print axioms Semplex.LieLyapunov.KanRetractObstruction.extraMidFunctor_mid_not_equiv_bool
+#print axioms Semplex.LieLyapunov.KanRetractObstruction.kan_comparison_equiv_not_sufficient_in_type
+#print axioms Semplex.LieLyapunov.KanRetractObstruction.posetal_retract_eq
+#print axioms Semplex.LieLyapunov.KanRetractObstruction.essential_image_equiv_determined
+
+#print axioms Semplex.LieLyapunov.LiePresentationUnitary.isUnitary_one
+#print axioms Semplex.LieLyapunov.LiePresentationUnitary.isUnitary_conjTranspose
+#print axioms Semplex.LieLyapunov.LiePresentationUnitary.isUnitary_mul
+#print axioms Semplex.LieLyapunov.LiePresentationUnitary.isUnitary_pow
+#print axioms Semplex.LieLyapunov.LiePresentationUnitary.spectral_conjugate_unitary
+#print axioms Semplex.LieLyapunov.LiePresentationUnitary.spectral_conjugate_pow
+#print axioms Semplex.LieLyapunov.LiePresentationUnitary.spectral_conjugate_torsion
+#print axioms Semplex.LieLyapunov.LiePresentationUnitary.s3PresRep_mul
+#print axioms Semplex.LieLyapunov.LiePresentationUnitary.s3PresRep_unitary
+#print axioms Semplex.LieLyapunov.LiePresentationUnitary.a4_v4_commute
+#print axioms Semplex.LieLyapunov.LiePresentationUnitary.a4PresRep_mul
+#print axioms Semplex.LieLyapunov.LiePresentationUnitary.a4PresRep_unitary
+#print axioms Semplex.LieLyapunov.LiePresentationUnitary.a4PresRep_trace_conjugacy_invariant
+
+#print axioms Semplex.LieLyapunov.IsolatingWeightTree.walkWeight_step_strict_lt
+#print axioms Semplex.LieLyapunov.IsolatingWeightTree.minWalk_root_nil
+#print axioms Semplex.LieLyapunov.IsolatingWeightTree.minWalk_le
+#print axioms Semplex.LieLyapunov.IsolatingWeightTree.minWalk_prefix_eq
+#print axioms Semplex.LieLyapunov.IsolatingWeightTree.isolating_tree_chord_disjoint
+#print axioms Semplex.LieLyapunov.IsolatingWeightTree.isolating_treeFrame_edge_recursion
+#print axioms Semplex.LieLyapunov.IsolatingWeightTree.isolating_treeFrame_gauge_covariant
+
+#print axioms Semplex.LieLyapunov.ContinuousLyapunovGramian.shiftedGen_zero
+#print axioms Semplex.LieLyapunov.ContinuousLyapunovGramian.shiftedGen_conj
+#print axioms Semplex.LieLyapunov.ContinuousLyapunovGramian.lyapEq_congruence_invariant
+#print axioms Semplex.LieLyapunov.ContinuousLyapunovGramian.balanced_trace_similarity_invariant
+#print axioms Semplex.LieLyapunov.ContinuousLyapunovGramian.skew_lyapunov_trace_exact
+#print axioms Semplex.LieLyapunov.ContinuousLyapunovGramian.lyapunov_quadratic_decay
+#print axioms Semplex.LieLyapunov.ContinuousLyapunovGramian.discrete_to_continuous_lyapunov_expansion

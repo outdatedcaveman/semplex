@@ -1,0 +1,43 @@
+/-
+  Axiom audit for `Semplex.Closure` (`MasterPrincipleClosure.lean`).
+-/
+import MasterPrincipleClosure
+
+#print axioms Semplex.Closure.SemidirectExactUnitary.s3GenS_unitary_and_sq
+#print axioms Semplex.Closure.SemidirectExactUnitary.s3GenR_unitary_and_cube
+#print axioms Semplex.Closure.SemidirectExactUnitary.s3Gen_mixed_rel
+#print axioms Semplex.Closure.SemidirectExactUnitary.s3GaugeConj_hom_rel
+#print axioms Semplex.Closure.SemidirectExactUnitary.a4GenS_unitary_and_sq
+#print axioms Semplex.Closure.SemidirectExactUnitary.a4GenT_unitary_and_cube
+#print axioms Semplex.Closure.SemidirectExactUnitary.a4Gen_mixed_rel
+#print axioms Semplex.Closure.SemidirectExactUnitary.a4GaugeConj_hom_rel
+#print axioms Semplex.Closure.SemidirectExactUnitary.gaugeConj_isUnitary
+#print axioms Semplex.Closure.SemidirectExactUnitary.gaugeConj_trace_eq
+
+#print axioms Semplex.Closure.OrthogonalReadoutRetention.outer_mulVec_orth_zero
+#print axioms Semplex.Closure.OrthogonalReadoutRetention.orth_rank1_sgd_logit_invariant
+#print axioms Semplex.Closure.OrthogonalReadoutRetention.orth_batch_sgd_logit_invariant
+#print axioms Semplex.Closure.OrthogonalReadoutRetention.orth_sgd_preserves_margin
+#print axioms Semplex.Closure.OrthogonalReadoutRetention.orth_sgd_preserves_argmax
+#print axioms Semplex.Closure.OrthogonalReadoutRetention.bias_drift_flips_prediction_witness
+
+#print axioms Semplex.Closure.StochasticInterventionalDPI.tvDist_nonneg
+#print axioms Semplex.Closure.StochasticInterventionalDPI.tvDist_symm
+#print axioms Semplex.Closure.StochasticInterventionalDPI.tvDist_self
+#print axioms Semplex.Closure.StochasticInterventionalDPI.tvDist_triangle
+#print axioms Semplex.Closure.StochasticInterventionalDPI.stochastic_channel_tv_dpi
+#print axioms Semplex.Closure.StochasticInterventionalDPI.noisy_hidden_bit_passive_vs_active
+#print axioms Semplex.Closure.StochasticInterventionalDPI.markov_blanket_screened_kernel
+
+#print axioms Semplex.Closure.VariationalDescriptionClosure.unitary_frobNormSq
+#print axioms Semplex.Closure.VariationalDescriptionClosure.unitary_frobNormSq_gauge_invariant
+#print axioms Semplex.Closure.VariationalDescriptionClosure.semidirect_generator_mdl_compression
+#print axioms Semplex.Closure.VariationalDescriptionClosure.amortized_quad_ge_opt
+#print axioms Semplex.Closure.VariationalDescriptionClosure.amortized_quad_eq_iff_zero_gap
+#print axioms Semplex.Closure.VariationalDescriptionClosure.quadEnergy_midpoint_convex
+
+#print axioms Semplex.Closure.MasterPrincipleSynthesis.s3_master_principle_exact_closure
+#print axioms Semplex.Closure.MasterPrincipleSynthesis.a4_master_principle_exact_closure
+#print axioms Semplex.Closure.MasterPrincipleSynthesis.orth_whitened_exact_representation_zero_forgetting
+#print axioms Semplex.Closure.MasterPrincipleSynthesis.active_interventional_strictly_dominates_passive
+#print axioms Semplex.Closure.MasterPrincipleSynthesis.master_principle_mdl_and_dpi_summary

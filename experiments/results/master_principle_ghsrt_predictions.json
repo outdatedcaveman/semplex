@@ -1,0 +1,32 @@
+{
+  "branch": "gemini/master-principle-ghsrt",
+  "base_commit": "7be5346",
+  "pre_registered_hypotheses": {
+    "HGH.1": {
+      "claim": "Homomorphic Unitary U(d) (`cayley_unitary_ufr_grounded`, regularized by 2-step counterfactual composition loss ||U_a U_b - U_{ab}||_F^2) achieves OOD length invariance >= 0.98 bacc across all tested lengths on A4 (L=4,5,6,8) and S3 bouquet (L=3,4,6/loop), beating both FER (`cayley_unitary_fer`) and variable-length linear (`cayley_unitary_varlen_linear`) by >= +0.15 on longest OOD lengths.",
+      "held_criterion": "min(ufr_ood_a4) >= 0.98 and min(ufr_ood_bouquet) >= 0.98 and edge_L8_A4 >= 0.15 and edge_L6_bouquet >= 0.15"
+    },
+    "HGH.2": {
+      "claim": "Test-Time Symmetrization (`K=16` vs `K=1` on GRU baselines) yields >= +0.02 held-out gain, stays > 0.15 below `cayley_unitary_ufr_grounded` at longest OOD lengths, and UFR outperforms FER on Phase-2 forgetting retention (`forgetting_after_keep` edge >= +0.05 on both A4 and S3 bouquet).",
+      "held_criterion": "tts_gain >= 0.02 and ood_ufr_minus_tts16 > 0.15 and forgetting_retention_diff >= 0.05 on both groups"
+    },
+    "HGH.3": {
+      "claim": "JEPA Content-Geometry Tradeoff on dual-timescale monoids (C8_slow3, D4_slow3): SVReg improves geometry (`jag` down, `r_geom` up) relative to Stop-Gradient at the expense of slow factor `r2_slow`; Slow SVReg recovers >= +0.05 `r2_slow` over SVReg while staying smoother than SG; SADL preserves `eff_rank >= 3.0` and `r2_fast >= 0.80`.",
+      "held_criterion": "geom_gain and slow_recovery >= 0.05 and slow_smoother_than_sg and sadl_noncollapse"
+    },
+    "HGH.4": {
+      "claim": "Free-energy operators `G_gm_heat(lam)` and `X_kl_gm(lam)` align with learned JEPA state Gramians (`mean best cos >= 0.60`), with SVReg inducing strictly higher effective inverse-temperature `lam*` than Stop-Gradient (`lam*(svreg) > lam*(sg)`).",
+      "held_criterion": "mean_best_cos >= 0.60 and lam_svreg > lam_sg"
+    },
+    "HGH.5": {
+      "claim": "Exact algebraic laws hold to machine precision: group-algebra Frobenius equations (`< 1e-10` on S3, D4, A4), finite S3 residuated concept-quantale associativity/unit/residuation (`0` violations), exact A4 U(12) length-4/8/16 trace invariance (`< 1e-10`), and neural Cayley unitarity (`< 1e-5`).",
+      "held_criterion": "max_frob < 1e-10 and quantale_violations == 0 and hom_len_err < 1e-10 and max_unitary_err < 1e-5"
+    }
+  },
+  "design": {
+    "arm1_runs": 24,
+    "arm2_runs": 24,
+    "total_runs": 48,
+    "arm1_param_budget": "16000 +- 5% ([15200, 16800])"
+  }
+}
