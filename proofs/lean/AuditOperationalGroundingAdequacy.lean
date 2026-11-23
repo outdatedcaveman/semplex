@@ -1,0 +1,9 @@
+import OperationalGroundingAdequacy
+
+#print axioms Cerp.OperationalGroundingAdequacy.realized_referent_unique
+#print axioms Cerp.OperationalGroundingAdequacy.indistinguishable_external_pair_of_not_separating
+#print axioms Cerp.OperationalGroundingAdequacy.separatesAt_monotone
+#print axioms Cerp.OperationalGroundingAdequacy.hiddenBit_external_reference_unique_at_one
+
+#print axioms Cerp.OperationalGroundingAdequacy.calibration_profile
+#print axioms Cerp.OperationalGroundingAdequacy.externalProfile_injective_iff_separatesAt

@@ -1,0 +1,11 @@
+import ContextualDescentObstruction
+
+#print axioms Cerp.ContextualDescentObstruction.globalSection_induces_compatible
+#print axioms Cerp.ContextualDescentObstruction.globalSection_glues_restrict
+#print axioms Cerp.ContextualDescentObstruction.gluing_implies_compatible
+#print axioms Cerp.ContextualDescentObstruction.glued_section_unique
+#print axioms Cerp.ContextualDescentObstruction.specker_each_context_locally_consistent
+#print axioms Cerp.ContextualDescentObstruction.specker_overlap_marginals_agree
+#print axioms Cerp.ContextualDescentObstruction.specker_triangle_no_global_section
+#print axioms Cerp.ContextualDescentObstruction.specker_no_compatible_valid_family
+#print axioms Cerp.ContextualDescentObstruction.specker_no_global_gluing_for_valid_family

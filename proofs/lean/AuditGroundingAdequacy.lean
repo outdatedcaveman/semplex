@@ -1,0 +1,8 @@
+import GroundingAdequacy
+
+#print axioms Cerp.GroundingAdequacy.profile_eq_of_equivalent
+#print axioms Cerp.GroundingAdequacy.profile_decoder_respects_equivalence
+#print axioms Cerp.GroundingAdequacy.no_exact_referent_decoder
+#print axioms Cerp.GroundingAdequacy.referent_descends_iff_observable
+#print axioms Cerp.GroundingAdequacy.truth_descends_iff_observable
+#print axioms Cerp.GroundingAdequacy.equivalent_iff_profile_eq

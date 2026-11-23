@@ -1,0 +1,4 @@
+name: semplex-cubical
+include: src
+depend:
+flags: --cubical=full

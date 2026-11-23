@@ -1,0 +1,7 @@
+import GroundedModuliFiberExample
+
+#print axioms Cerp.GroundedModuliFiber.groundedProfileEquivalence
+#print axioms Cerp.GroundedModuliFiber.grounded_moduli_fiber_contractible
+#print axioms Cerp.GroundedModuliFiberExample.falseOnlyProbes_not_globally_dense
+#print axioms Cerp.GroundedModuliFiberExample.finite_grounded_moduli_contractible
+#print axioms Cerp.GroundedModuliFiber.profileCompose_is_pointwise
