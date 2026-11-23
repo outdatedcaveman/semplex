@@ -1,0 +1,31 @@
+{
+  "branch": "gemini/master-principle-lie-lyapunov",
+  "base_commit": "7be5346",
+  "pre_registered_hypotheses": {
+    "HLL.1": {
+      "claim": "Exact presentation unitary parameterization (`spectral_presentation_gen` or `lie_presentation_gen`) achieves `homomorphism_err <= 1e-3` on both `A4` and `S3` bouquet AND `>= 0.990` OOD `bacc` through `A4 L=16` and `S3 L=8`, beating soft-regularized `cayley_unitary_ufr_soft` by `>= +0.10` on `A4 L=16`.",
+      "held_criterion": "min(pres_hom_err) <= 1e-3 on both groups and min(pres_bacc_all_lengths) >= 0.990 and (pres_A4_L16 - soft_ufr_A4_L16) >= 0.10"
+    },
+    "HLL.2": {
+      "claim": "On unmodified Phase-2 fine-tuning (`S_ft={2,3}`, `S_keep={0,1}` on `A4`), presentation-grounded `U(d)` beats `cayley_unitary_fer` by `>= +0.20` on `forgetting_after_keep` and also beats `cayley_unitary_ufr_soft`.",
+      "held_criterion": "(pres_A4_keep_after - fer_A4_keep_after) >= 0.20 and pres_A4_keep_after > soft_ufr_A4_keep_after"
+    },
+    "HLL.3": {
+      "claim": "Fixing `D4_slow3` 2-step `jag` to evaluate non-identity fast generators eliminates the `9.9` sentinel (`jag < 3.0`), `jepa_slow_svreg` has strictly lower `jag` than `jepa_sg` on both `C8_slow3` and `D4_slow3`, and recovers `>= +0.50` `r2_slow` over `jepa_svreg` on both worlds.",
+      "held_criterion": "all_d4_jag < 3.0 and slow_svreg_jag < sg_jag on both worlds and (slow_svreg_r2_slow - svreg_r2_slow) >= 0.50 on both worlds"
+    },
+    "HLL.4": {
+      "claim": "Continuous-time shifted Lyapunov balanced Gramian `G_cont_lyap(lam)` achieves `>= 0.80` cosine alignment with `jepa_slow_svreg` on both `C8_slow3` and `D4_slow3` within `<= 0.08` mean cosine gap of `G_gm_heat(lam)` / `X_kl_gm(lam)`, while Clark minimum-norm tangent response matches QR Lyapunov exponents on `N=32` random asymmetric RNNs within `<= 0.02` MAE.",
+      "held_criterion": "min(cont_lyap_cos_slow_svreg) >= 0.80 and abs(mean_cont_minus_heat) <= 0.08 and clark_lyap_mae <= 0.02"
+    },
+    "HLL.5": {
+      "claim": "Exact algebraic & Hoza isolating-weight audits pass: continuous Lyapunov residual `< 1e-12`, balanced trace similarity `< 1e-12`, exact `S3`/`A4` presentation homomorphism `< 1e-13`, Hoza small-seed `isolating_tree_success_rate == 1.0` across 30 random `b1 in {2,3,5}` multigraphs, neural `unitary_max_err < 1e-5`, and 3-object Kan retract counterexample verified.",
+      "held_criterion": "cont_lyap_err < 1e-12 and trace_sim_err < 1e-12 and pres_hom_err < 1e-13 and isolating_rate == 1.0 and max_unitary_err < 1e-5 and kan_retract_verified"
+    }
+  },
+  "design": {
+    "arm1_runs": 27,
+    "arm2_runs": 18,
+    "total_runs": 45
+  }
+}
