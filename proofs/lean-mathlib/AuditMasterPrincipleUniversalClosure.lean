@@ -1,0 +1,14 @@
+import MasterPrincipleUniversalClosure
+
+#print axioms Semplex.MasterPrincipleUniversalClosure.tvDist_nonneg
+#print axioms Semplex.MasterPrincipleUniversalClosure.tvDist_self
+#print axioms Semplex.MasterPrincipleUniversalClosure.tvDist_symm
+#print axioms Semplex.MasterPrincipleUniversalClosure.tvDist_triangle
+#print axioms Semplex.MasterPrincipleUniversalClosure.pushVec_isProbVec
+#print axioms Semplex.MasterPrincipleUniversalClosure.dobrushin_tv_contraction
+#print axioms Semplex.MasterPrincipleUniversalClosure.pushVec_tvDist_step_perturb
+#print axioms Semplex.MasterPrincipleUniversalClosure.dobrushin_one_step_stability
+#print axioms Semplex.MasterPrincipleUniversalClosure.dobrushin_horizon_stability
+#print axioms Semplex.MasterPrincipleUniversalClosure.dobrushin_uniform_ceiling
+#print axioms Semplex.MasterPrincipleUniversalClosure.ae_product_anchor_kernel_inter
+#print axioms Semplex.MasterPrincipleUniversalClosure.master_principle_universal_closure

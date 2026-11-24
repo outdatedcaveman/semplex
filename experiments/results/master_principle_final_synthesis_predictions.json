@@ -1,0 +1,42 @@
+{
+  "suite": "master_principle_final_synthesis",
+  "registered_at": "2026-11-24T18:32:00-03:00",
+  "protocol_note": "Strictly pre-registered thresholds locked before creating or running experiments/master_principle_final_synthesis_probe.py.",
+  "HFS.1": {
+    "description": "Prospective gauge-tube sensitivity (Gamma_mod = |<G, dW>| / |m|) predicting per-channel symmetric int3 (scale = amax/3, clamp [-3, 3]) margin shifts and sign flips across all 7 transformer linear families on borderline near-competitor contrast pairs in SmolLM2-135M-Instruct.",
+    "model": "HuggingFaceTB/SmolLM2-135M-Instruct",
+    "quantization": "per_channel_symmetric_int3",
+    "num_cal": 10,
+    "num_eval": 24,
+    "fp32_eval_acc_min": 0.70,
+    "all_int3_flip_rate_min": 0.15,
+    "spearman_gamma_vs_margin_shift_min": 0.70,
+    "spearman_gamma_vs_flip_min": 0.60,
+    "protection_flip_reduction_min": 1.5
+  },
+  "HFS.2": {
+    "description": "First-principles Dobrushin total-variation contraction on 10 seeded non-Gaussian bimodal finite Markov chains (n in 8..16, T=1..15) under transition perturbations Q.",
+    "num_chains": 10,
+    "state_dim_range": [8, 16],
+    "horizon": 15,
+    "alpha_range": [0.25, 0.80],
+    "delta_range": [0.02, 0.08],
+    "max_violation_le": 1e-12,
+    "max_t15_contraction_vs_linear_ratio_le": 0.45
+  },
+  "HFS.3": {
+    "description": "Exact computational witnesses of ContextualRingDescent: (a) sparse A-B-C heterogeneous ring invariant evolution across all action sequences up to length 5, (b) C4 3-way holonomy descent split (strict / groupoid / obstructed), and (c) internally coalgebra-isomorphic hallucination vs grounded separation.",
+    "sparse_abc_max_seq_len": 5,
+    "sparse_abc_expected_violations": 0,
+    "sparse_abc_direct_ac_adjacent": false,
+    "sparse_abc_connected": true,
+    "holonomy_strict_sections_eq": 1,
+    "holonomy_groupoid_sections_eq": 2,
+    "holonomy_coset0_edge_sections_eq": 2,
+    "holonomy_coset0_global_sections_eq": 0,
+    "holonomy_coset0_min_monodromy_ne": 0,
+    "hallucination_internally_iso": true,
+    "hallucination_grounded": false,
+    "grounded_grounded": true
+  }
+}
