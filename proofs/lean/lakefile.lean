@@ -86,3 +86,5 @@ lean_lib ContextualDescentObstruction where
 lean_lib AuditContextualDescentObstruction where
 lean_lib CrossTheoryConservativity where
 lean_lib AuditCrossTheoryConservativity where
+lean_lib StochasticCausalCovariance where
+lean_lib AuditStochasticCausalCovariance where
