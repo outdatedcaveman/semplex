@@ -1,0 +1,24 @@
+import ObstructionExactSequence
+
+#print axioms Cerp.ObstructionExactSequence.Subgroup.mem_interList_iff
+#print axioms Cerp.ObstructionExactSequence.stabilizer_interList
+#print axioms Cerp.ObstructionExactSequence.cocycle_diag_one
+#print axioms Cerp.ObstructionExactSequence.globalRealization_iff_coboundary
+#print axioms Cerp.ObstructionExactSequence.gluesByGauge_iff_transition_coboundary
+#print axioms Cerp.ObstructionExactSequence.connecting_trivial_iff_lift
+#print axioms Cerp.ObstructionExactSequence.exactness_at_H1_H
+#print axioms Cerp.ObstructionExactSequence.unanchored_triangle_has_two_realizations
+#print axioms Cerp.ObstructionExactSequence.c2InC4_acts_on_realizations
+#print axioms Cerp.ObstructionExactSequence.speckerCoset0Local_valid_edges
+#print axioms Cerp.ObstructionExactSequence.speckerCoset0Local_not_transition_coboundary
+#print axioms Cerp.ObstructionExactSequence.speckerCoset0Local_not_gluesByGauge
+#print axioms Cerp.ObstructionExactSequence.c4_triangle_coset0_anchor_no_global_realization
+#print axioms Cerp.ObstructionExactSequence.speckerC2Cocycle_nontrivial
+#print axioms Cerp.ObstructionExactSequence.speckerCoset1Local_gluesByGauge
+#print axioms Cerp.ObstructionExactSequence.hasMonolith_not_partialAnchorAdequate
+#print axioms Cerp.ObstructionExactSequence.c4_hasMonolith
+#print axioms Cerp.ObstructionExactSequence.c4_not_partialAnchorAdequate
+#print axioms Cerp.ObstructionExactSequence.q8_nonabelian
+#print axioms Cerp.ObstructionExactSequence.q8_hasMonolith
+#print axioms Cerp.ObstructionExactSequence.q8_not_partialAnchorAdequate
+#print axioms Cerp.ObstructionExactSequence.c2cubed_partialAnchorAdequate

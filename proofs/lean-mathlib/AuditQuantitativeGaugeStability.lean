@@ -1,0 +1,19 @@
+import QuantitativeGaugeStability
+
+#print axioms Semplex.QuantitativeGaugeStability.aeGaugeRel_equivalence
+#print axioms Semplex.QuantitativeGaugeStability.ae_null_perturbation_trivial
+#print axioms Semplex.QuantitativeGaugeStability.ae_anchor_kills_isotropy_iff
+#print axioms Semplex.QuantitativeGaugeStability.epsGauge_refl
+#print axioms Semplex.QuantitativeGaugeStability.epsGauge_symm
+#print axioms Semplex.QuantitativeGaugeStability.epsGauge_comp
+#print axioms Semplex.QuantitativeGaugeStability.epsGauge_pow
+#print axioms Semplex.QuantitativeGaugeStability.contraction_horizon_bound
+#print axioms Semplex.QuantitativeGaugeStability.nonexpansive_horizon_bound
+#print axioms Semplex.QuantitativeGaugeStability.gauge_perturbation_invisible
+#print axioms Semplex.QuantitativeGaugeStability.no_flip_within_gauge_tube_pos
+#print axioms Semplex.QuantitativeGaugeStability.no_flip_within_gauge_tube_neg
+#print axioms Semplex.QuantitativeGaugeStability.gauge_escape_lower_bound
+#print axioms Semplex.QuantitativeGaugeStability.eps_orbit_rigidity
+#print axioms Semplex.QuantitativeGaugeStability.variable_jacobian_density_pushforward
+#print axioms Semplex.QuantitativeGaugeStability.exp_jacobian_nonunit
+#print axioms Semplex.QuantitativeGaugeStability.exp_density_change_of_variables

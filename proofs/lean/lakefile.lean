@@ -90,3 +90,5 @@ lean_lib StochasticCausalCovariance where
 lean_lib AuditStochasticCausalCovariance where
 lean_lib CausalCovarianceGroupoidBridge where
 lean_lib AuditCausalCovarianceGroupoidBridge where
+lean_lib ObstructionExactSequence where
+lean_lib AuditObstructionExactSequence where
