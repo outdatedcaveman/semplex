@@ -1,0 +1,25 @@
+import ContextualRingDescent
+
+#print axioms Cerp.ContextualRingDescent.ringEvolve_preserves
+#print axioms Cerp.ContextualRingDescent.ringEvolveList_preserves
+#print axioms Cerp.ContextualRingDescent.sparseABC_hasNonAdjacentPair
+#print axioms Cerp.ContextualRingDescent.sparseABC_connected
+#print axioms Cerp.ContextualRingDescent.sparseABC_baseCoherent
+#print axioms Cerp.ContextualRingDescent.sparseABC_global_evolve_preserves
+#print axioms Cerp.ContextualRingDescent.effective_descent_iff_trivial_holonomy
+#print axioms Cerp.ContextualRingDescent.strict_descent_unique_gluing
+#print axioms Cerp.ContextualRingDescent.groupoid_descent_nontrivial_aut
+#print axioms Cerp.ContextualRingDescent.obstructed_descent_bridge
+#print axioms Cerp.ContextualRingDescent.coherentHallucination_is_globally_coherent
+#print axioms Cerp.ContextualRingDescent.hallucination_fails_grounding
+#print axioms Cerp.ContextualRingDescent.grounded_satisfies_grounding
+#print axioms Cerp.ContextualRingDescent.coCartesian_universal_exists_unique
+#print axioms Cerp.ContextualRingDescent.lift_comp_coherence
+#print axioms Cerp.ContextualRingDescent.reachable_support_covariance
+#print axioms Cerp.ContextualRingDescent.unreachable_mass_violation_still_covariant
+#print axioms Cerp.ContextualRingDescent.totalProfile_transport_commutes
+#print axioms Cerp.ContextualRingDescent.total_anchored_kernel_trivial_iff
+#print axioms Cerp.ContextualRingDescent.total_anchored_kernel_injective_eq_refl
+#print axioms Cerp.ContextualRingDescent.faithful_not_full
+#print axioms Cerp.ContextualRingDescent.faithful_collapses_nonIso_objects
+#print axioms Cerp.ContextualRingDescent.fullFaithful_not_essSurj

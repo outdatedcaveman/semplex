@@ -1,0 +1,218 @@
+{
+  "experiment": "master_principle_final_synthesis_probe",
+  "elapsed_total_sec": 765.0909235477448,
+  "results": {
+    "HFS.1": {
+      "model": "HuggingFaceTB/SmolLM2-135M-Instruct",
+      "quantization": "per_channel_symmetric_int3",
+      "n_cal_pairs": 10,
+      "n_eval_pairs": 24,
+      "cal_fp32_acc": 0.9,
+      "fp32_eval_acc": 0.625,
+      "eval_fp32_mean_abs_margin": 4.11837416390578,
+      "eval_fp32_median_abs_margin": 3.5966680347919464,
+      "gamma_mod": {
+        "q_proj": 32.290870951617265,
+        "k_proj": 39.562387231325474,
+        "v_proj": 64.60191297209057,
+        "o_proj": 44.87229240220382,
+        "gate_proj": 57.606353610432805,
+        "up_proj": 80.1329078282124,
+        "down_proj": 78.44749577873156
+      },
+      "raw_frob": {
+        "q_proj": 225.50739893648202,
+        "k_proj": 135.77463831985955,
+        "v_proj": 128.13193940513597,
+        "o_proj": 202.18985966008592,
+        "gate_proj": 326.24005874161804,
+        "up_proj": 343.4887394954255,
+        "down_proj": 385.047664079762
+      },
+      "gamma_ranked": [
+        "up_proj",
+        "down_proj",
+        "v_proj",
+        "gate_proj",
+        "o_proj",
+        "k_proj",
+        "q_proj"
+      ],
+      "raw_frob_ranked": [
+        "down_proj",
+        "up_proj",
+        "gate_proj",
+        "q_proj",
+        "o_proj",
+        "k_proj",
+        "v_proj"
+      ],
+      "protected_top2_families": [
+        "up_proj",
+        "down_proj"
+      ],
+      "per_family_int3_flip_rates": {
+        "q_proj": 0.041666666666666664,
+        "k_proj": 0.041666666666666664,
+        "v_proj": 0.08333333333333333,
+        "o_proj": 0.041666666666666664,
+        "gate_proj": 0.0,
+        "up_proj": 0.125,
+        "down_proj": 0.16666666666666666
+      },
+      "per_family_int3_mean_abs_margin_shift": {
+        "q_proj": 1.2115091681480408,
+        "k_proj": 0.8355877622961998,
+        "v_proj": 1.7749903053045273,
+        "o_proj": 1.8616067891319592,
+        "gate_proj": 2.9032070289055505,
+        "up_proj": 2.889409139752388,
+        "down_proj": 5.08908926943938
+      },
+      "spearman_gamma_vs_margin_shift": 0.7142857142857144,
+      "spearman_frob_vs_margin_shift": 0.7857142857142859,
+      "spearman_gamma_vs_flip": 0.7041868508280462,
+      "spearman_frob_vs_flip": 0.37062465833055064,
+      "all_int3_flip_rate": 0.3333333333333333,
+      "all_int3_acc": 0.375,
+      "protected_top2_int3_flip_rate": 0.25,
+      "protected_top2_int3_acc": 0.4583333333333333,
+      "protection_flip_reduction": 1.3333333333333333,
+      "rss_mb": 0.0,
+      "elapsed_sec": 764.4460256099701,
+      "verdict": "BROKEN"
+    },
+    "HFS.2": {
+      "num_chains": 10,
+      "horizon": 15,
+      "max_violation": 0.0,
+      "max_t15_contraction_vs_linear_ratio": 0.057802310491665,
+      "chains": [
+        {
+          "seed": 202611,
+          "state_dim": 8,
+          "alpha_max": 0.36202804499115854,
+          "delta_max": 0.03584682819286679,
+          "tv_T15": 0.007611099798403305,
+          "geom_bound_T15": 0.04754221296080045,
+          "lin_bound_T15": 0.9280261655329151,
+          "ratio_T15": 0.05122938848766138
+        },
+        {
+          "seed": 202612,
+          "state_dim": 9,
+          "alpha_max": 0.35628617273936364,
+          "delta_max": 0.041954733179318346,
+          "tv_T15": 0.003901771548786917,
+          "geom_bound_T15": 0.0432181708289809,
+          "lin_bound_T15": 1.1019224758235484,
+          "ratio_T15": 0.0392206999831642
+        },
+        {
+          "seed": 202613,
+          "state_dim": 10,
+          "alpha_max": 0.3376451559957312,
+          "delta_max": 0.03479401429801073,
+          "tv_T15": 0.006986732647805312,
+          "geom_bound_T15": 0.03973388888112467,
+          "lin_bound_T15": 1.0687565657429283,
+          "ratio_T15": 0.03717767932822412
+        },
+        {
+          "seed": 202614,
+          "state_dim": 11,
+          "alpha_max": 0.328453690302056,
+          "delta_max": 0.03800006150374102,
+          "tv_T15": 0.004119029137679316,
+          "geom_bound_T15": 0.04469746364156242,
+          "lin_bound_T15": 0.8614537411194132,
+          "ratio_T15": 0.051886086864606856
+        },
+        {
+          "seed": 202615,
+          "state_dim": 12,
+          "alpha_max": 0.3328153816974546,
+          "delta_max": 0.038097636888461635,
+          "tv_T15": 0.0060820971613872975,
+          "geom_bound_T15": 0.037908419208332725,
+          "lin_bound_T15": 1.1755347733324055,
+          "ratio_T15": 0.03224780760918705
+        },
+        {
+          "seed": 202616,
+          "state_dim": 13,
+          "alpha_max": 0.3418014542491553,
+          "delta_max": 0.03773987882695087,
+          "tv_T15": 0.007011052223311165,
+          "geom_bound_T15": 0.048551065330702456,
+          "lin_bound_T15": 0.8399502531599223,
+          "ratio_T15": 0.057802310491665
+        },
+        {
+          "seed": 202617,
+          "state_dim": 14,
+          "alpha_max": 0.3741282553869645,
+          "delta_max": 0.03369201202858991,
+          "tv_T15": 0.008829700649171983,
+          "geom_bound_T15": 0.05001938590706938,
+          "lin_bound_T15": 1.1831989087807162,
+          "ratio_T15": 0.04227470591450616
+        },
+        {
+          "seed": 202618,
+          "state_dim": 15,
+          "alpha_max": 0.371778216885042,
+          "delta_max": 0.03169921198943008,
+          "tv_T15": 0.006994395272803749,
+          "geom_bound_T15": 0.041522675633607606,
+          "lin_bound_T15": 1.0340040927194556,
+          "ratio_T15": 0.04015716758373941
+        },
+        {
+          "seed": 202619,
+          "state_dim": 16,
+          "alpha_max": 0.34818512097638016,
+          "delta_max": 0.03730657505216611,
+          "tv_T15": 0.0064452752586702106,
+          "geom_bound_T15": 0.03909967401558946,
+          "lin_bound_T15": 0.9550212063492378,
+          "ratio_T15": 0.04094115790900172
+        },
+        {
+          "seed": 202620,
+          "state_dim": 8,
+          "alpha_max": 0.36164674480677306,
+          "delta_max": 0.031183259402053264,
+          "tv_T15": 0.01248271496370136,
+          "geom_bound_T15": 0.041066662335068234,
+          "lin_bound_T15": 1.047366031944572,
+          "ratio_T15": 0.03920946553787181
+        }
+      ],
+      "elapsed_sec": 0.36528754234313965,
+      "verdict": "HELD"
+    },
+    "HFS.3": {
+      "sparse_abc_sequences_checked": 126,
+      "sparse_abc_violations": 0,
+      "sparse_abc_direct_ac_adjacent": false,
+      "sparse_abc_connected": true,
+      "holonomy_strict_sections": 1,
+      "holonomy_groupoid_sections": 2,
+      "holonomy_groupoid_aut_closed": true,
+      "holonomy_coset0_edge_sections": 2,
+      "holonomy_coset0_global_sections": 0,
+      "holonomy_coset0_min_monodromy": 2,
+      "hallucination_internally_iso": true,
+      "hallucination_grounded": false,
+      "grounded_grounded": true,
+      "elapsed_sec": 0.00041866302490234375,
+      "verdict": "HELD"
+    }
+  },
+  "summary": {
+    "HFS.1": "BROKEN",
+    "HFS.2": "HELD",
+    "HFS.3": "HELD"
+  }
+}

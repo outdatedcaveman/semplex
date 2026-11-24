@@ -92,3 +92,5 @@ lean_lib CausalCovarianceGroupoidBridge where
 lean_lib AuditCausalCovarianceGroupoidBridge where
 lean_lib ObstructionExactSequence where
 lean_lib AuditObstructionExactSequence where
+lean_lib ContextualRingDescent where
+lean_lib AuditContextualRingDescent where

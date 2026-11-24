@@ -1,6 +1,6 @@
 name = "CerpMathlib"
 version = "0.1.0"
-defaultTargets = ["CerpMathlib", "MasterPrinciple", "MasterPrincipleMech", "MasterPrincipleWindow", "MasterPrincipleHankel", "MasterPrincipleVariational", "MasterPrincipleGauge", "MasterPrincipleFreeEnergy", "MasterPrincipleBouquet", "MasterPrincipleGHSRT", "MasterPrincipleLieLyapunov", "MasterPrincipleClosure", "MasterPrincipleA5ERMoE", "MasterPrincipleFinalClosure", "MasterPrincipleSemigroup", "MasterPrincipleGrandClosure", "ContinuumKernelCovariance", "QuantitativeGaugeStability"]
+defaultTargets = ["CerpMathlib", "MasterPrinciple", "MasterPrincipleMech", "MasterPrincipleWindow", "MasterPrincipleHankel", "MasterPrincipleVariational", "MasterPrincipleGauge", "MasterPrincipleFreeEnergy", "MasterPrincipleBouquet", "MasterPrincipleGHSRT", "MasterPrincipleLieLyapunov", "MasterPrincipleClosure", "MasterPrincipleA5ERMoE", "MasterPrincipleFinalClosure", "MasterPrincipleSemigroup", "MasterPrincipleGrandClosure", "ContinuumKernelCovariance", "QuantitativeGaugeStability", "MasterPrincipleUniversalClosure"]
 
 [[require]]
 name = "mathlib"
@@ -66,3 +66,9 @@ name = "QuantitativeGaugeStability"
 
 [[lean_lib]]
 name = "AuditQuantitativeGaugeStability"
+
+[[lean_lib]]
+name = "MasterPrincipleUniversalClosure"
+
+[[lean_lib]]
+name = "AuditMasterPrincipleUniversalClosure"
