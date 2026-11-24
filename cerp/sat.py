@@ -203,18 +203,21 @@ def prove_equivalence(claim, time_limit=60.0):
 
 
 def rup_to_lrat(clauses, lemmas):
-    """Convert a RUP proof (list of clauses) into hint-indexed LRAT steps [(clause, [cid, ...]), ...]."""
+    """Convert a RUP proof (list of clauses) into cone-of-influence trimmed LRAT steps [(clause, [cid, ...]), ...]."""
+    base_len = len(clauses)
     db = [list(c) for c in clauses]
-    lrat = []
+    raw_lrat = []
     for C in lemmas:
         # `false_lits` are literals falsified by the current trail.
         # Initial trail is [-l for l in C], which falsifies every l in C.
-        false_lits = set(C)
-        hints = []
+        c_set = set(C)
+        false_lits = set(c_set)
+        prop_records = []
+        conflict_cid = None
         while True:
-            conflict_cid = None
             unit_cid = None
             unit_lit = None
+            unit_clause = None
             for cid, cl in enumerate(db):
                 rem = [l for l in cl if l not in false_lits]
                 if not rem:
@@ -226,18 +229,54 @@ def rup_to_lrat(clauses, lemmas):
                     if (-u) not in false_lits:
                         unit_cid = cid
                         unit_lit = u
+                        unit_clause = cl
             if conflict_cid is not None:
-                hints.append(conflict_cid)
                 break
             if unit_cid is None:
                 raise ValueError(f"RUP lemma {C} failed unit propagation during LRAT conversion")
-            hints.append(unit_cid)
+            prop_records.append((unit_cid, unit_lit, unit_clause))
             false_lits.add(-unit_lit)
-        lrat.append((list(C), hints))
+
+        # Backward cone-of-influence trimming of unit-propagation hints (preserving forward order).
+        needed_false = set(db[conflict_cid]) - c_set
+        kept_rev = []
+        for cid, u, cl in reversed(prop_records):
+            if (-u) in needed_false:
+                needed_false.remove(-u)
+                kept_rev.append(cid)
+                for lit in cl:
+                    if lit != u and lit not in c_set:
+                        needed_false.add(lit)
+        hints = kept_rev[::-1] + [conflict_cid]
+
+        raw_lrat.append((list(C), hints))
         db.append(list(C))
         if not C:
             break
-    return lrat
+
+    if not raw_lrat or raw_lrat[-1][0]:
+        return raw_lrat
+
+    # Backward cone-of-influence pruning of unused intermediate lemmas.
+    k = len(raw_lrat)
+    used = [False] * k
+    used[-1] = True
+    needed_cids = set(raw_lrat[-1][1])
+    for idx in range(k - 2, -1, -1):
+        if (base_len + idx) in needed_cids:
+            used[idx] = True
+            needed_cids.update(raw_lrat[idx][1])
+    remap = {}
+    nxt_cid = base_len
+    for idx, flag in enumerate(used):
+        if flag:
+            remap[base_len + idx] = nxt_cid
+            nxt_cid += 1
+    return [
+        (c, [h if h < base_len else remap[h] for h in hs])
+        for idx, (c, hs) in enumerate(raw_lrat)
+        if used[idx]
+    ]
 
 
 def _lean_tseitin_encode(body, var_idx, nxt):
@@ -325,6 +364,130 @@ def _pb_to_expr_indexed(ins, ws, t):
     )
 
 
+def _pb_bounds(ins, ws):
+    """Mirror Lean `Cerp.pbBounds` sum range `[min_sum, max_sum]`."""
+    lo, hi = 0, 0
+    for _, w in zip(ins, ws):
+        lo += min(w, 0)
+        hi += max(w, 0)
+    return lo, hi
+
+
+def _add_bound(lo, hi, u, acc):
+    if lo < u <= hi and u not in acc:
+        return [u] + acc
+    return acc
+
+
+def _next_layer_ts(lo, hi, w, ts):
+    acc = []
+    for u in ts:
+        acc = _add_bound(lo, hi, u - w, acc)
+        acc = _add_bound(lo, hi, u, acc)
+    return acc
+
+
+def _mk_sym_ite(c_lit, th, el, nxt):
+    if th[0] == "const" and el[0] == "const":
+        if th[1] and el[1]:
+            return ("const", True), [], nxt
+        if not th[1] and not el[1]:
+            return ("const", False), [], nxt
+        if th[1] and not el[1]:
+            return ("lit", c_lit), [], nxt
+        return ("lit", -c_lit), [], nxt
+    if th[0] == "const" and el[0] == "lit":
+        e = el[1]
+        if th[1]:
+            return ("lit", nxt), [[nxt, -c_lit], [nxt, -e], [-nxt, c_lit, e]], nxt + 1
+        return ("lit", nxt), [[-nxt, -c_lit], [-nxt, e], [nxt, c_lit, -e]], nxt + 1
+    if th[0] == "lit" and el[0] == "const":
+        t = th[1]
+        if el[1]:
+            return ("lit", nxt), [[nxt, c_lit], [nxt, -t], [-nxt, -c_lit, t]], nxt + 1
+        return ("lit", nxt), [[-nxt, c_lit], [-nxt, t], [nxt, -c_lit, -t]], nxt + 1
+    t, e = th[1], el[1]
+    if t == e:
+        return ("lit", t), [], nxt
+    return ("lit", nxt), [[-c_lit, -nxt, t], [-c_lit, nxt, -t], [c_lit, -nxt, e], [c_lit, nxt, -e]], nxt + 1
+
+
+def _lookup_sym(lo, hi, m, u):
+    if u <= lo:
+        return ("const", True)
+    if hi < u:
+        return ("const", False)
+    for k, s in m:
+        if k == u:
+            return s
+    return ("const", False)
+
+
+def _build_layer(c_lit, s_lo, s_hi, w, sub_map, ts, nxt):
+    my_map = []
+    clauses = []
+    cur = nxt
+    for u in ts:
+        th = _lookup_sym(s_lo, s_hi, sub_map, u - w)
+        el = _lookup_sym(s_lo, s_hi, sub_map, u)
+        s, c1, cur = _mk_sym_ite(c_lit, th, el, cur)
+        my_map.append((u, s))
+        clauses.extend(c1)
+    return my_map, clauses, cur
+
+
+def _pb_encode_layer(ins, ws, ts, nxt):
+    if not ins or not ws:
+        return [], [], nxt
+    i, is_ = ins[0], ins[1:]
+    w, ws_ = ws[0], ws[1:]
+    s_lo, s_hi = _pb_bounds(is_, ws_)
+    ts_next = _next_layer_ts(s_lo, s_hi, w, ts)
+    sub_map, sub_cnf, n1 = _pb_encode_layer(is_, ws_, ts_next, nxt)
+    my_map, my_cnf, n2 = _build_layer(i + 1, s_lo, s_hi, w, sub_map, ts, n1)
+    return my_map, sub_cnf + my_cnf, n2
+
+
+def _pb_encode_sym(ins, ws, t, nxt):
+    lo, hi = _pb_bounds(ins, ws)
+    if t <= lo:
+        return ("const", True), [], nxt
+    if hi < t:
+        return ("const", False), [], nxt
+    m, cnf, n1 = _pb_encode_layer(ins, ws, [t], nxt)
+    return _lookup_sym(lo, hi, m, t), cnf, n1
+
+
+def _wire_eq_sym(w, s):
+    if s[0] == "const":
+        return [[w]] if s[1] else [[-w]]
+    o = s[1]
+    return [[-w, o], [w, -o]]
+
+
+def _lean_tnet_miter_pb(vars_list, tns, ref_body):
+    """Produce the exact CNF emitted by Lean's `Cerp.tseitinTNetMiterPB`."""
+    n = len(vars_list)
+    m = len(tns)
+    nxt = n + m + 1
+    c_net = []
+    o_net = 0
+    for k, nd in enumerate(tns):
+        s, c, nxt = _pb_encode_sym(nd["ins"], nd["ws"], nd["t"], nxt)
+        w = n + k + 1
+        c_net.extend(c)
+        c_net.extend(_wire_eq_sym(w, s))
+        o_net = w
+    var_idx = {v: i for i, v in enumerate(vars_list)}
+    o_spec, c_spec, nxt2 = _lean_tseitin_encode(ref_body, var_idx, nxt)
+    clauses = (
+        c_net
+        + c_spec
+        + [[-nxt2, -o_net, -o_spec], [-nxt2, o_net, o_spec], [nxt2, -o_net, o_spec], [nxt2, o_net, -o_spec], [nxt2]]
+    )
+    return nxt2, clauses
+
+
 def _lean_tnet_miter(vars_list, tns, ref_body):
     """Produce the exact CNF emitted by Lean's `Cerp.tseitinTNetMiter`."""
     n = len(vars_list)
@@ -350,10 +513,11 @@ def _lean_tnet_miter(vars_list, tns, ref_body):
     return nxt2, clauses
 
 
-def prove_tnet_equivalence_lrat(net, ref_expr, vars_list, time_limit=60.0):
-    """Untrusted SAT search returning hint-indexed LRAT proof matching `Cerp.tseitinTNetMiter`."""
+def prove_tnet_equivalence_lrat(net, ref_expr, vars_list, time_limit=60.0, pb=True):
+    """Untrusted SAT search returning hint-indexed LRAT proof matching `Cerp.tseitinTNetMiterPB` (or `tseitinTNetMiter` when `pb=False`)."""
     tns = _tnet_to_indexed_nodes(net, vars_list)
-    n_vars, clauses = _lean_tnet_miter(vars_list, tns, ref_expr["body"])
+    miter_fn = _lean_tnet_miter_pb if pb else _lean_tnet_miter
+    n_vars, clauses = miter_fn(vars_list, tns, ref_expr["body"])
     s = Solver(n_vars, clauses)
     r = s.solve(time_limit)
     if r is None:

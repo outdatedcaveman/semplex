@@ -1579,4 +1579,1226 @@ theorem ville_anytime_valid_bound (K M d : Nat) (t : ProbTree) (s : StopPolicy)
 
 end SemiosisAndVille
 
+/-! ## §20 Equivariance of mechanism choice (Theorem 15, gap C1 / P069)
+
+Mechanizes the four steps of `THEORY.md` §3.7 Theorem 15 in Lean 4 core
+(no Mathlib):
+1. Concrete group `SignedPerm n` of coordinate permutations and sign flips
+   acting linearly on parameter vectors `Fin n → S`, with first moments `m`
+   signed-permuted and second moments `v` strictly permuted.
+2. Concrete loss-induced central-difference gradient `fdGrad` proving
+   gradient equivariance directly from loss invariance `L (σ • θ) = L θ`.
+3. Concrete equivariance proofs for `gdStep` and full `adamwStep` (elementwise
+   first/second moments using `g * g` evenness, bias corrections, elementwise
+   normalization `m̂ / (sqrt(v̂) + eps)`, and decoupled weight decay).
+4. Deterministic trajectory equivariance (`theorem15_trajectory_equivariant`,
+   for both GD and time-varying AdamW schedules) and finite weighted ensemble
+   distribution invariance (`theorem15_finite_distribution_invariant`, lemma
+   toward Theorem 15; continuous Gaussian measure requires Mathlib). -/
+section Theorem15
+
+/-- Scalar arithmetic interface for parameter vectors, losses, and AdamW updates. -/
+structure AdamScalar (S : Type _) where
+  zero : S
+  add : S → S → S
+  sub : S → S → S
+  mul : S → S → S
+  neg : S → S
+  div : S → S → S
+  sqrt : S → S
+  neg_neg : ∀ a, neg (neg a) = a
+  add_neg : ∀ a b, add (neg a) (neg b) = neg (add a b)
+  sub_neg : ∀ a b, sub (neg a) (neg b) = neg (sub a b)
+  neg_add : ∀ a b, neg (add a b) = sub (neg a) b
+  neg_sub : ∀ a b, neg (sub a b) = add (neg a) b
+  sub_swap_neg : ∀ a b, neg (sub a b) = sub b a
+  mul_neg_right : ∀ a b, mul a (neg b) = neg (mul a b)
+  neg_mul_neg : ∀ a b, mul (neg a) (neg b) = mul a b
+  div_neg_left : ∀ a b, div (neg a) b = neg (div a b)
+
+/-- Sign-preserving truncated division on `Int` (`symIntDiv (-a) b = - symIntDiv a b`). -/
+def symIntDiv (a b : Int) : Int :=
+  if a = 0 then 0
+  else if (0 ≤ a) = (0 ≤ b) then Int.ofNat (a.natAbs / b.natAbs)
+  else -Int.ofNat (a.natAbs / b.natAbs)
+
+theorem symIntDiv_neg_left (a b : Int) : symIntDiv (-a) b = -symIntDiv a b := by
+  by_cases ha : a = 0
+  · subst ha
+    simp [symIntDiv]
+  · have hna : -a ≠ 0 := by omega
+    by_cases hpos : 0 ≤ a <;> by_cases hb : 0 ≤ b
+    · have hnpos : ¬ (0 ≤ -a) := by omega
+      simp [symIntDiv, ha, hna, hpos, hnpos, hb, Int.natAbs_neg]
+    · have hnpos : ¬ (0 ≤ -a) := by omega
+      simp [symIntDiv, ha, hna, hpos, hnpos, hb, Int.natAbs_neg]
+    · have hnpos : 0 ≤ -a := by omega
+      simp [symIntDiv, ha, hna, hpos, hnpos, hb, Int.natAbs_neg]
+    · have hnpos : 0 ≤ -a := by omega
+      simp [symIntDiv, ha, hna, hpos, hnpos, hb, Int.natAbs_neg]
+
+private def natSqrtLoop (n : Nat) : Nat → Nat → Nat
+  | 0, lo => lo
+  | fuel + 1, lo =>
+      if (lo + 1) * (lo + 1) ≤ n then natSqrtLoop n fuel (lo + 1) else lo
+
+/-- Concrete fixed-point `Int` instance of `AdamScalar` with all algebraic laws proved in Lean core. -/
+def intFixedScalar : AdamScalar Int where
+  zero := 0
+  add := Int.add
+  sub := Int.sub
+  mul := Int.mul
+  neg := Int.neg
+  div := symIntDiv
+  sqrt := fun x => Int.ofNat (natSqrtLoop x.natAbs x.natAbs 0)
+  neg_neg := fun a => by show -(-a) = a; omega
+  add_neg := fun a b => by show (-a) + (-b) = -(a + b); omega
+  sub_neg := fun a b => by show (-a) - (-b) = -(a - b); omega
+  neg_add := fun a b => by show -(a + b) = (-a) - b; omega
+  neg_sub := fun a b => by show -(a - b) = (-a) + b; omega
+  sub_swap_neg := fun a b => by show -(a - b) = b - a; omega
+  mul_neg_right := Int.mul_neg
+  neg_mul_neg := Int.neg_mul_neg
+  div_neg_left := symIntDiv_neg_left
+
+/-- Apply a Boolean sign flip (`true` negates, `false` preserves). -/
+def signedVal {S : Type _} (F : AdamScalar S) (flip : Bool) (x : S) : S :=
+  if flip then F.neg x else x
+
+private theorem signedVal_invol {S : Type _} (F : AdamScalar S) (fl : Bool) (x : S) :
+    signedVal F fl (signedVal F fl x) = x := by
+  cases fl <;> simp [signedVal, F.neg_neg]
+
+private theorem signedVal_add {S : Type _} (F : AdamScalar S) (fl : Bool) (a b : S) :
+    F.add (signedVal F fl a) (signedVal F fl b) = signedVal F fl (F.add a b) := by
+  cases fl
+  · rfl
+  · simp [signedVal, F.add_neg]
+
+private theorem signedVal_sub {S : Type _} (F : AdamScalar S) (fl : Bool) (a b : S) :
+    F.sub (signedVal F fl a) (signedVal F fl b) = signedVal F fl (F.sub a b) := by
+  cases fl
+  · rfl
+  · simp [signedVal, F.sub_neg]
+
+private theorem signedVal_mul_scalar {S : Type _} (F : AdamScalar S) (fl : Bool) (c x : S) :
+    F.mul c (signedVal F fl x) = signedVal F fl (F.mul c x) := by
+  cases fl
+  · rfl
+  · simp [signedVal, F.mul_neg_right]
+
+private theorem signedVal_div_denom {S : Type _} (F : AdamScalar S) (fl : Bool) (a b : S) :
+    F.div (signedVal F fl a) b = signedVal F fl (F.div a b) := by
+  cases fl
+  · rfl
+  · simp [signedVal, F.div_neg_left]
+
+private theorem signedVal_sq_invariant {S : Type _} (F : AdamScalar S) (fl : Bool) (x : S) :
+    F.mul (signedVal F fl x) (signedVal F fl x) = F.mul x x := by
+  cases fl
+  · rfl
+  · simp [signedVal, F.neg_mul_neg]
+
+/-- Concrete signed-permutation group element on `n` parameter coordinates.
+    Covers input column permutations and negations on `W1`, and output negations `(W2, b2)`. -/
+structure SignedPerm (n : Nat) where
+  toFun : Fin n → Fin n
+  invFun : Fin n → Fin n
+  left_inv : ∀ i, invFun (toFun i) = i
+  right_inv : ∀ i, toFun (invFun i) = i
+  sgn : Fin n → Bool
+
+def SignedPerm.id (n : Nat) : SignedPerm n where
+  toFun := fun i => i
+  invFun := fun i => i
+  left_inv := fun _ => rfl
+  right_inv := fun _ => rfl
+  sgn := fun _ => false
+
+def SignedPerm.inv {n : Nat} (σ : SignedPerm n) : SignedPerm n where
+  toFun := σ.invFun
+  invFun := σ.toFun
+  left_inv := σ.right_inv
+  right_inv := σ.left_inv
+  sgn := fun i => σ.sgn (σ.toFun i)
+
+def SignedPerm.comp {n : Nat} (σ τ : SignedPerm n) : SignedPerm n where
+  toFun := fun i => σ.toFun (τ.toFun i)
+  invFun := fun i => τ.invFun (σ.invFun i)
+  left_inv := fun i => by simp [σ.left_inv, τ.left_inv]
+  right_inv := fun i => by simp [σ.right_inv, τ.right_inv]
+  sgn := fun i => Bool.xor (σ.sgn i) (τ.sgn (σ.invFun i))
+
+/-- Linear signed-permutation action on parameter/gradient/first-moment vectors. -/
+def actVec {S : Type _} (F : AdamScalar S) {n : Nat} (σ : SignedPerm n)
+    (v : Fin n → S) : Fin n → S :=
+  fun i => signedVal F (σ.sgn i) (v (σ.invFun i))
+
+/-- Pure coordinate permutation action on non-negative second-moment vectors `v`. -/
+def permVec {S : Type _} {n : Nat} (σ : SignedPerm n) (v : Fin n → S) : Fin n → S :=
+  fun i => v (σ.invFun i)
+
+theorem actVec_id {S : Type _} (F : AdamScalar S) {n : Nat} (v : Fin n → S) :
+    actVec F (SignedPerm.id n) v = v := by
+  funext i
+  rfl
+
+theorem actVec_left_inv {S : Type _} (F : AdamScalar S) {n : Nat} (σ : SignedPerm n)
+    (v : Fin n → S) :
+    actVec F (SignedPerm.inv σ) (actVec F σ v) = v := by
+  funext i
+  simp only [actVec, SignedPerm.inv, σ.right_inv, σ.left_inv]
+  exact signedVal_invol F (σ.sgn (σ.toFun i)) (v i)
+
+theorem actVec_right_inv {S : Type _} (F : AdamScalar S) {n : Nat} (σ : SignedPerm n)
+    (v : Fin n → S) :
+    actVec F σ (actVec F (SignedPerm.inv σ) v) = v := by
+  funext i
+  simp only [actVec, SignedPerm.inv, σ.left_inv, σ.right_inv]
+  exact signedVal_invol F (σ.sgn i) (v i)
+
+theorem permVec_left_inv {S : Type _} {n : Nat} (σ : SignedPerm n) (v : Fin n → S) :
+    permVec (SignedPerm.inv σ) (permVec σ v) = v := by
+  funext i
+  simp only [permVec, SignedPerm.inv]
+  rw [σ.left_inv]
+
+theorem permVec_right_inv {S : Type _} {n : Nat} (σ : SignedPerm n) (v : Fin n → S) :
+    permVec σ (permVec (SignedPerm.inv σ) v) = v := by
+  funext i
+  simp only [permVec, SignedPerm.inv]
+  rw [σ.right_inv]
+
+private theorem signedVal_xor {S : Type _} (F : AdamScalar S) (a b : Bool) (x : S) :
+    signedVal F a (signedVal F b x) = signedVal F (Bool.xor a b) x := by
+  cases a <;> cases b <;> simp [signedVal, F.neg_neg]
+
+theorem actVec_comp {S : Type _} (F : AdamScalar S) {n : Nat} (σ τ : SignedPerm n)
+    (v : Fin n → S) :
+    actVec F (SignedPerm.comp σ τ) v = actVec F σ (actVec F τ v) := by
+  funext i
+  simp only [actVec, SignedPerm.comp]
+  exact (signedVal_xor F (σ.sgn i) (τ.sgn (σ.invFun i)) (v (τ.invFun (σ.invFun i)))).symm
+
+/-- Replace a single coordinate `j` of parameter vector `θ`. -/
+def updateCoord {S : Type _} {n : Nat} (θ : Fin n → S) (j : Fin n) (val : S) : Fin n → S :=
+  fun i => if i = j then val else θ i
+
+private theorem actVec_updateCoord {S : Type _} (F : AdamScalar S) {n : Nat}
+    (σ : SignedPerm n) (θ : Fin n → S) (j : Fin n) (val : S) :
+    actVec F σ (updateCoord θ j val) =
+    updateCoord (actVec F σ θ) (σ.toFun j) (signedVal F (σ.sgn (σ.toFun j)) val) := by
+  funext i
+  by_cases hi : i = σ.toFun j
+  · subst hi
+    simp [actVec, updateCoord, σ.left_inv]
+  · have hinv_ne : σ.invFun i ≠ j := by
+      intro heq
+      apply hi
+      calc
+        i = σ.toFun (σ.invFun i) := (σ.right_inv i).symm
+        _ = σ.toFun j := congrArg σ.toFun heq
+    simp [actVec, updateCoord, hi, hinv_ne]
+
+/-- Concrete central-difference gradient induced by a scalar loss `L : (Fin n → S) → S`. -/
+def fdGrad {S : Type _} (F : AdamScalar S) {n : Nat}
+    (L : (Fin n → S) → S) (stepScale h : S) (θ : Fin n → S) : Fin n → S :=
+  fun j =>
+    F.mul stepScale
+      (F.sub (L (updateCoord θ j (F.add (θ j) h))) (L (updateCoord θ j (F.sub (θ j) h))))
+
+/-- Loss invariance under `σ` implies gradient equivariance of `fdGrad` concretely
+    (Step 2 of Theorem 15, derived rather than assumed). -/
+theorem fdGrad_equivariant {S : Type _} (F : AdamScalar S) {n : Nat}
+    (σ : SignedPerm n) (L : (Fin n → S) → S) (stepScale h : S)
+    (hL_inv : ∀ θ, L (actVec F σ θ) = L θ) :
+    ∀ θ, fdGrad F L stepScale h (actVec F σ θ) = actVec F σ (fdGrad F L stepScale h θ) := by
+  intro θ
+  funext k
+  let j := σ.invFun k
+  have hkj : σ.toFun j = k := σ.right_inv k
+  cases hfl : σ.sgn k
+  · have hval : actVec F σ θ k = θ j := by simp [actVec, signedVal, hfl, j]
+    have hp : updateCoord (actVec F σ θ) k (F.add (actVec F σ θ k) h) =
+        actVec F σ (updateCoord θ j (F.add (θ j) h)) := by
+      rw [actVec_updateCoord F σ θ j (F.add (θ j) h), hkj]
+      simp [signedVal, hfl, hval]
+    have hm : updateCoord (actVec F σ θ) k (F.sub (actVec F σ θ k) h) =
+        actVec F σ (updateCoord θ j (F.sub (θ j) h)) := by
+      rw [actVec_updateCoord F σ θ j (F.sub (θ j) h), hkj]
+      simp [signedVal, hfl, hval]
+    simp only [fdGrad]
+    rw [hp, hm, hL_inv, hL_inv]
+    simp only [actVec, hfl, signedVal, if_false]
+    rfl
+  · have hval : actVec F σ θ k = F.neg (θ j) := by simp [actVec, signedVal, hfl, j]
+    have hp : updateCoord (actVec F σ θ) k (F.add (actVec F σ θ k) h) =
+        actVec F σ (updateCoord θ j (F.sub (θ j) h)) := by
+      rw [actVec_updateCoord F σ θ j (F.sub (θ j) h), hkj]
+      simp [signedVal, hfl, hval, F.neg_sub]
+    have hm : updateCoord (actVec F σ θ) k (F.sub (actVec F σ θ k) h) =
+        actVec F σ (updateCoord θ j (F.add (θ j) h)) := by
+      rw [actVec_updateCoord F σ θ j (F.add (θ j) h), hkj]
+      simp [signedVal, hfl, hval, F.neg_add]
+    simp only [fdGrad]
+    rw [hp, hm, hL_inv, hL_inv]
+    simp only [actVec, hfl, signedVal, if_true]
+    change F.mul stepScale (F.sub _ _) = F.neg (F.mul stepScale (F.sub _ _))
+    rw [← F.sub_swap_neg, F.mul_neg_right]
+
+/-- Concrete full-batch gradient descent step on `Fin n → S`. -/
+def gdStep {S : Type _} (F : AdamScalar S) {n : Nat}
+    (grad : (Fin n → S) → Fin n → S) (lr : S) (θ : Fin n → S) : Fin n → S :=
+  fun i => F.sub (θ i) (F.mul lr (grad θ i))
+
+theorem gdStep_equivariant_of_grad {S : Type _} (F : AdamScalar S) {n : Nat}
+    (σ : SignedPerm n) (grad : (Fin n → S) → Fin n → S) (lr : S)
+    (hgrad : ∀ θ, grad (actVec F σ θ) = actVec F σ (grad θ)) :
+    ∀ θ, gdStep F grad lr (actVec F σ θ) = actVec F σ (gdStep F grad lr θ) := by
+  intro θ
+  funext i
+  simp only [gdStep, hgrad θ, actVec]
+  rw [signedVal_mul_scalar, signedVal_sub]
+
+/-- Concrete GD step commutes with `σ` for any `σ`-invariant loss `L`. -/
+theorem gdStep_equivariant {S : Type _} (F : AdamScalar S) {n : Nat}
+    (σ : SignedPerm n) (L : (Fin n → S) → S) (stepScale h lr : S)
+    (hL_inv : ∀ θ, L (actVec F σ θ) = L θ) :
+    ∀ θ, gdStep F (fdGrad F L stepScale h) lr (actVec F σ θ) =
+         actVec F σ (gdStep F (fdGrad F L stepScale h) lr θ) :=
+  gdStep_equivariant_of_grad F σ _ lr (fdGrad_equivariant F σ L stepScale h hL_inv)
+
+/-- AdamW hyperparameters / per-step scalars (moments, bias corrections, eps, decoupled decay). -/
+structure AdamWCfg (S : Type _) where
+  b1 : S
+  oneSubB1 : S
+  b2 : S
+  oneSubB2 : S
+  invOneSubB1t : S
+  invOneSubB2t : S
+  lr : S
+  eps : S
+  oneSubLrWd : S
+
+/-- Optimizer state `(θ, m, v)` for AdamW on `Fin n → S`. -/
+structure AdamWState (n : Nat) (S : Type _) where
+  θ : Fin n → S
+  m : Fin n → S
+  v : Fin n → S
+
+/-- Group action on AdamW state: permute and sign-flip `(θ, m)`, strictly permute `v`. -/
+def actAdamWState {S : Type _} (F : AdamScalar S) {n : Nat}
+    (σ : SignedPerm n) (s : AdamWState n S) : AdamWState n S where
+  θ := actVec F σ s.θ
+  m := actVec F σ s.m
+  v := permVec σ s.v
+
+theorem actAdamWState_left_inv {S : Type _} (F : AdamScalar S) {n : Nat}
+    (σ : SignedPerm n) (s : AdamWState n S) :
+    actAdamWState F (SignedPerm.inv σ) (actAdamWState F σ s) = s := by
+  cases s with
+  | mk θ m v =>
+      simp only [actAdamWState, actVec_left_inv, permVec_left_inv]
+
+theorem actAdamWState_right_inv {S : Type _} (F : AdamScalar S) {n : Nat}
+    (σ : SignedPerm n) (s : AdamWState n S) :
+    actAdamWState F σ (actAdamWState F (SignedPerm.inv σ) s) = s := by
+  cases s with
+  | mk θ m v =>
+      simp only [actAdamWState, actVec_right_inv, permVec_right_inv]
+
+/-- Concrete AdamW update with elementwise 1st & 2nd moments, sqrt normalization, and decoupled weight decay. -/
+def adamwStep {S : Type _} (F : AdamScalar S) {n : Nat}
+    (grad : (Fin n → S) → Fin n → S) (cfg : AdamWCfg S) (s : AdamWState n S) :
+    AdamWState n S :=
+  let g := grad s.θ
+  let m' : Fin n → S := fun i => F.add (F.mul cfg.b1 (s.m i)) (F.mul cfg.oneSubB1 (g i))
+  let v' : Fin n → S := fun i => F.add (F.mul cfg.b2 (s.v i)) (F.mul cfg.oneSubB2 (F.mul (g i) (g i)))
+  let θ' : Fin n → S := fun i =>
+    let mHat := F.mul cfg.invOneSubB1t (m' i)
+    let vHat := F.mul cfg.invOneSubB2t (v' i)
+    let dir := F.div mHat (F.add (F.sqrt vHat) cfg.eps)
+    F.sub (F.mul cfg.oneSubLrWd (s.θ i)) (F.mul cfg.lr dir)
+  ⟨θ', m', v'⟩
+
+theorem adamwStep_equivariant_of_grad {S : Type _} (F : AdamScalar S) {n : Nat}
+    (σ : SignedPerm n) (grad : (Fin n → S) → Fin n → S) (cfg : AdamWCfg S)
+    (hgrad : ∀ θ, grad (actVec F σ θ) = actVec F σ (grad θ)) :
+    ∀ s, adamwStep F grad cfg (actAdamWState F σ s) =
+         actAdamWState F σ (adamwStep F grad cfg s) := by
+  intro s
+  cases s with
+  | mk θ m v =>
+      have hg : grad (actVec F σ θ) = actVec F σ (grad θ) := hgrad θ
+      have hm_eq :
+          (adamwStep F grad cfg (actAdamWState F σ ⟨θ, m, v⟩)).m =
+          actVec F σ (adamwStep F grad cfg ⟨θ, m, v⟩).m := by
+        funext i
+        simp only [adamwStep, actAdamWState, hg, actVec]
+        rw [signedVal_mul_scalar, signedVal_mul_scalar, signedVal_add]
+      have hv_eq :
+          (adamwStep F grad cfg (actAdamWState F σ ⟨θ, m, v⟩)).v =
+          permVec σ (adamwStep F grad cfg ⟨θ, m, v⟩).v := by
+        funext i
+        simp only [adamwStep, actAdamWState, hg, actVec, permVec]
+        rw [signedVal_sq_invariant]
+      have hθ_eq :
+          (adamwStep F grad cfg (actAdamWState F σ ⟨θ, m, v⟩)).θ =
+          actVec F σ (adamwStep F grad cfg ⟨θ, m, v⟩).θ := by
+        funext i
+        have hm_i :
+            F.add (F.mul cfg.b1 (actVec F σ m i)) (F.mul cfg.oneSubB1 (grad (actVec F σ θ) i)) =
+            signedVal F (σ.sgn i) (F.add (F.mul cfg.b1 (m (σ.invFun i))) (F.mul cfg.oneSubB1 (grad θ (σ.invFun i)))) := by
+          have hc := congrFun hm_eq i
+          simpa [adamwStep, actAdamWState, actVec] using hc
+        have hv_i :
+            F.add (F.mul cfg.b2 (permVec σ v i))
+              (F.mul cfg.oneSubB2 (F.mul (grad (actVec F σ θ) i) (grad (actVec F σ θ) i))) =
+            F.add (F.mul cfg.b2 (v (σ.invFun i)))
+              (F.mul cfg.oneSubB2 (F.mul (grad θ (σ.invFun i)) (grad θ (σ.invFun i)))) := by
+          have hc := congrFun hv_eq i
+          simpa [adamwStep, actAdamWState, permVec] using hc
+        simp only [adamwStep, actAdamWState]
+        change F.sub (F.mul cfg.oneSubLrWd (actVec F σ θ i))
+            (F.mul cfg.lr (F.div (F.mul cfg.invOneSubB1t _) (F.add (F.sqrt (F.mul cfg.invOneSubB2t _)) cfg.eps))) =
+          signedVal F (σ.sgn i)
+            (F.sub (F.mul cfg.oneSubLrWd (θ (σ.invFun i)))
+              (F.mul cfg.lr (F.div (F.mul cfg.invOneSubB1t _) (F.add (F.sqrt (F.mul cfg.invOneSubB2t _)) cfg.eps))))
+        rw [hm_i, hv_i]
+        simp only [actVec]
+        rw [signedVal_mul_scalar, signedVal_mul_scalar, signedVal_div_denom, signedVal_mul_scalar, signedVal_sub]
+      cases hL : adamwStep F grad cfg (actAdamWState F σ ⟨θ, m, v⟩) with
+      | mk θL mL vL =>
+          cases hR : adamwStep F grad cfg ⟨θ, m, v⟩ with
+          | mk θR mR vR =>
+              simp only [actAdamWState]
+              rw [hL] at hθ_eq hm_eq hv_eq
+              rw [hR] at hθ_eq hm_eq hv_eq
+              simp only at hθ_eq hm_eq hv_eq
+              rw [hθ_eq, hm_eq, hv_eq]
+
+/-- Concrete AdamW step commutes with `SignedPerm n` for any `σ`-invariant loss `L`. -/
+theorem adamwStep_equivariant {S : Type _} (F : AdamScalar S) {n : Nat}
+    (σ : SignedPerm n) (L : (Fin n → S) → S) (stepScale h : S) (cfg : AdamWCfg S)
+    (hL_inv : ∀ θ, L (actVec F σ θ) = L θ) :
+    ∀ s, adamwStep F (fdGrad F L stepScale h) cfg (actAdamWState F σ s) =
+         actAdamWState F σ (adamwStep F (fdGrad F L stepScale h) cfg s) :=
+  adamwStep_equivariant_of_grad F σ _ cfg (fdGrad_equivariant F σ L stepScale h hL_inv)
+
+/-- Iterate a step function `t` times. -/
+def iterStep {α : Type _} (step : α → α) : Nat → α → α
+  | 0, x => x
+  | t + 1, x => step (iterStep step t x)
+
+/-- Iterate a time-dependent step schedule (e.g. AdamW with `(1 - β₁^t)` bias correction). -/
+def runSchedule {α : Type _} (stepAt : Nat → α → α) : Nat → α → α
+  | 0, x => x
+  | t + 1, x => stepAt t (runSchedule stepAt t x)
+
+theorem iterStep_equivariant {α : Type _} (step act : α → α)
+    (hstep : ∀ x, step (act x) = act (step x)) :
+    ∀ t x, iterStep step t (act x) = act (iterStep step t x)
+  | 0, _ => rfl
+  | t + 1, x => by
+      simp only [iterStep, iterStep_equivariant step act hstep t x, hstep]
+
+theorem runSchedule_equivariant {α : Type _} (stepAt : Nat → α → α) (act : α → α)
+    (hstep : ∀ t x, stepAt t (act x) = act (stepAt t x)) :
+    ∀ t x, runSchedule stepAt t (act x) = act (runSchedule stepAt t x)
+  | 0, _ => rfl
+  | t + 1, x => by
+      simp only [runSchedule, runSchedule_equivariant stepAt act hstep t x, hstep]
+
+/-- Theorem 15, Conclusion 1 (deterministic trajectory equivariance, abstract form). -/
+theorem theorem15_trajectory_equivariant {Θ C : Type _}
+    (actΘ : Θ → Θ) (actC : C → C)
+    (step : Θ → Θ) (readout : Θ → C)
+    (hstep : ∀ θ, step (actΘ θ) = actΘ (step θ))
+    (hreadout : ∀ θ, readout (actΘ θ) = actC (readout θ)) :
+    ∀ t θ, readout (iterStep step t (actΘ θ)) = actC (readout (iterStep step t θ)) := by
+  intro t θ
+  rw [iterStep_equivariant step actΘ hstep t θ, hreadout]
+
+/-- Theorem 15, Conclusion 1 instantiated concretely for full-batch GD on `Fin n → S`. -/
+theorem theorem15_gd_trajectory_equivariant {S C : Type _} (F : AdamScalar S) {n : Nat}
+    (σ : SignedPerm n) (actC : C → C)
+    (L : (Fin n → S) → S) (stepScale h lr : S)
+    (readout : (Fin n → S) → C)
+    (hL_inv : ∀ θ, L (actVec F σ θ) = L θ)
+    (hreadout : ∀ θ, readout (actVec F σ θ) = actC (readout θ)) :
+    ∀ t θ, readout (iterStep (gdStep F (fdGrad F L stepScale h) lr) t (actVec F σ θ)) =
+           actC (readout (iterStep (gdStep F (fdGrad F L stepScale h) lr) t θ)) :=
+  theorem15_trajectory_equivariant (actVec F σ) actC _ readout
+    (gdStep_equivariant F σ L stepScale h lr hL_inv) hreadout
+
+/-- Theorem 15, Conclusion 1 instantiated concretely for AdamW with time-varying schedule
+    on an invariant loss `L` and signed-permutation action `σ : SignedPerm n`. -/
+theorem theorem15_adamw_trajectory_equivariant {S C : Type _} (F : AdamScalar S) {n : Nat}
+    (σ : SignedPerm n) (actC : C → C)
+    (L : (Fin n → S) → S) (stepScale h : S) (sched : Nat → AdamWCfg S)
+    (readout : (Fin n → S) → C)
+    (hL_inv : ∀ θ, L (actVec F σ θ) = L θ)
+    (hreadout : ∀ θ, readout (actVec F σ θ) = actC (readout θ)) :
+    ∀ t s,
+      readout (runSchedule (fun k => adamwStep F (fdGrad F L stepScale h) (sched k)) t (actAdamWState F σ s)).θ =
+      actC (readout (runSchedule (fun k => adamwStep F (fdGrad F L stepScale h) (sched k)) t s).θ) := by
+  intro t s
+  have hsched : ∀ k s',
+      adamwStep F (fdGrad F L stepScale h) (sched k) (actAdamWState F σ s') =
+      actAdamWState F σ (adamwStep F (fdGrad F L stepScale h) (sched k) s') :=
+    fun k => adamwStep_equivariant F σ L stepScale h (sched k) hL_inv
+  rw [runSchedule_equivariant _ (actAdamWState F σ) hsched t s]
+  exact hreadout _
+
+private def sumNatT15 : List Nat → Nat
+  | [] => 0
+  | x :: xs => x + sumNatT15 xs
+
+/-- Pushforward invariance of a finite weighted list of initial parameter states under `actΘ`. -/
+def EnsembleInvariant {Θ : Type _} (actΘ : Θ → Θ) (init : List (Nat × Θ)) : Prop :=
+  ∀ P : Θ → Nat,
+    sumNatT15 (init.map fun p => p.1 * P (actΘ p.2)) =
+    sumNatT15 (init.map fun p => p.1 * P p.2)
+
+/-- Total initial weight landing on circuit `tgt` after readout. -/
+def circuitMass {Θ C : Type _} [DecidableEq C] (finalReadout : Θ → C)
+    (tgt : C) (init : List (Nat × Θ)) : Nat :=
+  sumNatT15 (init.map fun p => if finalReadout p.2 = tgt then p.1 else 0)
+
+private theorem list_map_congr_t15 {α β : Type _} (l : List α) (g₁ g₂ : α → β)
+    (h : ∀ a, g₁ a = g₂ a) : l.map g₁ = l.map g₂ := by
+  induction l with
+  | nil => rfl
+  | cons x xs ih => simp only [List.map, h x, ih]
+
+/-- Theorem 15, Conclusion 2 (finite weighted distribution — lemma toward Theorem 15;
+    continuous Gaussian measure requires Mathlib): any `actΘ`-invariant finite
+    weighted ensemble assigns equal weight to circuit `I` and circuit `actC I`. -/
+theorem theorem15_finite_distribution_invariant {Θ C : Type _} [DecidableEq C]
+    (actΘ : Θ → Θ) (actC invC : C → C)
+    (hC_left : ∀ c, invC (actC c) = c)
+    (step : Θ → Θ) (readout : Θ → C)
+    (hstep : ∀ θ, step (actΘ θ) = actΘ (step θ))
+    (hreadout : ∀ θ, readout (actΘ θ) = actC (readout θ))
+    (init : List (Nat × Θ)) (hinit : EnsembleInvariant actΘ init)
+    (t : Nat) (tgt : C) :
+    circuitMass (fun θ => readout (iterStep step t θ)) (actC tgt) init =
+    circuitMass (fun θ => readout (iterStep step t θ)) tgt init := by
+  have heq : circuitMass (fun θ => readout (iterStep step t θ)) (actC tgt) init =
+      sumNatT15 (init.map fun p => p.1 * (if readout (iterStep step t p.2) = actC tgt then 1 else 0)) := by
+    simp only [circuitMass]
+    congr 1
+    apply list_map_congr_t15
+    intro p
+    split <;> simp
+  have heq2 : circuitMass (fun θ => readout (iterStep step t θ)) tgt init =
+      sumNatT15 (init.map fun p => p.1 * (if readout (iterStep step t p.2) = tgt then 1 else 0)) := by
+    simp only [circuitMass]
+    congr 1
+    apply list_map_congr_t15
+    intro p
+    split <;> simp
+  rw [heq, heq2, ← hinit (fun θ => if readout (iterStep step t θ) = actC tgt then 1 else 0)]
+  congr 1
+  apply list_map_congr_t15
+  intro p
+  have htraj := theorem15_trajectory_equivariant actΘ actC step readout hstep hreadout t p.2
+  have hiff : actC (readout (iterStep step t p.2)) = actC tgt ↔
+      readout (iterStep step t p.2) = tgt := by
+    constructor
+    · intro h
+      have h' := congrArg invC h
+      simpa [hC_left] using h'
+    · intro h
+      rw [h]
+  have hind :
+      (if readout (iterStep step t (actΘ p.2)) = actC tgt then 1 else 0) =
+      (if readout (iterStep step t p.2) = tgt then 1 else 0) := by
+    rw [htraj]
+    by_cases hhit : readout (iterStep step t p.2) = tgt
+    · simp [hhit]
+    · have hne : actC (readout (iterStep step t p.2)) ≠ actC tgt :=
+        fun heq' => hhit (hiff.mp heq')
+      simp [hhit, hne]
+  rw [hind]
+
+private def countEqT15 {α : Type _} [DecidableEq α] (a : α) : List α → Nat
+  | [] => 0
+  | x :: xs => (if x = a then 1 else 0) + countEqT15 a xs
+
+private def eraseOneT15 {α : Type _} [DecidableEq α] (a : α) : List α → List α
+  | [] => []
+  | x :: xs => if x = a then xs else x :: eraseOneT15 a xs
+
+inductive NoDupSupport {α : Type _} : List α → Prop
+  | nil : NoDupSupport []
+  | cons {x xs} : x ∉ xs → NoDupSupport xs → NoDupSupport (x :: xs)
+
+private theorem countEqT15_pos_mem {α : Type _} [DecidableEq α] {a : α} :
+    ∀ {l : List α}, 0 < countEqT15 a l → a ∈ l
+  | [], h => by simp [countEqT15] at h
+  | x :: xs, h => by
+      if hxa : x = a then
+        subst hxa; exact List.Mem.head _
+      else
+        simp [countEqT15, hxa] at h
+        exact List.Mem.tail _ (countEqT15_pos_mem h)
+
+private theorem countEqT15_not_mem {α : Type _} [DecidableEq α] {a : α} :
+    ∀ {l : List α}, a ∉ l → countEqT15 a l = 0
+  | [], _ => rfl
+  | x :: xs, h => by
+      have hx : x ≠ a := fun heq => h (heq ▸ List.Mem.head _)
+      have hxs : a ∉ xs := fun hm => h (List.Mem.tail _ hm)
+      simp [countEqT15, hx, countEqT15_not_mem hxs]
+
+private theorem countEqT15_of_noDup {α : Type _} [DecidableEq α] {a : α} :
+    ∀ {l : List α}, NoDupSupport l → a ∈ l → countEqT15 a l = 1
+  | [], hn, hm => by cases hm
+  | x :: xs, NoDupSupport.cons hnx hnodup, hm => by
+      if hxa : x = a then
+        subst hxa; simp [countEqT15, countEqT15_not_mem hnx]
+      else
+        cases hm with
+        | head => exact absurd rfl hxa
+        | tail _ ht => simp [countEqT15, hxa, countEqT15_of_noDup hnodup ht]
+
+private theorem sumNatT15_map_eraseOne {α : Type _} [DecidableEq α] (w : α → Nat) {a : α} :
+    ∀ {l : List α}, a ∈ l → sumNatT15 (l.map w) = w a + sumNatT15 ((eraseOneT15 a l).map w)
+  | [], hm => by cases hm
+  | x :: xs, hm => by
+      if hxa : x = a then
+        subst hxa; simp [eraseOneT15, sumNatT15]
+      else
+        cases hm with
+        | head => exact absurd rfl hxa
+        | tail _ ht =>
+            simp [eraseOneT15, hxa, sumNatT15, sumNatT15_map_eraseOne w ht]; omega
+
+private theorem countEqT15_eraseOne_self {α : Type _} [DecidableEq α] (a : α) :
+    ∀ {l : List α}, a ∈ l → countEqT15 a (eraseOneT15 a l) + 1 = countEqT15 a l
+  | [], hm => by cases hm
+  | x :: xs, hm => by
+      if hxa : x = a then
+        subst hxa; simp [eraseOneT15, countEqT15]; omega
+      else
+        cases hm with
+        | head => exact absurd rfl hxa
+        | tail _ ht => simp [eraseOneT15, countEqT15, hxa, countEqT15_eraseOne_self a ht]
+
+private theorem countEqT15_eraseOne_ne {α : Type _} [DecidableEq α] {a b : α} (hne : b ≠ a) :
+    ∀ l : List α, countEqT15 b (eraseOneT15 a l) = countEqT15 b l
+  | [] => rfl
+  | x :: xs => by
+      if hxa : x = a then
+        subst hxa; simp [eraseOneT15, countEqT15, hne.symm]
+      else
+        simp [eraseOneT15, countEqT15, hxa, countEqT15_eraseOne_ne hne xs]
+
+private theorem sumNatT15_map_eq_of_countEq {α : Type _} [DecidableEq α] (w : α → Nat) :
+    ∀ {l₁ l₂ : List α}, (∀ z, countEqT15 z l₁ = countEqT15 z l₂) →
+      sumNatT15 (l₁.map w) = sumNatT15 (l₂.map w)
+  | [], l₂, h => by
+      cases l₂ with
+      | nil => rfl
+      | cons y ys => have hy := h y; simp [countEqT15] at hy; omega
+  | x :: xs, l₂, h => by
+      have hx : 0 < countEqT15 x l₂ := by have h0 := h x; simp [countEqT15] at h0; omega
+      have hmem := countEqT15_pos_mem hx
+      have heq := sumNatT15_map_eraseOne w hmem
+      have hcount : ∀ z, countEqT15 z xs = countEqT15 z (eraseOneT15 x l₂) := by
+        intro z
+        have hz := h z
+        if hzx : z = x then
+          subst hzx
+          have hs := countEqT15_eraseOne_self z hmem
+          simp [countEqT15] at hz; omega
+        else
+          rw [countEqT15_eraseOne_ne hzx l₂]
+          have hxz : x ≠ z := fun e => hzx e.symm
+          simp [countEqT15, hxz] at hz
+          exact hz
+      have ih := sumNatT15_map_eq_of_countEq w hcount
+      simp [sumNatT15, heq, ih]
+
+private theorem countEqT15_map_bijection {α : Type _} [DecidableEq α] {f inv : α → α}
+    (hl : ∀ x, inv (f x) = x) (hr : ∀ x, f (inv x) = x) :
+    ∀ (l : List α) (y : α), countEqT15 y (l.map f) = countEqT15 (inv y) l
+  | [], _ => rfl
+  | x :: xs, y => by
+      have ih := countEqT15_map_bijection hl hr xs y
+      if hfx : f x = y then
+        have hinv : x = inv y := by rw [← hl x, hfx]
+        simp only [List.map, countEqT15, if_pos hfx, if_pos hinv, ih]
+      else
+        have hinv : x ≠ inv y := fun heq => hfx (by rw [heq, hr])
+        simp only [List.map, countEqT15, if_neg hfx, if_neg hinv, ih]
+
+/-- Any finite `NoDupSupport` pool closed under `act` and `inv` with `act`-invariant weights
+    automatically forms an `EnsembleInvariant` weighted parameter distribution. -/
+theorem ensembleInvariant_of_nodup_support {Θ : Type _} [DecidableEq Θ]
+    (support : List Θ) (hnodup : NoDupSupport support) (w : Θ → Nat)
+    (act inv : Θ → Θ)
+    (hl : ∀ θ, inv (act θ) = θ) (hr : ∀ θ, act (inv θ) = θ)
+    (hc1 : ∀ θ, θ ∈ support → act θ ∈ support)
+    (hc2 : ∀ θ, θ ∈ support → inv θ ∈ support)
+    (hw : ∀ θ, w (act θ) = w θ) :
+    EnsembleInvariant act (support.map fun θ => (w θ, θ)) := by
+  intro P
+  have h1 : (support.map fun θ => (w θ, θ)).map (fun p => p.1 * P (act p.2)) =
+      (support.map act).map (fun θ => w (inv θ) * P θ) := by
+    clear hnodup hc1 hc2
+    induction support with
+    | nil => rfl
+    | cons θ θs ih => simp only [List.map, hl, hw, ih]
+  have h2 : (support.map fun θ => (w θ, θ)).map (fun p => p.1 * P p.2) =
+      support.map (fun θ => w (inv θ) * P θ) := by
+    clear hnodup hc1 hc2 h1
+    induction support with
+    | nil => rfl
+    | cons θ θs ih =>
+        have hw' : w (inv θ) = w θ := by simpa [hr] using (hw (inv θ)).symm
+        simp only [List.map, hw', ih]
+  rw [h1, h2]
+  apply sumNatT15_map_eq_of_countEq
+  intro y
+  rw [countEqT15_map_bijection hl hr support y]
+  if hym : y ∈ support then
+    rw [countEqT15_of_noDup hnodup (hc2 y hym), countEqT15_of_noDup hnodup hym]
+  else
+    have hn : inv y ∉ support := fun h => hym (hr y ▸ hc1 (inv y) h)
+    rw [countEqT15_not_mem hn, countEqT15_not_mem hym]
+
+/-- End-to-end finite Theorem 15 lemma specialized to concrete AdamW with invariant loss
+    `L` and signed-permutation action `σ : SignedPerm n`. -/
+theorem theorem15_adamw_finite_distribution_invariant {S C : Type _} [DecidableEq C]
+    (F : AdamScalar S) {n : Nat}
+    (σ : SignedPerm n) (actC invC : C → C)
+    (hC_left : ∀ c, invC (actC c) = c)
+    (L : (Fin n → S) → S) (stepScale δ : S) (sched : Nat → AdamWCfg S)
+    (readout : (Fin n → S) → C)
+    (hL_inv : ∀ θ, L (actVec F σ θ) = L θ)
+    (hreadout : ∀ θ, readout (actVec F σ θ) = actC (readout θ))
+    (init : List (Nat × AdamWState n S))
+    (hinit : EnsembleInvariant (actAdamWState F σ) init)
+    (t : Nat) (tgt : C) :
+    circuitMass (fun s => readout (runSchedule (fun k => adamwStep F (fdGrad F L stepScale δ) (sched k)) t s).θ)
+      (actC tgt) init =
+    circuitMass (fun s => readout (runSchedule (fun k => adamwStep F (fdGrad F L stepScale δ) (sched k)) t s).θ)
+      tgt init := by
+  have heq : ∀ target : C,
+      circuitMass (fun s => readout (runSchedule (fun k => adamwStep F (fdGrad F L stepScale δ) (sched k)) t s).θ)
+        target init =
+      sumNatT15 (init.map fun p => p.1 * (if readout (runSchedule (fun k => adamwStep F (fdGrad F L stepScale δ) (sched k)) t p.2).θ = target then 1 else 0)) := by
+    intro target
+    simp only [circuitMass]
+    congr 1
+    apply list_map_congr_t15
+    intro p
+    split <;> simp
+  rw [heq (actC tgt), heq tgt]
+  rw [← hinit (fun s => if readout (runSchedule (fun k => adamwStep F (fdGrad F L stepScale δ) (sched k)) t s).θ = actC tgt then 1 else 0)]
+  congr 1
+  apply list_map_congr_t15
+  intro p
+  have htraj := theorem15_adamw_trajectory_equivariant F σ actC L stepScale δ sched readout hL_inv hreadout t p.2
+  have hiff : actC (readout (runSchedule (fun k => adamwStep F (fdGrad F L stepScale δ) (sched k)) t p.2).θ) = actC tgt ↔
+      readout (runSchedule (fun k => adamwStep F (fdGrad F L stepScale δ) (sched k)) t p.2).θ = tgt := by
+    constructor
+    · intro h
+      have h' := congrArg invC h
+      simpa [hC_left] using h'
+    · intro h
+      rw [h]
+  have hind :
+      (if readout (runSchedule (fun k => adamwStep F (fdGrad F L stepScale δ) (sched k)) t (actAdamWState F σ p.2)).θ = actC tgt then 1 else 0) =
+      (if readout (runSchedule (fun k => adamwStep F (fdGrad F L stepScale δ) (sched k)) t p.2).θ = tgt then 1 else 0) := by
+    rw [htraj]
+    by_cases hhit : readout (runSchedule (fun k => adamwStep F (fdGrad F L stepScale δ) (sched k)) t p.2).θ = tgt
+    · simp [hhit]
+    · have hne : actC (readout (runSchedule (fun k => adamwStep F (fdGrad F L stepScale δ) (sched k)) t p.2).θ) ≠ actC tgt :=
+        fun heq' => hhit (hiff.mp heq')
+      simp [hhit, hne]
+  rw [hind]
+
+end Theorem15
+
+/-! ## §21 No-transfer lemma for exact data stabilizers (Spike 16 F2 / P077)
+
+If a group `G` maps the labelled set `L` to itself, every `G`-orbit lies
+entirely inside `L` or entirely outside `L`. Consequently:
+1. A predictor's `G`-symmetrized values on unlabelled inputs depend only on its
+   values on unlabelled inputs (zero label transfer from `L`).
+2. Random-`G` (Reynolds) symmetrization leaves expected unlabelled accuracy
+   identically unchanged, both on any `G`-invariant target and under any
+   `G`-invariant finite target prior.
+3. Deterministic symmetrization (e.g. logit averaging / majority vote) leaves
+   expected unlabelled accuracy identically unchanged under any distribution
+   invariant under unlabelled label flips `y ↦ flipUnlabelled L y`.
+4. Honest scope limit (`sym_majority_can_improve_without_flip_symmetry`): without
+   label-flip invariance (e.g. a `G`-invariant prior skewed 4:1 toward all-1),
+   deterministic majority vote across an orbit can strictly improve expected
+   accuracy by denoising `f`. -/
+section NoTransfer
+
+def sumNat : List Nat → Nat
+  | [] => 0
+  | x :: xs => x + sumNat xs
+
+def countEq {α : Type _} [DecidableEq α] (a : α) : List α → Nat
+  | [] => 0
+  | x :: xs => (if x = a then 1 else 0) + countEq a xs
+
+def eraseOne {α : Type _} [DecidableEq α] (a : α) : List α → List α
+  | [] => []
+  | x :: xs => if x = a then xs else x :: eraseOne a xs
+
+inductive NoDupList {α : Type _} : List α → Prop
+  | nil : NoDupList []
+  | cons {x xs} : x ∉ xs → NoDupList xs → NoDupList (x :: xs)
+
+private theorem sumNat_map_add {α : Type _} (u v : α → Nat) :
+    ∀ xs : List α, sumNat (xs.map fun x => u x + v x) = sumNat (xs.map u) + sumNat (xs.map v)
+  | [] => rfl
+  | x :: xs => by
+      have ih := sumNat_map_add u v xs
+      simp only [List.map, sumNat]
+      omega
+
+private theorem sumNat_map_const {α : Type _} (c : Nat) :
+    ∀ xs : List α, sumNat (xs.map fun _ => c) = xs.length * c
+  | [] => by simp [sumNat]
+  | _ :: xs => by
+      have ih := sumNat_map_const c xs
+      simp only [List.map, sumNat, List.length, Nat.succ_mul]
+      omega
+
+private theorem sumNat_map_comm {α β : Type _} (h : α → β → Nat) :
+    ∀ (xs : List α) (ys : List β),
+      sumNat (xs.map fun a => sumNat (ys.map fun b => h a b)) =
+      sumNat (ys.map fun b => sumNat (xs.map fun a => h a b))
+  | [], ys => by
+      simp only [List.map, sumNat]
+      induction ys with
+      | nil => rfl
+      | cons _ ys ih => simp only [List.map, sumNat, ← ih]
+  | x :: xs, ys => by
+      have ih := sumNat_map_comm h xs ys
+      simp only [List.map, sumNat]
+      rw [ih, ← sumNat_map_add]
+
+private theorem list_map_congr {α β : Type _} (l : List α) (g₁ g₂ : α → β)
+    (h : ∀ a, a ∈ l → g₁ a = g₂ a) : l.map g₁ = l.map g₂ := by
+  induction l with
+  | nil => rfl
+  | cons x xs ih =>
+      simp only [List.map, h x (List.Mem.head _)]
+      congr 1
+      exact ih (fun a ha => h a (List.Mem.tail _ ha))
+
+private theorem countEq_pos_mem {α : Type _} [DecidableEq α] {a : α} :
+    ∀ {l : List α}, 0 < countEq a l → a ∈ l
+  | [], h => by simp [countEq] at h
+  | x :: xs, h => by
+      if hxa : x = a then
+        subst hxa
+        exact List.Mem.head _
+      else
+        simp [countEq, hxa] at h
+        exact List.Mem.tail _ (countEq_pos_mem h)
+
+private theorem countEq_not_mem {α : Type _} [DecidableEq α] {a : α} :
+    ∀ {l : List α}, a ∉ l → countEq a l = 0
+  | [], _ => rfl
+  | x :: xs, h => by
+      have hx : x ≠ a := fun heq => h (heq ▸ List.Mem.head _)
+      have hxs : a ∉ xs := fun hm => h (List.Mem.tail _ hm)
+      simp [countEq, hx, countEq_not_mem hxs]
+
+private theorem countEq_of_noDup {α : Type _} [DecidableEq α] {a : α} :
+    ∀ {l : List α}, NoDupList l → a ∈ l → countEq a l = 1
+  | [], hn, hm => by cases hm
+  | x :: xs, NoDupList.cons hnx hnodup, hm => by
+      if hxa : x = a then
+        subst hxa
+        simp [countEq, countEq_not_mem hnx]
+      else
+        cases hm with
+        | head => exact absurd rfl hxa
+        | tail _ htail =>
+            simp [countEq, hxa]
+            exact countEq_of_noDup hnodup htail
+
+private theorem sumNat_map_eraseOne {α : Type _} [DecidableEq α] (w : α → Nat) {a : α} :
+    ∀ {l : List α}, a ∈ l → sumNat (l.map w) = w a + sumNat ((eraseOne a l).map w)
+  | [], hm => by cases hm
+  | x :: xs, hm => by
+      if hxa : x = a then
+        subst hxa
+        simp [eraseOne, sumNat]
+      else
+        cases hm with
+        | head => exact absurd rfl hxa
+        | tail _ htail =>
+            simp [eraseOne, hxa, sumNat, sumNat_map_eraseOne w htail]
+            omega
+
+private theorem countEq_eraseOne_self {α : Type _} [DecidableEq α] (a : α) :
+    ∀ {l : List α}, a ∈ l → countEq a (eraseOne a l) + 1 = countEq a l
+  | [], hm => by cases hm
+  | x :: xs, hm => by
+      if hxa : x = a then
+        subst hxa
+        simp [eraseOne, countEq]
+        omega
+      else
+        cases hm with
+        | head => exact absurd rfl hxa
+        | tail _ htail =>
+            simp [eraseOne, countEq, hxa]
+            exact countEq_eraseOne_self a htail
+
+private theorem countEq_eraseOne_ne {α : Type _} [DecidableEq α] {a b : α} (hne : b ≠ a) :
+    ∀ l : List α, countEq b (eraseOne a l) = countEq b l
+  | [] => rfl
+  | x :: xs => by
+      if hxa : x = a then
+        subst hxa
+        simp [eraseOne, countEq, hne.symm]
+      else
+        simp [eraseOne, countEq, hxa, countEq_eraseOne_ne hne xs]
+
+private theorem sumNat_map_eq_of_countEq {α : Type _} [DecidableEq α] (w : α → Nat) :
+    ∀ {l₁ l₂ : List α}, (∀ z, countEq z l₁ = countEq z l₂) → sumNat (l₁.map w) = sumNat (l₂.map w)
+  | [], l₂, h => by
+      cases l₂ with
+      | nil => rfl
+      | cons y ys =>
+          have hy := h y
+          simp [countEq] at hy
+          omega
+  | x :: xs, l₂, h => by
+      have hx : 0 < countEq x l₂ := by
+        have h0 := h x
+        simp [countEq] at h0
+        omega
+      have hmem : x ∈ l₂ := countEq_pos_mem hx
+      have heq := sumNat_map_eraseOne w hmem
+      have hcount : ∀ z, countEq z xs = countEq z (eraseOne x l₂) := by
+        intro z
+        have hz := h z
+        if hzx : z = x then
+          subst hzx
+          have hs := countEq_eraseOne_self z hmem
+          simp [countEq] at hz
+          omega
+        else
+          rw [countEq_eraseOne_ne hzx l₂]
+          have hxz : x ≠ z := fun e => hzx e.symm
+          simp [countEq, hxz] at hz
+          exact hz
+      have ih := sumNat_map_eq_of_countEq w hcount
+      simp [sumNat, heq, ih]
+
+private theorem countEq_map_bijection {α : Type _} [DecidableEq α] {f inv : α → α}
+    (hl : ∀ x, inv (f x) = x) (hr : ∀ x, f (inv x) = x) :
+    ∀ (l : List α) (y : α), countEq y (l.map f) = countEq (inv y) l
+  | [], _ => rfl
+  | x :: xs, y => by
+      have ih := countEq_map_bijection hl hr xs y
+      if hfx : f x = y then
+        have hinv : x = inv y := by rw [← hl x, hfx]
+        simp only [List.map, countEq, if_pos hfx, if_pos hinv, ih]
+      else
+        have hinv : x ≠ inv y := fun heq => hfx (by rw [heq, hr])
+        simp only [List.map, countEq, if_neg hfx, if_neg hinv, ih]
+
+theorem sumNat_map_bijection {α : Type _} [DecidableEq α]
+    (l : List α) (hnodup : NoDupList l)
+    (f inv : α → α)
+    (hl : ∀ x, inv (f x) = x) (hr : ∀ x, f (inv x) = x)
+    (hclosed_f : ∀ x, x ∈ l → f x ∈ l)
+    (hclosed_inv : ∀ x, x ∈ l → inv x ∈ l)
+    (w : α → Nat) :
+    sumNat (l.map fun x => w (f x)) = sumNat (l.map w) := by
+  have hmap : l.map (fun x => w (f x)) = (l.map f).map w := by
+    induction l with
+    | nil => rfl
+    | cons x xs ih => simp [List.map, ih]
+  rw [hmap]
+  apply sumNat_map_eq_of_countEq w
+  intro y
+  rw [countEq_map_bijection hl hr l y]
+  if hym : y ∈ l then
+    have hinvm : inv y ∈ l := hclosed_inv y hym
+    rw [countEq_of_noDup hnodup hinvm, countEq_of_noDup hnodup hym]
+  else
+    have hninvm : inv y ∉ l := fun h => hym (hr y ▸ hclosed_f (inv y) h)
+    rw [countEq_not_mem hninvm, countEq_not_mem hym]
+
+/-- Exact group action of a finite group `G` (represented by element list, action, and inverse). -/
+structure FiniteGroupAction (Gp : Type _) (X : Type _) where
+  elems : List Gp
+  act : Gp → X → X
+  inv : Gp → Gp
+  inv_mem : ∀ g, g ∈ elems → inv g ∈ elems
+  act_left_inv : ∀ g x, act (inv g) (act g x) = x
+  act_right_inv : ∀ g x, act g (act (inv g) x) = x
+
+/-- Setwise stabilization of the labelled set `L` under `G`. -/
+def StabilizesSet {Gp X : Type _} (ga : FiniteGroupAction Gp X) (L : X → Prop) : Prop :=
+  ∀ g, g ∈ ga.elems → ∀ x, L x → L (ga.act g x)
+
+/-- Exact label-preserving stabilization of `(L, yL)` under `G`. -/
+def StabilizesLabelled {Gp X : Type _} (ga : FiniteGroupAction Gp X)
+    (L : X → Prop) (yL : X → Bool) : Prop :=
+  ∀ g, g ∈ ga.elems → ∀ x, L x → L (ga.act g x) ∧ yL (ga.act g x) = yL x
+
+theorem stabilizesLabelled_to_set {Gp X : Type _} (ga : FiniteGroupAction Gp X)
+    (L : X → Prop) (yL : X → Bool) (hs : StabilizesLabelled ga L yL) :
+    StabilizesSet ga L :=
+  fun g hg x hx => (hs g hg x hx).1
+
+/-- Lemma (Spike 16 F2): Every `G`-orbit lies either wholly inside `L` or wholly outside `L`. -/
+theorem no_transfer_orbit_preserves_labelled {Gp X : Type _} (ga : FiniteGroupAction Gp X)
+    (L : X → Prop) (hstab : StabilizesSet ga L) :
+    ∀ g, g ∈ ga.elems → ∀ x, (L (ga.act g x) ↔ L x) := by
+  intro g hg x
+  constructor
+  · intro hact
+    have hback := hstab (ga.inv g) (ga.inv_mem g hg) (ga.act g x) hact
+    rw [ga.act_left_inv g x] at hback
+    exact hback
+  · intro hx
+    exact hstab g hg x hx
+
+theorem no_transfer_orbit_preserves_unlabelled {Gp X : Type _} (ga : FiniteGroupAction Gp X)
+    (L : X → Prop) (hstab : StabilizesSet ga L) :
+    ∀ g, g ∈ ga.elems → ∀ x, (¬ L (ga.act g x) ↔ ¬ L x) := by
+  intro g hg x
+  have h := no_transfer_orbit_preserves_labelled ga L hstab g hg x
+  exact ⟨fun hn hl => hn (h.mpr hl), fun hn hl => hn (h.mp hl)⟩
+
+/-- Any `G`-symmetrized predictor evaluated on an unlabelled input depends strictly
+    on the base predictor's values at unlabelled inputs (zero label transfer from `L`). -/
+theorem no_transfer_sym_list_independent_of_labelled {Gp X B : Type _}
+    (ga : FiniteGroupAction Gp X) (L : X → Prop) (hstab : StabilizesSet ga L)
+    (f₁ f₂ : X → B) (hunlab_eq : ∀ z, ¬ L z → f₁ z = f₂ z) :
+    ∀ x, ¬ L x →
+      ga.elems.map (fun g => f₁ (ga.act g x)) = ga.elems.map (fun g => f₂ (ga.act g x)) := by
+  intro x hnx
+  apply list_map_congr
+  intro g hg
+  apply hunlab_eq
+  exact (no_transfer_orbit_preserves_unlabelled ga L hstab g hg x).mpr hnx
+
+theorem no_transfer_sym_predictor_independent_of_labelled {Gp X B C : Type _}
+    (ga : FiniteGroupAction Gp X) (L : X → Prop) (hstab : StabilizesSet ga L)
+    (agg : List B → C) (f₁ f₂ : X → B) (hunlab_eq : ∀ z, ¬ L z → f₁ z = f₂ z) :
+    ∀ x, ¬ L x →
+      agg (ga.elems.map (fun g => f₁ (ga.act g x))) =
+      agg (ga.elems.map (fun g => f₂ (ga.act g x))) := by
+  intro x hnx
+  rw [no_transfer_sym_list_independent_of_labelled ga L hstab f₁ f₂ hunlab_eq x hnx]
+
+/-- Correct predictions (hit count) on unlabelled test list `U`. -/
+def hitCount {X : Type _} (U : List X) (h y : X → Bool) : Nat :=
+  sumNat (U.map fun x => if h x = y x then 1 else 0)
+
+/-- Flip every unlabelled label while preserving all labelled data `(L, y|_L)`. -/
+def flipUnlabelled {X : Type _} (L : X → Prop) [DecidablePred L] (y : X → Bool) (x : X) : Bool :=
+  if L x then y x else !(y x)
+
+theorem flipUnlabelled_preserves_labelled {X : Type _} (L : X → Prop) [DecidablePred L]
+    (y : X → Bool) : ∀ x, L x → flipUnlabelled L y x = y x := by
+  intro x hx
+  simp [flipUnlabelled, hx]
+
+theorem flipUnlabelled_preserves_stabilizer {Gp X : Type _} (ga : FiniteGroupAction Gp X)
+    (L : X → Prop) [DecidablePred L] (y : X → Bool)
+    (hs : StabilizesLabelled ga L y) :
+    StabilizesLabelled ga L (flipUnlabelled L y) := by
+  intro g hg x hx
+  have ⟨hlg, hyg⟩ := hs g hg x hx
+  refine ⟨hlg, ?_⟩
+  simp [flipUnlabelled, hx, hlg, hyg]
+
+/-- Paired unlabelled hit count under `(y, flipUnlabelled L y)` is identically `U.length`
+    for every Boolean predictor `h` (raw or deterministically symmetrized). -/
+theorem no_transfer_flip_pair_constant {X : Type _} (L : X → Prop) [DecidablePred L]
+    (U : List X) (hU : ∀ x, x ∈ U → ¬ L x) (h y : X → Bool) :
+    hitCount U h y + hitCount U h (flipUnlabelled L y) = U.length := by
+  induction U with
+  | nil => rfl
+  | cons x xs ih =>
+      have hnx : ¬ L x := hU x (List.Mem.head _)
+      have hxs : ∀ z, z ∈ xs → ¬ L z := fun z hz => hU z (List.Mem.tail _ hz)
+      have ih' := ih hxs
+      have hxflip : flipUnlabelled L y x = !(y x) := by simp [flipUnlabelled, hnx]
+      have hbit : (if h x = y x then 1 else 0) + (if h x = !(y x) then 1 else 0) = 1 := by
+        cases h x <;> cases y x <;> rfl
+      simp only [hitCount, List.map, sumNat, hxflip, List.length] at ih' ⊢
+      omega
+
+/-- Expected unlabelled hit count (scaled by weight) over a finite weighted target family
+    closed under unlabelled label flips `flipUnlabelled L` is identical for any two
+    predictors `h₁, h₂ : X → Bool` (in particular, raw `f` vs deterministic `symPred`). -/
+private theorem sumNat_flip_pair {X T : Type _} (L : X → Prop) [DecidablePred L]
+    (U : List X) (hU : ∀ x, x ∈ U → ¬ L x)
+    (decode : T → X → Bool) (flipT : T → T)
+    (hdecode_flip : ∀ t x, decode (flipT t) x = flipUnlabelled L (decode t) x)
+    (h : X → Bool) :
+    ∀ ts : List (Nat × T),
+      sumNat (ts.map fun p => p.1 * hitCount U h (decode p.2)) +
+      sumNat (ts.map fun p => p.1 * hitCount U h (decode (flipT p.2))) =
+      U.length * sumNat (ts.map fun p => p.1)
+  | [] => by simp [sumNat]
+  | p :: ps => by
+      have ih := sumNat_flip_pair L U hU decode flipT hdecode_flip h ps
+      have hpair := no_transfer_flip_pair_constant L U hU h (decode p.2)
+      have hdeceq : hitCount U h (decode (flipT p.2)) =
+          hitCount U h (flipUnlabelled L (decode p.2)) := by
+        simp only [hitCount]
+        congr 1
+        apply list_map_congr
+        intro x _
+        rw [hdecode_flip]
+      simp only [List.map, sumNat]
+      rw [hdeceq]
+      have hdist : p.1 * hitCount U h (decode p.2) + p.1 * hitCount U h (flipUnlabelled L (decode p.2)) =
+          p.1 * U.length := by
+        rw [← Nat.mul_add, hpair]
+      have hcomm : U.length * (p.1 + sumNat (ps.map fun q => q.1)) =
+          p.1 * U.length + U.length * sumNat (ps.map fun q => q.1) := by
+        rw [Nat.mul_add, Nat.mul_comm U.length p.1]
+      omega
+
+/-- Expected unlabelled hit count (scaled by weight) over a finite weighted target family
+    closed under unlabelled label flips `flipUnlabelled L` is identical for any two
+    predictors `h₁, h₂ : X → Bool` (in particular, raw `f` vs deterministic `symPred`). -/
+theorem no_transfer_flip_invariant_dist_eq {X T : Type _} (L : X → Prop) [DecidablePred L]
+    (U : List X) (hU : ∀ x, x ∈ U → ¬ L x)
+    (targets : List (Nat × T)) (decode : T → X → Bool) (flipT : T → T)
+    (hdecode_flip : ∀ t x, decode (flipT t) x = flipUnlabelled L (decode t) x)
+    (hclosed : ∀ P : T → Nat,
+      sumNat (targets.map fun p => p.1 * P p.2) =
+      sumNat (targets.map fun p => p.1 * P (flipT p.2)))
+    (h₁ h₂ : X → Bool) :
+    sumNat (targets.map fun p => p.1 * hitCount U h₁ (decode p.2)) =
+    sumNat (targets.map fun p => p.1 * hitCount U h₂ (decode p.2)) := by
+  have const_twice : ∀ h : X → Bool,
+      2 * sumNat (targets.map fun p => p.1 * hitCount U h (decode p.2)) =
+      U.length * sumNat (targets.map fun p => p.1) := by
+    intro h
+    have hf := hclosed (fun t => hitCount U h (decode t))
+    have hsum := sumNat_flip_pair L U hU decode flipT hdecode_flip h targets
+    omega
+  have h1 := const_twice h₁
+  have h2 := const_twice h₂
+  omega
+
+/-- Pullback of a target labeling along `g` preserves unlabelled expected accuracy
+    whenever `U` is `G`-closed and `targets` is closed under pulling back along `g`. -/
+theorem no_transfer_reynolds_fixed_invariant_target {Gp X : Type _} [DecidableEq X]
+    (ga : FiniteGroupAction Gp X) (U : List X) (hnoDup : NoDupList U)
+    (hU_closed : ∀ g, g ∈ ga.elems → ∀ x, x ∈ U → ga.act g x ∈ U)
+    (f y : X → Bool)
+    (hy_inv : ∀ g, g ∈ ga.elems → ∀ x, x ∈ U → y (ga.act g x) = y x) :
+    sumNat (ga.elems.map fun g => hitCount U (fun x => f (ga.act g x)) y) =
+    ga.elems.length * hitCount U f y := by
+  have heach : ∀ g, g ∈ ga.elems →
+      hitCount U (fun x => f (ga.act g x)) y = hitCount U f y := by
+    intro g hg
+    have hcongr : hitCount U (fun x => f (ga.act g x)) y =
+        hitCount U (fun x => f (ga.act g x)) (fun x => y (ga.act g x)) := by
+      simp only [hitCount]
+      congr 1
+      apply list_map_congr
+      intro x hx
+      have hy := hy_inv g hg x hx
+      simp only [hy]
+    rw [hcongr]
+    exact sumNat_map_bijection U hnoDup (ga.act g) (ga.act (ga.inv g))
+      (ga.act_left_inv g) (ga.act_right_inv g)
+      (hU_closed g hg) (hU_closed (ga.inv g) (ga.inv_mem g hg))
+      (fun z => if f z = y z then 1 else 0)
+  have hconst : ga.elems.map (fun g => hitCount U (fun x => f (ga.act g x)) y) =
+      ga.elems.map (fun _ => hitCount U f y) :=
+    list_map_congr ga.elems _ _ heach
+  rw [hconst, sumNat_map_const]
+
+/-- Random-`G` (Reynolds) symmetrization leaves expected unlabelled hit count
+    unchanged under any finite uniform prior over targets closed under pulling back
+    by every `g ∈ G` (without requiring each individual target to be `G`-invariant). -/
+theorem no_transfer_reynolds_invariant_prior {Gp X T : Type _}
+    [DecidableEq X] [DecidableEq T]
+    (ga : FiniteGroupAction Gp X) (U : List X) (hnoDup : NoDupList U)
+    (hU_closed : ∀ g, g ∈ ga.elems → ∀ x, x ∈ U → ga.act g x ∈ U)
+    (TList : List T) (hT_nodup : NoDupList TList) (decode : T → X → Bool)
+    (hT_inv : ∀ g, g ∈ ga.elems →
+      ∃ shiftT unshiftT : T → T,
+        (∀ t, unshiftT (shiftT t) = t) ∧
+        (∀ t, shiftT (unshiftT t) = t) ∧
+        (∀ t, t ∈ TList → shiftT t ∈ TList) ∧
+        (∀ t, t ∈ TList → unshiftT t ∈ TList) ∧
+        (∀ t x, decode (shiftT t) x = decode t (ga.act g x)))
+    (f : X → Bool) :
+    sumNat (ga.elems.map fun g =>
+      sumNat (TList.map fun t => hitCount U (fun x => f (ga.act g x)) (decode t))) =
+    ga.elems.length * sumNat (TList.map fun t => hitCount U f (decode t)) := by
+  have heach : ∀ g, g ∈ ga.elems →
+      sumNat (TList.map fun t => hitCount U (fun x => f (ga.act g x)) (decode t)) =
+      sumNat (TList.map fun t => hitCount U f (decode t)) := by
+    intro g hg
+    obtain ⟨shiftT, unshiftT, hl, hr, hc1, hc2, hdec⟩ := hT_inv g hg
+    have hbijT := sumNat_map_bijection TList hT_nodup shiftT unshiftT hl hr hc1 hc2
+      (fun t => hitCount U (fun x => f (ga.act g x)) (decode t))
+    rw [← hbijT]
+    have hinner : TList.map (fun t => hitCount U (fun x => f (ga.act g x)) (decode (shiftT t))) =
+        TList.map (fun t => hitCount U f (decode t)) := by
+      apply list_map_congr
+      intro t _
+      have hdec1 : hitCount U (fun x => f (ga.act g x)) (decode (shiftT t)) =
+          hitCount U (fun x => f (ga.act g x)) (fun x => decode t (ga.act g x)) := by
+        simp only [hitCount]
+        congr 1
+        apply list_map_congr
+        intro x _
+        have hdx := hdec t x
+        simp only [hdx]
+      rw [hdec1]
+      exact sumNat_map_bijection U hnoDup (ga.act g) (ga.act (ga.inv g))
+        (ga.act_left_inv g) (ga.act_right_inv g)
+        (hU_closed g hg) (hU_closed (ga.inv g) (ga.inv_mem g hg))
+        (fun z => if f z = decode t z then 1 else 0)
+    rw [hinner]
+  have hconst : ga.elems.map (fun g =>
+      sumNat (TList.map fun t => hitCount U (fun x => f (ga.act g x)) (decode t))) =
+      ga.elems.map (fun _ => sumNat (TList.map fun t => hitCount U f (decode t))) :=
+    list_map_congr ga.elems _ _ heach
+  rw [hconst, sumNat_map_const]
+
+/-- Majority-vote symmetrization helper for the scope-boundary counterexample. -/
+def symMajority (G : List Gp) (act : Gp → X → X) (f : X → Bool) (x : X) : Bool :=
+  2 * sumNat (G.map fun g => if f (act g x) then 1 else 0) >= G.length
+
+/-- Scope boundary (Rule 4 honesty): deterministic majority-vote / logit-average
+    symmetrization can strictly IMPROVE expected unlabelled accuracy when the target
+    prior is `G`-invariant yet lacks unlabelled label-flip symmetry (4:1 skewed
+    toward constant-true vs constant-false on a 3-point cyclic unlabelled orbit). -/
+theorem sym_majority_can_improve_without_flip_symmetry :
+    let elems : List (Fin 3) := [0, 1, 2]
+    let U : List (Fin 3) := [0, 1, 2]
+    let act : Fin 3 → Fin 3 → Fin 3 := fun g x => g + x
+    let f : Fin 3 → Bool := fun x => decide (x ≠ 2)
+    let symF : Fin 3 → Bool := symMajority elems act f
+    let yTrue : Fin 3 → Bool := fun _ => true
+    let yFalse : Fin 3 → Bool := fun _ => false
+    let accRaw := 4 * hitCount U f yTrue + 1 * hitCount U f yFalse
+    let accSym := 4 * hitCount U symF yTrue + 1 * hitCount U symF yFalse
+    accRaw = 9 ∧ accSym = 12 ∧ accRaw < accSym := by
+  decide
+
+end NoTransfer
+
 end PFT

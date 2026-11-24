@@ -1,0 +1,206 @@
+{
+ "exact_fraction": 1.0,
+ "mean_minimal_ties": 9.8578125,
+ "frac_tasks_with_cheaper_completion_than_target": 0.209375,
+ "occam_bal_all": 0.5520200060259883,
+ "occam_acc_all": 0.5904296875,
+ "rows": {
+  "abs": {
+   "bal_net": 0.5606168487462578,
+   "bal_post": 0.5528566741489089,
+   "bal_occam": 0.5520200060259883,
+   "bal_occam_volume": 0.5565902189181899,
+   "agree_net_occam": 0.701953125,
+   "agree_net_post": 0.7732421875
+  },
+  "arcsinh": {
+   "bal_net": 0.5340982733741116,
+   "bal_post": 0.4988095562795887,
+   "bal_occam": 0.5520200060259883,
+   "bal_occam_volume": 0.5459988825284778,
+   "agree_net_occam": 0.7345703125,
+   "agree_net_post": 0.761328125
+  },
+  "bentid": {
+   "bal_net": 0.5511616456211657,
+   "bal_post": 0.5123976973642761,
+   "bal_occam": 0.5520200060259883,
+   "bal_occam_volume": 0.5339513719650544,
+   "agree_net_occam": 0.7478515625,
+   "agree_net_post": 0.8
+  },
+  "clip2": {
+   "bal_net": 0.5445052659628051,
+   "bal_post": 0.5366501912384517,
+   "bal_occam": 0.5513155970636692,
+   "bal_occam_volume": 0.5387180687028607,
+   "agree_net_occam": 0.7553233438485805,
+   "agree_net_post": 0.8172318611987381
+  },
+  "clip4": {
+   "bal_net": 0.5552822956092724,
+   "bal_post": 0.5347206468594186,
+   "bal_occam": 0.5512456316432277,
+   "bal_occam_volume": 0.5348912294279116,
+   "agree_net_occam": 0.7480361351139042,
+   "agree_net_post": 0.816967792615868
+  },
+  "cliprelu": {
+   "bal_net": 0.546394853694947,
+   "bal_post": 0.5283898558566887,
+   "bal_occam": 0.5491911822688228,
+   "bal_occam_volume": 0.5307602941056507,
+   "agree_net_occam": 0.7481854838709677,
+   "agree_net_post": 0.8161290322580645
+  },
+  "elu": {
+   "bal_net": 0.5536631166290322,
+   "bal_post": 0.5244819731554822,
+   "bal_occam": 0.5520200060259883,
+   "bal_occam_volume": 0.534102101423859,
+   "agree_net_occam": 0.7396484375,
+   "agree_net_post": 0.8123046875
+  },
+  "erf": {
+   "bal_net": 0.5379516042000724,
+   "bal_post": 0.5142809383379341,
+   "bal_occam": 0.5520200060259883,
+   "bal_occam_volume": 0.527058808892751,
+   "agree_net_occam": 0.73671875,
+   "agree_net_post": 0.7912109375
+  },
+  "gelu": {
+   "bal_net": 0.5582397096041462,
+   "bal_post": 0.5353605727783235,
+   "bal_occam": 0.5520200060259883,
+   "bal_occam_volume": 0.538933738213395,
+   "agree_net_occam": 0.7466796875,
+   "agree_net_post": 0.82421875
+  },
+  "hardtanh": {
+   "bal_net": 0.5399374474868777,
+   "bal_post": 0.5218599948245622,
+   "bal_occam": 0.5519827996562487,
+   "bal_occam_volume": 0.5301089078228978,
+   "agree_net_occam": 0.7404222048475372,
+   "agree_net_post": 0.8047302580140735
+  },
+  "leaky0.01": {
+   "bal_net": 0.5568543543507619,
+   "bal_post": 0.5290585661305961,
+   "bal_occam": 0.5520200060259883,
+   "bal_occam_volume": 0.5320784986261289,
+   "agree_net_occam": 0.74375,
+   "agree_net_post": 0.8265625
+  },
+  "leaky0.1": {
+   "bal_net": 0.556844704475357,
+   "bal_post": 0.5330220331378317,
+   "bal_occam": 0.5520200060259883,
+   "bal_occam_volume": 0.5356252664681503,
+   "agree_net_occam": 0.7443359375,
+   "agree_net_post": 0.8271484375
+  },
+  "leaky0.3": {
+   "bal_net": 0.5507893677832291,
+   "bal_post": 0.5279186048162289,
+   "bal_occam": 0.5520200060259883,
+   "bal_occam_volume": 0.5360419656333644,
+   "agree_net_occam": 0.7474609375,
+   "agree_net_post": 0.8298828125
+  },
+  "relu": {
+   "bal_net": 0.5566831442380553,
+   "bal_post": 0.533123246431424,
+   "bal_occam": 0.5516617942206475,
+   "bal_occam_volume": 0.5362163110037068,
+   "agree_net_occam": 0.7453051643192489,
+   "agree_net_post": 0.8255086071987481
+  },
+  "relu2": {
+   "bal_net": 0.5462816075457039,
+   "bal_post": 0.5388632851628249,
+   "bal_occam": 0.551767331074519,
+   "bal_occam_volume": 0.540515631494616,
+   "agree_net_occam": 0.7282868525896414,
+   "agree_net_post": 0.8237051792828686
+  },
+  "sigmoid": {
+   "bal_net": 0.5414926559788532,
+   "bal_post": 0.4994044397112559,
+   "bal_occam": 0.5515220770482898,
+   "bal_occam_volume": 0.5506099114336329,
+   "agree_net_occam": 0.7391390205371248,
+   "agree_net_post": 0.7306477093206951
+  },
+  "signsqrt": {
+   "bal_net": 0.5245258362255047,
+   "bal_post": 0.5114922040969383,
+   "bal_occam": 0.5520200060259883,
+   "bal_occam_volume": 0.5298069498562169,
+   "agree_net_occam": 0.71953125,
+   "agree_net_post": 0.7892578125
+  },
+  "silu": {
+   "bal_net": 0.5585115011362131,
+   "bal_post": 0.5376656169835256,
+   "bal_occam": 0.5520200060259883,
+   "bal_occam_volume": 0.5411022486442723,
+   "agree_net_occam": 0.7392578125,
+   "agree_net_post": 0.8130859375
+  },
+  "softplus": {
+   "bal_net": 0.5534930874194175,
+   "bal_post": 0.5135305608364034,
+   "bal_occam": 0.5520200060259883,
+   "bal_occam_volume": 0.5443726791451517,
+   "agree_net_occam": 0.7427734375,
+   "agree_net_post": 0.7888671875
+  },
+  "softsign": {
+   "bal_net": 0.5300137442936139,
+   "bal_post": 0.51494558347533,
+   "bal_occam": 0.5520200060259883,
+   "bal_occam_volume": 0.5293554792391304,
+   "agree_net_occam": 0.7267578125,
+   "agree_net_post": 0.7796875
+  },
+  "ssq": {
+   "bal_net": 0.5193554170333221,
+   "bal_post": 0.5034010626985103,
+   "bal_occam": 0.5520200060259883,
+   "bal_occam_volume": 0.5193006280713122,
+   "agree_net_occam": 0.716796875,
+   "agree_net_post": 0.814453125
+  },
+  "tanh": {
+   "bal_net": 0.5390400463449223,
+   "bal_post": 0.509347539225946,
+   "bal_occam": 0.5520200060259883,
+   "bal_occam_volume": 0.5260888767879983,
+   "agree_net_occam": 0.74140625,
+   "agree_net_post": 0.7919921875
+  },
+  "tanh02": {
+   "bal_net": 0.5442368631301548,
+   "bal_post": 0.5069780561833291,
+   "bal_occam": 0.5520200060259883,
+   "bal_occam_volume": 0.5320881485015339,
+   "agree_net_occam": 0.7333984375,
+   "agree_net_post": 0.7822265625
+  },
+  "tanh05": {
+   "bal_net": 0.5351268224906217,
+   "bal_post": 0.5157615163287854,
+   "bal_occam": 0.5520200060259883,
+   "bal_occam_volume": 0.5496545105351917,
+   "agree_net_occam": 0.7265625,
+   "agree_net_post": 0.76484375
+  }
+ },
+ "H34.1_occam_bal": 0.5520200060259883,
+ "H34.2_rho_agreeoccam_balnet": 0.4556521739130434,
+ "H34.3_occam_sides_with_net_on_net_posterior_disagreements": 0.4523721956601692,
+ "pooled_disagreements": 24471,
+ "H34.4_mean_bal_occam_volume_minus_occam": -0.015377324498990494
+}

@@ -1,0 +1,16 @@
+{
+ "automaton": "A4",
+ "seed": 5844,
+ "first99": 375,
+ "fit": 1.0,
+ "probe_acc": 1.0,
+ "determinism": 1.0,
+ "intervene_diff": 1.0,
+ "intervene_same": 1.0,
+ "char_scores": {
+  "omega(real,2d)": -0.44824287354387216,
+  "chi3": 0.44824287354387216
+ },
+ "char_best": "chi3",
+ "char_hit": true
+}

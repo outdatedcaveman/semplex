@@ -1,0 +1,120 @@
+{
+ "pairs": 5449620,
+ "features": [
+  "lawful",
+  "unlawful",
+  "passengers",
+  "more",
+  "fewer",
+  "younger",
+  "older",
+  "pets"
+ ],
+ "n_observed_cells": 24,
+ "n_dilemmas_in_observed": 5449620,
+ "min_cost": 1,
+ "certified_minimal": true,
+ "threshold_min_errors": 0,
+ "threshold_min_errors_status": "optimal",
+ "threshold_weights": {
+  "in": [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7
+  ],
+  "w": [
+   -3,
+   -4,
+   -3,
+   1,
+   -4,
+   1,
+   -4,
+   -4
+  ],
+  "b": 3,
+  "act": "step"
+ },
+ "partial": {
+  "splits": 40,
+  "frac_forced": 0.065,
+  "acc_forced": 1.0,
+  "acc_majority_of_minimal_forms": 0.825,
+  "acc_logistic": 0.9575000000000001
+ },
+ "cultures": {
+  "n_common_cells": 24,
+  "frac_all_agree": 0.875,
+  "n_observed": {
+   "0": 24,
+   "1": 24,
+   "2": 24
+  },
+  "min_cost": {
+   "0": 1,
+   "1": 1,
+   "2": 1
+  },
+  "disagreeing_cells": [
+   {
+    "cell": 4,
+    "features": [
+     "passengers"
+    ],
+    "verdict_by_cluster": {
+     "0": 1,
+     "1": 0,
+     "2": 1
+    },
+    "saved_share": {
+     "0": 0.513,
+     "1": 0.467,
+     "2": 0.512
+    }
+   },
+   {
+    "cell": 17,
+    "features": [
+     "lawful",
+     "fewer"
+    ],
+    "verdict_by_cluster": {
+     "0": 0,
+     "1": 1,
+     "2": 0
+    },
+    "saved_share": {
+     "0": 0.389,
+     "1": 0.514,
+     "2": 0.421
+    }
+   },
+   {
+    "cell": 34,
+    "features": [
+     "unlawful",
+     "younger"
+    ],
+    "verdict_by_cluster": {
+     "0": 1,
+     "1": 0,
+     "2": 1
+    },
+    "saved_share": {
+     "0": 0.552,
+     "1": 0.496,
+     "2": 0.58
+    }
+   }
+  ]
+ },
+ "H52.1": "NO VERDICT",
+ "H52.2": "NO VERDICT",
+ "H52.3": "NO VERDICT",
+ "H52.4": "NO VERDICT"
+}

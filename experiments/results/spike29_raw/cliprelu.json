@@ -1,0 +1,1 @@
+{"act": "cliprelu", "R2_trained": 0.8240379372010039, "pre_std": 1.4933806657791138, "armB_fit_rate": 0.96875, "heldout_acc": 0.5622983870967742, "heldout_acc_all": 0.5625}

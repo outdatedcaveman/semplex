@@ -1,0 +1,80 @@
+{
+ "groups": [
+  "Z7_s1_015",
+  "Z7_s3_023",
+  "Z8_s3_037",
+  "Z8_s3_015",
+  "Z11_s3_045",
+  "Z11_s2_012",
+  "Z12_s1_037",
+  "Z12_s1_035",
+  "D7_pt",
+  "A4_sub012",
+  "S3_pt"
+ ],
+ "nongroups": [
+  {
+   "id": 274,
+   "kind": "mixed"
+  },
+  {
+   "id": 184,
+   "kind": "mixed"
+  },
+  {
+   "id": 364,
+   "kind": "mixed"
+  },
+  {
+   "id": 443,
+   "kind": "free"
+  },
+  {
+   "id": 236,
+   "kind": "free"
+  },
+  {
+   "id": 335,
+   "kind": "free"
+  },
+  {
+   "id": 73,
+   "kind": "mixed"
+  },
+  {
+   "id": 34,
+   "kind": "mixed"
+  },
+  {
+   "id": 190,
+   "kind": "mixed"
+  },
+  {
+   "id": 14,
+   "kind": "free"
+  },
+  {
+   "id": 494,
+   "kind": "free"
+  },
+  {
+   "id": 284,
+   "kind": "free"
+  },
+  {
+   "id": 422,
+   "kind": "free"
+  },
+  {
+   "id": 547,
+   "kind": "mixed"
+  },
+  {
+   "id": 31,
+   "kind": "mixed"
+  }
+ ],
+ "VAR": 0.7,
+ "NRAND": 300,
+ "note": "No numeric predictions needed beyond the registered thresholds; automata fixed here before any run."
+}

@@ -9,3 +9,5 @@ open CerpBounds
 #print axioms depth2_or_flip_adds_one
 #print axioms parity4_not_two_halfspaces
 #print axioms depth2_or_flip_true_to_false
+#print axioms parity4_not_three_ltf_determined
+#print axioms parity4_not_four_neurons

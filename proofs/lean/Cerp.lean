@@ -1734,4 +1734,1127 @@ theorem tseitinTNetMiter_lrat_unsat_implies_equiv (n : Nat) (ns : List TNode) (e
     exact checkLrat_sound Ls (tseitinTNetMiter n ns e).toArray
       (dbValid_of_wellFormed _ hw) hchk τ (dbSat_of_cnfSat τ _ hsat_miter)
 
+
+/-! ## Part F1: Kernel-fast balanced binary tree LRAT checker -/
+
+inductive BTree (α : Type) where
+  | leaf : BTree α
+  | node : Option α → BTree α → BTree α → BTree α
+
+def bgetAux {α : Type} : Nat → BTree α → Nat → Option α
+  | 0, _, _ => none
+  | _ + 1, .leaf, _ => none
+  | _ + 1, .node v _ _, 0 => v
+  | fuel + 1, .node _ l r, n + 1 =>
+      if n % 2 == 0 then bgetAux fuel l (n / 2) else bgetAux fuel r (n / 2)
+
+def bsetAux {α : Type} : Nat → BTree α → Nat → α → BTree α
+  | 0, t, _, _ => t
+  | _ + 1, .leaf, 0, x => .node (some x) .leaf .leaf
+  | fuel + 1, .leaf, n + 1, x =>
+      if n % 2 == 0 then .node none (bsetAux fuel .leaf (n / 2) x) .leaf
+      else .node none .leaf (bsetAux fuel .leaf (n / 2) x)
+  | _ + 1, .node _ l r, 0, x => .node (some x) l r
+  | fuel + 1, .node v l r, n + 1, x =>
+      if n % 2 == 0 then .node v (bsetAux fuel l (n / 2) x) r
+      else .node v l (bsetAux fuel r (n / 2) x)
+
+def bOfListAux {α : Type} : List α → Nat → BTree α → BTree α
+  | [], _, t => t
+  | x :: xs, i, t => bOfListAux xs (i + 1) (bsetAux 32 t i x)
+
+def TreeAll (P : Clause → Prop) : BTree Clause → Prop
+  | .leaf => True
+  | .node v l r => (∀ c, v = some c → P c) ∧ TreeAll P l ∧ TreeAll P r
+
+theorem treeAll_bsetAux {P : Clause → Prop} :
+    ∀ (fuel : Nat) (t : BTree Clause) (i : Nat) (x : Clause),
+      TreeAll P t → P x → TreeAll P (bsetAux fuel t i x) := by
+  intro fuel
+  induction fuel with
+  | zero => intro t _ _ ht _; exact ht
+  | succ fuel ih =>
+      intro t i x ht hx
+      cases t with
+      | leaf =>
+          cases i with
+          | zero => exact ⟨(fun c h => by cases h; exact hx), trivial, trivial⟩
+          | succ n =>
+              dsimp only [bsetAux]
+              split
+              · exact ⟨(fun c h => by cases h), ih .leaf (n / 2) x trivial hx, trivial⟩
+              · exact ⟨(fun c h => by cases h), trivial, ih .leaf (n / 2) x trivial hx⟩
+      | node _ l r =>
+          cases i with
+          | zero => exact ⟨(fun c h => by cases h; exact hx), ht.2.1, ht.2.2⟩
+          | succ n =>
+              dsimp only [bsetAux]
+              split
+              · exact ⟨ht.1, ih l (n / 2) x ht.2.1 hx, ht.2.2⟩
+              · exact ⟨ht.1, ht.2.1, ih r (n / 2) x ht.2.2 hx⟩
+
+theorem treeAll_bOfListAux {P : Clause → Prop} :
+    ∀ (xs : List Clause) (i : Nat) (t : BTree Clause),
+      (∀ c, c ∈ xs → P c) → TreeAll P t → TreeAll P (bOfListAux xs i t) := by
+  intro xs
+  induction xs with
+  | nil => intro _ _ _ ht; exact ht
+  | cons x xs ih =>
+      intro i t hxs ht
+      exact ih (i + 1) (bsetAux 32 t i x)
+        (fun c hc => hxs c (List.mem_cons_of_mem x hc))
+        (treeAll_bsetAux 32 t i x ht (hxs x (List.mem_cons_self x xs)))
+
+theorem treeAll_bgetAux {P : Clause → Prop} :
+    ∀ (fuel : Nat) (t : BTree Clause) (cid : Nat) (c : Clause),
+      TreeAll P t → bgetAux fuel t cid = some c → P c := by
+  intro fuel
+  induction fuel with
+  | zero => intro _ _ _ _ h; cases h
+  | succ fuel ih =>
+      intro t cid c ht h
+      cases t with
+      | leaf => cases cid <;> simp [bgetAux] at h
+      | node _ l r =>
+          cases cid with
+          | zero => exact ht.1 c h
+          | succ n =>
+              dsimp only [bgetAux] at h
+              split at h
+              · exact ih l (n / 2) c ht.2.1 h
+              · exact ih r (n / 2) c ht.2.2 h
+
+def lratHintsT (db : BTree Clause) (trail : List Int) : List Nat → Bool
+  | [] => false
+  | cid :: rest =>
+      match bgetAux 32 db cid with
+      | none => false
+      | some c =>
+          match c.filter (notFalse trail) with
+          | [] => true
+          | [u] => lratHintsT db (u :: trail) rest
+          | _ => false
+
+theorem lratHintsT_sound (σ : Nat → Bool) (db : BTree Clause)
+    (hv : TreeAll (fun c => ∀ l, l ∈ c → l ≠ 0) db)
+    (hs : TreeAll (fun c => clauseSat σ c = true) db) :
+    ∀ (hints : List Nat) (trail : List Int),
+      Consistent σ trail → lratHintsT db trail hints = true → False := by
+  intro hints
+  induction hints with
+  | nil => intro _ _ h; simp [lratHintsT] at h
+  | cons cid rest ih =>
+      intro trail hc h
+      dsimp only [lratHintsT] at h
+      cases hg : bgetAux 32 db cid with
+      | none => rw [hg] at h; exact Bool.false_ne_true h
+      | some c =>
+          rw [hg] at h
+          dsimp only at h
+          have hcV := treeAll_bgetAux 32 db cid c hv hg
+          have hcS := treeAll_bgetAux 32 db cid c hs hg
+          obtain ⟨l, hl, hlt⟩ := List.any_eq_true.mp hcS
+          cases hf : c.filter (notFalse trail) with
+          | nil =>
+              have hnf := false_of_notFalse_false hc (hcV l hl) (filter_nil_all hf l hl)
+              rw [hnf] at hlt; exact Bool.false_ne_true hlt
+          | cons u us =>
+              cases us with
+              | nil =>
+                  rw [hf] at h
+                  have hu_true : litTrue σ u = true := by
+                    by_cases hnf : notFalse trail l = true
+                    · have hmem : l ∈ c.filter (notFalse trail) := mem_filter_of hl hnf
+                      rw [hf] at hmem
+                      simp at hmem; rw [← hmem]; exact hlt
+                    · have hnf' : notFalse trail l = false := by simpa using hnf
+                      have := false_of_notFalse_false hc (hcV l hl) hnf'
+                      rw [this] at hlt; exact absurd hlt Bool.false_ne_true
+                  apply ih (u :: trail) _ h
+                  intro l' hl'
+                  cases List.mem_cons.mp hl' with
+                  | inl heq => rw [heq]; exact hu_true
+                  | inr hmem => exact hc l' hmem
+              | cons _ _ =>
+                  rw [hf] at h; exact Bool.false_ne_true h
+
+def rupLratT (db : BTree Clause) (C : Clause) (hints : List Nat) : Bool :=
+  lratHintsT db (C.map (fun l => -l)) hints
+
+theorem rupLratT_sound (σ : Nat → Bool) (db : BTree Clause) (C : Clause) (hints : List Nat)
+    (hv : TreeAll (fun c => ∀ l, l ∈ c → l ≠ 0) db)
+    (hC : ∀ l, l ∈ C → l ≠ 0)
+    (hs : TreeAll (fun c => clauseSat σ c = true) db)
+    (hr : rupLratT db C hints = true) :
+    clauseSat σ C = true := by
+  cases hcs : clauseSat σ C
+  · exfalso
+    apply lratHintsT_sound σ db hv hs hints (C.map (fun l => -l)) _ hr
+    intro l hl
+    obtain ⟨k, hk, hkl⟩ := List.mem_map.mp hl
+    rw [← hkl, litTrue_neg σ k (hC k hk)]
+    have hkf : litTrue σ k = false := by
+      cases hv' : litTrue σ k
+      · rfl
+      · have : clauseSat σ C = true := List.any_eq_true.mpr ⟨k, hk, hv'⟩
+        rw [hcs] at this; exact absurd this Bool.false_ne_true
+    simp [hkf]
+  · rfl
+
+def checkLratT (db : BTree Clause) (nxt : Nat) : List (Clause × List Nat) → Bool
+  | [] => false
+  | (C, hints) :: Ls =>
+      C.all (fun l => l != 0) && rupLratT db C hints &&
+        (C.isEmpty || checkLratT (bsetAux 32 db nxt C) (nxt + 1) Ls)
+
+theorem checkLratT_sound : ∀ (Ls : List (Clause × List Nat)) (db : BTree Clause) (nxt : Nat),
+    TreeAll (fun c => ∀ l, l ∈ c → l ≠ 0) db →
+    checkLratT db nxt Ls = true →
+    ∀ σ, ¬ TreeAll (fun c => clauseSat σ c = true) db := by
+  intro Ls
+  induction Ls with
+  | nil => intro _ _ _ h _; simp [checkLratT] at h
+  | cons step Ls ih =>
+      obtain ⟨C, hints⟩ := step
+      intro db nxt hv hchk σ hs
+      simp only [checkLratT, Bool.and_eq_true, Bool.or_eq_true] at hchk
+      obtain ⟨⟨hCnz, hrup⟩, hrest⟩ := hchk
+      have hC : ∀ l, l ∈ C → l ≠ 0 := by
+        intro l hl; have := List.all_eq_true.mp hCnz l hl; simpa using this
+      have hCsat := rupLratT_sound σ db C hints hv hC hs hrup
+      cases hrest with
+      | inl hempty =>
+          have : C = [] := by simpa using hempty
+          subst this; simp [clauseSat] at hCsat
+      | inr hnext =>
+          exact ih (bsetAux 32 db nxt C) (nxt + 1)
+            (treeAll_bsetAux 32 db nxt C hv hC) hnext σ
+            (treeAll_bsetAux 32 db nxt C hs hCsat)
+
+theorem checkLratT_unsat (F : CNF) (Ls : List (Clause × List Nat))
+    (hw : wellFormed F = true)
+    (hchk : checkLratT (bOfListAux F 0 .leaf) F.length Ls = true) :
+    ∀ σ, cnfSat σ F = false := by
+  intro σ
+  cases hsat : cnfSat σ F
+  · rfl
+  · exfalso
+    have hv : TreeAll (fun c => ∀ l, l ∈ c → l ≠ 0) (bOfListAux F 0 .leaf) :=
+      treeAll_bOfListAux F 0 .leaf
+        (fun c hc l hl => by
+          have := List.all_eq_true.mp (List.all_eq_true.mp hw c hc) l hl
+          simpa using this) trivial
+    have hs : TreeAll (fun c => clauseSat σ c = true) (bOfListAux F 0 .leaf) :=
+      treeAll_bOfListAux F 0 .leaf
+        (fun c hc => List.all_eq_true.mp hsat c hc) trivial
+    exact checkLratT_sound Ls (bOfListAux F 0 .leaf) F.length hv hchk σ hs
+
+/-! ## Part F2: Polynomial O(d * W) Threshold DP Encoder (Gap B1) -/
+
+inductive SymLit where
+  | const : Bool → SymLit
+  | lit : Int → SymLit
+  deriving DecidableEq
+
+def symEval (σ : Nat → Bool) : SymLit → Bool
+  | .const b => b
+  | .lit l => litTrue σ l
+
+def SymBelow (k : Nat) : SymLit → Prop
+  | .const _ => True
+  | .lit l => l ≠ 0 ∧ l.natAbs < k
+
+theorem symBelow_mono {k₁ k₂ : Nat} {s : SymLit} (hle : k₁ ≤ k₂) (h : SymBelow k₁ s) :
+    SymBelow k₂ s := by
+  cases s with
+  | const _ => trivial
+  | lit l => exact ⟨h.1, Nat.lt_of_lt_of_le h.2 hle⟩
+
+theorem symEval_congr_below (σ τ : Nat → Bool) (k : Nat)
+    (hagree : ∀ i, i < k → τ i = σ i) (s : SymLit) (hb : SymBelow k s) :
+    symEval τ s = symEval σ s := by
+  cases s with
+  | const _ => rfl
+  | lit l =>
+      unfold symEval litTrue
+      have hlt : l.natAbs < k := hb.2
+      simp [hagree l.natAbs hlt]
+
+theorem litTrue_ofNat (σ : Nat → Bool) (k : Nat) (hk : 0 < k) :
+    litTrue σ (k : Int) = σ k := by
+  have hp : (0 : Int) < (k : Int) := Int.ofNat_lt.mpr hk
+  have hn : ((k : Int)).natAbs = k := by omega
+  simp [litTrue, hp, hn]
+
+def pbBounds : List Nat → List Int → Int × Int
+  | [], _ => (0, 0)
+  | _ :: _, [] => (0, 0)
+  | _ :: is, w :: ws =>
+      let b := pbBounds is ws
+      (b.1 + min w 0, b.2 + max w 0)
+
+theorem pbBounds_sound (env : Nat → Bool) :
+    ∀ (ins : List Nat) (ws : List Int),
+      (pbBounds ins ws).1 ≤ tnodeSum env ins ws ∧ tnodeSum env ins ws ≤ (pbBounds ins ws).2 := by
+  intro ins
+  induction ins with
+  | nil => intro ws; cases ws <;> simp [pbBounds, tnodeSum]
+  | cons i is ih =>
+      intro ws
+      cases ws with
+      | nil => simp [pbBounds, tnodeSum]
+      | cons w ws =>
+          have h := ih ws
+          dsimp only [pbBounds, tnodeSum]
+          cases env i <;> simp <;> omega
+
+def addBound (lo hi : Int) (u : Int) (acc : List Int) : List Int :=
+  if lo < u && u ≤ hi then
+    if acc.elem u then acc else u :: acc
+  else acc
+
+def nextLayerTs (lo hi w : Int) : List Int → List Int → List Int
+  | [], acc => acc
+  | u :: us, acc =>
+      let acc1 := addBound lo hi (u - w) acc
+      let acc2 := addBound lo hi u acc1
+      nextLayerTs lo hi w us acc2
+
+theorem mem_addBound_old {lo hi u : Int} :
+    ∀ {acc : List Int} {x : Int}, x ∈ acc → x ∈ addBound lo hi u acc := by
+  intro acc x hx
+  unfold addBound
+  split
+  · split
+    · exact hx
+    · exact List.mem_cons_of_mem u hx
+  · exact hx
+
+theorem mem_addBound_self {lo hi u : Int} (hlo : lo < u) (hhi : u ≤ hi) (acc : List Int) :
+    u ∈ addBound lo hi u acc := by
+  unfold addBound
+  have hc : (lo < u && u ≤ hi) = true := by
+    simp [decide_eq_true_eq, hlo, hhi]
+  rw [hc]; simp only [↓reduceIte]
+  split
+  · next he => exact List.mem_of_elem_eq_true he
+  · exact List.mem_cons_self u acc
+
+theorem mem_nextLayerTs_acc {lo hi w : Int} :
+    ∀ (ts acc : List Int) {x : Int}, x ∈ acc → x ∈ nextLayerTs lo hi w ts acc := by
+  intro ts
+  induction ts with
+  | nil => intro acc x hx; exact hx
+  | cons _ _ ih =>
+      intro acc x hx
+      exact ih _ (mem_addBound_old (mem_addBound_old hx))
+
+theorem mem_nextLayerTs_spec {lo hi w : Int} :
+    ∀ (ts acc : List Int) {u : Int}, u ∈ ts →
+      (lo < u - w → u - w ≤ hi → u - w ∈ nextLayerTs lo hi w ts acc) ∧
+      (lo < u → u ≤ hi → u ∈ nextLayerTs lo hi w ts acc) := by
+  intro ts
+  induction ts with
+  | nil => intro _ _ hu; simp at hu
+  | cons t ts ih =>
+      intro acc u hu
+      cases List.mem_cons.mp hu with
+      | inl heq =>
+          subst heq
+          constructor
+          · intro h1 h2
+            exact mem_nextLayerTs_acc ts _ (mem_addBound_old (mem_addBound_self h1 h2 acc))
+          · intro h1 h2
+            exact mem_nextLayerTs_acc ts _ (mem_addBound_self h1 h2 _)
+      | inr hmem =>
+          exact ih _ hmem
+
+def mkSymIte (cLit : Int) (th el : SymLit) (nxt : Nat) : SymLit × CNF × Nat :=
+  match th, el with
+  | .const true, .const true => (.const true, [], nxt)
+  | .const false, .const false => (.const false, [], nxt)
+  | .const true, .const false => (.lit cLit, [], nxt)
+  | .const false, .const true => (.lit (-cLit), [], nxt)
+  | .const true, .lit e => (.lit (nxt : Int), gateOr (nxt : Int) cLit e, nxt + 1)
+  | .lit t, .const false => (.lit (nxt : Int), gateAnd (nxt : Int) cLit t, nxt + 1)
+  | .const false, .lit e => (.lit (nxt : Int), gateAnd (nxt : Int) (-cLit) e, nxt + 1)
+  | .lit t, .const true => (.lit (nxt : Int), gateOr (nxt : Int) (-cLit) t, nxt + 1)
+  | .lit t, .lit e =>
+      if t == e then (.lit t, [], nxt)
+      else (.lit (nxt : Int), gateIte (nxt : Int) cLit t e, nxt + 1)
+
+theorem mkSymIte_nxt_le (cLit : Int) (th el : SymLit) (nxt : Nat) :
+    nxt ≤ (mkSymIte cLit th el nxt).2.2 := by
+  cases th with
+  | const bt =>
+      cases el with
+      | const be => cases bt <;> cases be <;> exact Nat.le_refl nxt
+      | lit _ => cases bt <;> exact Nat.le_step (Nat.le_refl nxt)
+  | lit t =>
+      cases el with
+      | const be => cases be <;> exact Nat.le_step (Nat.le_refl nxt)
+      | lit e =>
+          dsimp only [mkSymIte]
+          split
+          · exact Nat.le_refl nxt
+          · exact Nat.le_step (Nat.le_refl nxt)
+
+theorem cnfBelow_gateOr {out a b : Int} {k : Nat}
+    (ho : out ≠ 0 ∧ out.natAbs < k) (ha : a ≠ 0 ∧ a.natAbs < k) (hb : b ≠ 0 ∧ b.natAbs < k) :
+    CNFBelow k (gateOr out a b) := by
+  intro c hc l hl
+  simp only [gateOr, List.mem_cons, List.not_mem_nil, or_false] at hc
+  rcases hc with rfl | rfl | rfl <;>
+    simp only [List.mem_cons, List.not_mem_nil, or_false] at hl <;>
+    rcases hl with rfl | rfl | rfl <;> (try rw [Int.natAbs_neg]) <;> omega
+
+theorem cnfBelow_gateAnd {out a b : Int} {k : Nat}
+    (ho : out ≠ 0 ∧ out.natAbs < k) (ha : a ≠ 0 ∧ a.natAbs < k) (hb : b ≠ 0 ∧ b.natAbs < k) :
+    CNFBelow k (gateAnd out a b) := by
+  intro c hc l hl
+  simp only [gateAnd, List.mem_cons, List.not_mem_nil, or_false] at hc
+  rcases hc with rfl | rfl | rfl <;>
+    simp only [List.mem_cons, List.not_mem_nil, or_false] at hl <;>
+    rcases hl with rfl | rfl | rfl <;> (try rw [Int.natAbs_neg]) <;> omega
+
+theorem cnfBelow_gateIte {out cLit t e : Int} {k : Nat}
+    (ho : out ≠ 0 ∧ out.natAbs < k) (hc : cLit ≠ 0 ∧ cLit.natAbs < k)
+    (ht : t ≠ 0 ∧ t.natAbs < k) (he : e ≠ 0 ∧ e.natAbs < k) :
+    CNFBelow k (gateIte out cLit t e) := by
+  intro cl hcl l hl
+  simp only [gateIte, List.mem_cons, List.not_mem_nil, or_false] at hcl
+  rcases hcl with rfl | rfl | rfl | rfl <;>
+    simp only [List.mem_cons, List.not_mem_nil, or_false] at hl <;>
+    rcases hl with rfl | rfl | rfl <;> (try rw [Int.natAbs_neg]) <;> omega
+
+theorem mkSymIte_below (cLit : Int) (th el : SymLit) (nxt : Nat)
+    (hnxt : 1 ≤ nxt) (hc0 : cLit ≠ 0) (hclt : cLit.natAbs < nxt)
+    (hth : SymBelow nxt th) (hel : SymBelow nxt el) :
+    SymBelow (mkSymIte cLit th el nxt).2.2 (mkSymIte cLit th el nxt).1 ∧
+    CNFBelow (mkSymIte cLit th el nxt).2.2 (mkSymIte cLit th el nxt).2.1 := by
+  have hc_k : cLit ≠ 0 ∧ cLit.natAbs < nxt + 1 := ⟨hc0, Nat.lt_succ_of_lt hclt⟩
+  have hnc_k : -cLit ≠ 0 ∧ (-cLit).natAbs < nxt + 1 := ⟨by omega, by simpa [Int.natAbs_neg] using Nat.lt_succ_of_lt hclt⟩
+  have ho_k : (nxt : Int) ≠ 0 ∧ ((nxt : Int)).natAbs < nxt + 1 := ⟨by omega, by omega⟩
+  cases th with
+  | const bt =>
+      cases el with
+      | const be =>
+          cases bt <;> cases be <;> dsimp only [mkSymIte]
+          · exact ⟨trivial, (fun _ h => by cases h)⟩
+          · exact ⟨⟨by omega, by simpa [Int.natAbs_neg] using hclt⟩, (fun _ h => by cases h)⟩
+          · exact ⟨⟨hc0, hclt⟩, (fun _ h => by cases h)⟩
+          · exact ⟨trivial, (fun _ h => by cases h)⟩
+      | lit e =>
+          have hel1 : e ≠ 0 ∧ e.natAbs < nxt + 1 := ⟨hel.1, Nat.lt_succ_of_lt hel.2⟩
+          cases bt <;> dsimp only [mkSymIte]
+          · exact ⟨ho_k, cnfBelow_gateAnd ho_k hnc_k hel1⟩
+          · exact ⟨ho_k, cnfBelow_gateOr ho_k hc_k hel1⟩
+  | lit t =>
+      have hth1 : t ≠ 0 ∧ t.natAbs < nxt + 1 := ⟨hth.1, Nat.lt_succ_of_lt hth.2⟩
+      cases el with
+      | const be =>
+          cases be <;> dsimp only [mkSymIte]
+          · exact ⟨ho_k, cnfBelow_gateAnd ho_k hc_k hth1⟩
+          · exact ⟨ho_k, cnfBelow_gateOr ho_k hnc_k hth1⟩
+      | lit e =>
+          have hel1 : e ≠ 0 ∧ e.natAbs < nxt + 1 := ⟨hel.1, Nat.lt_succ_of_lt hel.2⟩
+          dsimp only [mkSymIte]
+          split
+          · dsimp only; exact ⟨hth, (fun _ h => by cases h)⟩
+          · dsimp only; exact ⟨ho_k, cnfBelow_gateIte ho_k hc_k hth1 hel1⟩
+
+theorem mkSymIte_complete (σ : Nat → Bool) (cLit : Int) (th el : SymLit) (nxt : Nat)
+    (hnxt : 1 ≤ nxt) (hc0 : cLit ≠ 0) (hclt : cLit.natAbs < nxt)
+    (hth : SymBelow nxt th) (hel : SymBelow nxt el) :
+    ∃ τ, (∀ i, i < nxt → τ i = σ i) ∧
+      cnfSat τ (mkSymIte cLit th el nxt).2.1 = true ∧
+      symEval τ (mkSymIte cLit th el nxt).1 =
+        (if litTrue σ cLit then symEval σ th else symEval σ el) := by
+  cases th with
+  | const bt =>
+      cases el with
+      | const be =>
+          cases bt <;> cases be <;> dsimp only [mkSymIte]
+          · exact ⟨σ, fun _ _ => rfl, rfl, by cases litTrue σ cLit <;> rfl⟩
+          · exact ⟨σ, fun _ _ => rfl, rfl, by
+              cases h : litTrue σ cLit <;> simp [symEval, litTrue_neg σ cLit hc0, h]⟩
+          · exact ⟨σ, fun _ _ => rfl, rfl, by
+              cases h : litTrue σ cLit <;> simp [symEval, h]⟩
+          · exact ⟨σ, fun _ _ => rfl, rfl, by cases litTrue σ cLit <;> rfl⟩
+      | lit e =>
+          have hel_ne : e.natAbs ≠ nxt := Nat.ne_of_lt hel.2
+          have hcl_ne : cLit.natAbs ≠ nxt := Nat.ne_of_lt hclt
+          let τ := upd σ nxt (if litTrue σ cLit then bt else litTrue σ e)
+          have hag : ∀ i, i < nxt → τ i = σ i := fun i hi => if_neg (Nat.ne_of_lt hi)
+          have hc_eq : litTrue τ cLit = litTrue σ cLit := litTrue_upd_ne σ nxt _ cLit hcl_ne
+          have he_eq : litTrue τ e = litTrue σ e := litTrue_upd_ne σ nxt _ e hel_ne
+          have ho_eq : litTrue τ (nxt : Int) = (if litTrue σ cLit then bt else litTrue σ e) := by
+            rw [litTrue_ofNat τ nxt hnxt]; simp [τ, upd]
+          cases bt <;> dsimp only [mkSymIte]
+          · refine ⟨τ, hag, ?_, by simpa [symEval] using ho_eq⟩
+            simp only [gateAnd, cnfSat, clauseSat, List.all_cons, List.all_nil, List.any_cons, List.any_nil,
+              Bool.or_false, Bool.and_true, Bool.and_eq_true, Bool.or_eq_true]
+            rw [litTrue_neg τ (nxt : Int) (by omega), ho_eq, litTrue_neg τ (-cLit) (by omega),
+              litTrue_neg τ cLit hc0, hc_eq, litTrue_neg τ e hel.1, he_eq]
+            cases litTrue σ cLit <;> cases litTrue σ e <;> simp
+          · refine ⟨τ, hag, ?_, by simpa [symEval] using ho_eq⟩
+            simp only [gateOr, cnfSat, clauseSat, List.all_cons, List.all_nil, List.any_cons, List.any_nil,
+              Bool.or_false, Bool.and_true, Bool.and_eq_true, Bool.or_eq_true]
+            rw [litTrue_neg τ (nxt : Int) (by omega), ho_eq, litTrue_neg τ cLit hc0, hc_eq,
+              litTrue_neg τ e hel.1, he_eq]
+            cases litTrue σ cLit <;> cases litTrue σ e <;> simp
+  | lit t =>
+      have hth_ne : t.natAbs ≠ nxt := Nat.ne_of_lt hth.2
+      have hcl_ne : cLit.natAbs ≠ nxt := Nat.ne_of_lt hclt
+      cases el with
+      | const be =>
+          let τ := upd σ nxt (if litTrue σ cLit then litTrue σ t else be)
+          have hag : ∀ i, i < nxt → τ i = σ i := fun i hi => if_neg (Nat.ne_of_lt hi)
+          have hc_eq : litTrue τ cLit = litTrue σ cLit := litTrue_upd_ne σ nxt _ cLit hcl_ne
+          have ht_eq : litTrue τ t = litTrue σ t := litTrue_upd_ne σ nxt _ t hth_ne
+          have ho_eq : litTrue τ (nxt : Int) = (if litTrue σ cLit then litTrue σ t else be) := by
+            rw [litTrue_ofNat τ nxt hnxt]; simp [τ, upd]
+          cases be <;> dsimp only [mkSymIte]
+          · refine ⟨τ, hag, ?_, by simpa [symEval] using ho_eq⟩
+            simp only [gateAnd, cnfSat, clauseSat, List.all_cons, List.all_nil, List.any_cons, List.any_nil,
+              Bool.or_false, Bool.and_true, Bool.and_eq_true, Bool.or_eq_true]
+            rw [litTrue_neg τ (nxt : Int) (by omega), ho_eq, litTrue_neg τ cLit hc0, hc_eq,
+              litTrue_neg τ t hth.1, ht_eq]
+            cases litTrue σ cLit <;> cases litTrue σ t <;> simp
+          · refine ⟨τ, hag, ?_, by simpa [symEval] using ho_eq⟩
+            simp only [gateOr, cnfSat, clauseSat, List.all_cons, List.all_nil, List.any_cons, List.any_nil,
+              Bool.or_false, Bool.and_true, Bool.and_eq_true, Bool.or_eq_true]
+            rw [litTrue_neg τ (nxt : Int) (by omega), ho_eq, litTrue_neg τ (-cLit) (by omega),
+              litTrue_neg τ cLit hc0, hc_eq, litTrue_neg τ t hth.1, ht_eq]
+            cases litTrue σ cLit <;> cases litTrue σ t <;> simp
+      | lit e =>
+          dsimp only [mkSymIte]
+          split
+          · next heq =>
+              have hte : t = e := of_decide_eq_true heq
+              subst hte
+              exact ⟨σ, fun _ _ => rfl, rfl, by cases litTrue σ cLit <;> simp [symEval]⟩
+          · have hel_ne : e.natAbs ≠ nxt := Nat.ne_of_lt hel.2
+            let τ := upd σ nxt (if litTrue σ cLit then litTrue σ t else litTrue σ e)
+            have hag : ∀ i, i < nxt → τ i = σ i := fun i hi => if_neg (Nat.ne_of_lt hi)
+            have hc_eq : litTrue τ cLit = litTrue σ cLit := litTrue_upd_ne σ nxt _ cLit hcl_ne
+            have ht_eq : litTrue τ t = litTrue σ t := litTrue_upd_ne σ nxt _ t hth_ne
+            have he_eq : litTrue τ e = litTrue σ e := litTrue_upd_ne σ nxt _ e hel_ne
+            have ho_eq : litTrue τ (nxt : Int) = (if litTrue σ cLit then litTrue σ t else litTrue σ e) := by
+              rw [litTrue_ofNat τ nxt hnxt]; simp [τ, upd]
+            refine ⟨τ, hag, ?_, by simpa [symEval] using ho_eq⟩
+            simp only [gateIte, cnfSat, clauseSat, List.all_cons, List.all_nil, List.any_cons, List.any_nil,
+              Bool.or_false, Bool.and_true, Bool.and_eq_true, Bool.or_eq_true]
+            rw [litTrue_neg τ (nxt : Int) (by omega), ho_eq, litTrue_neg τ cLit hc0, hc_eq,
+              litTrue_neg τ t hth.1, ht_eq, litTrue_neg τ e hel.1, he_eq]
+            cases litTrue σ cLit <;> cases litTrue σ t <;> cases litTrue σ e <;> simp
+
+def findSym (u : Int) : List (Int × SymLit) → Option SymLit
+  | [] => none
+  | (k, s) :: rest => if k == u then some s else findSym u rest
+
+theorem findSym_mem {u : Int} : ∀ {m : List (Int × SymLit)} {s : SymLit},
+    findSym u m = some s → (u, s) ∈ m := by
+  intro m s
+  induction m with
+  | nil => intro h; cases h
+  | cons p rest ih =>
+      obtain ⟨k, sp⟩ := p
+      intro h
+      dsimp only [findSym] at h
+      split at h
+      · next hk =>
+          have hku : k = u := of_decide_eq_true hk
+          cases h; subst hku; exact List.mem_cons_self _ rest
+      · exact List.mem_cons_of_mem _ (ih h)
+
+theorem findSym_isSome {u : Int} : ∀ {m : List (Int × SymLit)} {s : SymLit},
+    (u, s) ∈ m → ∃ s', findSym u m = some s' := by
+  intro m s hm
+  induction m with
+  | nil => cases hm
+  | cons p rest ih =>
+      obtain ⟨k, sp⟩ := p
+      dsimp only [findSym]
+      by_cases h : k == u
+      · rw [h]; exact ⟨sp, rfl⟩
+      · simp only [h, Bool.false_eq_true, ↓reduceIte]
+        cases List.mem_cons.mp hm with
+        | inl heq => cases heq; exact absurd (beq_self_eq_true u) h
+        | inr hr => exact ih hr
+
+def lookupSym (lo hi : Int) (m : List (Int × SymLit)) (u : Int) : SymLit :=
+  if u ≤ lo then .const true
+  else if hi < u then .const false
+  else match findSym u m with
+    | some s => s
+    | none => .const false
+
+theorem lookupSym_below {k : Nat} (lo hi : Int) (m : List (Int × SymLit)) (u : Int)
+    (hm : ∀ p, p ∈ m → SymBelow k p.2) : SymBelow k (lookupSym lo hi m u) := by
+  unfold lookupSym
+  split
+  · trivial
+  · split
+    · trivial
+    · cases hf : findSym u m with
+      | none => trivial
+      | some s => exact hm (u, s) (findSym_mem hf)
+
+theorem lookupSym_eval (σ : Nat → Bool) (lo hi rhs : Int) (m : List (Int × SymLit)) (u : Int)
+    (hlo : lo ≤ rhs) (hhi : rhs ≤ hi)
+    (hm : ∀ p, p ∈ m → symEval σ p.2 = decide (p.1 ≤ rhs))
+    (hcov : lo < u → u ≤ hi → ∃ s, (u, s) ∈ m) :
+    symEval σ (lookupSym lo hi m u) = decide (u ≤ rhs) := by
+  unfold lookupSym
+  split
+  · next hle =>
+      have : u ≤ rhs := Int.le_trans hle hlo
+      simp [symEval, this]
+  · split
+    · next hlt =>
+        have : ¬ (u ≤ rhs) := by omega
+        simp [symEval, this]
+    · next hnle hnlt =>
+        have hlo' : lo < u := by omega
+        have hhi' : u ≤ hi := by omega
+        obtain ⟨s, hs⟩ := hcov hlo' hhi'
+        obtain ⟨s', hs'⟩ := findSym_isSome hs
+        rw [hs']
+        exact hm (u, s') (findSym_mem hs')
+
+def buildLayer (cLit sLo sHi w : Int) (subMap : List (Int × SymLit)) :
+    List Int → Nat → List (Int × SymLit) × CNF × Nat
+  | [], nxt => ([], [], nxt)
+  | u :: us, nxt =>
+      let th := lookupSym sLo sHi subMap (u - w)
+      let el := lookupSym sLo sHi subMap u
+      let (s, c1, n1) := mkSymIte cLit th el nxt
+      let (restMap, c2, n2) := buildLayer cLit sLo sHi w subMap us n1
+      ((u, s) :: restMap, c1 ++ c2, n2)
+
+theorem buildLayer_nxt_le (cLit sLo sHi w : Int) (subMap : List (Int × SymLit)) :
+    ∀ (us : List Int) (nxt : Nat), nxt ≤ (buildLayer cLit sLo sHi w subMap us nxt).2.2 := by
+  intro us
+  induction us with
+  | nil => intro nxt; exact Nat.le_refl nxt
+  | cons _ _ ih =>
+      intro nxt
+      dsimp only [buildLayer]
+      exact Nat.le_trans (mkSymIte_nxt_le _ _ _ nxt) (ih _)
+
+theorem buildLayer_below (cLit sLo sHi w : Int) (subMap : List (Int × SymLit)) :
+    ∀ (us : List Int) (nxt : Nat),
+      1 ≤ nxt → cLit ≠ 0 → cLit.natAbs < nxt →
+      (∀ p, p ∈ subMap → SymBelow nxt p.2) →
+      (∀ p, p ∈ (buildLayer cLit sLo sHi w subMap us nxt).1 →
+        SymBelow (buildLayer cLit sLo sHi w subMap us nxt).2.2 p.2) ∧
+      CNFBelow (buildLayer cLit sLo sHi w subMap us nxt).2.2
+        (buildLayer cLit sLo sHi w subMap us nxt).2.1 := by
+  intro us
+  induction us with
+  | nil =>
+      intro _ _ _ _ _
+      exact ⟨(fun _ h => by cases h), (fun _ h => by cases h)⟩
+  | cons u us ih =>
+      intro nxt hnxt hc0 hclt hsub
+      dsimp only [buildLayer]
+      have hth : SymBelow nxt (lookupSym sLo sHi subMap (u - w)) := lookupSym_below sLo sHi subMap (u - w) hsub
+      have hel : SymBelow nxt (lookupSym sLo sHi subMap u) := lookupSym_below sLo sHi subMap u hsub
+      let r1 := mkSymIte cLit (lookupSym sLo sHi subMap (u - w)) (lookupSym sLo sHi subMap u) nxt
+      obtain ⟨hs1, hc1⟩ := mkSymIte_below cLit _ _ nxt hnxt hc0 hclt hth hel
+      have hle1 : nxt ≤ r1.2.2 := mkSymIte_nxt_le _ _ _ nxt
+      have hn1 : 1 ≤ r1.2.2 := Nat.le_trans hnxt hle1
+      have hclt1 : cLit.natAbs < r1.2.2 := Nat.lt_of_lt_of_le hclt hle1
+      have hsub1 : ∀ p, p ∈ subMap → SymBelow r1.2.2 p.2 := fun p hp => symBelow_mono hle1 (hsub p hp)
+      obtain ⟨hrest, hc2⟩ := ih r1.2.2 hn1 hc0 hclt1 hsub1
+      have hle2 : r1.2.2 ≤ (buildLayer cLit sLo sHi w subMap us r1.2.2).2.2 :=
+        buildLayer_nxt_le cLit sLo sHi w subMap us r1.2.2
+      constructor
+      · intro p hp
+        cases List.mem_cons.mp hp with
+        | inl heq =>
+            rw [heq]
+            exact symBelow_mono hle2 hs1
+        | inr hr => exact hrest p hr
+      · rw [cnfBelow_append]
+        exact ⟨cnfBelow_mono hle2 hc1, hc2⟩
+
+theorem buildLayer_covers (cLit sLo sHi w : Int) (subMap : List (Int × SymLit)) :
+    ∀ (us : List Int) (nxt : Nat) {u : Int},
+      u ∈ us → ∃ s, (u, s) ∈ (buildLayer cLit sLo sHi w subMap us nxt).1 := by
+  intro us
+  induction us with
+  | nil => intro _ _ hu; cases hu
+  | cons _ _ ih =>
+      intro nxt u hu
+      dsimp only [buildLayer]
+      cases List.mem_cons.mp hu with
+      | inl heq => rw [heq]; exact ⟨_, List.mem_cons_self _ _⟩
+      | inr hr =>
+          obtain ⟨s, hs⟩ := ih _ hr
+          exact ⟨s, List.mem_cons_of_mem _ hs⟩
+
+theorem buildLayer_complete (cLit sLo sHi w rhs : Int) (subMap : List (Int × SymLit)) :
+    ∀ (us : List Int) (nxt : Nat) (σ : Nat → Bool),
+      1 ≤ nxt → cLit ≠ 0 → cLit.natAbs < nxt →
+      (∀ p, p ∈ subMap → SymBelow nxt p.2) →
+      sLo ≤ rhs → rhs ≤ sHi →
+      (∀ p, p ∈ subMap → symEval σ p.2 = decide (p.1 ≤ rhs)) →
+      (∀ u, u ∈ us → (sLo < u - w → u - w ≤ sHi → ∃ s, (u - w, s) ∈ subMap) ∧
+                      (sLo < u → u ≤ sHi → ∃ s, (u, s) ∈ subMap)) →
+      ∃ τ, (∀ i, i < nxt → τ i = σ i) ∧
+        cnfSat τ (buildLayer cLit sLo sHi w subMap us nxt).2.1 = true ∧
+        ∀ p, p ∈ (buildLayer cLit sLo sHi w subMap us nxt).1 →
+          symEval τ p.2 = decide (p.1 ≤ (if litTrue σ cLit then w else 0) + rhs) := by
+  intro us
+  induction us with
+  | nil =>
+      intro nxt σ _ _ _ _ _ _ _ _
+      exact ⟨σ, fun _ _ => rfl, rfl, fun _ h => by cases h⟩
+  | cons u us ih =>
+      intro nxt σ hnxt hc0 hclt hsub hlo hhi hsm hcov
+      dsimp only [buildLayer]
+      have hu_cov := hcov u (List.mem_cons_self u us)
+      have hth_b : SymBelow nxt (lookupSym sLo sHi subMap (u - w)) := lookupSym_below sLo sHi subMap (u - w) hsub
+      have hel_b : SymBelow nxt (lookupSym sLo sHi subMap u) := lookupSym_below sLo sHi subMap u hsub
+      let r1 := mkSymIte cLit (lookupSym sLo sHi subMap (u - w)) (lookupSym sLo sHi subMap u) nxt
+      obtain ⟨hs1, hc1⟩ := mkSymIte_below cLit _ _ nxt hnxt hc0 hclt hth_b hel_b
+      obtain ⟨τ₁, hag1, hsat1, hev1⟩ := mkSymIte_complete σ cLit _ _ nxt hnxt hc0 hclt hth_b hel_b
+      have hth_ev : symEval σ (lookupSym sLo sHi subMap (u - w)) = decide (u - w ≤ rhs) :=
+        lookupSym_eval σ sLo sHi rhs subMap (u - w) hlo hhi hsm hu_cov.1
+      have hel_ev : symEval σ (lookupSym sLo sHi subMap u) = decide (u ≤ rhs) :=
+        lookupSym_eval σ sLo sHi rhs subMap u hlo hhi hsm hu_cov.2
+      have hle1 : nxt ≤ r1.2.2 := mkSymIte_nxt_le _ _ _ nxt
+      have hn1 : 1 ≤ r1.2.2 := Nat.le_trans hnxt hle1
+      have hclt1 : cLit.natAbs < r1.2.2 := Nat.lt_of_lt_of_le hclt hle1
+      have hsub1 : ∀ p, p ∈ subMap → SymBelow r1.2.2 p.2 := fun p hp => symBelow_mono hle1 (hsub p hp)
+      have hsm1 : ∀ p, p ∈ subMap → symEval τ₁ p.2 = decide (p.1 ≤ rhs) := fun p hp => by
+        rw [symEval_congr_below σ τ₁ nxt hag1 p.2 (hsub p hp)]
+        exact hsm p hp
+      have hc_eq : litTrue τ₁ cLit = litTrue σ cLit := by
+        have h := symEval_congr_below σ τ₁ nxt hag1 (.lit cLit) ⟨hc0, hclt⟩
+        simpa [symEval] using h
+      obtain ⟨τ₂, hag2, hsat2, hmap2⟩ :=
+        ih r1.2.2 τ₁ hn1 hc0 hclt1 hsub1 hlo hhi hsm1 (fun v hv => hcov v (List.mem_cons_of_mem u hv))
+      refine ⟨τ₂, fun i hi => by rw [hag2 i (Nat.lt_of_lt_of_le hi hle1), hag1 i hi], ?_, ?_⟩
+      · rw [cnfSat_append, Bool.and_eq_true]
+        refine ⟨?_, hsat2⟩
+        rw [cnfSat_congr_below τ₁ τ₂ r1.2.2 hag2 r1.2.1 hc1]
+        exact hsat1
+      · intro p hp
+        cases List.mem_cons.mp hp with
+        | inl heq =>
+            rw [heq]
+            dsimp only
+            rw [symEval_congr_below τ₁ τ₂ r1.2.2 hag2 r1.1 hs1, hev1, hth_ev, hel_ev]
+            cases litTrue σ cLit <;> simp <;> omega
+        | inr hr =>
+            rw [hmap2 p hr, hc_eq]
+
+def pbEncodeLayer : List Nat → List Int → List Int → Nat → List (Int × SymLit) × CNF × Nat
+  | [], _, _, nxt => ([], [], nxt)
+  | _ :: _, [], _, nxt => ([], [], nxt)
+  | i :: is, w :: ws, ts, nxt =>
+      let b := pbBounds is ws
+      let ts' := nextLayerTs b.1 b.2 w ts []
+      let (subMap, subCNF, n1) := pbEncodeLayer is ws ts' nxt
+      let (myMap, myCNF, n2) := buildLayer ((i : Int) + 1) b.1 b.2 w subMap ts n1
+      (myMap, subCNF ++ myCNF, n2)
+
+theorem pbEncodeLayer_nxt_le :
+    ∀ (ins : List Nat) (ws : List Int) (ts : List Int) (nxt : Nat),
+      nxt ≤ (pbEncodeLayer ins ws ts nxt).2.2 := by
+  intro ins
+  induction ins with
+  | nil => intro _ _ nxt; exact Nat.le_refl nxt
+  | cons _ is ih =>
+      intro ws ts nxt
+      cases ws with
+      | nil => exact Nat.le_refl nxt
+      | cons w ws =>
+          dsimp only [pbEncodeLayer]
+          exact Nat.le_trans (ih ws _ nxt) (buildLayer_nxt_le _ _ _ _ _ ts _)
+
+theorem pbEncodeLayer_below :
+    ∀ (ins : List Nat) (ws : List Int) (ts : List Int) (n nxt : Nat),
+      1 ≤ nxt → n + 1 ≤ nxt →
+      (ins.all fun i => decide (i < n)) = true →
+      (∀ p, p ∈ (pbEncodeLayer ins ws ts nxt).1 →
+        SymBelow (pbEncodeLayer ins ws ts nxt).2.2 p.2) ∧
+      CNFBelow (pbEncodeLayer ins ws ts nxt).2.2
+        (pbEncodeLayer ins ws ts nxt).2.1 := by
+  intro ins
+  induction ins with
+  | nil => intro _ _ _ _ _ _ _; exact ⟨(fun _ h => by cases h), (fun _ h => by cases h)⟩
+  | cons i is ih =>
+      intro ws ts n nxt hnxt hn hsc
+      cases ws with
+      | nil => exact ⟨(fun _ h => by cases h), (fun _ h => by cases h)⟩
+      | cons w ws =>
+          dsimp only [pbEncodeLayer]
+          simp only [List.all_cons, Bool.and_eq_true, decide_eq_true_eq] at hsc
+          let b := pbBounds is ws
+          let ts' := nextLayerTs b.1 b.2 w ts []
+          obtain ⟨hsub, hscnf⟩ := ih ws ts' n nxt hnxt hn hsc.2
+          have hle1 : nxt ≤ (pbEncodeLayer is ws ts' nxt).2.2 := pbEncodeLayer_nxt_le is ws ts' nxt
+          have hn1 : 1 ≤ (pbEncodeLayer is ws ts' nxt).2.2 := Nat.le_trans hnxt hle1
+          have hc0 : ((i : Int) + 1) ≠ 0 := by omega
+          have hclt : ((i : Int) + 1).natAbs < (pbEncodeLayer is ws ts' nxt).2.2 := by omega
+          obtain ⟨hmy, hmycnf⟩ :=
+            buildLayer_below ((i : Int) + 1) b.1 b.2 w (pbEncodeLayer is ws ts' nxt).1 ts (pbEncodeLayer is ws ts' nxt).2.2
+              hn1 hc0 hclt hsub
+          have hle2 : (pbEncodeLayer is ws ts' nxt).2.2 ≤
+              (buildLayer ((i : Int) + 1) b.1 b.2 w (pbEncodeLayer is ws ts' nxt).1 ts (pbEncodeLayer is ws ts' nxt).2.2).2.2 :=
+            buildLayer_nxt_le ((i : Int) + 1) b.1 b.2 w (pbEncodeLayer is ws ts' nxt).1 ts (pbEncodeLayer is ws ts' nxt).2.2
+          refine ⟨hmy, ?_⟩
+          rw [cnfBelow_append]
+          exact ⟨cnfBelow_mono hle2 hscnf, hmycnf⟩
+
+theorem pbEncodeLayer_covers :
+    ∀ (ins : List Nat) (ws : List Int) (ts : List Int) (nxt : Nat) {u : Int},
+      u ∈ ts → (pbBounds ins ws).1 < u → u ≤ (pbBounds ins ws).2 →
+      ∃ s, (u, s) ∈ (pbEncodeLayer ins ws ts nxt).1 := by
+  intro ins ws ts nxt u hu hlo hhi
+  cases ins with
+  | nil => simp [pbBounds] at hlo hhi; omega
+  | cons _ _ =>
+      cases ws with
+      | nil => simp [pbBounds] at hlo hhi; omega
+      | cons _ _ =>
+          dsimp only [pbEncodeLayer]
+          exact buildLayer_covers _ _ _ _ _ ts _ hu
+
+theorem pbEncodeLayer_complete (σ : Nat → Bool) :
+    ∀ (ins : List Nat) (ws : List Int) (ts : List Int) (n nxt : Nat),
+      1 ≤ nxt → n + 1 ≤ nxt →
+      (ins.all fun i => decide (i < n)) = true →
+      ∃ τ, (∀ i, i < nxt → τ i = σ i) ∧
+        cnfSat τ (pbEncodeLayer ins ws ts nxt).2.1 = true ∧
+        ∀ p, p ∈ (pbEncodeLayer ins ws ts nxt).1 →
+          symEval τ p.2 = decide (p.1 ≤ tnodeSum (fun i => σ (i + 1)) ins ws) := by
+  intro ins
+  induction ins with
+  | nil => intro _ _ _ _ _ _ _; exact ⟨σ, fun _ _ => rfl, rfl, fun _ h => by cases h⟩
+  | cons i is ih =>
+      intro ws ts n nxt hnxt hn hsc
+      cases ws with
+      | nil => exact ⟨σ, fun _ _ => rfl, rfl, fun _ h => by cases h⟩
+      | cons w ws =>
+          dsimp only [pbEncodeLayer]
+          simp only [List.all_cons, Bool.and_eq_true, decide_eq_true_eq] at hsc
+          obtain ⟨hi, his⟩ := hsc
+          let b := pbBounds is ws
+          let ts' := nextLayerTs b.1 b.2 w ts []
+          obtain ⟨hsub, hscnf⟩ := pbEncodeLayer_below is ws ts' n nxt hnxt hn his
+          obtain ⟨τ₁, hag1, hsat1, hmap1⟩ := ih ws ts' n nxt hnxt hn his
+          let subRes := pbEncodeLayer is ws ts' nxt
+          have hle1 : nxt ≤ subRes.2.2 := pbEncodeLayer_nxt_le is ws ts' nxt
+          have hn1 : 1 ≤ subRes.2.2 := Nat.le_trans hnxt hle1
+          have hc0 : ((i : Int) + 1) ≠ 0 := by omega
+          have hclt : ((i : Int) + 1).natAbs < subRes.2.2 := by omega
+          have hb := pbBounds_sound (fun j => σ (j + 1)) is ws
+          have hcov : ∀ u, u ∈ ts →
+              (b.1 < u - w → u - w ≤ b.2 → ∃ s, (u - w, s) ∈ subRes.1) ∧
+              (b.1 < u → u ≤ b.2 → ∃ s, (u, s) ∈ subRes.1) :=
+            fun u hu => by
+              have hm := @mem_nextLayerTs_spec b.1 b.2 w ts [] u hu
+              exact ⟨fun h1 h2 => pbEncodeLayer_covers is ws ts' nxt (hm.1 h1 h2) h1 h2,
+                     fun h1 h2 => pbEncodeLayer_covers is ws ts' nxt (hm.2 h1 h2) h1 h2⟩
+          obtain ⟨τ₂, hag2, hsat2, hmap2⟩ :=
+            buildLayer_complete ((i : Int) + 1) b.1 b.2 w (tnodeSum (fun j => σ (j + 1)) is ws)
+              subRes.1 ts subRes.2.2 τ₁ hn1 hc0 hclt hsub hb.1 hb.2 hmap1 hcov
+          have hi_lt : i + 1 < nxt := by omega
+          have hci_eq : litTrue τ₁ ((i : Int) + 1) = σ (i + 1) := by
+            rw [litTrue_pos τ₁ i, hag1 (i + 1) hi_lt]
+          refine ⟨τ₂, fun j hj => by rw [hag2 j (Nat.lt_of_lt_of_le hj hle1), hag1 j hj], ?_, ?_⟩
+          · rw [cnfSat_append, Bool.and_eq_true]
+            refine ⟨?_, hsat2⟩
+            rw [cnfSat_congr_below τ₁ τ₂ _ hag2 _ hscnf]
+            exact hsat1
+          · intro p hp
+            rw [hmap2 p hp, hci_eq]
+            rfl
+
+def pbEncodeSym (ins : List Nat) (ws : List Int) (t : Int) (nxt : Nat) : SymLit × CNF × Nat :=
+  let b := pbBounds ins ws
+  if t ≤ b.1 then (.const true, [], nxt)
+  else if b.2 < t then (.const false, [], nxt)
+  else
+    let (m, cnf, n1) := pbEncodeLayer ins ws [t] nxt
+    (lookupSym b.1 b.2 m t, cnf, n1)
+
+theorem pbEncodeSym_nxt_le (ins : List Nat) (ws : List Int) (t : Int) (nxt : Nat) :
+    nxt ≤ (pbEncodeSym ins ws t nxt).2.2 := by
+  dsimp only [pbEncodeSym]
+  split
+  · exact Nat.le_refl nxt
+  · split
+    · exact Nat.le_refl nxt
+    · exact pbEncodeLayer_nxt_le ins ws [t] nxt
+
+theorem pbEncodeSym_below (ins : List Nat) (ws : List Int) (t : Int) (n nxt : Nat)
+    (hnxt : 1 ≤ nxt) (hn : n + 1 ≤ nxt) (hsc : (ins.all fun i => decide (i < n)) = true) :
+    SymBelow (pbEncodeSym ins ws t nxt).2.2 (pbEncodeSym ins ws t nxt).1 ∧
+    CNFBelow (pbEncodeSym ins ws t nxt).2.2 (pbEncodeSym ins ws t nxt).2.1 := by
+  dsimp only [pbEncodeSym]
+  split
+  · exact ⟨trivial, (fun _ h => by cases h)⟩
+  · split
+    · exact ⟨trivial, (fun _ h => by cases h)⟩
+    · obtain ⟨hm, hc⟩ := pbEncodeLayer_below ins ws [t] n nxt hnxt hn hsc
+      exact ⟨lookupSym_below _ _ _ t hm, hc⟩
+
+theorem pbEncodeSym_complete (ins : List Nat) (ws : List Int) (t : Int) (n nxt : Nat) (σ : Nat → Bool)
+    (hnxt : 1 ≤ nxt) (hn : n + 1 ≤ nxt) (hsc : (ins.all fun i => decide (i < n)) = true) :
+    ∃ τ, (∀ i, i < nxt → τ i = σ i) ∧
+      cnfSat τ (pbEncodeSym ins ws t nxt).2.1 = true ∧
+      symEval τ (pbEncodeSym ins ws t nxt).1 =
+        decide (t ≤ tnodeSum (fun i => σ (i + 1)) ins ws) := by
+  have hb := pbBounds_sound (fun i => σ (i + 1)) ins ws
+  dsimp only [pbEncodeSym]
+  split
+  · next hle =>
+      have : t ≤ tnodeSum (fun i => σ (i + 1)) ins ws := Int.le_trans hle hb.1
+      exact ⟨σ, fun _ _ => rfl, rfl, by simp [symEval, this]⟩
+  · split
+    · next hlt =>
+        have : ¬ (t ≤ tnodeSum (fun i => σ (i + 1)) ins ws) := by omega
+        exact ⟨σ, fun _ _ => rfl, rfl, by simp [symEval, this]⟩
+    · obtain ⟨τ, hag, hsat, hmap⟩ := pbEncodeLayer_complete σ ins ws [t] n nxt hnxt hn hsc
+      refine ⟨τ, hag, hsat, ?_⟩
+      exact lookupSym_eval τ (pbBounds ins ws).1 (pbBounds ins ws).2
+        (tnodeSum (fun i => σ (i + 1)) ins ws) _ t hb.1 hb.2 hmap
+        (fun h1 h2 => pbEncodeLayer_covers ins ws [t] nxt (List.mem_cons_self t []) h1 h2)
+
+def wireEqSym (w : Nat) : SymLit → CNF
+  | .const true => [[(w : Int)]]
+  | .const false => [[-(w : Int)]]
+  | .lit o => wireEq w o
+
+theorem cnfBelow_wireEqSym {k w : Nat} {s : SymLit} (hw0 : 0 < w) (hwk : w < k) (hs : SymBelow k s) :
+    CNFBelow k (wireEqSym w s) := by
+  have hwn : ((w : Int)).natAbs = w := by omega
+  cases s with
+  | const b =>
+      cases b <;> intro c hc l hl <;>
+        simp [wireEqSym] at hc <;> subst hc <;> simp at hl <;> subst hl <;>
+        (try rw [Int.natAbs_neg]) <;> rw [hwn] <;> omega
+  | lit o =>
+      intro c hc l hl
+      simp only [wireEqSym, wireEq, List.mem_cons, List.not_mem_nil, or_false] at hc
+      rcases hc with rfl | rfl <;>
+        simp only [List.mem_cons, List.not_mem_nil, or_false] at hl <;>
+        rcases hl with rfl | rfl <;> (try rw [Int.natAbs_neg]) <;>
+        first | exact ⟨by omega, by rw [hwn]; exact hwk⟩ | exact ⟨Int.natAbs_pos.mpr hs.1, hs.2⟩
+
+theorem wireEqSym_sat (τ : Nat → Bool) (w : Nat) (s : SymLit) (hw : 0 < w)
+    (hs0 : match s with | .const _ => True | .lit o => o ≠ 0)
+    (hs : τ w = symEval τ s) : cnfSat τ (wireEqSym w s) = true := by
+  cases s with
+  | const b =>
+      cases b <;> simp only [wireEqSym, symEval] at hs ⊢
+      · simp [cnfSat, clauseSat, litTrue_neg τ (w : Int) (by omega), litTrue_ofNat τ w hw, hs]
+      · simp [cnfSat, clauseSat, litTrue_ofNat τ w hw, hs]
+  | lit o => exact wireEq_sat τ w o hw hs0 hs
+
+def tseitinTNetGoPB : Nat → Nat → List TNode → Int → CNF → Nat → (Int × CNF × Nat)
+  | _, _, [], lastLit, acc, nxt => (lastLit, acc, nxt)
+  | n, k, nd :: ns, _, acc, nxt =>
+      let (s, c, nxt') := pbEncodeSym nd.ins nd.ws nd.t nxt
+      let w := n + k + 1
+      tseitinTNetGoPB n (k + 1) ns (w : Int) (acc ++ c ++ wireEqSym w s) nxt'
+
+def tseitinTNetMiterPB (n : Nat) (ns : List TNode) (e : Expr) : CNF :=
+  let m := ns.length
+  let nxt0 := n + m + 1
+  let (oNet, cNet, nxt1) := tseitinTNetGoPB n 0 ns 0 [] nxt0
+  let (oSpec, cSpec, nxt2) := tseitinEncode e nxt1
+  cNet ++ cSpec ++ gateXor (nxt2 : Int) oNet oSpec ++ [[(nxt2 : Int)]]
+
+theorem tseitinTNetGoPB_complete :
+    ∀ (ns : List TNode) (n k : Nat) (lastLit : Int) (acc : CNF) (nxt : Nat)
+      (σ : Nat → Bool) (env : Nat → Bool),
+      1 ≤ nxt →
+      n + k + ns.length + 1 ≤ nxt →
+      CNFBelow nxt acc →
+      cnfSat σ acc = true →
+      (∀ j, j < n + k + ns.length → σ (j + 1) = evalTNetEnv env (n + k) ns j) →
+      (1 ≤ k → lastLit = ((n + k : Nat) : Int)) →
+      (1 ≤ k ∨ 1 ≤ ns.length) →
+      tnetScoped (n + k) ns = true →
+      ∃ τ, (∀ i, i < nxt → τ i = σ i) ∧
+        cnfSat τ (tseitinTNetGoPB n k ns lastLit acc nxt).2.1 = true ∧
+        CNFBelow (tseitinTNetGoPB n k ns lastLit acc nxt).2.2 (tseitinTNetGoPB n k ns lastLit acc nxt).2.1 ∧
+        0 < (tseitinTNetGoPB n k ns lastLit acc nxt).1 ∧
+        (tseitinTNetGoPB n k ns lastLit acc nxt).1.natAbs < (tseitinTNetGoPB n k ns lastLit acc nxt).2.2 ∧
+        n + k + ns.length + 1 ≤ (tseitinTNetGoPB n k ns lastLit acc nxt).2.2 ∧
+        litTrue τ (tseitinTNetGoPB n k ns lastLit acc nxt).1 =
+          evalTNetEnv env (n + k) ns (n + k + ns.length - 1) := by
+  intro ns
+  induction ns with
+  | nil =>
+      intro n k lastLit acc nxt σ env _ hbound haccB haccS hmatch hlast hkor _
+      have hk1 : 1 ≤ k := by cases hkor with | inl h => exact h | inr h => simp [List.length] at h
+      have hlast_eq : lastLit = ((n + k : Nat) : Int) := hlast hk1
+      dsimp only [tseitinTNetGoPB]
+      refine ⟨σ, fun _ _ => rfl, haccS, haccB, ?_, ?_, hbound, ?_⟩
+      · rw [hlast_eq]; omega
+      · rw [hlast_eq]; simp [List.length] at hbound ⊢; omega
+      · rw [hlast_eq, litTrue_ofNat σ (n + k) (by omega)]
+        have hlt : n + k - 1 < n + k + ([] : List TNode).length := by simp; omega
+        have hm := hmatch (n + k - 1) hlt
+        have hsub : n + k - 1 + 1 = n + k := by omega
+        rw [hsub] at hm
+        simpa [List.length, evalTNetEnv] using hm
+  | cons nd ns ih =>
+      intro n k _ acc nxt σ env hnxt hbound haccB haccS hmatch _ _ hsc
+      simp only [tnetScoped, Bool.and_eq_true] at hsc
+      obtain ⟨hnd_sc, hns_sc⟩ := hsc
+      have hle1 : n + k + 1 ≤ nxt := by simp [List.length] at hbound; omega
+      obtain ⟨hsB, hcB⟩ := pbEncodeSym_below nd.ins nd.ws nd.t (n + k) nxt hnxt hle1 hnd_sc
+      have hnxt1 : nxt ≤ (pbEncodeSym nd.ins nd.ws nd.t nxt).2.2 := pbEncodeSym_nxt_le nd.ins nd.ws nd.t nxt
+      obtain ⟨τ₁, hag1, hcSat, hsEv⟩ := pbEncodeSym_complete nd.ins nd.ws nd.t (n + k) nxt σ hnxt hle1 hnd_sc
+      have haccSat₁ : cnfSat τ₁ acc = true := by
+        rw [cnfSat_congr_below σ τ₁ nxt hag1 acc haccB]; exact haccS
+      have hmatch₁ : ∀ j, j < n + (k + 1) + ns.length →
+          τ₁ (j + 1) = evalTNetEnv (upd env (n + k) (tnodeEval env nd)) (n + k + 1) ns j := by
+        intro j hj
+        have hlt_nxt : j + 1 < nxt := by simp [List.length] at hbound; omega
+        rw [hag1 (j + 1) hlt_nxt]
+        have hj' : j < n + k + (nd :: ns).length := by simp [List.length] at hj ⊢; omega
+        exact hmatch j hj'
+      let w := n + k + 1
+      have hw_pos : 0 < w := by omega
+      have hw_lt : w < (pbEncodeSym nd.ins nd.ws nd.t nxt).2.2 := by
+        simp [List.length] at hbound; omega
+      have h_w_eq : τ₁ w = symEval τ₁ (pbEncodeSym nd.ins nd.ws nd.t nxt).1 := by
+        have hm_w := hmatch (n + k) (by simp [List.length])
+        have hlt_w : w < nxt := by simp [List.length] at hbound; omega
+        have hτw : τ₁ w = σ w := hag1 w hlt_w
+        have h_eval_w : evalTNetEnv env (n + k) (nd :: ns) (n + k) = tnodeEval env nd := by
+          dsimp only [evalTNetEnv]
+          rw [evalTNetEnv_below (upd env (n + k) (tnodeEval env nd)) (n + k + 1) ns (n + k) (by omega)]
+          simp [upd]
+        have h_env_agree : ∀ i, i < n + k → σ (i + 1) = env i := fun i hi => by
+          have hm_i := hmatch i (by simp [List.length]; omega)
+          have h_eval_i : evalTNetEnv env (n + k) (nd :: ns) i = env i := by
+            dsimp only [evalTNetEnv]
+            rw [evalTNetEnv_below (upd env (n + k) (tnodeEval env nd)) (n + k + 1) ns i (by omega)]
+            simp [upd, Nat.ne_of_lt hi]
+          rw [hm_i, h_eval_i]
+        have hsum := tnodeSum_congr (n + k) (fun i => σ (i + 1)) env h_env_agree nd.ins nd.ws hnd_sc
+        rw [hτw]; change σ (n + k + 1) = _; rw [hm_w, h_eval_w, hsEv]
+        simp [tnodeEval, hsum]
+      have hs0 : match (pbEncodeSym nd.ins nd.ws nd.t nxt).1 with
+          | .const _ => True | .lit o => o ≠ 0 := by
+        cases hss : (pbEncodeSym nd.ins nd.ws nd.t nxt).1 with
+        | const _ => trivial
+        | lit o => rw [hss] at hsB; exact hsB.1
+      have hwireSat : cnfSat τ₁ (wireEqSym w (pbEncodeSym nd.ins nd.ws nd.t nxt).1) = true :=
+        wireEqSym_sat τ₁ w _ hw_pos hs0 h_w_eq
+      have hacc1B : CNFBelow (pbEncodeSym nd.ins nd.ws nd.t nxt).2.2
+          (acc ++ (pbEncodeSym nd.ins nd.ws nd.t nxt).2.1 ++ wireEqSym w (pbEncodeSym nd.ins nd.ws nd.t nxt).1) := by
+        rw [cnfBelow_append, cnfBelow_append]
+        exact ⟨⟨cnfBelow_mono hnxt1 haccB, hcB⟩, cnfBelow_wireEqSym hw_pos hw_lt hsB⟩
+      have hacc1S : cnfSat τ₁
+          (acc ++ (pbEncodeSym nd.ins nd.ws nd.t nxt).2.1 ++ wireEqSym w (pbEncodeSym nd.ins nd.ws nd.t nxt).1) = true := by
+        rw [cnfSat_append, cnfSat_append, Bool.and_eq_true, Bool.and_eq_true]
+        exact ⟨⟨haccSat₁, hcSat⟩, hwireSat⟩
+      have hbound1 : n + (k + 1) + ns.length + 1 ≤ (pbEncodeSym nd.ins nd.ws nd.t nxt).2.2 := by
+        simp [List.length] at hbound; omega
+      obtain ⟨τ₂, hag2, hc2S, hc2B, ho_pos, ho_lt, hn2_le, ho_ev⟩ :=
+        ih n (k + 1) (w : Int)
+          (acc ++ (pbEncodeSym nd.ins nd.ws nd.t nxt).2.1 ++ wireEqSym w (pbEncodeSym nd.ins nd.ws nd.t nxt).1)
+          (pbEncodeSym nd.ins nd.ws nd.t nxt).2.2 τ₁ (upd env (n + k) (tnodeEval env nd))
+          (Nat.le_trans hnxt hnxt1) hbound1 hacc1B hacc1S hmatch₁ (fun _ => by simp [w, Nat.add_assoc])
+          (Or.inl (Nat.succ_pos k)) hns_sc
+      dsimp only [tseitinTNetGoPB]
+      refine ⟨τ₂, fun i hi => by rw [hag2 i (Nat.lt_of_lt_of_le hi hnxt1), hag1 i hi], hc2S, hc2B, ho_pos, ho_lt, ?_, ?_⟩
+      · have hlen_rhs : n + k + (nd :: ns).length + 1 = n + (k + 1) + ns.length + 1 := by simp [List.length]; omega
+        rw [hlen_rhs]; exact hn2_le
+      rw [ho_ev]
+      have hlen_eq : n + (k + 1) + ns.length - 1 = n + k + (nd :: ns).length - 1 := by
+        simp [List.length]; omega
+      rw [hlen_eq]
+      rfl
+
+theorem tseitinTNetMiterPB_lrat_unsat_implies_equiv (n : Nat) (ns : List TNode) (e : Expr)
+    (Ls : List (Clause × List Nat))
+    (hne : 1 ≤ ns.length)
+    (ht : tnetScoped n ns = true)
+    (hs : Scoped n e = true)
+    (hw : wellFormed (tseitinTNetMiterPB n ns e) = true)
+    (hchk : checkLratT (bOfListAux (tseitinTNetMiterPB n ns e) 0 .leaf) (tseitinTNetMiterPB n ns e).length Ls = true) :
+    ∀ σ, evalTNet n ns σ = eval σ e := by
+  intro σ
+  by_cases heq : evalTNet n ns σ = eval σ e
+  · exact heq
+  exfalso
+  let m := ns.length
+  let nxt0 := n + m + 1
+  let σ0 : Nat → Bool := fun i => match i with | 0 => false | j + 1 => evalTNetEnv σ n ns j
+  have hmatch0 : ∀ j, j < n + 0 + ns.length → σ0 (j + 1) = evalTNetEnv σ n ns j := fun _ _ => rfl
+  have hnxt0_pos : 1 ≤ nxt0 := by omega
+  obtain ⟨τ₁, hag1, hcNetS, hcNetB, hoNet_pos, hoNet_lt, hnxt1_ge, hoNet_ev⟩ :=
+    tseitinTNetGoPB_complete ns n 0 0 [] nxt0 σ0 σ hnxt0_pos (by omega)
+      (fun _ h => by cases h) rfl hmatch0 (fun h => by cases h) (Or.inr hne) (by simpa using ht)
+  let oNet := (tseitinTNetGoPB n 0 ns 0 [] nxt0).1
+  let cNet := (tseitinTNetGoPB n 0 ns 0 [] nxt0).2.1
+  let nxt1 := (tseitinTNetGoPB n 0 ns 0 [] nxt0).2.2
+  have hoNet_lt' : oNet.natAbs < nxt1 := hoNet_lt
+  have hnxt1_pos : 1 ≤ nxt1 := Nat.le_trans hnxt0_pos (by omega)
+  have hle_n1 : n + 1 ≤ nxt1 := by omega
+  obtain ⟨τ, hag2, hcSpecS, hoSpec_ev⟩ := tseitinEncode_complete e n nxt1 τ₁ hnxt1_pos hle_n1 hs
+  have hoSpec_pos := (tseitinEncode_out_pos e nxt1 hnxt1_pos).1
+  have hnxt2_le := (tseitinEncode_out_pos e nxt1 hnxt1_pos).2
+  have hcSpecB := (tseitinEncode_below e n nxt1 hnxt1_pos hle_n1 hs).2
+  have hoSpec_lt := (tseitinEncode_below e n nxt1 hnxt1_pos hle_n1 hs).1
+  let oSpec := (tseitinEncode e nxt1).1
+  let cSpec := (tseitinEncode e nxt1).2.1
+  let nxt2 := (tseitinEncode e nxt1).2.2
+  have hnxt2_le' : nxt1 ≤ nxt2 := hnxt2_le
+  have hnxt2_pos : 1 ≤ nxt2 := Nat.le_trans hnxt1_pos hnxt2_le'
+  have hoSpec_lt' : oSpec.natAbs < nxt2 := hoSpec_lt
+  let τ' := upd τ nxt2 true
+  have hag_nxt2 : ∀ i, i < nxt2 → τ' i = τ i := fun i hi => if_neg (Nat.ne_of_lt hi)
+  have hcNetS_τ : cnfSat τ cNet = true := by
+    rw [cnfSat_congr_below τ₁ τ nxt1 hag2 cNet hcNetB]; exact hcNetS
+  have hcNetS' : cnfSat τ' cNet = true := by
+    rw [cnfSat_congr_below τ τ' nxt2 hag_nxt2 cNet (cnfBelow_mono hnxt2_le' hcNetB)]; exact hcNetS_τ
+  have hcSpecS' : cnfSat τ' cSpec = true := by
+    rw [cnfSat_congr_below τ τ' nxt2 hag_nxt2 cSpec hcSpecB]; exact hcSpecS
+  have hoNet_eq : litTrue τ' oNet = evalTNet n ns σ := by
+    have hlt_τ' : oNet.natAbs ≠ nxt2 := Nat.ne_of_lt (Nat.lt_of_lt_of_le hoNet_lt' hnxt2_le')
+    rw [litTrue_upd_ne τ nxt2 true oNet hlt_τ']
+    have hl1 := symEval_congr_below τ₁ τ nxt1 hag2 (.lit oNet) ⟨by omega, hoNet_lt'⟩
+    dsimp only [symEval] at hl1
+    rw [hl1, hoNet_ev]
+    exact (evalTNetFrom_eq_envLast σ n false ns hne).symm
+  have hoSpec_eq : litTrue τ' oSpec = eval σ e := by
+    have hlt_τ' : oSpec.natAbs ≠ nxt2 := Nat.ne_of_lt hoSpec_lt'
+    rw [litTrue_upd_ne τ nxt2 true oSpec hlt_τ', hoSpec_ev]
+    apply eval_congr n (fun i => τ₁ (i + 1)) σ _ e hs
+    intro i hi
+    have hi_nxt0 : i + 1 < nxt0 := by omega
+    dsimp only
+    rw [hag1 (i + 1) hi_nxt0]
+    exact evalTNetEnv_below σ n ns i hi
+  have hn2_lit : litTrue τ' (nxt2 : Int) = true := by
+    rw [litTrue_ofNat τ' nxt2 hnxt2_pos]; simp [τ', upd]
+  have hxor : cnfSat τ' (gateXor (nxt2 : Int) oNet oSpec) = true := by
+    simp [gateXor, cnfSat, clauseSat, litTrue_neg τ' (nxt2 : Int) (by omega),
+      litTrue_neg τ' oNet (by omega), litTrue_neg τ' oSpec (by omega),
+      hoNet_eq, hoSpec_eq, hn2_lit]
+    cases h1 : evalTNet n ns σ <;> cases h2 : eval σ e <;> simp_all
+  have hunit : cnfSat τ' [[(nxt2 : Int)]] = true := by
+    simp [cnfSat, clauseSat, hn2_lit]
+  have hsat_miter : cnfSat τ' (tseitinTNetMiterPB n ns e) = true := by
+    dsimp only [tseitinTNetMiterPB]
+    rw [cnfSat_append, cnfSat_append, cnfSat_append, Bool.and_eq_true, Bool.and_eq_true, Bool.and_eq_true]
+    exact ⟨⟨⟨hcNetS', hcSpecS'⟩, hxor⟩, hunit⟩
+  have h_unsat := checkLratT_unsat (tseitinTNetMiterPB n ns e) Ls hw hchk τ'
+  rw [hsat_miter] at h_unsat
+  exact Bool.false_ne_true h_unsat.symm
+
 end Cerp

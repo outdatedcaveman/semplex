@@ -1,0 +1,18 @@
+{
+ "automaton": "A5",
+ "seed": 5851,
+ "first99": 600,
+ "fit": 1.0,
+ "probe_acc": 1.0,
+ "determinism": 1.0,
+ "intervene_diff": 1.0,
+ "intervene_same": 1.0,
+ "char_scores": {
+  "chi3": -0.031099109018201086,
+  "chi3'": -0.027098257044489028,
+  "chi4": 0.5916160522906379,
+  "chi5": -0.320230004870294
+ },
+ "char_best": "chi4",
+ "char_hit": false
+}

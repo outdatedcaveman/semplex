@@ -1,0 +1,42 @@
+[
+ {
+  "class": "Empirical",
+  "claims": 117
+ },
+ {
+  "class": "Proved in Lean",
+  "claims": 32
+ },
+ {
+  "class": "Refuted",
+  "claims": 18
+ },
+ {
+  "class": "Exploratory",
+  "claims": 16
+ },
+ {
+  "class": "Proved on paper",
+  "claims": 11
+ },
+ {
+  "class": "Other",
+  "claims": 9
+ },
+ {
+  "class": "Kernel-checked",
+  "claims": 6
+ },
+ {
+  "class": "Conjecture",
+  "claims": 5
+ },
+ {
+  "class": "Method note",
+  "claims": 5
+ },
+ {
+  "class": "Computed",
+  "claims": 4
+ }
+]

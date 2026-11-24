@@ -1,0 +1,15 @@
+{
+ "leader": "r0_tr2_ker1",
+ "shares": {
+  "r0_tr2_ker1": 0.5410335070014806,
+  "r1_tr2_ker1": 0.11392502339308021,
+  "r2_tr2_ker3": 0.33018108610562147,
+  "r3_tr2_ker1": 0.014860383499817557
+ },
+ "probe_macro": 1.0,
+ "probe_element": 1.0,
+ "substrate": "SPEC",
+ "automaton": "Z9_s1_014",
+ "seed": 7740,
+ "fit": 1.0
+}

@@ -1,0 +1,107 @@
+{
+ "fit": 0.9999240121580547,
+ "n_literals": {
+  "cm": 383,
+  "rm": 166,
+  "counter": 383
+ },
+ "confident": {
+  "cm": {
+   "instances": 2159,
+   "violations": 93,
+   "rate": 0.04307549791570171
+  },
+  "cut": {
+   "instances": 2196,
+   "violations": 130,
+   "rate": 0.05919854280510018
+  },
+  "rm": {
+   "instances": 824,
+   "violations": 124,
+   "rate": 0.15048543689320387
+  },
+  "counter": {
+   "instances": 2159,
+   "violations": 753,
+   "rate": 0.34877257989810095
+  }
+ },
+ "majority": {
+  "cm": {
+   "instances": 2637,
+   "violations": 137,
+   "rate": 0.051952976867652635
+  },
+  "cut": {
+   "instances": 2629,
+   "violations": 129,
+   "rate": 0.04906808672499049
+  },
+  "rm": {
+   "instances": 1137,
+   "violations": 150,
+   "rate": 0.13192612137203166
+  },
+  "counter": {
+   "instances": 2637,
+   "violations": 663,
+   "rate": 0.2514220705346985
+  }
+ },
+ "minimal_model": {
+  "cm": {
+   "instances": 426,
+   "violations": 0,
+   "rate": 0.0
+  },
+  "cut": {
+   "instances": 426,
+   "violations": 0,
+   "rate": 0.0
+  },
+  "counter": {
+   "instances": 434,
+   "violations": 432,
+   "rate": 0.9953917050691244
+  },
+  "rm": {
+   "instances": 130,
+   "violations": 0,
+   "rate": 0.0
+  }
+ },
+ "kernel": {
+  "cm": {
+   "instances": 2681,
+   "violations": 137,
+   "rate": 0.051100335695635955
+  },
+  "cut": {
+   "instances": 2681,
+   "violations": 137,
+   "rate": 0.051100335695635955
+  },
+  "counter": {
+   "instances": 2681,
+   "violations": 529,
+   "rate": 0.19731443491234613
+  },
+  "rm": {
+   "instances": 546,
+   "violations": 30,
+   "rate": 0.054945054945054944
+  }
+ },
+ "retraction_overlap": {
+  "both": 203,
+  "minimal_model_only": 221,
+  "net_only": 8,
+  "recall_of_mm_retractions": 0.47877358490566035,
+  "precision": 0.9620853080568721
+ },
+ "H51.1": "HELD",
+ "H51.2": "NEITHER",
+ "H51.3": "NEITHER",
+ "H51.4": "NEITHER"
+}

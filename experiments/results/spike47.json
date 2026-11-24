@@ -1,0 +1,44 @@
+{
+ "n_targets": 128,
+ "n_unoriented_ltfs": 940,
+ "n_pairs": 441330,
+ "fit": 1.0,
+ "enumeration_mismatches": [],
+ "n_mismatch": 0,
+ "chance_top_is_min": 8.569621938232162e-05,
+ "n_nets": 1280,
+ "frac_cr_min_ge_0.90": 0.00078125,
+ "frac_top_is_min": 0.059375,
+ "median_cr_min": {
+  "30": 0.5089537417823548,
+  "100": 0.5197785849657952,
+  "300": 0.5236207693390105,
+  "1000": 0.53711168703119,
+  "3000": 0.5550747836073675
+ },
+ "median_cr_best": 0.7318138119710205,
+ "median_cr_class": 0.24248169347243465,
+ "median_rank_of_best_min": 1302.0,
+ "frac_rank_le_10": 0.15078125,
+ "raw": {
+  "frac_cr_min_ge_0.90": 0.0,
+  "frac_top_is_min": 0.06015625,
+  "median_cr_min": 0.515794607684894
+ },
+ "by_orbits": {
+  "one_orbit": {
+   "n": 500,
+   "median_cr_min": 0.41408434721178067,
+   "frac_top_is_min": 0.0
+  },
+  "several_orbits": {
+   "n": 780,
+   "median_cr_min": 0.6273307015148692,
+   "frac_top_is_min": 0.09743589743589744
+  }
+ },
+ "H47.1": "BROKEN",
+ "H47.2": "BROKEN",
+ "H47.3": "NEITHER",
+ "H47.3_measured": 0.035296198641572296
+}

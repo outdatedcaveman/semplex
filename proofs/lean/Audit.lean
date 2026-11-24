@@ -15,3 +15,4 @@ open Cerp
 #print axioms decideTNetEquivExpr_correct
 #print axioms eval_pbToExpr
 #print axioms tseitinTNetMiter_lrat_unsat_implies_equiv
+#print axioms tseitinTNetMiterPB_lrat_unsat_implies_equiv

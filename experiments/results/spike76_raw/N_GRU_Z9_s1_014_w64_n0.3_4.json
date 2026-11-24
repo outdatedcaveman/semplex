@@ -1,0 +1,1 @@
+{"fit": 1.0, "shares": {"r0_tr2_ker1": 0.3253714460041246, "r1_tr2_ker1": 0.570696606122892, "r2_tr2_ker3": 0.08471451020367617, "r3_tr2_ker1": 0.019217437669307266}, "traj": [], "config": "N_GRU_Z9_s1_014_w64_n0.3", "kind": "N", "automaton": "Z9_s1_014", "width": 64, "eta": 0.3, "substrate": "GRU", "seed": 7664}

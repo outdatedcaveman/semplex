@@ -1,0 +1,22 @@
+{
+ "spike36_n6": {
+  "lower_at_w16": 3,
+  "checked": 139,
+  "unknown": 0
+ },
+ "spike45_cost4": {
+  "lower_at_w16": 1,
+  "checked": 40,
+  "unknown": 0
+ },
+ "spike45_noisy": {
+  "lower_at_w16": 3,
+  "checked": 40,
+  "unknown": 0
+ },
+ "spike45_diabetes": {
+  "lower_at_w16": 1,
+  "checked": 39,
+  "unknown": 0
+ }
+}

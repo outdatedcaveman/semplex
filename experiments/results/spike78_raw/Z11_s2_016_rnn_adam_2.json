@@ -1,0 +1,1 @@
+{"fit": 0.9983599781990051, "leader": "r4_tr2_ker1", "leader_white": "r4_tr2_ker1", "shares": {"r0_tr2_ker1": 0.0009109992696200158, "r1_tr2_ker1": 0.0012628199617322486, "r2_tr2_ker1": 0.02247172841784427, "r3_tr2_ker1": 0.0019606314338782784, "r4_tr2_ker1": 0.9733938209169251}, "automaton": "Z11_s2_016", "learner": "rnn_adam", "freq": null, "seed": 9832}

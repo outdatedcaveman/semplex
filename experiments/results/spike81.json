@@ -1,0 +1,903 @@
+{
+ "verdicts": {
+  "H81.1": "BROKEN",
+  "H81.2": "BROKEN",
+  "H81.3": "BROKEN"
+ },
+ "random": {
+  "n": 36,
+  "n_automata": 12,
+  "acc": 0.2222222222222222,
+  "nll": {
+   "gibbs": 49.46676515814745,
+   "energy": 48.66688444345767,
+   "smooth": 60.864018693222285
+  }
+ },
+ "discriminating": {
+  "n": 36,
+  "n_automata": 12,
+  "acc": 0.3888888888888889,
+  "nll": {
+   "gibbs": 77.98347777355592,
+   "energy": 60.959058214372575,
+   "smooth": 66.40664704365811
+  }
+ },
+ "non_permutation": {
+  "n": 45,
+  "n_automata": 15,
+  "acc": 0.28888888888888886,
+  "nll": {
+   "gibbs": 73.91465484923744,
+   "energy": 62.25054691132681,
+   "smooth": 69.56081955643158
+  }
+ },
+ "per": [
+  {
+   "set": "disc",
+   "id": 12,
+   "kind": "perm",
+   "fit": 1.0,
+   "leader": 1,
+   "pred": {
+    "gibbs": 2,
+    "energy": 0,
+    "smooth": 4
+   }
+  },
+  {
+   "set": "disc",
+   "id": 12,
+   "kind": "perm",
+   "fit": 1.0,
+   "leader": 0,
+   "pred": {
+    "gibbs": 2,
+    "energy": 0,
+    "smooth": 4
+   }
+  },
+  {
+   "set": "disc",
+   "id": 12,
+   "kind": "perm",
+   "fit": 1.0,
+   "leader": 0,
+   "pred": {
+    "gibbs": 2,
+    "energy": 0,
+    "smooth": 4
+   }
+  },
+  {
+   "set": "disc",
+   "id": 186,
+   "kind": "perm",
+   "fit": 1.0,
+   "leader": 1,
+   "pred": {
+    "gibbs": 1,
+    "energy": 0,
+    "smooth": 1
+   }
+  },
+  {
+   "set": "disc",
+   "id": 186,
+   "kind": "perm",
+   "fit": 1.0,
+   "leader": 1,
+   "pred": {
+    "gibbs": 1,
+    "energy": 0,
+    "smooth": 1
+   }
+  },
+  {
+   "set": "disc",
+   "id": 186,
+   "kind": "perm",
+   "fit": 1.0,
+   "leader": 1,
+   "pred": {
+    "gibbs": 1,
+    "energy": 0,
+    "smooth": 1
+   }
+  },
+  {
+   "set": "disc",
+   "id": 24,
+   "kind": "perm",
+   "fit": 1.0,
+   "leader": 0,
+   "pred": {
+    "gibbs": 6,
+    "energy": 0,
+    "smooth": 6
+   }
+  },
+  {
+   "set": "disc",
+   "id": 24,
+   "kind": "perm",
+   "fit": 1.0,
+   "leader": 0,
+   "pred": {
+    "gibbs": 6,
+    "energy": 0,
+    "smooth": 6
+   }
+  },
+  {
+   "set": "disc",
+   "id": 24,
+   "kind": "perm",
+   "fit": 1.0,
+   "leader": 0,
+   "pred": {
+    "gibbs": 6,
+    "energy": 0,
+    "smooth": 6
+   }
+  },
+  {
+   "set": "disc",
+   "id": 284,
+   "kind": "free",
+   "fit": 1.0,
+   "leader": 2,
+   "pred": {
+    "gibbs": 1,
+    "energy": 0,
+    "smooth": 1
+   }
+  },
+  {
+   "set": "disc",
+   "id": 284,
+   "kind": "free",
+   "fit": 1.0,
+   "leader": 1,
+   "pred": {
+    "gibbs": 1,
+    "energy": 0,
+    "smooth": 1
+   }
+  },
+  {
+   "set": "disc",
+   "id": 284,
+   "kind": "free",
+   "fit": 1.0,
+   "leader": 1,
+   "pred": {
+    "gibbs": 1,
+    "energy": 0,
+    "smooth": 1
+   }
+  },
+  {
+   "set": "disc",
+   "id": 31,
+   "kind": "mixed",
+   "fit": 1.0,
+   "leader": 0,
+   "pred": {
+    "gibbs": 1,
+    "energy": 0,
+    "smooth": 1
+   }
+  },
+  {
+   "set": "disc",
+   "id": 31,
+   "kind": "mixed",
+   "fit": 1.0,
+   "leader": 0,
+   "pred": {
+    "gibbs": 1,
+    "energy": 0,
+    "smooth": 1
+   }
+  },
+  {
+   "set": "disc",
+   "id": 31,
+   "kind": "mixed",
+   "fit": 1.0,
+   "leader": 0,
+   "pred": {
+    "gibbs": 1,
+    "energy": 0,
+    "smooth": 1
+   }
+  },
+  {
+   "set": "disc",
+   "id": 422,
+   "kind": "free",
+   "fit": 1.0,
+   "leader": 2,
+   "pred": {
+    "gibbs": 1,
+    "energy": 0,
+    "smooth": 5
+   }
+  },
+  {
+   "set": "disc",
+   "id": 422,
+   "kind": "free",
+   "fit": 1.0,
+   "leader": 2,
+   "pred": {
+    "gibbs": 1,
+    "energy": 0,
+    "smooth": 5
+   }
+  },
+  {
+   "set": "disc",
+   "id": 422,
+   "kind": "free",
+   "fit": 1.0,
+   "leader": 2,
+   "pred": {
+    "gibbs": 1,
+    "energy": 0,
+    "smooth": 5
+   }
+  },
+  {
+   "set": "disc",
+   "id": 456,
+   "kind": "perm",
+   "fit": 1.0,
+   "leader": 0,
+   "pred": {
+    "gibbs": 6,
+    "energy": 0,
+    "smooth": 6
+   }
+  },
+  {
+   "set": "disc",
+   "id": 456,
+   "kind": "perm",
+   "fit": 1.0,
+   "leader": 0,
+   "pred": {
+    "gibbs": 6,
+    "energy": 0,
+    "smooth": 6
+   }
+  },
+  {
+   "set": "disc",
+   "id": 456,
+   "kind": "perm",
+   "fit": 1.0,
+   "leader": 5,
+   "pred": {
+    "gibbs": 6,
+    "energy": 0,
+    "smooth": 6
+   }
+  },
+  {
+   "set": "disc",
+   "id": 494,
+   "kind": "free",
+   "fit": 1.0,
+   "leader": 3,
+   "pred": {
+    "gibbs": 1,
+    "energy": 0,
+    "smooth": 2
+   }
+  },
+  {
+   "set": "disc",
+   "id": 494,
+   "kind": "free",
+   "fit": 1.0,
+   "leader": 3,
+   "pred": {
+    "gibbs": 1,
+    "energy": 0,
+    "smooth": 2
+   }
+  },
+  {
+   "set": "disc",
+   "id": 494,
+   "kind": "free",
+   "fit": 1.0,
+   "leader": 3,
+   "pred": {
+    "gibbs": 1,
+    "energy": 0,
+    "smooth": 2
+   }
+  },
+  {
+   "set": "disc",
+   "id": 537,
+   "kind": "perm",
+   "fit": 1.0,
+   "leader": 1,
+   "pred": {
+    "gibbs": 1,
+    "energy": 0,
+    "smooth": 2
+   }
+  },
+  {
+   "set": "disc",
+   "id": 537,
+   "kind": "perm",
+   "fit": 1.0,
+   "leader": 1,
+   "pred": {
+    "gibbs": 1,
+    "energy": 0,
+    "smooth": 2
+   }
+  },
+  {
+   "set": "disc",
+   "id": 537,
+   "kind": "perm",
+   "fit": 1.0,
+   "leader": 1,
+   "pred": {
+    "gibbs": 1,
+    "energy": 0,
+    "smooth": 2
+   }
+  },
+  {
+   "set": "disc",
+   "id": 546,
+   "kind": "perm",
+   "fit": 1.0,
+   "leader": 2,
+   "pred": {
+    "gibbs": 2,
+    "energy": 0,
+    "smooth": 4
+   }
+  },
+  {
+   "set": "disc",
+   "id": 546,
+   "kind": "perm",
+   "fit": 0.9997599720954895,
+   "leader": 2,
+   "pred": {
+    "gibbs": 2,
+    "energy": 0,
+    "smooth": 4
+   }
+  },
+  {
+   "set": "disc",
+   "id": 546,
+   "kind": "perm",
+   "fit": 1.0,
+   "leader": 2,
+   "pred": {
+    "gibbs": 2,
+    "energy": 0,
+    "smooth": 4
+   }
+  },
+  {
+   "set": "disc",
+   "id": 547,
+   "kind": "mixed",
+   "fit": 1.0,
+   "leader": 1,
+   "pred": {
+    "gibbs": 1,
+    "energy": 0,
+    "smooth": 1
+   }
+  },
+  {
+   "set": "disc",
+   "id": 547,
+   "kind": "mixed",
+   "fit": 1.0,
+   "leader": 1,
+   "pred": {
+    "gibbs": 1,
+    "energy": 0,
+    "smooth": 1
+   }
+  },
+  {
+   "set": "disc",
+   "id": 547,
+   "kind": "mixed",
+   "fit": 1.0,
+   "leader": 1,
+   "pred": {
+    "gibbs": 1,
+    "energy": 0,
+    "smooth": 1
+   }
+  },
+  {
+   "set": "disc",
+   "id": 6,
+   "kind": "perm",
+   "fit": 1.0,
+   "leader": 0,
+   "pred": {
+    "gibbs": 6,
+    "energy": 0,
+    "smooth": 6
+   }
+  },
+  {
+   "set": "disc",
+   "id": 6,
+   "kind": "perm",
+   "fit": 1.0,
+   "leader": 0,
+   "pred": {
+    "gibbs": 6,
+    "energy": 0,
+    "smooth": 6
+   }
+  },
+  {
+   "set": "disc",
+   "id": 6,
+   "kind": "perm",
+   "fit": 1.0,
+   "leader": 0,
+   "pred": {
+    "gibbs": 6,
+    "energy": 0,
+    "smooth": 6
+   }
+  },
+  {
+   "set": "rand",
+   "id": 14,
+   "kind": "free",
+   "fit": 1.0,
+   "leader": 0,
+   "pred": {
+    "gibbs": 0,
+    "energy": 0,
+    "smooth": 0
+   }
+  },
+  {
+   "set": "rand",
+   "id": 14,
+   "kind": "free",
+   "fit": 1.0,
+   "leader": 0,
+   "pred": {
+    "gibbs": 0,
+    "energy": 0,
+    "smooth": 0
+   }
+  },
+  {
+   "set": "rand",
+   "id": 14,
+   "kind": "free",
+   "fit": 1.0,
+   "leader": 0,
+   "pred": {
+    "gibbs": 0,
+    "energy": 0,
+    "smooth": 0
+   }
+  },
+  {
+   "set": "rand",
+   "id": 184,
+   "kind": "mixed",
+   "fit": 1.0,
+   "leader": 0,
+   "pred": {
+    "gibbs": 0,
+    "energy": 0,
+    "smooth": 5
+   }
+  },
+  {
+   "set": "rand",
+   "id": 184,
+   "kind": "mixed",
+   "fit": 1.0,
+   "leader": 0,
+   "pred": {
+    "gibbs": 0,
+    "energy": 0,
+    "smooth": 5
+   }
+  },
+  {
+   "set": "rand",
+   "id": 184,
+   "kind": "mixed",
+   "fit": 1.0,
+   "leader": 1,
+   "pred": {
+    "gibbs": 0,
+    "energy": 0,
+    "smooth": 5
+   }
+  },
+  {
+   "set": "rand",
+   "id": 190,
+   "kind": "mixed",
+   "fit": 1.0,
+   "leader": 0,
+   "pred": {
+    "gibbs": 3,
+    "energy": 0,
+    "smooth": 4
+   }
+  },
+  {
+   "set": "rand",
+   "id": 190,
+   "kind": "mixed",
+   "fit": 1.0,
+   "leader": 0,
+   "pred": {
+    "gibbs": 3,
+    "energy": 0,
+    "smooth": 4
+   }
+  },
+  {
+   "set": "rand",
+   "id": 190,
+   "kind": "mixed",
+   "fit": 1.0,
+   "leader": 0,
+   "pred": {
+    "gibbs": 3,
+    "energy": 0,
+    "smooth": 4
+   }
+  },
+  {
+   "set": "rand",
+   "id": 236,
+   "kind": "free",
+   "fit": 1.0,
+   "leader": 0,
+   "pred": {
+    "gibbs": 0,
+    "energy": 0,
+    "smooth": 0
+   }
+  },
+  {
+   "set": "rand",
+   "id": 236,
+   "kind": "free",
+   "fit": 1.0,
+   "leader": 0,
+   "pred": {
+    "gibbs": 0,
+    "energy": 0,
+    "smooth": 0
+   }
+  },
+  {
+   "set": "rand",
+   "id": 236,
+   "kind": "free",
+   "fit": 1.0,
+   "leader": 0,
+   "pred": {
+    "gibbs": 0,
+    "energy": 0,
+    "smooth": 0
+   }
+  },
+  {
+   "set": "rand",
+   "id": 258,
+   "kind": "perm",
+   "fit": 1.0,
+   "leader": 4,
+   "pred": {
+    "gibbs": 7,
+    "energy": 0,
+    "smooth": 7
+   }
+  },
+  {
+   "set": "rand",
+   "id": 258,
+   "kind": "perm",
+   "fit": 1.0,
+   "leader": 4,
+   "pred": {
+    "gibbs": 7,
+    "energy": 0,
+    "smooth": 7
+   }
+  },
+  {
+   "set": "rand",
+   "id": 258,
+   "kind": "perm",
+   "fit": 1.0,
+   "leader": 4,
+   "pred": {
+    "gibbs": 7,
+    "energy": 0,
+    "smooth": 7
+   }
+  },
+  {
+   "set": "rand",
+   "id": 274,
+   "kind": "mixed",
+   "fit": 1.0,
+   "leader": 1,
+   "pred": {
+    "gibbs": 0,
+    "energy": 0,
+    "smooth": 3
+   }
+  },
+  {
+   "set": "rand",
+   "id": 274,
+   "kind": "mixed",
+   "fit": 1.0,
+   "leader": 1,
+   "pred": {
+    "gibbs": 0,
+    "energy": 0,
+    "smooth": 3
+   }
+  },
+  {
+   "set": "rand",
+   "id": 274,
+   "kind": "mixed",
+   "fit": 1.0,
+   "leader": 1,
+   "pred": {
+    "gibbs": 0,
+    "energy": 0,
+    "smooth": 3
+   }
+  },
+  {
+   "set": "rand",
+   "id": 335,
+   "kind": "free",
+   "fit": 1.0,
+   "leader": 1,
+   "pred": {
+    "gibbs": 0,
+    "energy": 0,
+    "smooth": 6
+   }
+  },
+  {
+   "set": "rand",
+   "id": 335,
+   "kind": "free",
+   "fit": 1.0,
+   "leader": 1,
+   "pred": {
+    "gibbs": 0,
+    "energy": 0,
+    "smooth": 6
+   }
+  },
+  {
+   "set": "rand",
+   "id": 335,
+   "kind": "free",
+   "fit": 1.0,
+   "leader": 1,
+   "pred": {
+    "gibbs": 0,
+    "energy": 0,
+    "smooth": 6
+   }
+  },
+  {
+   "set": "rand",
+   "id": 34,
+   "kind": "mixed",
+   "fit": 1.0,
+   "leader": 3,
+   "pred": {
+    "gibbs": 2,
+    "energy": 0,
+    "smooth": 3
+   }
+  },
+  {
+   "set": "rand",
+   "id": 34,
+   "kind": "mixed",
+   "fit": 1.0,
+   "leader": 3,
+   "pred": {
+    "gibbs": 2,
+    "energy": 0,
+    "smooth": 3
+   }
+  },
+  {
+   "set": "rand",
+   "id": 34,
+   "kind": "mixed",
+   "fit": 1.0,
+   "leader": 3,
+   "pred": {
+    "gibbs": 2,
+    "energy": 0,
+    "smooth": 3
+   }
+  },
+  {
+   "set": "rand",
+   "id": 364,
+   "kind": "mixed",
+   "fit": 1.0,
+   "leader": 1,
+   "pred": {
+    "gibbs": 0,
+    "energy": 0,
+    "smooth": 1
+   }
+  },
+  {
+   "set": "rand",
+   "id": 364,
+   "kind": "mixed",
+   "fit": 1.0,
+   "leader": 1,
+   "pred": {
+    "gibbs": 0,
+    "energy": 0,
+    "smooth": 1
+   }
+  },
+  {
+   "set": "rand",
+   "id": 364,
+   "kind": "mixed",
+   "fit": 1.0,
+   "leader": 1,
+   "pred": {
+    "gibbs": 0,
+    "energy": 0,
+    "smooth": 1
+   }
+  },
+  {
+   "set": "rand",
+   "id": 443,
+   "kind": "free",
+   "fit": 1.0,
+   "leader": 2,
+   "pred": {
+    "gibbs": 1,
+    "energy": 0,
+    "smooth": 4
+   }
+  },
+  {
+   "set": "rand",
+   "id": 443,
+   "kind": "free",
+   "fit": 1.0,
+   "leader": 2,
+   "pred": {
+    "gibbs": 1,
+    "energy": 0,
+    "smooth": 4
+   }
+  },
+  {
+   "set": "rand",
+   "id": 443,
+   "kind": "free",
+   "fit": 1.0,
+   "leader": 0,
+   "pred": {
+    "gibbs": 1,
+    "energy": 0,
+    "smooth": 4
+   }
+  },
+  {
+   "set": "rand",
+   "id": 73,
+   "kind": "mixed",
+   "fit": 1.0,
+   "leader": 2,
+   "pred": {
+    "gibbs": 0,
+    "energy": 0,
+    "smooth": 2
+   }
+  },
+  {
+   "set": "rand",
+   "id": 73,
+   "kind": "mixed",
+   "fit": 1.0,
+   "leader": 2,
+   "pred": {
+    "gibbs": 0,
+    "energy": 0,
+    "smooth": 2
+   }
+  },
+  {
+   "set": "rand",
+   "id": 73,
+   "kind": "mixed",
+   "fit": 1.0,
+   "leader": 2,
+   "pred": {
+    "gibbs": 0,
+    "energy": 0,
+    "smooth": 2
+   }
+  },
+  {
+   "set": "rand",
+   "id": 78,
+   "kind": "perm",
+   "fit": 1.0,
+   "leader": 3,
+   "pred": {
+    "gibbs": 1,
+    "energy": 0,
+    "smooth": 1
+   }
+  },
+  {
+   "set": "rand",
+   "id": 78,
+   "kind": "perm",
+   "fit": 1.0,
+   "leader": 3,
+   "pred": {
+    "gibbs": 1,
+    "energy": 0,
+    "smooth": 1
+   }
+  },
+  {
+   "set": "rand",
+   "id": 78,
+   "kind": "perm",
+   "fit": 0.9996200203895569,
+   "leader": 3,
+   "pred": {
+    "gibbs": 1,
+    "energy": 0,
+    "smooth": 1
+   }
+  }
+ ]
+}

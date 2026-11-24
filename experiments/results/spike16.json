@@ -1,0 +1,84 @@
+{
+ "planted_tasks": 600,
+ "planted_invariant_share": 0.37666666666666665,
+ "relu-W8-adam": {
+  "part1_kernel": {
+   "runs": 970,
+   "kernel_completion_invariant": 0.9402061855670103,
+   "kernel_completion_cheapest": 0.9195876288659793,
+   "P_learned_equals_kernel_given_learned_invariant": 0.6726572528883183
+  },
+  "part2_deficit": {
+   "heldout_acc_target_invariant": 0.513089970501475,
+   "heldout_acc_target_breaks": 0.5158199643493762,
+   "mean_cost_invariant_targets": 3.084070796460177,
+   "mean_cost_breaking_targets": 3.286096256684492,
+   "error_rate_on_orbits_where_target_breaks": 0.5001365001365001,
+   "error_rate_on_orbits_where_target_keeps": 0.4801154884977182
+  },
+  "part3_method": {
+   "symmetrization_gain_target_invariant": 0.0003687315634217647,
+   "symmetrization_gain_target_breaks": 0.0004456327985739028
+  }
+ },
+ "tanh-W64-adam": {
+  "part1_kernel": {
+   "runs": 976,
+   "kernel_completion_invariant": 0.9692622950819673,
+   "kernel_completion_cheapest": 0.9313524590163934,
+   "P_learned_equals_kernel_given_learned_invariant": 0.6624843161856964
+  },
+  "part2_deficit": {
+   "heldout_acc_target_invariant": 0.5180678466076696,
+   "heldout_acc_target_breaks": 0.5250668449197861,
+   "mean_cost_invariant_targets": 3.084070796460177,
+   "mean_cost_breaking_targets": 3.286096256684492,
+   "error_rate_on_orbits_where_target_breaks": 0.5001365001365001,
+   "error_rate_on_orbits_where_target_keeps": 0.46987054111949333
+  },
+  "part3_method": {
+   "symmetrization_gain_target_invariant": 0.0012905604719763986,
+   "symmetrization_gain_target_breaks": 0.0027852049910873644
+  }
+ },
+ "tanh-W8-adam": {
+  "part1_kernel": {
+   "runs": 966,
+   "kernel_completion_invariant": 0.968944099378882,
+   "kernel_completion_cheapest": 0.9337474120082816,
+   "P_learned_equals_kernel_given_learned_invariant": 0.6416772554002541
+  },
+  "part2_deficit": {
+   "heldout_acc_target_invariant": 0.519542772861357,
+   "heldout_acc_target_breaks": 0.5229500891265597,
+   "mean_cost_invariant_targets": 3.084070796460177,
+   "mean_cost_breaking_targets": 3.286096256684492,
+   "error_rate_on_orbits_where_target_breaks": 0.500955500955501,
+   "error_rate_on_orbits_where_target_keeps": 0.47061562820154607
+  },
+  "part3_method": {
+   "symmetrization_gain_target_invariant": 0.002949852507374562,
+   "symmetrization_gain_target_breaks": 0.002228163992869847
+  }
+ },
+ "tanh-W8-gd": {
+  "part1_kernel": {
+   "runs": 987,
+   "kernel_completion_invariant": 0.9696048632218845,
+   "kernel_completion_cheapest": 0.9270516717325228,
+   "P_learned_equals_kernel_given_learned_invariant": 0.6759358288770053
+  },
+  "part2_deficit": {
+   "heldout_acc_target_invariant": 0.5228613569321534,
+   "heldout_acc_target_breaks": 0.5218360071301248,
+   "mean_cost_invariant_targets": 3.084070796460177,
+   "mean_cost_breaking_targets": 3.286096256684492,
+   "error_rate_on_orbits_where_target_breaks": 0.4974064974064974,
+   "error_rate_on_orbits_where_target_keeps": 0.471081307627829
+  },
+  "part3_method": {
+   "symmetrization_gain_target_invariant": -0.0009218289085546338,
+   "symmetrization_gain_target_breaks": -0.0018939393939394478
+  }
+ }
+}

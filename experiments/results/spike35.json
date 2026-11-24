@@ -1,0 +1,22 @@
+{
+ "tasks": 400,
+ "H35.1_frac_found_verified": 1.0,
+ "frac_seen_consistent_with_single_threshold": 0.0775,
+ "mean_seconds": 1.60686252117157,
+ "H35.2_frac_cost3_certified": 0.962059620596206,
+ "H35.3_frac_all5_agree": 0.095,
+ "occam_bal": 0.9021015458385732,
+ "occam_acc": 0.90203125,
+ "ntk_tanh_bal": 0.7876472187680562,
+ "ntk_tanh_acc": 0.78765625,
+ "net_tanh_bal": 0.8937726928990319,
+ "net_tanh_acc": 0.8936546159619715,
+ "net_tanh_fit": 0.99925,
+ "ntk_relu_bal": 0.795977553716025,
+ "ntk_relu_acc": 0.7959375,
+ "net_relu_bal": 0.8859778431125023,
+ "net_relu_acc": 0.8859226339509264,
+ "net_relu_fit": 0.9985,
+ "H35.4_occam_minus_nets": 0.012226277832806054,
+ "H35.5_occam_minus_ntk": 0.11028915959653263
+}

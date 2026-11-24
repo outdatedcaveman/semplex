@@ -1,0 +1,19 @@
+{
+ "D": 6561,
+ "CM": {
+  "instances": 3904,
+  "violations": 0
+ },
+ "Cut": {
+  "instances": 3904,
+  "violations": 0
+ },
+ "RM": {
+  "instances": 10912,
+  "violations": 0
+ },
+ "Mono": {
+  "instances": 14816,
+  "violations": 3888
+ }
+}

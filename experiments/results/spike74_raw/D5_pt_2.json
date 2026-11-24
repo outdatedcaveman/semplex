@@ -1,0 +1,14 @@
+{
+ "automaton": "D5_pt",
+ "seed": 7472,
+ "labels": [
+  "r0_tr4_ker1",
+  "r1_tr4_ker1",
+  "r2_tr1_ker5"
+ ],
+ "fit": 1.0,
+ "final_leader": "r1_tr4_ker1",
+ "final_leader_white": "r1_tr4_ker1",
+ "first_step": 50,
+ "first_leader": "r1_tr4_ker1"
+}

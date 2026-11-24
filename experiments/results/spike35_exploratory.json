@@ -1,0 +1,16 @@
+{
+ "tanh": {
+  "agree_net_occam": 0.9100106329747311,
+  "agree_net_ntk": 0.8080278959219415,
+  "net_right_where_net_ne_ntk": 0.7759224566262116,
+  "occam_sides_with_net_where_net_ne_ntk": 0.801987456218946,
+  "n_disagreements": 12277.0
+ },
+ "relu": {
+  "agree_net_occam": 0.905279794692038,
+  "agree_net_ntk": 0.8337349774661993,
+  "net_right_where_net_ne_ntk": 0.7706352941176471,
+  "occam_sides_with_net_where_net_ne_ntk": 0.7992470588235294,
+  "n_disagreements": 10625.0
+ }
+}

@@ -1,0 +1,9 @@
+{
+ "automaton": "Z4",
+ "seed": 6602,
+ "fit": 1.0,
+ "rho_predictive": -0.11595420713048969,
+ "rho_onestep": 0.48795003647426655,
+ "n_macro": 4,
+ "probe_macro": 1.0
+}
