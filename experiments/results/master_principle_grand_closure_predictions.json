@@ -1,0 +1,54 @@
+{
+  "experiment": "master_principle_grand_closure",
+  "seeds": [101, 202, 303],
+  "hypotheses": {
+    "HGC.1": {
+      "paper_anchor": "arXiv:2611.26366 (TailWorld + RIFT)",
+      "prediction": "Under 100:1 long-tailed 2D physical rule imbalance across 6 continuous dynamics rules (3 common, 3 rare), prior-debiased RIFT (tau=0) achieves rare-rule identification >= 0.95 and rare-rule query ADE < 0.50 * biased/uncalibrated prior baseline at calibration length T=8, strictly outperforming strong prior bias (tau=2.0) at short calibration T=2..4 with 0 violations of the exact explanatory-gap vs tau*log(n_h/n_l) boundary.",
+      "metrics": {
+        "rift_tau0_id_acc_T8_min": 0.95,
+        "rift_tau0_ade_ratio_vs_uncal_T8_max": 0.50,
+        "rift_tau0_beats_tau2_short_T4": true,
+        "threshold_boundary_violations_max": 0
+      }
+    },
+    "HGC.2": {
+      "paper_anchor": "arXiv:2611.26339 (Sirius-Tiamat)",
+      "prediction": "On a 6-layer PyTorch Transformer decision encoder (d_model=64, nhead=4), 1-parameter unlabeled KL temperature recalibration produces 0.0000 decision flips (0 flipped items) while reducing top-layer-deletion ECE by > 50% when raw ECE > 0.08; out-of-family flip rate strictly exceeds in-family flip rate under 4-bit rounding and top-layer deletion; flip/TV ratio for weight rounding strictly exceeds top-layer deletion; and fp32 logit margin predicts 4-bit flips with AUROC >= 0.80.",
+      "metrics": {
+        "unlabeled_temp_flips_max": 0,
+        "temp_ece_relative_drop_min": 0.50,
+        "oof_gt_infam_4bit_and_drop": true,
+        "flip_per_tv_rounding_gt_deletion": true,
+        "margin_auroc_4bit_min": 0.80
+      }
+    },
+    "HGC.3": {
+      "paper_anchor": "arXiv:2611.26414 (ZeroVLN Prop 1-2 & Modular Interface)",
+      "prediction": "Adapting the trained Transformer encoder to a secondary routing/action Task B, frozen-brain modular action-expert adaptation preserves Task A with 0.0000 forgetting drop (keep_drop == 0.0) and Task B acc >= 0.90, whereas direct end-to-end SFT incurs forgetting sft_keep_drop > 0.05; and exact numerical verification of Proposition 2 Pythagorean excess ||Delta_sft||^2 = ||Delta_return||^2 + ||w||^2 holds within < 1e-10 across all seeds.",
+      "metrics": {
+        "frozen_expert_keep_drop_max": 0.0,
+        "frozen_expert_taskB_acc_min": 0.90,
+        "direct_sft_keep_drop_min": 0.05,
+        "prop2_pythagorean_max_err": 1e-10
+      }
+    },
+    "HGC.4": {
+      "paper_anchor": "Nature Neuroscience 2026 (10.1038/s41593-026-02523-6, de Varda & Fedorenko)",
+      "prediction": "Across two typologically opposite compositional formal languages (L1 prefix/VSO over alphabet A, L2 postfix/SOV over disjoint alphabet B) grounded in the same 12-state A4 semantic automaton, zero-shot cross-lingual transfer to unseen L2 compositional expressions after bilingual word/generator alignment achieves >= 0.95 accuracy (vs 1/12 chance), and cross-language same-meaning cosine similarity exceeds within-language different-meaning similarity by > 0.30.",
+      "metrics": {
+        "zero_shot_cross_lingual_acc_min": 0.95,
+        "semantic_vs_surface_cosine_gap_min": 0.30
+      }
+    },
+    "HGC.5": {
+      "paper_anchor": "Anthropic vp-vnp computable monotone check + Spike 30 general-n Walsh closure",
+      "prediction": "Computable block-diagonal log-det Fisher capacity is additive within < 1e-12 while T5 nonzero off-diagonal coupling yields strictly positive contextuality defect Delta_ctx > 0 on 100/100 trials per seed; and exact Boolean Walsh-Hadamard Fourier inversion + arbitrary-n (n=2..8) parity extremal kernel checks pass with max error < 1e-12.",
+      "metrics": {
+        "block_diag_additivity_err_max": 1e-12,
+        "coupling_defect_positive_rate_min": 1.0,
+        "general_n_walsh_max_err": 1e-12
+      }
+    }
+  }
+}
