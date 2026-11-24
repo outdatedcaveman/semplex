@@ -1,0 +1,26 @@
+{
+  "benchmark": "master_principle_semigroup_transformer",
+  "date": "2026-11-23",
+  "pre_registered_hypotheses": {
+    "HKR.1": {
+      "claim": "On non-invertible Krohn-Rhodes wreath automaton A5 \\wr U2 (L = 6..48, 10 classes), kr_wreath_ermoe_etf (learned U2 reset gates + template-free A5 discovery) achieves L48_bacc >= 0.98, a5_hom_err <= 1e-10, and beats unitary_only_ufr_etf (>= +0.40 at L48), causal_transformer, and gru_baseline.",
+      "metrics": ["L48_bacc", "a5_hom_err", "unitary_L48_gap"]
+    },
+    "HKR.2": {
+      "claim": "On A5 \\wr U2 zero-replay continual learning (Keep {0..5} -> FT {6..9}), kr_wreath_ermoe_etf achieves forgetting_after_keep >= 0.98, forgetting_drop <= 0.01, and ft_acc >= 0.98, outperforming standard causal_transformer and gru_baseline (drop >= 0.30).",
+      "metrics": ["forgetting_after_keep", "forgetting_drop", "ft_acc"]
+    },
+    "HKR.3": {
+      "claim": "On real 2-layer PyTorch Causal Transformer next-token representations over the non-group Bounded-Dyck + Reset language, unsupervised D-optimal epiplexity selection (B = 40, 80, 160; zero labels accessed during selection) beats uniform random by >= +0.05 balanced accuracy at B = 40 and B = 80 with higher or equal class coverage.",
+      "metrics": ["B40_gain", "B80_gain", "coverage"]
+    },
+    "HKR.4": {
+      "claim": "On real 2-layer PyTorch Causal Transformer zero-replay continual learning (Keep {0..4} -> FT {5..7}), transformer_whitened_orth_etf achieves forgetting_after_keep >= 0.85, forgetting_drop <= 0.05, and ft_acc >= 0.80, beating transformer_standard_ft.",
+      "metrics": ["forgetting_after_keep", "forgetting_drop", "ft_acc"]
+    },
+    "HKR.5": {
+      "claim": "On the continuous-state noisy 2D double-integrator POMDP (T = 5..80), active excitation (u != 0) achieves id_acc(T=80) >= 0.98 vs passive (u = 0) in [0.45, 0.55] with 0 Chebyshev violations; float64 U2 audit confirms det=0, and horn-fill counts verify A5 = 100% inner/outer vs U2 & C5 \\wr U2 & A5 \\wr U2 = 100% inner / <100% outer.",
+      "metrics": ["active_T80_acc", "passive_T80_acc", "chebyshev_violations", "horn_separation"]
+    }
+  }
+}
