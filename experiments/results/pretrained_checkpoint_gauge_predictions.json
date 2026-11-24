@@ -1,0 +1,67 @@
+{
+  "experiment": "pretrained_checkpoint_gauge_probe",
+  "models": {
+    "HP.1": "cross-encoder/ms-marco-MiniLM-L-6-v2",
+    "HP.2": "HuggingFaceTB/SmolLM2-135M-Instruct",
+    "HP.3": "cross-encoder/ms-marco-MiniLM-L-6-v2",
+    "HP.4": "HuggingFaceTB/SmolLM2-135M-Instruct",
+    "HP.5": "Polish R^2 Ornstein-Uhlenbeck Markov Kernel (seeds [101, 202, 303])"
+  },
+  "hypotheses": {
+    "HP.1": {
+      "paper_anchor": "arXiv:2611.26339 (Sirius-Tiamat decision-quotient gauge vs quantization/deletion)",
+      "prediction": "On pretrained cross-encoder/ms-marco-MiniLM-L-6-v2 (6 layers, 22.7M params) evaluated on 80 In-Family and 80 OOF adversarial query-passage pairs: fp32 In-Family accuracy >= 0.85; top-2-layer deletion with 1-parameter unlabeled KL temperature recalibration produces 0 decision flips and cuts ECE by >= 30% (when raw ECE > 0.05); per-channel int4 quantization causes strictly higher flip rate OOF than In-Family, higher flip/TV ratio for int4 rounding than layer deletion, and fp32 margin predicts int4 flips with AUROC >= 0.75.",
+      "metrics": {
+        "fp32_infam_acc_min": 0.85,
+        "temp_recal_flips_max": 0,
+        "temp_ece_rel_drop_min": 0.30,
+        "oof_gt_infam_int4": true,
+        "flip_per_tv_int4_gt_deletion": true,
+        "margin_auroc_int4_min": 0.75
+      }
+    },
+    "HP.2": {
+      "paper_anchor": "arXiv:2611.26339 (Sirius-Tiamat scaling to causal LLM weights)",
+      "prediction": "On pretrained HuggingFaceTB/SmolLM2-135M-Instruct (30 layers, 135M params) evaluated on 48 In-Family and 48 OOF chat-templated Yes/No prompts: top-4-layer deletion with 1-parameter unlabeled KL temperature recalibration produces 0 decision flips and cuts ECE by >= 30% (when raw ECE > 0.05); per-channel int4 weight rounding produces higher flip/TV ratio than top-layer deletion and fp32 logit margin predicts int4 flips with AUROC >= 0.75.",
+      "metrics": {
+        "temp_recal_flips_max": 0,
+        "temp_ece_rel_drop_min": 0.30,
+        "flip_per_tv_int4_gt_deletion": true,
+        "margin_auroc_int4_min": 0.75
+      }
+    },
+    "HP.3": {
+      "paper_anchor": "arXiv:2611.26414 (ZeroVLN Prop. 1-2 across 22.7M pretrained weights)",
+      "prediction": "Adapting cross-encoder/ms-marco-MiniLM-L-6-v2 to Task B sentence-domain routing while tracking Task A MS-MARCO relevance: a frozen-brain modular MLP adapter preserves Task A with 0.0000 drop and reaches >= 0.90 Task B accuracy, whereas end-to-end SFT incurs Task A logit L2 drift > 0.10 while exact float64 Prop. 2 decomposition across all 22.7M parameters satisfies Pythagorean rel error < 1e-8, orthogonality |cos(g, w)| < 1e-8, and orthogonal drift energy fraction > 0.50.",
+      "metrics": {
+        "frozen_taskA_drop_max": 0.0,
+        "frozen_taskB_acc_min": 0.90,
+        "sft_taskA_logit_l2_drift_min": 0.10,
+        "prop2_pyth_rel_err_max": 1e-8,
+        "prop2_orth_cos_abs_max": 1e-8,
+        "orthogonal_waste_fraction_min": 0.50
+      }
+    },
+    "HP.4": {
+      "paper_anchor": "arXiv:2611.26414 (ZeroVLN Prop. 1-2 on causal LLM top decoder blocks)",
+      "prediction": "Adapting HuggingFaceTB/SmolLM2-135M-Instruct to binary prompt-type routing: a frozen-LLM linear probe preserves Task A with 0.0000 drop and achieves >= 0.85 Task B accuracy, while SFT over the top 2 decoder blocks incurs Task A logit L2 drift > 0.05 with exact float64 Prop. 2 decomposition satisfying Pythagorean rel error < 1e-8, orthogonality |cos(g, w)| < 1e-8, and orthogonal drift energy fraction > 0.50.",
+      "metrics": {
+        "frozen_taskA_drop_max": 0.0,
+        "frozen_taskB_acc_min": 0.85,
+        "sft_taskA_logit_l2_drift_min": 0.05,
+        "prop2_pyth_rel_err_max": 1e-8,
+        "prop2_orth_cos_abs_max": 1e-8,
+        "orthogonal_waste_fraction_min": 0.50
+      }
+    },
+    "HP.5": {
+      "paper_anchor": "ContinuumKernelCovariance (Mathlib Polish R^2 Markov kernel transport & counterexample)",
+      "prediction": "Across 3 seeds [101, 202, 303] on a 2D Polish Ornstein-Uhlenbeck Markov kernel under smooth bijection phi(x1,x2) = (x1 + 0.35*x2^3, x2) vs non-injective projection psi(x1,x2) = x1: analytic pushforward Jacobian log-density discrepancy < 1e-12, Monte Carlo multi-step energy-distance discrepancy between transported and evolved laws < 0.02, and projection psi collapses x2-separated external states (collapse ratio == 0.0).",
+      "metrics": {
+        "jacobian_log_density_max_err_max": 1e-12,
+        "mc_energy_dist_err_max": 0.02,
+        "projection_collapse_ratio_max": 0.0
+      }
+    }
+  }
+}
