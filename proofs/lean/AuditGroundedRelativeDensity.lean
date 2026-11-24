@@ -1,0 +1,6 @@
+import GroundedRelativeDensityExample
+
+#print axioms Cerp.GroundedRelativeDensity.groundedProfileHomEquiv
+#print axioms Cerp.GroundedRelativeDensity.grounded_profile_representation_fully_faithful
+#print axioms Cerp.GroundedRelativeDensity.realization_profile_adequacy_iff
+#print axioms Cerp.GroundedRelativeDensityExample.empty_probes_not_relatively_dense

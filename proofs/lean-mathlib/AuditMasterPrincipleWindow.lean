@@ -1,0 +1,9 @@
+import MasterPrincipleWindow
+
+#print axioms MasterPrincipleWindow.run_append
+#print axioms MasterPrincipleWindow.definite_monotone
+#print axioms MasterPrincipleWindow.definite_depends_only_on_suffix
+#print axioms MasterPrincipleWindow.definite_window_map_exact
+#print axioms MasterPrincipleWindow.run_bijective_of_bijective
+#print axioms MasterPrincipleWindow.periodic_group_not_definite
+#print axioms MasterPrincipleWindow.definite_reset_pushforward_const

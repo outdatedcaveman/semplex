@@ -1,0 +1,11 @@
+import CausalAnchorAdequacy
+
+#print axioms Cerp.CausalAnchorAdequacy.joint_profile_eq_iff
+#print axioms Cerp.CausalAnchorAdequacy.joint_identification_iff_kernel_intersection_trivial
+#print axioms Cerp.CausalAnchorAdequacy.derived_channel_cannot_refine_kernel
+#print axioms Cerp.CausalAnchorAdequacy.first_channel_blind_to_second_coordinate
+#print axioms Cerp.CausalAnchorAdequacy.second_channel_blind_to_first_coordinate
+#print axioms Cerp.CausalAnchorAdequacy.complementary_channels_jointly_identify_at_one
+
+#print axioms Cerp.CausalAnchorAdequacy.twoStageMeasurement_not_identifying_at_zero
+#print axioms Cerp.CausalAnchorAdequacy.twoStageMeasurement_identifies_at_one

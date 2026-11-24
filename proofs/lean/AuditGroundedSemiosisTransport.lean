@@ -1,0 +1,9 @@
+import GroundedSemiosisTransportExample
+
+#print axioms Cerp.GroundedSemiosisTransport.externalProfileQuotientEquivOfInjective
+#print axioms Cerp.GroundedSemiosisTransport.externalProfileQuotientEquiv
+#print axioms Cerp.GroundedSemiosisTransport.transportGroundedSemiosis
+#print axioms Cerp.GroundedSemiosisTransport.content_truth_preserved
+#print axioms Cerp.GroundedSemiosisTransport.grounded_assertion_truth_preserved
+#print axioms Cerp.GroundedSemiosisTransport.evidential_support_preserved
+#print axioms Cerp.GroundedSemiosisTransportExample.transported_truth_without_evidence

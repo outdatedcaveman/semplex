@@ -1,0 +1,162 @@
+{
+  "mode": "full",
+  "elapsed_s": 587.57,
+  "total_runs": 22,
+  "verdicts": {
+    "HTF.1": "HELD",
+    "HTF.2": "HELD",
+    "HTF.3": "HELD",
+    "HTF.4": "HELD"
+  },
+  "Arm1_TemplateFree_A5": {
+    "spectral_alm_lbfgs_etf": {
+      "n_params": 1840.0,
+      "unitary_max_err": 7.482903185973555e-14,
+      "homomorphism_err": 3.1871811019247737e-29,
+      "forgetting_before_keep": 1.0,
+      "forgetting_after_keep": 1.0,
+      "forgetting_drop": 0.0,
+      "ft_acc": 1.0,
+      "L5_bacc": 1.0,
+      "L6_bacc": 1.0,
+      "L8_bacc": 1.0,
+      "L12_bacc": 1.0,
+      "L16_bacc": 1.0,
+      "L24_bacc": 1.0,
+      "L32_bacc": 1.0,
+      "n_converged_heads": 20.0,
+      "phi_found_count": 7.333333333333333,
+      "psi_found_count": 6.666666666666667,
+      "galois_phi_err": 4.440892098500626e-16,
+      "galois_psi_err": 1.1102230246251565e-16
+    },
+    "spectral_alm_adam_linear": {
+      "n_params": 3285.0,
+      "unitary_max_err": 1.239776611328125e-05,
+      "homomorphism_err": 0.018908931873738766,
+      "forgetting_before_keep": 1.0,
+      "forgetting_after_keep": 0.06444444444444444,
+      "forgetting_drop": 0.9355555555555556,
+      "ft_acc": 1.0,
+      "L5_bacc": 0.9925,
+      "L6_bacc": 0.995,
+      "L8_bacc": 0.995,
+      "L12_bacc": 0.995,
+      "L16_bacc": 0.9941666666666666,
+      "L24_bacc": 0.9958333333333332,
+      "L32_bacc": 0.9966666666666667
+    },
+    "icosahedral_ermoe_etf": {
+      "n_params": 1840.0,
+      "unitary_max_err": 4.696243394164412e-14,
+      "homomorphism_err": 1.0117177751909608e-29,
+      "forgetting_before_keep": 1.0,
+      "forgetting_after_keep": 1.0,
+      "forgetting_drop": 0.0,
+      "ft_acc": 1.0,
+      "L5_bacc": 1.0,
+      "L6_bacc": 1.0,
+      "L8_bacc": 1.0,
+      "L12_bacc": 1.0,
+      "L16_bacc": 1.0,
+      "L24_bacc": 1.0,
+      "L32_bacc": 1.0
+    },
+    "cayley_ufr_soft_etf": {
+      "n_params": 34144.0,
+      "unitary_max_err": 8.145968119303385e-07,
+      "homomorphism_err": 0.2314924548069636,
+      "forgetting_before_keep": 0.18888888888888888,
+      "forgetting_after_keep": 0.18888888888888888,
+      "forgetting_drop": 0.0,
+      "ft_acc": 0.20370370370370372,
+      "L5_bacc": 0.205,
+      "L6_bacc": 0.22583333333333333,
+      "L8_bacc": 0.18583333333333332,
+      "L12_bacc": 0.18500000000000003,
+      "L16_bacc": 0.2025,
+      "L24_bacc": 0.1991666666666667,
+      "L32_bacc": 0.20333333333333334
+    }
+  },
+  "Arm2_Continuous_SO3": {
+    "so3_gauge_ermoe_etf": {
+      "n_params": 1321.0,
+      "forgetting_before_keep": 0.9972222222222222,
+      "forgetting_after_keep": 0.9972222222222222,
+      "forgetting_drop": 0.0,
+      "ft_acc": 0.9981481481481481,
+      "L5_bacc": 0.9942857142857143,
+      "L8_bacc": 0.9904761904761905,
+      "L16_bacc": 0.9885714285714285,
+      "L24_bacc": 0.9961904761904762,
+      "L32_bacc": 0.9923809523809525,
+      "R2_cos": 0.9999693969933615
+    },
+    "cayley_ufr_soft": {
+      "n_params": 114.0,
+      "forgetting_before_keep": 0.23611111111111113,
+      "forgetting_after_keep": 0.0,
+      "forgetting_drop": 0.23611111111111113,
+      "ft_acc": 0.5564814814814815,
+      "L5_bacc": 0.22952380952380955,
+      "L8_bacc": 0.19333333333333333,
+      "L16_bacc": 0.19428571428571426,
+      "L24_bacc": 0.19999999999999998,
+      "L32_bacc": 0.19714285714285715,
+      "R2_cos": -6282092332.966023
+    },
+    "mlp_sequence": {
+      "n_params": 16950.0,
+      "forgetting_before_keep": 0.30370370370370364,
+      "forgetting_after_keep": 0.0,
+      "forgetting_drop": 0.30370370370370364,
+      "ft_acc": 0.7935185185185185,
+      "L5_bacc": 0.32761904761904764,
+      "L8_bacc": 0.22666666666666666,
+      "L16_bacc": 0.19999999999999998,
+      "L24_bacc": 0.1819047619047619,
+      "L32_bacc": 0.2219047619047619,
+      "R2_cos": -0.4024950663248698
+    }
+  },
+  "Arm3_Closure_T6": {
+    "commuting_defect": 0.0,
+    "broken_defect": 1.4142135623730951,
+    "broken_comm_defect": 1.2247448713915887,
+    "alg_escape_defect": 1.4142135623730951,
+    "t6_chebyshev_violations": 0,
+    "t6_curve": [
+      {
+        "N": 10,
+        "empirical_err": 0.053,
+        "chebyshev_bound": 0.4
+      },
+      {
+        "N": 25,
+        "empirical_err": 0.004,
+        "chebyshev_bound": 0.16
+      },
+      {
+        "N": 50,
+        "empirical_err": 0.0005,
+        "chebyshev_bound": 0.08
+      },
+      {
+        "N": 100,
+        "empirical_err": 0.0,
+        "chebyshev_bound": 0.04
+      },
+      {
+        "N": 250,
+        "empirical_err": 0.0,
+        "chebyshev_bound": 0.016
+      },
+      {
+        "N": 500,
+        "empirical_err": 0.0,
+        "chebyshev_bound": 0.008
+      }
+    ]
+  }
+}

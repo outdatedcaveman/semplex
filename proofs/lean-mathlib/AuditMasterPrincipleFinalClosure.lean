@@ -1,0 +1,29 @@
+import MasterPrincipleFinalClosure
+
+#print axioms Semplex.FinalClosure.AlgebraicClosureSeam.eigenspace_not_action_invariant_witness
+#print axioms Semplex.FinalClosure.AlgebraicClosureSeam.invariant_subspace_not_algebra_closed_witness
+#print axioms Semplex.FinalClosure.AlgebraicClosureSeam.obsRel_equiv
+#print axioms Semplex.FinalClosure.AlgebraicClosureSeam.actionInvariant_induces_congruence
+#print axioms Semplex.FinalClosure.AlgebraicClosureSeam.quotientEval_mk
+#print axioms Semplex.FinalClosure.AlgebraicClosureSeam.quotient_profile_separates
+
+#print axioms Semplex.FinalClosure.TemplateFreeRelationLocking.gaugeConj_preserves_a5_rels
+#print axioms Semplex.FinalClosure.TemplateFreeRelationLocking.relation_defect_zero_iff_exact
+#print axioms Semplex.FinalClosure.TemplateFreeRelationLocking.word_pow_trace_gauge_invariant
+#print axioms Semplex.FinalClosure.TemplateFreeRelationLocking.unitary_frobNormSq_eq_dim
+#print axioms Semplex.FinalClosure.TemplateFreeRelationLocking.template_free_pair_mdl_lt_bank
+#print axioms Semplex.FinalClosure.TemplateFreeRelationLocking.orthogonal_sgd_step_zero_drift
+
+#print axioms Semplex.FinalClosure.ContinuousSO3Gauge.one_isSO3
+#print axioms Semplex.FinalClosure.ContinuousSO3Gauge.mul_isSO3
+#print axioms Semplex.FinalClosure.ContinuousSO3Gauge.transpose_isSO3
+#print axioms Semplex.FinalClosure.ContinuousSO3Gauge.gaugeConj_isSO3
+#print axioms Semplex.FinalClosure.ContinuousSO3Gauge.so3_trace_gauge_invariant
+#print axioms Semplex.FinalClosure.ContinuousSO3Gauge.so3_trace_abs_le_three
+#print axioms Semplex.FinalClosure.ContinuousSO3Gauge.rotZ_so3_and_exact_trace
+
+#print axioms Semplex.FinalClosure.QuantitativeFiniteSampleT6.bernoulli_var_le_quarter
+#print axioms Semplex.FinalClosure.QuantitativeFiniteSampleT6.chebyshevTail_pos
+#print axioms Semplex.FinalClosure.QuantitativeFiniteSampleT6.chebyshevTail_antitone_N
+#print axioms Semplex.FinalClosure.QuantitativeFiniteSampleT6.chebyshevTail_antitone_delta
+#print axioms Semplex.FinalClosure.QuantitativeFiniteSampleT6.sample_complexity_threshold_sufficient

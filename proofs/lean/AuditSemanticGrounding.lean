@@ -1,0 +1,31 @@
+import CausalClosure
+import ResponseQuotient
+import ObservableCongruence
+import ResourceRelativeProbes
+import BeliefStateHankel
+
+#print axioms Cerp.CausalClosure.stable_indicators_iff_transition_congruence
+#print axioms Cerp.ResponseQuotient.quotientResponse_injective
+#print axioms Cerp.ResponseQuotient.factorThrough_comp
+#print axioms Cerp.ResponseQuotient.factorThrough_unique
+#print axioms Cerp.ObservableCongruence.probeEq_equivalence
+#print axioms Cerp.ObservableCongruence.probeEq_action
+#print axioms Cerp.ObservableCongruence.stable_relation_le_probeEq
+#print axioms Cerp.ObservableCongruence.representation_kernel_le_probeEq
+#print axioms Cerp.ObservableCongruence.quotientObs_mk
+
+
+#print axioms Cerp.ObservableCongruence.quotientAct
+#print axioms Cerp.ObservableCongruence.quotientObs
+#print axioms Cerp.ResourceRelativeProbes.free_comp
+#print axioms Cerp.ResourceRelativeProbes.precompose_id
+#print axioms Cerp.ResourceRelativeProbes.precompose_comp
+#print axioms Cerp.ResourceRelativeProbes.postcompose_natural
+#print axioms Cerp.ResourceRelativeProbes.postcompose_free_natural
+
+
+#print axioms Cerp.BeliefStateHankel.beliefEq_implies_responseEq
+#print axioms Cerp.BeliefStateHankel.responseEq_implies_beliefEq
+#print axioms Cerp.BeliefStateHankel.beliefEq_iff_responseEq
+#print axioms Cerp.BeliefStateHankel.posterior_factorization
+#print axioms Cerp.BeliefStateHankel.representation_kernel_le_responseEq

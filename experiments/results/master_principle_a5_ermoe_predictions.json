@@ -1,0 +1,31 @@
+{
+  "branch": "gemini/master-principle-a5-ermoe",
+  "base_commit": "7be5346",
+  "pre_registered_hypotheses": {
+    "HA5.1": {
+      "claim": "On non-solvable simple group `A5` (`|G| = 60`, full `60 x 60 = 3,600` multiplication table), exact golden-ratio icosahedral ERMoE presentations (`icosahedral_ermoe_etf` / `icosahedral_exact_linear`) achieve `homomorphism_err <= 1e-5` AND `>= 0.995` OOD balanced accuracy across `L in {5, 6, 8, 12, 16, 24, 32}`, beating `cayley_unitary_ufr_soft` on `L32` by `>= +0.55`, while `spectral_alm_gen` achieves strictly lower `homomorphism_err` than `cayley_unitary_ufr_soft`.",
+      "held_criterion": "max(ico_etf_hom, ico_lin_hom) <= 1e-5 and min(ico_etf_bacc_all_L) >= 0.995 and (ico_etf_L32 - cayley_L32) >= 0.55 and alm_hom < cayley_hom"
+    },
+    "HA5.2": {
+      "claim": "With ZERO replay and ZERO kept-label masking, Phase-2 continual fine-tuning on Galois 5-cycle classes `S_ft = {C5+, C5-}` preserves kept classes `S_keep = {e, C2, C3}` at `forgetting_after_keep >= 0.98` and `forgetting_drop <= 0.02` (`icosahedral_ermoe_etf`), beating `icosahedral_exact_linear` on `forgetting_after_keep` by `>= +0.25` AND beating `cayley_ufr_soft_etf` on BOTH `L32` (`>= +0.55`) and `forgetting_after_keep` (`>= +0.25`).",
+      "held_criterion": "etf_keep_after >= 0.98 and etf_drop <= 0.02 and (etf_keep_after - lin_keep_after) >= 0.25 and (etf_L32 - cayley_etf_L32) >= 0.55 and (etf_keep_after - cayley_etf_keep_after) >= 0.25"
+    },
+    "HA5.3": {
+      "claim": "Unsupervised D-optimal epiplexity data selection (`epiplexity_d_optimal_selection`, zero label access during sample selection) strictly outperforms `uniform_random_sampling` on BOTH `a5_haar_low_budget` (`B in {10, 20, 40}`, eval `L = 32`) and `s3_bouquet_haar_low_budget` (`B in {15, 25, 45}`, eval `L = 16`) by `>= +0.10` mean OOD balanced accuracy and achieves higher mean class coverage.",
+      "held_criterion": "min(epi_minus_rand_ood_bacc_A5, epi_minus_rand_ood_bacc_S3) >= 0.10 and min(epi_cov_A5 - rand_cov_A5, epi_cov_S3 - rand_cov_S3) > 0.05"
+    },
+    "HA5.4": {
+      "claim": "On `A5` (`|G| = 60`), `icosahedral_ermoe_etf` achieves exact generator Frobenius MDL compression `mdl_ratio = 2/60 = 0.0333 < 0.05` and total parameter count ratio `<= 0.10` vs full 60-element `cayley_unitary_ufr_soft`.",
+      "held_criterion": "ico_mdl_ratio < 0.05 and a5_param_ratio <= 0.10"
+    },
+    "HA5.5": {
+      "claim": "Exact float64 `A5` algebraic & ERMoE audits pass: diameter-9 `f64_a5_hom_err < 1e-13`, `f64_a5_unitary_err < 1e-13`, single-op `f64_galois_split_err < 1e-14`, 25-trial ERMoE simplex-gated trace error `< 1e-14`, 25-trial orthogonal cross-expert max logit drift `< 1e-14`, and length-9 complex64 max neural unitary error `< 1e-4`.",
+      "held_criterion": "f64_a5_hom_err < 1e-13 and f64_a5_unitary_err < 1e-13 and f64_galois_split_err < 1e-14 and ermoe_trace_max_err < 1e-14 and ermoe_orth_logit_drift < 1e-14 and max_neural_unitary_err < 1e-4"
+    }
+  },
+  "design": {
+    "arm1_runs": 15,
+    "arm2_runs": 12,
+    "total_runs": 27
+  }
+}

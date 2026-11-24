@@ -1,0 +1,10 @@
+import MasterPrincipleMech
+
+#print axioms MasterPrincipleMech.dirichletFlow_hasDerivAt
+#print axioms MasterPrincipleMech.dirichletFlow_gram_eq_sandwich
+#print axioms MasterPrincipleMech.dirichletVar_nonneg
+#print axioms MasterPrincipleMech.dirichletVar_pos_of_two_modes
+#print axioms MasterPrincipleMech.normDirichlet_hasDerivAt_neg_var
+#print axioms MasterPrincipleMech.normDirichlet_strictAnti
+#print axioms MasterPrincipleMech.lambda_unique_of_dirichlet
+#print axioms MasterPrincipleMech.leaky_step_displacement_sq

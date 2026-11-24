@@ -1,0 +1,16 @@
+import MasterPrincipleBouquet
+
+#print axioms MasterPrincipleBouquet.graphAct_mul
+#print axioms MasterPrincipleBouquet.graphAct_one
+#print axioms MasterPrincipleBouquet.signedTransport_gauge_covariant
+#print axioms MasterPrincipleBouquet.treeFrame_root
+#print axioms MasterPrincipleBouquet.treeFrame_edge_recursion
+#print axioms MasterPrincipleBouquet.treeFrame_gauge_covariant
+#print axioms MasterPrincipleBouquet.chordHol_gauge_covariant
+#print axioms MasterPrincipleBouquet.spanningTree_gaugeHomEquiv
+#print axioms MasterPrincipleBouquet.spanningTree_autEquiv_commonCentralizer
+#print axioms MasterPrincipleBouquet.spanningTree_chordRep_essential_surj
+#print axioms MasterPrincipleBouquet.bouquetHol_covariant
+#print axioms MasterPrincipleBouquet.bouquet_homEquiv
+#print axioms MasterPrincipleBouquet.a4_non_ambivalent
+#print axioms MasterPrincipleBouquet.s3_bouquet_both_split_pairs

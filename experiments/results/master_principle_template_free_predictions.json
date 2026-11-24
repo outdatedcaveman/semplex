@@ -1,0 +1,26 @@
+{
+  "campaign": "master_principle_template_free_and_so3_closure",
+  "scope": "Template-free A5 Coxeter discovery via float64 L-BFGS + ERMoE ETF, continuous non-finite SO(3) Lie rotation gauge, memory-15108 algebraic closure defect, and T6 finite-sample empirical concentration",
+  "pre_registered_hypotheses": {
+    "HTF.1": {
+      "claim": "Template-free spectral_alm_lbfgs_etf (given only abstract Coxeter orders s^2=1, t^3=1, (st)^5=1, ZERO phi/psi template) discovers exact A5 unitary representations with hom_err < 1e-10, achieves L5..L32_bacc >= 0.999, and post-hoc exhibits both Galois 5-cycle traces |Tr - phi| < 1e-5 and |Tr - psi| < 1e-5.",
+      "metrics": ["spectral_alm_lbfgs_etf.homomorphism_err", "min_L5_to_L32_bacc", "galois_phi_err", "galois_psi_err"],
+      "pass_if": "hom_err < 1e-10 AND min_bacc >= 0.999 AND galois_phi_err < 1e-5 AND galois_psi_err < 1e-5"
+    },
+    "HTF.2": {
+      "claim": "Zero-replay Phase-2 continual retention on A5 Keep {e, C2, C3} after fine-tuning {C5+, C5-}: template-free spectral_alm_lbfgs_etf achieves forgetting_after_keep >= 0.99 (drop <= 0.01), beating spectral_alm_adam_linear by >= +0.50 and matching icosahedral_ermoe_etf within 0.01.",
+      "metrics": ["spectral_alm_lbfgs_etf.forgetting_after_keep", "spectral_alm_lbfgs_etf.forgetting_drop", "spectral_alm_adam_linear.forgetting_after_keep"],
+      "pass_if": "forgetting_after_keep >= 0.99 AND forgetting_drop <= 0.01 AND (lbfgs_keep - adam_linear_keep) >= 0.50"
+    },
+    "HTF.3": {
+      "claim": "Continuous non-finite Lie group SO(3) 3D rotations (L=4..32 generalization + disjoint geodesic-angle band continual learning): so3_gauge_ermoe_etf achieves L32_bacc >= 0.99, R2_cos >= 0.999, and zero-replay Keep {0,1,2} retention >= 0.99 after fine-tuning {3,4}, beating cayley_ufr_soft and mlp_sequence by >= +0.30 on both L32 and retention.",
+      "metrics": ["so3_gauge_ermoe_etf.L32_bacc", "so3_gauge_ermoe_etf.R2_cos", "so3_gauge_ermoe_etf.forgetting_after_keep"],
+      "pass_if": "L32_bacc >= 0.99 AND R2_cos >= 0.999 AND keeping >= 0.99 AND min_margin >= 0.30"
+    },
+    "HTF.4": {
+      "claim": "memory 15108 algebraic closure seam & T6 finite-sample concentration: (a) commuting invariant observable algebra gives 0 commutator/quotient defect (< 1e-12), while broken non-commuting G(lambda) / non-algebra subspace exhibits > 0.05 defect; (b) empirical 3:1 noisy channel identification failure across N in {10,25,50,100,250,500} satisfies empirical_err <= 1/(4*N*delta^2) at all N (0 violations) and <= 0.01 at N=250.",
+      "metrics": ["commuting_defect", "broken_defect", "t6_chebyshev_violations", "n250_err"],
+      "pass_if": "commuting_defect < 1e-12 AND broken_defect > 0.05 AND t6_chebyshev_violations == 0 AND n250_err <= 0.01"
+    }
+  }
+}
