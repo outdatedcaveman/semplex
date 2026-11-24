@@ -1,0 +1,174 @@
+{
+  "experiment": "quantitative_gauge_stability_probe",
+  "elapsed_total_sec": 1547.3958013057709,
+  "results": {
+    "HQS.1": {
+      "q8_n_proper_nontrivial_subgroups": 4,
+      "q8_all_proper_subgroups_kernel_size": 2,
+      "q8_all_proper_subgroups_kernel": [
+        "1",
+        "-1"
+      ],
+      "q8_max_row_prob": 0.85,
+      "q8_profile_tv_max": 7.632783294297951e-17,
+      "c2cubed_n_proper_nontrivial_subgroups": 14,
+      "c2cubed_all_proper_subgroups_kernel_size": 1,
+      "c2cubed_all_proper_subgroups_kernel": [
+        "000"
+      ],
+      "c2cubed_max_row_prob": 0.85,
+      "c2cubed_profile_tv_max": 7.632783294297951e-17,
+      "c2cubed_anchors_needed": 3,
+      "c2cubed_final_kernel_size": 1,
+      "verdict": "HELD",
+      "elapsed_sec": 0.007644176483154297
+    },
+    "HQS.2": {
+      "unanchored_global_solutions": 2,
+      "unanchored_solutions_list": [
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          3,
+          3,
+          3
+        ]
+      ],
+      "coset0_each_edge_solutions": 2,
+      "coset0_global_solutions": 0,
+      "coset0_monodromies": [
+        2
+      ],
+      "coset0_min_cycle_monodromy": 2,
+      "coset1_global_solutions": 2,
+      "coset1_trivial_monodromy_count": 8,
+      "verdict": "HELD",
+      "elapsed_sec": 6.985664367675781e-05
+    },
+    "HQS.3": {
+      "model": "HuggingFaceTB/SmolLM2-135M-Instruct",
+      "n_cal_pairs": 16,
+      "n_eval_pairs": 48,
+      "cal_fp32_acc": 1.0,
+      "fp32_eval_acc": 0.9583333333333334,
+      "gamma_mod": {
+        "q_proj": 0.6365712654479403,
+        "k_proj": 0.6328455576292037,
+        "v_proj": 0.9498771838804487,
+        "o_proj": 0.694258954596233,
+        "gate_proj": 0.874608620777624,
+        "up_proj": 1.1708183054173502,
+        "down_proj": 1.6532851077141766
+      },
+      "raw_frob": {
+        "q_proj": 98.28217641032973,
+        "k_proj": 59.06846554616735,
+        "v_proj": 55.561200683471625,
+        "o_proj": 87.50856743422125,
+        "gate_proj": 141.4688216188796,
+        "up_proj": 148.25127421920254,
+        "down_proj": 168.33957630830653
+      },
+      "gamma_ranked": [
+        "down_proj",
+        "up_proj",
+        "v_proj",
+        "gate_proj",
+        "o_proj",
+        "q_proj",
+        "k_proj"
+      ],
+      "raw_frob_ranked": [
+        "down_proj",
+        "up_proj",
+        "gate_proj",
+        "q_proj",
+        "o_proj",
+        "k_proj",
+        "v_proj"
+      ],
+      "top_gamma_family": "down_proj",
+      "per_family_int4_flip_rates": {
+        "q_proj": 0.0,
+        "k_proj": 0.0,
+        "v_proj": 0.0,
+        "o_proj": 0.0,
+        "gate_proj": 0.0,
+        "up_proj": 0.0,
+        "down_proj": 0.0
+      },
+      "per_family_int4_mean_abs_margin_shift": {
+        "q_proj": 0.4701038971543312,
+        "k_proj": 0.5976108635465304,
+        "v_proj": 0.5394851453602314,
+        "o_proj": 0.5748323711256186,
+        "gate_proj": 0.6740254933635393,
+        "up_proj": 1.0851954159637291,
+        "down_proj": 1.4380063290397327
+      },
+      "spearman_gamma_vs_flip": null,
+      "spearman_frob_vs_flip": null,
+      "gamma_beats_raw_frob": false,
+      "all_int4_flip_rate": 0.0,
+      "all_int4_acc": 0.9583333333333334,
+      "protected_top_gamma_flip_rate": 0.0,
+      "protected_top_gamma_acc": 0.9583333333333334,
+      "protection_flip_reduction": 0.0,
+      "rss_mb": 0.0,
+      "elapsed_sec": 1418.7326805591583,
+      "verdict": "BROKEN"
+    },
+    "HQS.4": {
+      "model": "BAAI/bge-base-en-v1.5",
+      "n_adapt_params": 14175744,
+      "fp32_taskA_acc": 1.0,
+      "frozen_taskA_drop": 0.0,
+      "frozen_taskB_acc": 1.0,
+      "sft_steps": 1,
+      "sft_taskA_acc": 1.0,
+      "sft_taskA_logit_l2_drift": 0.09019398237352524,
+      "sft_taskB_eval_loss": 0.011009222827851772,
+      "sft_taskB_acc": 1.0,
+      "sft_param_norm": 0.2845259992866126,
+      "ret_steps": 30,
+      "ret_taskA_acc": 1.0,
+      "ret_taskA_logit_l2_drift": 0.08173230153100126,
+      "ret_taskB_eval_loss": 0.012941506691277027,
+      "ret_taskB_acc": 1.0,
+      "ret_param_norm": 0.03577749641524183,
+      "matched_taskB_acc_gap": 0.0,
+      "prop2_pyth_rel_err": 7.03874567084517e-13,
+      "prop2_orth_cos_abs": 1.9115735410070923e-14,
+      "orthogonal_waste_fraction": 0.9238203269639627,
+      "return_only_shorter_than_sft": true,
+      "return_only_less_logit_drift_than_sft": true,
+      "rss_mb": 0.0,
+      "elapsed_sec": 127.29187631607056,
+      "verdict": "HELD"
+    },
+    "HQS.5": {
+      "seeds": [
+        101,
+        202,
+        303
+      ],
+      "jacobian_ratio_max_min": 14.045704178455207,
+      "jacobian_log_density_max_err": 7.105427357601002e-15,
+      "mc_energy_dist_err_max": 0.0028884473380905717,
+      "all_horizon_tv_below_contraction_bound": true,
+      "contraction_vs_linear_ratio_at_T8": 0.19689935233226102,
+      "elapsed_sec": 0.6951658725738525,
+      "verdict": "HELD"
+    }
+  },
+  "summary": {
+    "HQS.1": "HELD",
+    "HQS.2": "HELD",
+    "HQS.3": "BROKEN",
+    "HQS.4": "HELD",
+    "HQS.5": "HELD"
+  }
+}

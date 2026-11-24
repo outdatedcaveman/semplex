@@ -1,0 +1,57 @@
+{
+  "experiment": "quantitative_gauge_stability_probe",
+  "version": "1.0",
+  "preregistered_before_run": true,
+  "predictions": {
+    "HQS.1": {
+      "description": "16-state non-Dirac stochastic HMMs comparing monolith group Q8 vs elementary abelian C2^3 under proper-subgroup anchors",
+      "c2cubed_max_row_prob_lt": 1.0,
+      "q8_max_row_prob_lt": 1.0,
+      "c2cubed_profile_tv_max_le": 1e-12,
+      "q8_profile_tv_max_le": 1e-12,
+      "c2cubed_anchors_needed_eq": 3,
+      "c2cubed_final_kernel_size_eq": 1,
+      "q8_all_proper_subgroups_count_eq": 4,
+      "q8_all_proper_subgroups_kernel_size_ge": 2
+    },
+    "HQS.2": {
+      "description": "C4 Specker triangle with H = C2 = {0,2} gauge symmetry and anchor-induced Cech H^1 contextual obstruction",
+      "unanchored_global_solutions_eq": 2,
+      "coset0_each_edge_solutions_ge": 2,
+      "coset0_global_solutions_eq": 0,
+      "coset0_min_cycle_monodromy_ne": 0,
+      "coset1_global_solutions_eq": 2
+    },
+    "HQS.3": {
+      "description": "Prospective gauge-tube margin sensitivity score Gamma_mod predicting per-module-family int4 flip rates on calibrated pairwise HuggingFaceTB/SmolLM2-135M-Instruct",
+      "model_id": "HuggingFaceTB/SmolLM2-135M-Instruct",
+      "n_cal_pairs": 16,
+      "n_eval_pairs": 48,
+      "fp32_eval_acc_min": 0.8,
+      "all_int4_flip_rate_min": 0.15,
+      "spearman_gamma_vs_flip_min": 0.75,
+      "require_gamma_beats_raw_frob": true,
+      "protection_flip_reduction_min": 2.0
+    },
+    "HQS.4": {
+      "description": "Matched-return ZeroVLN Prop 1-2 test on locally cached BAAI/bge-base-en-v1.5 comparing frozen probe, gradient-aligned return-only update, and SFT at matched Task-B accuracy",
+      "model_id": "BAAI/bge-base-en-v1.5",
+      "fp32_taskA_acc_min": 0.85,
+      "frozen_taskB_acc_min": 0.85,
+      "matched_taskB_acc_gap_max": 0.06,
+      "prop2_pyth_rel_err_max": 1e-12,
+      "prop2_orth_cos_abs_max": 1e-12,
+      "require_return_only_shorter_than_sft": true,
+      "require_return_only_less_logit_drift_than_sft": true
+    },
+    "HQS.5": {
+      "description": "Variable-Jacobian triangular C^inf diffeomorphism (max|det J|/min|det J| >= 3.0) and finite-horizon contraction TV bound on R^2 OU Markov kernel",
+      "seeds": [101, 202, 303],
+      "jacobian_ratio_min": 3.0,
+      "jacobian_log_density_max_err": 1e-12,
+      "mc_energy_dist_err_max": 0.005,
+      "require_tv_below_contraction_bound": true,
+      "contraction_vs_linear_ratio_max_at_T8": 0.7
+    }
+  }
+}
