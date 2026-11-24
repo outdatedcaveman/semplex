@@ -88,3 +88,5 @@ lean_lib CrossTheoryConservativity where
 lean_lib AuditCrossTheoryConservativity where
 lean_lib StochasticCausalCovariance where
 lean_lib AuditStochasticCausalCovariance where
+lean_lib CausalCovarianceGroupoidBridge where
+lean_lib AuditCausalCovarianceGroupoidBridge where
