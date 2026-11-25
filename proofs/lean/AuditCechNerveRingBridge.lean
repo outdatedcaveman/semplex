@@ -1,0 +1,16 @@
+import CechNerveRingBridge
+
+#print axioms Cerp.CechNerveRingBridge.contextualSystem_ring_roundtrip
+#print axioms Cerp.CechNerveRingBridge.ring_contextualSystem_roundtrip
+#print axioms Cerp.CechNerveRingBridge.contextualSystem_sparseABC_witness
+#print axioms Cerp.CechNerveRingBridge.contextualSystem_hallucination_separation
+#print axioms Cerp.CechNerveRingBridge.totalIso_coCartesian_universal
+#print axioms Cerp.CechNerveRingBridge.cech_simplicial_ids
+#print axioms Cerp.CechNerveRingBridge.split_effective_descent_equiv
+#print axioms Cerp.CechNerveRingBridge.cech_quotient_universal
+#print axioms Cerp.CechNerveRingBridge.nonSurjective_cover_loses_global_unity
+#print axioms Cerp.CechNerveRingBridge.pullback_preserving_coalgebra_descends
+#print axioms Cerp.CechNerveRingBridge.non_congruent_dynamics_fails_descent
+#print axioms Cerp.CechNerveRingBridge.partition_of_unity_glues_overlaps
+#print axioms Cerp.CechNerveRingBridge.raw_overlap_double_counts
+#print axioms Cerp.CechNerveRingBridge.cech_specker_c4_obstruction

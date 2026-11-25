@@ -1,0 +1,49 @@
+{
+  "suite": "master_principle_nitty_gritties",
+  "registered_at": "2026-11-24T21:40:00-03:00",
+  "protocol_note": "Strictly pre-registered hypotheses locked prior to creating or executing experiments/nitty_gritties_probe.py. Do not modify after probe execution.",
+  "HNG.1": {
+    "description": "Large open-weight (>=1B) replication of prospective gauge-tube sensitivity Gamma_mod via directional derivative (eps=0.25) across all 7 linear projection families under per-channel symmetric int3 quantization (scale = amax/3, clamp [-3, 3]) in Qwen/Qwen2.5-1.5B-Instruct using fp16 weight storage + fp32 linear compute.",
+    "model": "Qwen/Qwen2.5-1.5B-Instruct",
+    "quantization": "per_channel_symmetric_int3",
+    "num_cal": 12,
+    "num_eval": 32,
+    "eps": 0.25,
+    "fp32_eval_acc_min": 0.70,
+    "all_int3_flip_rate_min": 0.10,
+    "spearman_gamma_vs_margin_shift_min": 0.70,
+    "protection_flip_reduction_min": 1.5,
+    "top2_less_shift_than_bottom2": true
+  },
+  "HNG.2": {
+    "description": "Continuous [0, 1] nonlinear bimodal Beta-mixture Markov kernel Dobrushin contraction, kernel composition submultiplicativity K2 o K1, finite-horizon T=1..15 stability under kernel perturbations, and Monte Carlo TV cross-check.",
+    "grid_bins": 400,
+    "num_initial_pairs": 50,
+    "horizon": 15,
+    "mc_samples": 20000,
+    "max_contraction_violation_le": 1e-10,
+    "max_comp_violation_le": 1e-10,
+    "max_horizon_violation_le": 1e-10,
+    "max_t15_vs_linear_ratio_le": 0.40,
+    "mc_tv_max_abs_err_le": 0.025
+  },
+  "HNG.3": {
+    "description": "Cech nerve 0/1/2 cocycle descent, split effective descent equivalence, partition-of-unity overlap gluing exactness vs raw overlap double-counting, non-surjective fiber loss, and C4 -> C2 Specker obstruction.",
+    "cocycle_max_err_eq": 0.0,
+    "split_descent_exact": true,
+    "pou_abs_err_le": 1e-12,
+    "raw_overlap_err_ge": 0.50,
+    "non_surjective_missing_fibers_ge": 1,
+    "c4_global_solutions_eq": 0,
+    "c4_min_monodromy_eq": 2
+  },
+  "HNG.4": {
+    "description": "Exact cyclic C_16 / dihedral D_16 bispectrum orbit invariants separating phase-different signals with identical power spectra, plus test-time group symmetrization variance elimination and MSE reduction.",
+    "group_order": 16,
+    "max_orbit_invariance_err_le": 1e-12,
+    "power_spectrum_matched_diff_le": 1e-12,
+    "min_phase_matched_bispectrum_sep_ge": 1e-3,
+    "sym_orbit_variance_max_le": 1e-12,
+    "sym_mse_ratio_le": 0.85
+  }
+}
