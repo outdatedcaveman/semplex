@@ -1,0 +1,647 @@
+"""Spike 99: Discriminating test of the two-sided Gramian (W_c + W_o) on irreversible automata.
+
+Implements all pre-registered design & statistical rules (Work Order 2026-11-25 G-A +
+ChatGPT independent review requirements 1-11):
+  - Candidate target: A = W_c + W_o (unsmoothed two-sided Gramian).
+  - Competitors B: W_o alone, G(lambda_0) with heat, output Gram o o^T, predictive-kernel top mode k1_top.
+  - Eligibility: fresh irreversible automata from Spike 81's pool (excluding all prior uses
+    and isomorphic duplicates, min(pi) > 1e-4) satisfying max_B cos(W_c + W_o, B) <= 0.80.
+    If fewer than 20 qualify, DO NOT relax the threshold: report UNDERPOWERED / NO VERDICT.
+  - Learners: primary GRU + 3-layer tanh MLP readout (5 seeds), secondary GRU + linear readout
+    (5 seeds), identical budgets, plus untrained-GRU step-0 control; no best-seed selection.
+  - Learned Gram: mu_s = E[h_t | s_t = s] on held-out trajectories, sqrt(pi)-weighted and centered,
+    with within-state variance, between-state separation, R^2_state, and split-half stability.
+  - Nulls (10,000 draws each, upper-tail p = (1 + #{null >= obs}) / (B + 1)):
+      Null A: Gaussian stationary-weighted using actual GRU hidden_dim.
+      Null B: spectrum-preserving random orthogonal rotations Q A Q^T in centred subspace.
+      Null C: spectrum-matched diagonal baseline in centred subspace (secondary).
+  - Aggregate inference: 10,000-rep hierarchical bootstrap (automata, then seeds) and
+    Holm-Bonferroni corrected pairwise tests at alpha = 0.05.
+
+Usage:
+  python -m experiments.spike99 predict
+  python -m experiments.spike99 run
+  python -m experiments.spike99 analyse
+"""
+
+from __future__ import annotations
+
+import ctypes
+import json
+import os
+import pathlib
+import sys
+import time
+from typing import Callable
+
+os.environ.setdefault("OMP_NUM_THREADS", "1")
+os.environ.setdefault("MKL_NUM_THREADS", "1")
+os.environ.setdefault("OPENBLAS_NUM_THREADS", "1")
+
+import numpy as np
+from scipy.stats import wilcoxon
+
+from experiments import master_principle as MP
+from experiments import spike81 as S81
+from experiments.audits import spike99_candidate_audit as AUDIT
+
+ROOT = pathlib.Path(__file__).resolve().parents[1]
+RESULTS = ROOT / "experiments" / "results"
+RAW = RESULTS / "spike99_raw"
+PRED_PATH = RESULTS / "spike99_predictions.json"
+OUT_PATH = RESULTS / "spike99.json"
+
+TARGET_KEY = "WcWo"
+COMPETITOR_KEYS = AUDIT.COMPETITORS_4
+ALL_CAND_KEYS = AUDIT.CANDIDATES_5
+
+MAX_COMP_THRESHOLD = 0.80
+MIN_ELIGIBLE_AUTOMATA = 20
+TARGET_N_AUTOMATA = 20
+
+SEEDS_PER_ARM = 5
+HIDDEN_DIM = 64
+EMB_DIM = 16
+BATCH = 64
+SEQ_LEN = 30
+BURN = 5
+STEPS = 2000
+LR = 0.004
+FIT_GUARD = 0.99
+
+NULL_DRAWS = 10000
+BOOTSTRAP_REPS = 10000
+MIN_FREE_RAM_GB = 1.0
+
+
+def available_ram_gb() -> float | None:
+    """Return available physical RAM in GiB on Windows (or /proc/meminfo on POSIX)."""
+    try:
+        if os.name == "nt":
+            class MEMORYSTATUSEX(ctypes.Structure):
+                _fields_ = [
+                    ("dwLength", ctypes.c_ulong),
+                    ("dwMemoryLoad", ctypes.c_ulong),
+                    ("ullTotalPhys", ctypes.c_ulonglong),
+                    ("ullAvailPhys", ctypes.c_ulonglong),
+                    ("ullTotalPageFile", ctypes.c_ulonglong),
+                    ("ullAvailPageFile", ctypes.c_ulonglong),
+                    ("ullTotalVirtual", ctypes.c_ulonglong),
+                    ("ullAvailVirtual", ctypes.c_ulonglong),
+                    ("ullAvailExtendedVirtual", ctypes.c_ulonglong),
+                ]
+
+            stat = MEMORYSTATUSEX()
+            stat.dwLength = ctypes.sizeof(MEMORYSTATUSEX)
+            if ctypes.windll.kernel32.GlobalMemoryStatusEx(ctypes.byref(stat)):
+                return float(stat.ullAvailPhys / (1024.0 ** 3))
+        elif pathlib.Path("/proc/meminfo").exists():
+            for line in pathlib.Path("/proc/meminfo").read_text().splitlines():
+                if line.startswith("MemAvailable:"):
+                    kb = float(line.split()[1])
+                    return kb / (1024.0 ** 2)
+    except Exception:
+        return None
+    return None
+
+
+def make_gru_model(arch: str, L: int, k_out: int = 1, hidden_dim: int = HIDDEN_DIM):
+    """Build GRU + nonlinear MLP (primary) or GRU + linear readout (secondary) with hidden_dim."""
+    import torch
+
+    nn = torch.nn
+    if arch not in ("gru_mlp", "gru_lin"):
+        raise ValueError(f"Unsupported arch: {arch}")
+
+    class Spike99GRU(nn.Module):
+        def __init__(self) -> None:
+            super().__init__()
+            self.hidden_dim = hidden_dim
+            self.e = nn.Embedding(L, EMB_DIM)
+            self.r = nn.GRU(EMB_DIM, hidden_dim, batch_first=True)
+            if arch == "gru_lin":
+                self.h = nn.Linear(hidden_dim, k_out)
+            else:
+                self.h = nn.Sequential(
+                    nn.Linear(hidden_dim, hidden_dim),
+                    nn.Tanh(),
+                    nn.Linear(hidden_dim, hidden_dim),
+                    nn.Tanh(),
+                    nn.Linear(hidden_dim, k_out),
+                )
+
+        def hidden(self, X: torch.Tensor) -> torch.Tensor:
+            return self.r(self.e(X))[0]
+
+        def forward(self, X: torch.Tensor) -> torch.Tensor:
+            return self.h(self.hidden(X))
+
+    return Spike99GRU()
+
+
+def compute_learned_gram_and_stats(
+    H: np.ndarray,
+    ST: np.ndarray,
+    pi: np.ndarray,
+    burn: int = BURN,
+) -> dict | None:
+    """Compute mu_s = E[h_t | s_t = s], centered sqrt(pi) Gram, and geometry diagnostics."""
+    H_post = np.asarray(H[:, burn:], dtype=float)
+    ST_post = np.asarray(ST[:, burn:], dtype=int)
+    d_hid = H_post.shape[-1]
+    flatH = H_post.reshape(-1, d_hid)
+    flatL = ST_post.ravel()
+    m = len(pi)
+
+    counts = np.bincount(flatL, minlength=m)
+    if (counts == 0).any():
+        return None
+
+    Ce = np.stack([flatH[flatL == s].mean(axis=0) for s in range(m)])
+    # Within-state variance (pi-weighted across states and empirical pooled)
+    per_state_var = np.array([float(np.mean(np.sum((flatH[flatL == s] - Ce[s]) ** 2, axis=1))) for s in range(m)])
+    var_within_pi = float(np.sum(pi * per_state_var))
+    var_within_emp = float(np.mean(np.sum((flatH - Ce[flatL]) ** 2, axis=1)))
+
+    # Centered sqrt(pi)-weighted state Gram: G_learned = X_perp @ X_perp.T
+    W, one, _ = AUDIT.centred_subspace_basis(pi)
+    mu_bar = (pi[:, None] * Ce).sum(axis=0)
+    diffs = Ce - mu_bar
+    var_between_pi = float(np.sum(pi[:, None] * (diffs ** 2)))
+    X = W[:, None] * diffs
+    X_perp = X - np.outer(one, one @ X)
+    G_learned = 0.5 * ((X_perp @ X_perp.T) + (X_perp @ X_perp.T).T)
+
+    # Minimum pairwise centroid separation across distinct states
+    pair_dists = [
+        float(np.linalg.norm(Ce[i] - Ce[j]))
+        for i in range(m)
+        for j in range(i + 1, m)
+    ]
+    min_sep = float(min(pair_dists)) if pair_dists else 0.0
+    r2_state = float(var_between_pi / max(var_between_pi + var_within_pi, 1e-12))
+
+    # Split-half held-out stability across first vs second half of trajectories
+    half = H_post.shape[0] // 2
+    split_half_cos = None
+    if half >= 1:
+        def _half_gram(Hh: np.ndarray, Sh: np.ndarray) -> np.ndarray | None:
+            fh = Hh.reshape(-1, d_hid)
+            fs = Sh.ravel()
+            if any(not (fs == s).any() for s in range(m)):
+                return None
+            ch = np.stack([fh[fs == s].mean(axis=0) for s in range(m)])
+            mh = (pi[:, None] * ch).sum(axis=0)
+            xh = W[:, None] * (ch - mh)
+            xp = xh - np.outer(one, one @ xh)
+            return 0.5 * ((xp @ xp.T) + (xp @ xp.T).T)
+
+        G1 = _half_gram(H_post[:half], ST_post[:half])
+        G2 = _half_gram(H_post[half:], ST_post[half:])
+        if G1 is not None and G2 is not None:
+            split_half_cos = AUDIT.cos_mat(G1, G2)
+
+    return {
+        "hidden_dim": int(d_hid),
+        "Ce": Ce,
+        "G_learned": G_learned,
+        "var_within_pi": var_within_pi,
+        "var_within_emp": var_within_emp,
+        "var_between_pi": var_between_pi,
+        "min_state_sep": min_sep,
+        "r2_state": r2_state,
+        "split_half_cos": split_half_cos,
+    }
+
+
+def evaluate_learned_gram(
+    G_learned: np.ndarray,
+    cand_mats: dict[str, np.ndarray],
+    pi: np.ndarray,
+    hidden_dim: int,
+    draws: int = NULL_DRAWS,
+    seed: int = 0,
+) -> dict:
+    """Score one learned Gram against all 5 candidates and Nulls A, B, C."""
+    cosines = {k: AUDIT.cos_mat(G_learned, cand_mats[k]) for k in ALL_CAND_KEYS}
+    obs_target = cosines[TARGET_KEY]
+    max_comp = max(cosines[c] for c in COMPETITOR_KEYS)
+    margin_D = float(obs_target - max_comp)
+
+    null_a = AUDIT.null_a_gaussian_draws(cand_mats[TARGET_KEY], pi, hidden_dim=hidden_dim, draws=draws, seed=seed)
+    null_b = AUDIT.null_b_rotation_draws(G_learned, cand_mats[TARGET_KEY], pi, draws=draws, seed=seed + 100)
+    null_c = AUDIT.null_c_diagonal_draws(G_learned, cand_mats[TARGET_KEY], pi, draws=draws, seed=seed + 200)
+
+    return {
+        "cosines": cosines,
+        "target_cos": obs_target,
+        "max_competitor_cos": max_comp,
+        "margin_D": margin_D,
+        "null_A": {
+            "median": float(np.median(null_a)),
+            "p95": float(np.percentile(null_a, 95)),
+            "p_upper": AUDIT.empirical_upper_p(null_a, obs_target),
+        },
+        "null_B": {
+            "median": float(np.median(null_b)),
+            "p95": float(np.percentile(null_b, 95)),
+            "p_upper": AUDIT.empirical_upper_p(null_b, obs_target),
+        },
+        "null_C": {
+            "median": float(np.median(null_c)),
+            "p95": float(np.percentile(null_c, 95)),
+            "p_upper": AUDIT.empirical_upper_p(null_c, obs_target),
+        },
+    }
+
+
+def holm_bonferroni(p_values: dict[str, float], alpha: float = 0.05) -> dict[str, dict]:
+    """Step-down Holm-Bonferroni correction across a dictionary of named p-values."""
+    ordered = sorted(p_values.items(), key=lambda kv: kv[1])
+    m = len(ordered)
+    out = {}
+    running_max = 0.0
+    rejected_so_far = True
+    for idx, (name, p) in enumerate(ordered):
+        adj = min(1.0, (m - idx) * p)
+        running_max = max(running_max, adj)
+        threshold = alpha / (m - idx)
+        if rejected_so_far and p <= threshold:
+            reject = True
+        else:
+            reject = False
+            rejected_so_far = False
+        out[name] = {
+            "raw_p": float(p),
+            "holm_adj_p": float(running_max),
+            "threshold": float(threshold),
+            "reject_at_alpha": bool(reject),
+        }
+    return out
+
+
+def hierarchical_bootstrap_ci(
+    per_automaton_seed_margins: list[list[float]],
+    reps: int = BOOTSTRAP_REPS,
+    seed: int = 9900,
+) -> dict:
+    """Hierarchical bootstrap (automata, then seeds within automata) for median D."""
+    rng = np.random.default_rng(seed)
+    n_aut = len(per_automaton_seed_margins)
+    if n_aut == 0:
+        return {"median": None, "ci95_low": None, "ci95_high": None, "reps": 0}
+    arrs = [np.asarray(xs, dtype=float) for xs in per_automaton_seed_margins]
+    obs_med = float(np.median([np.median(a) for a in arrs]))
+    boot = np.empty(reps, dtype=float)
+    for r in range(reps):
+        aut_idx = rng.integers(0, n_aut, size=n_aut)
+        aut_meds = np.empty(n_aut, dtype=float)
+        for j, ai in enumerate(aut_idx):
+            s_arr = arrs[ai]
+            s_idx = rng.integers(0, len(s_arr), size=len(s_arr))
+            aut_meds[j] = float(np.median(s_arr[s_idx]))
+        boot[r] = float(np.median(aut_meds))
+    return {
+        "observed_median_D": obs_med,
+        "ci95_low": float(np.percentile(boot, 2.5)),
+        "ci95_high": float(np.percentile(boot, 97.5)),
+        "reps": int(reps),
+    }
+
+
+def evaluate_automaton_held(seed_evals: list[dict]) -> dict:
+    """Apply ChatGPT Point #7 per-automaton HELD criterion across 5 nested seeds."""
+    if not seed_evals:
+        return {"held": False, "n_seeds": 0}
+    med_target = float(np.median([r["target_cos"] for r in seed_evals]))
+    med_cands = {k: float(np.median([r["cosines"][k] for r in seed_evals])) for k in ALL_CAND_KEYS}
+    best_comp = max(med_cands[c] for c in COMPETITOR_KEYS)
+    margin_D = float(med_target - best_comp)
+    null_a_p95 = float(np.median([r["null_A"]["p95"] for r in seed_evals]))
+    n_above_p95 = sum(1 for r in seed_evals if r["target_cos"] > r["null_A"]["p95"])
+    med_null_b_p = float(np.median([r["null_B"]["p_upper"] for r in seed_evals]))
+    med_null_a_p = float(np.median([r["null_A"]["p_upper"] for r in seed_evals]))
+
+    c1 = med_target > null_a_p95 + 0.05
+    c2 = n_above_p95 >= 4
+    c3 = margin_D >= 0.05
+    c4 = med_null_b_p <= 0.05
+    return {
+        "held": bool(c1 and c2 and c3 and c4),
+        "n_seeds": len(seed_evals),
+        "med_target_cos": med_target,
+        "med_competitor_cos": {c: med_cands[c] for c in COMPETITOR_KEYS},
+        "margin_D": margin_D,
+        "null_a_p95": null_a_p95,
+        "n_seeds_above_null_a_p95": int(n_above_p95),
+        "med_null_a_p": med_null_a_p,
+        "med_null_b_p": med_null_b_p,
+        "criteria_met": {"gt_p95_plus_005": bool(c1), "ge_4_of_5_seeds": bool(c2), "beats_all_by_005": bool(c3), "null_b_p_le_005": bool(c4)},
+    }
+
+
+def evaluate_aggregate_verdict(
+    automaton_summaries: list[dict],
+    per_automaton_seed_evals: list[list[dict]],
+    n_eligible: int = TARGET_N_AUTOMATA,
+    bootstrap_reps: int = BOOTSTRAP_REPS,
+) -> dict:
+    """Apply ChatGPT Points #8 & #9 aggregate HELD / BROKEN / NEITHER / UNDERPOWERED verdict."""
+    if n_eligible < MIN_ELIGIBLE_AUTOMATA or len(automaton_summaries) < MIN_ELIGIBLE_AUTOMATA:
+        return {
+            "verdict": "NO VERDICT",
+            "status": "UNDERPOWERED",
+            "reason": f"Only {n_eligible} eligible automata (< {MIN_ELIGIBLE_AUTOMATA} required; threshold max_B <= {MAX_COMP_THRESHOLD:.2f} not relaxed).",
+            "n_eligible": int(n_eligible),
+            "n_evaluated": len(automaton_summaries),
+        }
+
+    n_held = sum(1 for a in automaton_summaries if a["held"])
+    seed_margins = [[r["margin_D"] for r in se] for se in per_automaton_seed_evals]
+    boot = hierarchical_bootstrap_ci(seed_margins, reps=bootstrap_reps)
+    med_null_a_p = float(np.median([a["med_null_a_p"] for a in automaton_summaries]))
+    med_null_b_p = float(np.median([a["med_null_b_p"] for a in automaton_summaries]))
+
+    # Paired Wilcoxon tests (WcWo vs each competitor) across automata with Holm-Bonferroni alpha=0.05
+    target_vec = np.array([a["med_target_cos"] for a in automaton_summaries], dtype=float)
+    raw_pvals = {}
+    for comp in COMPETITOR_KEYS:
+        comp_vec = np.array([a["med_competitor_cos"][comp] for a in automaton_summaries], dtype=float)
+        diff = target_vec - comp_vec
+        if np.allclose(diff, 0.0):
+            raw_pvals[comp] = 1.0
+        else:
+            _, pv = wilcoxon(diff, alternative="greater")
+            raw_pvals[comp] = float(pv)
+    holm = holm_bonferroni(raw_pvals, alpha=0.05)
+
+    held_count_bar = max(14, int(np.ceil(0.70 * len(automaton_summaries))))
+    is_held = (
+        n_held >= held_count_bar
+        and boot["observed_median_D"] >= 0.05
+        and boot["ci95_low"] > 0.0
+        and med_null_b_p <= 0.05
+    )
+    fails_agg_null = (med_null_a_p > 0.05) or (med_null_b_p > 0.05)
+    is_broken = (boot["ci95_high"] < 0.05) or (n_held <= 6 and fails_agg_null)
+
+    verdict = "HELD" if is_held else ("BROKEN" if is_broken else "NEITHER")
+    return {
+        "verdict": verdict,
+        "status": "COMPLETE",
+        "n_eligible": int(n_eligible),
+        "n_evaluated": len(automaton_summaries),
+        "n_held": int(n_held),
+        "held_count_bar": int(held_count_bar),
+        "median_D": boot["observed_median_D"],
+        "ci95_low": boot["ci95_low"],
+        "ci95_high": boot["ci95_high"],
+        "med_null_a_p": med_null_a_p,
+        "med_null_b_p": med_null_b_p,
+        "holm_pairwise": holm,
+    }
+
+
+def predict(out_path: pathlib.Path = PRED_PATH) -> dict:
+    """Run eligibility & candidate-agreement audit and lock Spike 99 predictions before training."""
+    audit = AUDIT.run_full_audit(draws=NULL_DRAWS, hidden_dim=HIDDEN_DIM)
+    pool_audit = audit["spike81_pool_audit"]
+    eligible = pool_audit["eligible_automata"]
+
+    if len(eligible) < MIN_ELIGIBLE_AUTOMATA:
+        payload = {
+            "spike": 99,
+            "status": "UNDERPOWERED",
+            "max_competitor_threshold": MAX_COMP_THRESHOLD,
+            "min_eligible_required": MIN_ELIGIBLE_AUTOMATA,
+            "n_eligible": len(eligible),
+            "n_fresh_irreversible_pi_ok": pool_audit["n_fresh_irreversible_pi_ok"],
+            "n_rejected": pool_audit["n_rejected"],
+            "reason": (
+                f"0/{pool_audit['n_fresh_irreversible_pi_ok']} fresh irreversible automata in Spike 81's pool "
+                f"satisfy max_B cos(W_c + W_o, B) <= {MAX_COMP_THRESHOLD:.2f} "
+                f"(observed minimum across fresh irreversible pool = {pool_audit['fresh_irrev_min_max_comp_cos']:.4f}). "
+                "Per pre-registered rule, threshold is NOT relaxed."
+            ),
+            "selected_automata": [],
+            "audit_file": str(AUDIT.AUDIT_OUT.relative_to(ROOT)).replace("\\", "/"),
+        }
+    else:
+        rng = np.random.default_rng(20261125)
+        idx = rng.choice(len(eligible), size=min(TARGET_N_AUTOMATA, len(eligible)), replace=False)
+        selected = [eligible[int(j)] for j in sorted(idx)]
+        payload = {
+            "spike": 99,
+            "status": "READY",
+            "max_competitor_threshold": MAX_COMP_THRESHOLD,
+            "min_eligible_required": MIN_ELIGIBLE_AUTOMATA,
+            "n_eligible": len(eligible),
+            "selected_automata": selected,
+            "audit_file": str(AUDIT.AUDIT_OUT.relative_to(ROOT)).replace("\\", "/"),
+        }
+
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text(json.dumps(payload, indent=1), encoding="utf-8")
+    print(f"Spike 99 predict: status={payload['status']}, n_eligible={payload['n_eligible']}")
+    return payload
+
+
+def _train_or_eval_one(
+    A: dict,
+    arch: str,
+    seed_idx: int,
+    steps: int = STEPS,
+    draws: int = NULL_DRAWS,
+) -> dict:
+    """Train one GRU arm (or step-0 untrained control) and evaluate learned Gram."""
+    import torch
+
+    nn = torch.nn
+    D = np.asarray(A["D"], dtype=int)
+    O = np.asarray(A["O"], dtype=float)
+    s0 = int(A["s0"])
+    m = D.shape[1]
+    Dl = np.vstack([D, np.arange(m)[None]])
+    L = Dl.shape[0]
+    pi = S81.visit_dist(Dl, s0, np.ones(L) / L, T=SEQ_LEN, burn=BURN)
+    ops = MP.master_operators(Dl, O, pi)
+    cand_mats = AUDIT.candidate_matrices_from_ops(ops)
+
+    seed = 99_000 + (0 if arch == "gru_mlp" else 10_000) + 100 * int(A["id"]) + seed_idx
+    torch.manual_seed(seed)
+    rng = np.random.default_rng(seed)
+    mdl = make_gru_model(arch, L=L, k_out=1, hidden_dim=HIDDEN_DIM)
+
+    def _collect_eval(eval_seed_offset: int):
+        with torch.no_grad():
+            Xv, Yv, _ = MP.fast_sample(Dl, O, s0, 500, 100, np.random.default_rng(seed + eval_seed_offset))
+            fit = float(((mdl(Xv) > 0).float() == Yv).float().mean())
+            Xh, _, ST = MP.fast_sample(Dl, O, s0, 400, SEQ_LEN, np.random.default_rng(seed + eval_seed_offset + 1_000_000))
+            H = mdl.hidden(Xh).numpy()
+        return fit, H, ST
+
+    # Untrained control (step 0 before any optimizer step)
+    mdl.eval()
+    fit0, H0, ST0 = _collect_eval(500_000)
+    stats0 = compute_learned_gram_and_stats(H0, ST0, pi, burn=BURN)
+    eval0 = (
+        evaluate_learned_gram(stats0["G_learned"], cand_mats, pi, hidden_dim=mdl.hidden_dim, draws=draws, seed=seed + 1)
+        if stats0 is not None
+        else None
+    )
+
+    # Trained run
+    mdl.train()
+    opt = torch.optim.AdamW(mdl.parameters(), lr=LR, weight_decay=0.0)
+    sch = torch.optim.lr_scheduler.CosineAnnealingLR(opt, steps)
+    for _ in range(steps):
+        X, Y, _ = MP.fast_sample(Dl, O, s0, BATCH, SEQ_LEN, rng)
+        loss = nn.functional.binary_cross_entropy_with_logits(mdl(X), Y)
+        opt.zero_grad()
+        loss.backward()
+        opt.step()
+        sch.step()
+
+    mdl.eval()
+    fit, H, ST = _collect_eval(1_000_000)
+    stats = compute_learned_gram_and_stats(H, ST, pi, burn=BURN)
+    eval_tr = (
+        evaluate_learned_gram(stats["G_learned"], cand_mats, pi, hidden_dim=mdl.hidden_dim, draws=draws, seed=seed + 2)
+        if stats is not None
+        else None
+    )
+
+    return {
+        "id": int(A["id"]),
+        "arch": arch,
+        "seed_idx": int(seed_idx),
+        "seed": int(seed),
+        "hidden_dim": int(mdl.hidden_dim),
+        "fit": fit,
+        "fit_ok": bool(fit >= FIT_GUARD),
+        "untrained_control": {
+            "fit": fit0,
+            "stats": {k: v for k, v in stats0.items() if k not in ("Ce", "G_learned")} if stats0 else None,
+            "eval": eval0,
+        },
+        "trained": {
+            "stats": {k: v for k, v in stats.items() if k not in ("Ce", "G_learned")} if stats else None,
+            "eval": eval_tr,
+        },
+    }
+
+
+def run() -> None:
+    """Execute Spike 99 training ONLY if pre-registered eligibility >= 20 is satisfied."""
+    import torch
+
+    torch.set_num_threads(1)
+    if not PRED_PATH.exists():
+        predict()
+    P = json.loads(PRED_PATH.read_text(encoding="utf-8"))
+    if P["status"] != "READY" or len(P["selected_automata"]) < MIN_ELIGIBLE_AUTOMATA:
+        print(
+            f"Spike 99 run aborted cleanly: status={P['status']}, "
+            f"n_eligible={P['n_eligible']} (< {MIN_ELIGIBLE_AUTOMATA}). No training executed."
+        )
+        return
+
+    free_gb = available_ram_gb()
+    if free_gb is not None and free_gb < MIN_FREE_RAM_GB:
+        raise RuntimeError(f"Aborted: free RAM {free_gb:.2f} GB < {MIN_FREE_RAM_GB:.2f} GB floor.")
+
+    pool = S81.build_pool()
+    RAW.mkdir(parents=True, exist_ok=True)
+    for arch in ("gru_mlp", "gru_lin"):
+        for item in P["selected_automata"]:
+            aid = int(item["id"])
+            A = {"id": aid, **pool[aid]}
+            for s_idx in range(SEEDS_PER_ARM):
+                free_gb = available_ram_gb()
+                if free_gb is not None and free_gb < MIN_FREE_RAM_GB:
+                    raise RuntimeError(f"Stopped mid-run: free RAM {free_gb:.2f} GB < {MIN_FREE_RAM_GB:.2f} GB floor.")
+                pth = RAW / f"{arch}_{aid}_{s_idx}.json"
+                if pth.exists():
+                    continue
+                t0 = time.perf_counter()
+                rec = _train_or_eval_one(A, arch, s_idx)
+                rec["secs"] = round(time.perf_counter() - t0, 2)
+                pth.write_text(json.dumps(rec, indent=1), encoding="utf-8")
+
+
+def analyse(out_path: pathlib.Path = OUT_PATH) -> dict:
+    """Summarize Spike 99 outcome strictly under pre-registered criteria."""
+    if not PRED_PATH.exists():
+        predict()
+    P = json.loads(PRED_PATH.read_text(encoding="utf-8"))
+    audit = json.loads(AUDIT.AUDIT_OUT.read_text(encoding="utf-8")) if AUDIT.AUDIT_OUT.exists() else None
+
+    if P["status"] != "READY" or len(P["selected_automata"]) < MIN_ELIGIBLE_AUTOMATA:
+        summary = {
+            "spike": 99,
+            "status": "UNDERPOWERED",
+            "verdict": "NO VERDICT",
+            "reason": P["reason"],
+            "n_eligible": P["n_eligible"],
+            "n_training_runs_executed": 0,
+            "pr12_candidate_agreement_summary": (
+                audit["pr12_candidate_agreement_audit"]["median_pairwise_diag"] if audit else None
+            ),
+            "pr12_null_summary": (
+                audit["pr12_candidate_agreement_audit"]["summary_nulls"] if audit else None
+            ),
+            "pool_audit_summary": (
+                {
+                    k: audit["spike81_pool_audit"][k]
+                    for k in (
+                        "pool_size",
+                        "max_comp_threshold",
+                        "n_used_excluded",
+                        "n_isomorphic_duplicates",
+                        "n_fresh_irreversible_all",
+                        "n_fresh_irreversible_pi_ok",
+                        "n_eligible",
+                        "n_rejected",
+                        "reason_counts",
+                        "fresh_irrev_min_max_comp_cos",
+                        "fresh_irrev_min_cos_WcWo_Wo",
+                        "fresh_irrev_min_max_comp_excl_G",
+                        "all_irrev_incl_used_min_max_comp_cos",
+                        "diag_fresh_unit_norm_le_080_count",
+                    )
+                }
+                if audit
+                else None
+            ),
+        }
+        out_path.write_text(json.dumps(summary, indent=1), encoding="utf-8")
+        print(json.dumps(summary, indent=2))
+        return summary
+
+    runs = [json.loads(f.read_text(encoding="utf-8")) for f in sorted(RAW.glob("*.json"))]
+    arms_out = {}
+    for arch in ("gru_mlp", "gru_lin"):
+        arm_runs = [r for r in runs if r["arch"] == arch]
+        by_aut: dict[int, list[dict]] = {}
+        for r in arm_runs:
+            if r["fit_ok"] and r["trained"]["eval"] is not None:
+                by_aut.setdefault(int(r["id"]), []).append(r["trained"]["eval"])
+        aut_summaries = [evaluate_automaton_held(se) for _, se in sorted(by_aut.items())]
+        seed_evals_list = [se for _, se in sorted(by_aut.items())]
+        arms_out[arch] = evaluate_aggregate_verdict(
+            aut_summaries, seed_evals_list, n_eligible=len(P["selected_automata"])
+        )
+
+    out = {"spike": 99, "status": "COMPLETE", "arms": arms_out, "n_runs": len(runs)}
+    out_path.write_text(json.dumps(out, indent=1), encoding="utf-8")
+    print(json.dumps(out, indent=2))
+    return out
+
+
+def main() -> None:
+    cmd = sys.argv[1] if len(sys.argv) > 1 else "analyse"
+    {"predict": predict, "run": run, "analyse": analyse}[cmd]()
+
+
+if __name__ == "__main__":
+    main()
