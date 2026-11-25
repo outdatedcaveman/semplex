@@ -224,7 +224,7 @@
  "experiments/spike85.py": "74af1ccb0ed5eafaf5331b1bcc27e00108101736fb71eb24ac139232669d383c",
  "experiments/spike86.py": "d5e41df334ef6f1d4f69c068e0241b950f1dbace4a7fa466a0c75ec9126ff3ea",
  "experiments/spike87.py": "4562d582434583ccc017f32b5cd11c30b925ddb19fdeda48ccdc408ac16f8b0b",
- "experiments/spike99.py": "4da72fc66c5379ecde10af4d1dec61341d660cd25360127121b7eabda08c3b51",
+ "experiments/spike99.py": "90e271679bc5006d1a8e89d13fe5f53eac75763fb169908b0f689e6a1a04ee3b",
  "experiments/theory/exchange_rate.py": "138eafa6e51e7bc3bfb3bd63913573efab57b5018b67d5fde4d9b85074a05e6d",
  "experiments/theory/gated_smoothness.py": "605be44548f4c3ceb1729681135e5047a3f1822a32e90015a5e3a6196eda7460"
 }
