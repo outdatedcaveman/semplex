@@ -101,4 +101,148 @@ python -m experiments.spike99 analyse
 
 ## 7. Results
 
-*Pending execution after pre-registration commit.*
+*Pending execution after pre-registration and Commit-2 statistical lock.*
+
+## 8. Commit-2 Amendments: Execution and Statistical Lock
+
+### A. Automaton Selection
+
+If N_elig >= 20:
+
+- Select exactly 20 automata.
+- Use deterministic stratified sampling.
+- Freeze strata, selection algorithm, and RNG seed
+  before selection.
+- Publish all selected IDs before training.
+- Publish all eligible but unselected IDs.
+- No manual substitutions.
+
+If N_elig < 20:
+- Halt.
+- Report UNDERPOWERED / NO VERDICT.
+- No threshold relaxation.
+
+*(Frozen selection parameters: strata = `(kind, m)`, algorithm = deterministic round-robin over shuffled within-stratum IDs sorted ascending, `selection_seed = 20261125`. Also audit and report the exact exclusion count and `pi_min` distribution of the `min(pi_q) > 1e-4` filter.)*
+
+### B. Training Seeds and Failed Runs
+
+- Publish exactly 5 training seeds per condition.
+- No replacement seeds.
+- Retain every seed in the primary intention-to-train
+  analysis.
+- Report every fit failure.
+- Fit-qualified analysis is secondary only.
+- At least 4/5 seeds must achieve accuracy >= 0.99
+  for individual HELD eligibility.
+
+*(Frozen training seeds: `seed = 99000 + arch_offset + 100 * aid + seed_idx` for `seed_idx in {0, 1, 2, 3, 4}`, with `arch_offset = 0` for `gru_mlp` and `10000` for `gru_lin`; PyTorch `torch.manual_seed(seed)` and NumPy `np.random.default_rng(seed)`.)*
+
+### C. Trajectory Generation
+
+Freeze and publish:
+
+- Initial-state distribution.
+- Transition sampling procedure.
+- Evaluation RNG seed.
+- Burn-in handling.
+- Held-out trajectory IDs or reproducible
+  trajectory-generation seed.
+
+All competing candidates use identical evaluation
+trajectories.
+
+*(Frozen trajectory generator: deterministic initial state fixed at `s0`, independent uniform letter draws over `L` action symbols (including stay-identity letter), training batches `B=64, T=30`, held-out fit check `500` trajectories of length `100` (`eval_seed + 1_000_000`), held-out Gram extraction `400` trajectories of length `30` (`eval_seed + 2_000_000`, `eval_seed = 99_000_000 + 100 * aid + seed_idx`, shared across arms), burn-in `t in {0..4}` discarded and `t in {5..29}` retained. Verify centring invariant `||1_pi^T X||_2 < 1e-8`.)*
+
+### D. Null B Implementation
+
+Construct Q0 as an orthonormal basis of im(P_perp).
+
+Verify:
+
+||Q0.T @ Q0 - I||_F < 1e-8
+||Q0 @ Q0.T - P_perp||_F < 1e-8
+
+For each draw:
+
+- Generate an independent Haar-random U in O(m-1).
+- Randomize the centred learned Gram.
+- Verify PSD and eigenvalue preservation.
+- Record maximum numerical eigenvalue error.
+
+Use 10,000 independent draws per run.
+
+Individual Null B robustness:
+At least 4/5 seeds must have p_B <= 0.05.
+
+*(Canonical basis for Null C: standard orthonormal basis `Q0` of `im(P_perp)` constructed by symmetric eigendecomposition of `P_perp`. Zero-norm / missing-centroid runs are flagged `gram_valid = False` and retained as failed runs with `target_cos = 0.0, margin_D = -1.0, p_upper = 1.0` in the intention-to-train primary analysis.)*
+
+### E. Aggregate Statistical Test
+
+Primary discrimination statistic:
+
+T = median_a(D_a)
+
+Construct 10,000 aggregate Null B replicates.
+
+For every replicate:
+- Independently randomize each automaton/seed Gram.
+- Recompute seed-level candidate similarities.
+- Recompute D_a.
+- Recompute T using the identical aggregation procedure.
+
+Aggregate empirical p-value:
+
+p_aggregate =
+(1 + count(T_null >= T_observed)) / 10001
+
+Do not use the median of individual p-values
+as an aggregate significance test.
+
+### F. Strengthened Aggregate HELD
+
+In addition to all existing requirements:
+
+The lower bound of the 95% hierarchical bootstrap
+confidence interval for median_a(D_a) must be >= 0.05.
+
+Bootstrap:
+- 10,000 replicates.
+- Resample automata first.
+- Resample their 5 seeds second.
+- Percentile 95% confidence interval.
+- Preserve candidate pairing within seeds.
+
+### G. Mandatory Interpretation
+
+Report H1, H2, and H3 separately.
+
+- H1: alignment above the specified null.
+- H2: discrimination against every competitor.
+- H3: causal necessity (not tested by Spike 99).
+
+H1 passing without H2 does NOT confirm
+the two-sided Gramian hypothesis.
+
+Null B passing without Null A does NOT
+confirm the hypothesis.
+
+Fit-qualified results cannot replace
+the intention-to-train primary analysis.
+
+NEITHER and UNDERPOWERED are never
+described as confirmation.
+
+### H. Reproducibility
+
+Publish:
+- RNG seeds and implementations.
+- Candidate construction formulas.
+- Normalization and centering conventions.
+- Zero-norm and missing-value policies.
+- Every excluded and failed run.
+- Complete deviation log.
+
+No changes to primary thresholds,
+selection rules, or statistical procedures
+after the first training run.
+

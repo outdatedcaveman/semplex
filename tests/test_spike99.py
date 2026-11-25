@@ -45,11 +45,13 @@ def test_null_a_b_c_properties_and_upper_tail_p() -> None:
     T = Pperp @ (0.5 * (T_raw + T_raw.T)) @ Pperp
 
     na = AUDIT.null_a_gaussian_draws(T, pi, hidden_dim=64, draws=200, seed=1)
-    nb = AUDIT.null_b_rotation_draws(A, T, pi, draws=200, seed=2)
+    nb, diag = AUDIT.null_b_rotation_draws(A, T, pi, draws=200, seed=2, return_diagnostics=True)
     nc = AUDIT.null_c_diagonal_draws(A, T, pi, draws=200, seed=3)
     assert na.shape == (200,)
     assert nb.shape == (200,)
     assert nc.shape == (200,)
+    assert diag["max_eig_err"] < 1e-8
+    assert diag["min_rot_eig"] >= -1e-8
     assert np.all((na >= -1.0 - 1e-9) & (na <= 1.0 + 1e-9))
     assert np.all((nb >= -1.0 - 1e-9) & (nb <= 1.0 + 1e-9))
     assert np.all((nc >= -1.0 - 1e-9) & (nc <= 1.0 + 1e-9))
@@ -103,10 +105,34 @@ def test_verdict_rules_underpowered_held_broken_neither_and_holm() -> None:
         [se for _, se in held_pairs],
         n_eligible=20,
         bootstrap_reps=500,
+        aggregate_null_b={"p_aggregate": 0.001, "T_observed": 0.20, "reps": 500},
     )
     assert res_held["verdict"] == "HELD"
     assert res_held["n_held"] == 20
     assert all(v["reject_at_alpha"] for v in res_held["holm_pairwise"].values())
+
+    # CI lower bound < 0.05 (e.g. 0.02..0.10) must NOT receive HELD under Commit-2 Section 8.F
+    borderline_pairs = [make_aut(0.85, 0.83, 0.75, 0.001) for _ in range(10)] + [
+        make_aut(0.85, 0.75, 0.75, 0.001) for _ in range(10)
+    ]
+    res_borderline = S99.evaluate_aggregate_verdict(
+        [a for a, _ in borderline_pairs],
+        [se for _, se in borderline_pairs],
+        n_eligible=20,
+        bootstrap_reps=500,
+        aggregate_null_b={"p_aggregate": 0.001, "T_observed": 0.06, "reps": 500},
+    )
+    assert res_borderline["verdict"] != "HELD"
+
+    # Intention-to-train fit failure: if only 3/5 seeds pass fit guard, individual HELD must fail
+    aut_low_fit = S99.evaluate_automaton_held(held_pairs[0][1], fit_flags=[True, True, True, False, False])
+    assert aut_low_fit["held"] is False
+    # Individual Null B: if only 3/5 seeds have p_B <= 0.05, individual HELD must fail
+    mixed_b = held_pairs[0][1][:3] + [
+        {**held_pairs[0][1][0], "null_B": {"median": 0.4, "p95": 0.75, "p_upper": 0.20}},
+        {**held_pairs[0][1][0], "null_B": {"median": 0.4, "p95": 0.75, "p_upper": 0.20}},
+    ]
+    assert S99.evaluate_automaton_held(mixed_b)["held"] is False
 
     # Synthetic BROKEN case (competitor beats target, CI upper < 0.05)
     broken_pairs = [make_aut(0.60, 0.75, 0.78, 0.40) for _ in range(20)]
@@ -143,3 +169,34 @@ def test_holm_bonferroni_monotonic() -> None:
     assert h2["a"]["reject_at_alpha"] is True
     assert h2["b"]["reject_at_alpha"] is False
     assert h2["c"]["reject_at_alpha"] is False
+
+
+def test_stratified_selection_and_aggregate_null_b() -> None:
+    eligible = [{"id": i, "kind": "free" if i % 2 == 0 else "mixed", "m": 5 + (i % 3)} for i in range(30)]
+    sel1, unsel1 = S99.select_stratified_20(eligible, seed=20261125)
+    sel2, unsel2 = S99.select_stratified_20(eligible, seed=20261125)
+    assert len(sel1) == 20
+    assert len(unsel1) == 10
+    assert [r["id"] for r in sel1] == [r["id"] for r in sel2]
+    assert set(r["id"] for r in sel1).isdisjoint(set(unsel1))
+
+    # Aggregate Null B test preserves hierarchy & detects strong planted alignment
+    rng = np.random.default_rng(123)
+    pi = np.array([0.2, 0.25, 0.25, 0.3], dtype=float)
+    _, _, Q0 = AUDIT.centred_subspace_basis(pi)
+    Pperp = Q0 @ Q0.T
+    target = Pperp @ np.diag([2.0, 0.5, -0.5, -1.0]) @ Pperp
+    cands = {"WcWo": target}
+    for j, k in enumerate(S99.COMPETITOR_KEYS):
+        M = rng.normal(size=(4, 4))
+        M = Pperp @ (0.5 * (M + M.T)) @ Pperp
+        cands[k] = M
+    agg = S99.aggregate_null_b_test(
+        [[target.copy() for _ in range(5)] for _ in range(3)],
+        [cands for _ in range(3)],
+        [pi for _ in range(3)],
+        observed_T=0.60,
+        reps=50,
+    )
+    assert agg["reps"] == 50
+    assert agg["p_aggregate"] <= 0.05

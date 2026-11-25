@@ -96,6 +96,10 @@ def centred_subspace_basis(pi: np.ndarray) -> tuple[np.ndarray, np.ndarray, np.n
     evals, evecs = np.linalg.eigh(Pperp)
     # Keep the m - 1 unit-eigenvalue eigenvectors spanning im(P_perp).
     Q0 = evecs[:, evals > 0.5]
+    orth_err = float(np.linalg.norm(Q0.T @ Q0 - np.eye(Q0.shape[1])))
+    proj_err = float(np.linalg.norm(Q0 @ Q0.T - Pperp))
+    if orth_err >= 1e-8 or proj_err >= 1e-8:
+        raise AssertionError(f"Centred subspace basis check failed: orth_err={orth_err:.2e}, proj_err={proj_err:.2e}")
     return W, one, Q0
 
 
@@ -144,26 +148,41 @@ def null_b_rotation_draws(
     pi: np.ndarray,
     draws: int = 10000,
     seed: int = 1,
-) -> np.ndarray:
+    return_diagnostics: bool = False,
+) -> np.ndarray | tuple[np.ndarray, dict]:
     """Null B: spectrum-preserving random orientations Q A Q^T inside im(P_perp)."""
     rng = np.random.default_rng(seed)
     _, _, Q0 = centred_subspace_basis(pi)
     d = Q0.shape[1]
-    A_sub = Q0.T @ (0.5 * (source_gram + source_gram.T)) @ Q0
+    A_sub = 0.5 * (Q0.T @ (0.5 * (source_gram + source_gram.T)) @ Q0 + (Q0.T @ (0.5 * (source_gram + source_gram.T)) @ Q0).T)
     T_sub = Q0.T @ (0.5 * (target + target.T)) @ Q0
     na = float(np.linalg.norm(A_sub))
     nt = float(np.linalg.norm(T_sub))
     if na < 1e-12 or nt < 1e-12 or d == 0:
-        return np.zeros(draws, dtype=float)
+        zeros = np.zeros(draws, dtype=float)
+        diag = {"max_eig_err": 0.0, "min_rot_eig": 0.0}
+        return (zeros, diag) if return_diagnostics else zeros
+    orig_eigs = np.linalg.eigvalsh(A_sub)
+    max_eig_err = 0.0
+    min_rot_eig = float("inf")
     out = np.empty(draws, dtype=float)
     chunk = 1000
     for start in range(0, draws, chunk):
         b = min(chunk, draws - start)
         U = _haar_orthogonal_batch(rng, d, b)
         rot = np.einsum("bij,jk,blk->bil", U, A_sub, U)
-        dots = np.einsum("bij,ij->b", rot, T_sub)
+        # Verify eigenvalue & PSD preservation numerically on first batch + max error tracking
+        rot_sym = 0.5 * (rot + np.swapaxes(rot, 1, 2))
+        rot_eigs = np.linalg.eigvalsh(rot_sym)
+        batch_err = float(np.max(np.abs(rot_eigs - orig_eigs[None, :])))
+        max_eig_err = max(max_eig_err, batch_err)
+        min_rot_eig = min(min_rot_eig, float(np.min(rot_eigs)))
+        dots = np.einsum("bij,ij->b", rot_sym, T_sub)
         out[start : start + b] = dots / (na * nt)
-    return out
+    if max_eig_err >= 1e-7:
+        raise AssertionError(f"Null B eigenvalue preservation failed: max_eig_err={max_eig_err:.2e}")
+    diag = {"max_eig_err": max_eig_err, "min_rot_eig": min_rot_eig}
+    return (out, diag) if return_diagnostics else out
 
 
 def null_c_diagonal_draws(
@@ -587,6 +606,19 @@ def audit_spike81_pool(
             ),
         }
 
+    fresh_irrev_low_pi = [
+        {
+            "id": r["id"],
+            "kind": r["kind"],
+            "m": r["m"],
+            "pi_min": r["strat"]["pi_min"] if r["strat"] else None,
+            "max_competitor_cos": r["max_competitor_cos"],
+        }
+        for r in fresh_irrev_all
+        if not r["pi_ok"]
+    ]
+    all_low_pi = [r for r in records if not r["pi_ok"]]
+
     lowest_collinearity = sorted(fresh_irrev_ok, key=lambda r: r["max_competitor_cos"])[:20]
     return {
         "pool_size": len(pool),
@@ -596,6 +628,17 @@ def audit_spike81_pool(
         "n_isomorphic_duplicates": sum(r["isomorphic_duplicate_of"] is not None for r in records),
         "n_fresh_irreversible_all": len(fresh_irrev_all),
         "n_fresh_irreversible_pi_ok": len(fresh_irrev_ok),
+        "low_pi_threshold_effect": {
+            "total_excluded_by_pi_le_1e4": len(all_low_pi),
+            "fresh_irrev_excluded_by_pi_le_1e4": len(fresh_irrev_low_pi),
+            "fresh_irrev_low_pi_rows": fresh_irrev_low_pi,
+            "fresh_irrev_low_pi_min_max_comp_cos": (
+                float(min(x["max_competitor_cos"] for x in fresh_irrev_low_pi)) if fresh_irrev_low_pi else None
+            ),
+            "fresh_irrev_low_pi_eligible_count": sum(
+                1 for x in fresh_irrev_low_pi if x["max_competitor_cos"] is not None and x["max_competitor_cos"] <= max_comp_threshold
+            ),
+        },
         "n_eligible": len(eligible_rows),
         "n_rejected": len(rejected_rows),
         "reason_counts": dict(reason_counts),
