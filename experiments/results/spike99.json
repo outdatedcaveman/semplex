@@ -1,0 +1,174 @@
+{
+ "spike": 99,
+ "status": "UNDERPOWERED",
+ "verdict": "NO VERDICT",
+ "reason": "0/312 fresh irreversible automata in Spike 81's pool satisfy max_B cos(W_c + W_o, B) <= 0.80 (observed minimum across fresh irreversible pool = 0.9037). Per pre-registered rule, threshold is NOT relaxed.",
+ "n_eligible": 0,
+ "n_training_runs_executed": 0,
+ "selection_lock_sha256": "23edf1a06862c3b44facaa8bc46030be5b70e04aa9891adfbc4e55ae6bb7d117",
+ "candidate_audit_commit_sha": "80f8904f98baa925c81e5bbb8e8bb0df69054343",
+ "pr12_candidate_agreement_summary": {
+  "WcWo": {
+   "WcWo": 0.9999999999999999,
+   "Wo": 0.971810366521631,
+   "G": 0.9387494748936316,
+   "o": 0.8436691532654347,
+   "k1_top": 0.5219084787587462,
+   "k1_full": 0.7527446871175405
+  },
+  "Wo": {
+   "WcWo": 0.971810366521631,
+   "Wo": 1.0,
+   "G": 0.925441127625317,
+   "o": 0.8765124862592413,
+   "k1_top": 0.5357029564105039,
+   "k1_full": 0.7489374691186186
+  },
+  "G": {
+   "WcWo": 0.9387494748936316,
+   "Wo": 0.925441127625317,
+   "G": 1.0,
+   "o": 0.7913950843220176,
+   "k1_top": 0.48381580186180706,
+   "k1_full": 0.7306821115660042
+  },
+  "o": {
+   "WcWo": 0.8436691532654347,
+   "Wo": 0.8765124862592413,
+   "G": 0.7913950843220176,
+   "o": 1.0,
+   "k1_top": 0.2477193075921586,
+   "k1_full": 0.37897385654089644
+  },
+  "k1_top": {
+   "WcWo": 0.5219084787587462,
+   "Wo": 0.5357029564105039,
+   "G": 0.48381580186180706,
+   "o": 0.2477193075921586,
+   "k1_top": 1.0,
+   "k1_full": 0.7733022382464652
+  },
+  "k1_full": {
+   "WcWo": 0.7527446871175405,
+   "Wo": 0.7489374691186186,
+   "G": 0.7306821115660042,
+   "o": 0.37897385654089644,
+   "k1_top": 0.7733022382464652,
+   "k1_full": 1.0
+  }
+ },
+ "pr12_null_summary": {
+  "null_A_G_median_of_medians": 0.7390210680016336,
+  "null_A_G_median_of_p95s": 0.8236857863623545,
+  "null_A_WcWo_median_of_medians": 0.7453308773609116,
+  "null_A_WcWo_median_of_p95s": 0.8238224737586644,
+  "null_B_self_WcWo_median_of_p95s": 0.7305779851422496,
+  "null_C_self_WcWo_median_of_p95s": 0.7425662139790683
+ },
+ "pool_audit_summary": {
+  "pool_size": 600,
+  "max_comp_threshold": 0.8,
+  "n_used_excluded": 85,
+  "n_isomorphic_duplicates": 0,
+  "n_fresh_irreversible_all": 323,
+  "n_fresh_irreversible_pi_ok": 312,
+  "low_pi_threshold_effect": {
+   "total_excluded_by_pi_le_1e4": 24,
+   "fresh_irrev_excluded_by_pi_le_1e4": 11,
+   "fresh_irrev_low_pi_rows": [
+    {
+     "id": 104,
+     "kind": "free",
+     "m": 8,
+     "pi_min": 8.230452674887415e-05,
+     "max_competitor_cos": 0.9351081004712672
+    },
+    {
+     "id": 152,
+     "kind": "free",
+     "m": 4,
+     "pi_min": 8.230452674887418e-05,
+     "max_competitor_cos": 0.9999994703953528
+    },
+    {
+     "id": 176,
+     "kind": "free",
+     "m": 5,
+     "pi_min": 8.230452674887415e-05,
+     "max_competitor_cos": 0.9514710731274266
+    },
+    {
+     "id": 200,
+     "kind": "free",
+     "m": 6,
+     "pi_min": 8.230452674887414e-05,
+     "max_competitor_cos": 0.9689296946914414
+    },
+    {
+     "id": 206,
+     "kind": "free",
+     "m": 8,
+     "pi_min": 8.23045267488741e-05,
+     "max_competitor_cos": 0.9813314374383194
+    },
+    {
+     "id": 242,
+     "kind": "free",
+     "m": 5,
+     "pi_min": 8.23045267488741e-05,
+     "max_competitor_cos": 0.9999999445840234
+    },
+    {
+     "id": 341,
+     "kind": "free",
+     "m": 4,
+     "pi_min": 8.230452674887412e-05,
+     "max_competitor_cos": 0.9988330367152769
+    },
+    {
+     "id": 392,
+     "kind": "free",
+     "m": 9,
+     "pi_min": 8.230452674887412e-05,
+     "max_competitor_cos": 0.9906501427884963
+    },
+    {
+     "id": 437,
+     "kind": "free",
+     "m": 8,
+     "pi_min": 8.230452674887412e-05,
+     "max_competitor_cos": 0.9442479706208461
+    },
+    {
+     "id": 479,
+     "kind": "free",
+     "m": 8,
+     "pi_min": 8.230452674887412e-05,
+     "max_competitor_cos": 0.9765964319478548
+    },
+    {
+     "id": 491,
+     "kind": "free",
+     "m": 9,
+     "pi_min": 8.23045267488741e-05,
+     "max_competitor_cos": 0.9749613597576207
+    }
+   ],
+   "fresh_irrev_low_pi_min_max_comp_cos": 0.9351081004712672,
+   "fresh_irrev_low_pi_eligible_count": 0
+  },
+  "n_eligible": 0,
+  "n_rejected": 600,
+  "reason_counts": {
+   "bijective_not_irreversible": 201,
+   "candidate_collinearity_max_cos_gt_0.80": 600,
+   "used_in_prior_spike": 85,
+   "low_stationary_mass_pi_le_1e-4": 24
+  },
+  "fresh_irrev_min_max_comp_cos": 0.90369719602886,
+  "fresh_irrev_min_cos_WcWo_Wo": 0.8821665507230981,
+  "fresh_irrev_min_max_comp_excl_G": 0.8821665507230981,
+  "all_irrev_incl_used_min_max_comp_cos": 0.8910073104004328,
+  "diag_fresh_unit_norm_le_080_count": 14
+ }
+}

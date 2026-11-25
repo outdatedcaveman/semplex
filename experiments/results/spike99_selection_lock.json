@@ -1,0 +1,19 @@
+{
+ "spike": 99,
+ "status": "UNDERPOWERED",
+ "candidate_audit_commit_sha": "80f8904f98baa925c81e5bbb8e8bb0df69054343",
+ "selection_algorithm": "deterministic_stratified_round_robin_over_shuffled_strata",
+ "strata_keys": [
+  "kind",
+  "m"
+ ],
+ "selection_seed": 20261125,
+ "max_competitor_threshold": 0.8,
+ "min_eligible_required": 20,
+ "eligible_count": 0,
+ "eligible_strata_inputs": [],
+ "selected_ids": [],
+ "eligible_unselected_ids": [],
+ "selected_signatures": [],
+ "selection_sha256": "23edf1a06862c3b44facaa8bc46030be5b70e04aa9891adfbc4e55ae6bb7d117"
+}

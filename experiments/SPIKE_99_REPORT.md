@@ -101,7 +101,135 @@ python -m experiments.spike99 analyse
 
 ## 7. Results
 
-*Pending execution after pre-registration and Commit-2 statistical lock.*
+### 7.1 Execution & Stopping Outcome (`experiments/results/spike99.json`)
+
+- **Pre-registration & statistical-lock commits prior to final audit execution (`80f8904`):** `ff9445c` (protocol + blocking candidate-agreement audit code), `73c42fc` (Section 8 execution and statistical lock), `8d00806` (unified `D_a`, zero-similarity stub, full grid, PSD enforcement), and `80f8904` (unconditional `aggregate_null_b_test` assertion, uniform `normalize_seed_run_record` / `normalize_seed_eval`, 200-record postconditions, immutable `spike99_selection_lock.json`, Haar QR zero-diag documentation & test log `spike99_test_run.txt`).
+- **Status:** **`UNDERPOWERED`** (`verdict: NO VERDICT`)
+- **Eligible automata under $\max_B \cos(W_c + W_o, B) \le 0.80$:** **`0 / 312`** fresh irreversible automata with $\min_q \pi_q > 10^{-4}$ (`0 / 323` even without the $\pi_{\min}$ filter; `0 / 600` across the entire Spike 81 pool).
+- **Training runs executed:** **`0`** (`python -m experiments.spike99 run` verified `spike99_selection_lock.json` and halted cleanly per Section 8.A without relaxing `<= 0.80`).
+- **Selection lock:** `experiments/results/spike99_selection_lock.json` (`selection_sha256`: `23edf1a06862c3b44facaa8bc46030be5b70e04aa9891adfbc4e55ae6bb7d117`, `candidate_audit_commit_sha`: `80f8904f98baa925c81e5bbb8e8bb0df69054343`).
+- **Artifacts:** `experiments/results/spike99_candidate_audit.json`, `experiments/results/spike99_predictions.json`, `experiments/results/spike99_selection_lock.json`, `experiments/results/spike99.json`, `experiments/results/spike99_test_run.txt`.
+
+### 7.2 Blocking Candidate-Agreement & Multi-Null Audit on PR #12 (`master_principle_predictions.json`)
+
+Computing the full pairwise Frobenius cosine matrix across the 12 monoids of §11 (`hidden_dim = 64`, `draws = 10,000` per monoid) reveals that $W_c + W_o$, $W_o$, and $G(\lambda_0)$ are **even more collinear than PR #12 inferred** (median $\cos(W_c + W_o, W_o) = \mathbf{0.9718}$, minimum `0.9424`, maximum `0.9993`), while `o o^T` also agrees strongly with both (`0.8437` and `0.8765`), and only `k1_top` (`0.5219`) separates substantially:
+
+| Candidate A \ Candidate B (median [min, max]) | `WcWo` ($W_c + W_o$) | `Wo` ($W_o$) | `G` ($G(\lambda_0)$) | `o` ($o o^\top$) | `k1_top` ($k_{1,w} k_{1,w}^\top$) | `k1_full` ($K_{\mathrm{fut}, t\ge 1}$, aux) |
+|---|---|---|---|---|---|---|
+| **`WcWo`** | `1.0000` | `0.9718` [`0.9424`, `0.9993`] | `0.9387` [`0.8791`, `0.9673`] | `0.8437` [`0.7186`, `0.8911`] | `0.5219` [`0.2712`, `0.8996`] | `0.7527` [`0.3776`, `0.9542`] |
+| **`Wo`** | `0.9718` [`0.9424`, `0.9993`] | `1.0000` | `0.9254` [`0.8676`, `0.9748`] | `0.8765` [`0.8247`, `0.9771`] | `0.5357` [`0.3505`, `0.9199`] | `0.7489` [`0.4534`, `0.9303`] |
+| **`G`** | `0.9387` [`0.8791`, `0.9673`] | `0.9254` [`0.8676`, `0.9748`] | `1.0000` | `0.7914` [`0.5903`, `0.9497`] | `0.4838` [`0.2506`, `0.8519`] | `0.7307` [`0.3482`, `0.9115`] |
+| **`o`** | `0.8437` [`0.7186`, `0.8911`] | `0.8765` [`0.8247`, `0.9771`] | `0.7914` [`0.5903`, `0.9497`] | `1.0000` | `0.2477` [`0.0049`, `0.8257`] | `0.3790` [`0.0957`, `0.8321`] |
+| **`k1_top`** | `0.5219` [`0.2712`, `0.8996`] | `0.5357` [`0.3505`, `0.9199`] | `0.4838` [`0.2506`, `0.8519`] | `0.2477` [`0.0049`, `0.8257`] | `1.0000` | `0.7733` [`0.6466`, `0.9914`] |
+
+**Per-monoid PR #12 audit (`10,000` draws, actual `hidden_dim = 64`):**
+
+| ID | Kind | `m` | `cos(WcWo, Wo)` | `cos(WcWo, G)` | `cos(WcWo, o)` | `cos(WcWo, k1_top)` | `cos(Wo, G)` | `cos(Wo, o)` | Null A(`G`) med / p95 | Null A(`WcWo`) med / p95 | Null B self(`WcWo`) p95* | Null C self(`WcWo`) p95* |
+|---:|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| 65 | free | 5 | 0.9529 | 0.9302 | 0.8911 | 0.8996 | 0.9228 | 0.9771 | 0.9038 / 0.9537 | 0.9787 / 0.9908 | 0.8542 | 0.8323 |
+| 127 | mixed | 6 | 0.9625 | 0.9421 | 0.8342 | 0.6582 | 0.9748 | 0.9295 | 0.7206 / 0.8179 | 0.8563 / 0.9214 | 0.7610 | 0.8041 |
+| 515 | free | 6 | 0.9699 | 0.9363 | 0.7186 | 0.4059 | 0.8676 | 0.8247 | 0.7841 / 0.8448 | 0.7431 / 0.8054 | 0.8947 | 0.9107 |
+| 103 | mixed | 9 | 0.9887 | 0.9646 | 0.8840 | 0.4381 | 0.9646 | 0.8818 | 0.6690 / 0.7399 | 0.6509 / 0.7275 | 0.6072 | 0.5198 |
+| 512 | free | 6 | 0.9551 | 0.9544 | 0.8332 | 0.4488 | 0.9574 | 0.8815 | 0.6690 / 0.7679 | 0.7476 / 0.8336 | 0.8250 | 0.7493 |
+| 409 | mixed | 7 | 0.9991 | 0.8791 | 0.8485 | 0.3797 | 0.8775 | 0.8587 | 0.7812 / 0.8471 | 0.7177 / 0.7896 | 0.7229 | 0.7551 |
+| 584 | free | 7 | 0.9424 | 0.8819 | 0.7794 | 0.6243 | 0.8754 | 0.8492 | 0.7248 / 0.8198 | 0.9190 / 0.9602 | 0.6869 | 0.6605 |
+| 70 | mixed | 9 | 0.9809 | 0.9254 | 0.8406 | 0.5657 | 0.9281 | 0.8787 | 0.7533 / 0.8275 | 0.7344 / 0.8067 | 0.6256 | 0.6106 |
+| 281 | free | 4 | 0.9993 | 0.9142 | 0.8500 | 0.6466 | 0.9205 | 0.8581 | 0.9203 / 0.9496 | 0.8523 / 0.9143 | 0.9128 | 0.9294 |
+| 193 | mixed | 7 | 0.9512 | 0.9673 | 0.8467 | 0.2712 | 0.9334 | 0.8811 | 0.6457 / 0.7351 | 0.7358 / 0.8140 | 0.7383 | 0.7358 |
+| 368 | free | 8 | 0.9737 | 0.9453 | 0.8363 | 0.4781 | 0.9213 | 0.8743 | 0.7996 / 0.8689 | 0.8016 / 0.8628 | 0.6761 | 0.6872 |
+| 76 | mixed | 9 | 0.9873 | 0.9412 | 0.8572 | 0.5661 | 0.9558 | 0.8682 | 0.6617 / 0.7358 | 0.7399 / 0.8090 | 0.6005 | 0.5947 |
+
+*\*Note: Raw per-seed `G_learned` centroid matrices from `master_principle_raw/` are not tracked on `master`, so Null B/C above report the spectrum-preserving self-orientation benchmark $\cos(W_c+W_o,\, Q(W_c+W_o)Q^\top)$ in $\operatorname{im}(P_\perp)$ (`pr12_null_summary`: Null A(`G`) median-of-medians `0.7390`, median-of-p95s `0.8237`; Null A(`WcWo`) median-of-medians `0.7453`, median-of-p95s `0.8238`; Null B self(`WcWo`) median-of-p95s `0.7306`; Null C self(`WcWo`) median-of-p95s `0.7426`).*
+
+### 7.3 Spike 81 Pool Eligibility & Rejection Audit (`600` Automata)
+
+Full pool breakdown (`experiments/results/spike99_candidate_audit.json:spike81_pool_audit`):
+- **Total pool (`S81.build_pool()`):** `600` (`200` `perm`, `200` `mixed`, `200` `free`).
+- **Excluded as previously used (`used_in_prior_spike`):** `85` across `spike81`, `spike83`, `spike84`, `spike87`, `master_principle`, `master_principle_mech`, `master_principle_transformer`, `master_principle_tf_causal`.
+- **Bijective automata (`bijective_not_irreversible`):** `201` (`200` `perm` + `1` `free` automaton `id = 251`, `m = 5`, whose minimized action letters are all bijective).
+- **Isomorphic duplicates (`canonical_aut_sig`):** **`0`** (both under letter-permutation equivalence and fixed-letter order).
+- **Effect of $\min_q \pi_q > 10^{-4}$ filter (`low_pi_threshold_effect`):** excludes `24` automata total (`11` fresh irreversible automata: IDs `104, 152, 176, 200, 206, 242, 341, 392, 437, 479, 491`, each with $\min_q \pi_q = 8.2305 \times 10^{-5}$). None of those `11` pass the candidate disagreement filter (`min max_B = 0.9351`, `0 / 11` eligible). No automaton has $\min_q \pi_q \le 10^{-12}$.
+- **Fresh irreversible automata with $\min_q \pi_q > 10^{-4}$:** `312` (`323` total fresh irreversible).
+- **Candidate collinearity filter ($\max_B \cos(W_c + W_o, B) \le 0.80$):**
+  - **Eligible:** **`0 / 312`** (`0 / 323` without $\pi_{\min}$ filter; **`0 / 600`** across the entire pool!).
+  - **Rejected:** **`600 / 600`** (`candidate_collinearity_max_cos_gt_0.80`: `600`, `used_in_prior_spike`: `85`, `bijective_not_irreversible`: `201`, `low_stationary_mass_pi_le_1e-4`: `24`).
+  - **Observed minimum $\max_B \cos(W_c + W_o, B)$ among fresh $\pi > 10^{-4}$:** **`0.9037`** (`id = 542`).
+  - **Observed minimum $\cos(W_c + W_o, W_o)$ among fresh $\pi > 10^{-4}$:** **`0.8822`** (`id = 518`).
+  - **Diagnostic sensitivity (never used to relax threshold):**
+    - Excluding $G(\lambda_0)$ from $B$ still gives **`0 / 312`** at $\le 0.80$ (`min = 0.8822`).
+    - Even across all `399` non-dead irreversible automata including already-used ones, minimum $\max_B = 0.8910$ (`id = 359`) and minimum $\cos(W_c + W_o, W_o) = 0.8684$ (`id = 449`).
+    - Even under non-pre-registered unit normalization $\hat{W}_c + \hat{W}_o = W_c/\|W_c\|_F + W_o/\|W_o\|_F$, only `14 / 312` (`< 20`) achieve $\max_B \le 0.80$.
+
+**Stratified summary across all `312` fresh irreversible automata ($\min_q \pi_q > 10^{-4}$):**
+
+| Axis | Bin | Count | Eligible | Min $\max_B \cos$ | Median $\max_B \cos$ | Median $\cos(W_c+W_o, W_o)$ | Median $\|W_c\|/\|W_o\|$ |
+|---|---|---:|---:|---:|---:|---:|---:|
+| `#states` | `m=4` | 22 | 0 | 0.9388 | 0.9886 | 0.9886 | 0.3089 |
+| `#states` | `m=5` | 73 | 0 | 0.9334 | 0.9848 | 0.9791 | 0.3419 |
+| `#states` | `m=6` | 59 | 0 | 0.9194 | 0.9754 | 0.9725 | 0.3668 |
+| `#states` | `m=7` | 58 | 0 | 0.9092 | 0.9768 | 0.9768 | 0.3124 |
+| `#states` | `m=8` | 61 | 0 | 0.9037 | 0.9725 | 0.9725 | 0.3668 |
+| `#states` | `m=9` | 39 | 0 | 0.9312 | 0.9712 | 0.9712 | 0.3314 |
+| `H(pi)` bits | `[0, 1.5)` | 8 | 0 | 0.9984 | 0.9998 | 0.9998 | 0.0222 |
+| `H(pi)` bits | `[1.5, 2.2)` | 59 | 0 | 0.9336 | 0.9831 | 0.9815 | 0.3751 |
+| `H(pi)` bits | `[2.2, 2.8)` | 174 | 0 | 0.9037 | 0.9750 | 0.9712 | 0.3480 |
+| `H(pi)` bits | `[2.8, inf)` | 71 | 0 | 0.9312 | 0.9759 | 0.9759 | 0.2979 |
+| `spectral_gap` | `[0, 0.25)` | 44 | 0 | 0.9256 | 0.9811 | 0.9811 | 0.2647 |
+| `spectral_gap` | `[0.25, 0.50)` | 207 | 0 | 0.9037 | 0.9771 | 0.9755 | 0.3463 |
+| `spectral_gap` | `[0.50, 1.1)` | 61 | 0 | 0.9312 | 0.9786 | 0.9754 | 0.3677 |
+| `\|Wc\|/\|Wo\|` | `[0, 0.25)` | 93 | 0 | 0.9762 | 0.9909 | 0.9909 | 0.1762 |
+| `\|Wc\|/\|Wo\|` | `[0.25, 0.50)` | 147 | 0 | 0.9320 | 0.9739 | 0.9721 | 0.3568 |
+| `\|Wc\|/\|Wo\|` | `[0.50, 1.0)` | 72 | 0 | 0.9037 | 0.9521 | 0.9414 | 0.6198 |
+| `rank(WcWo)` | `rank=3` | 22 | 0 | 0.9388 | 0.9886 | 0.9886 | 0.3089 |
+| `rank(WcWo)` | `rank=4` | 73 | 0 | 0.9334 | 0.9848 | 0.9791 | 0.3419 |
+| `rank(WcWo)` | `rank=5` | 59 | 0 | 0.9194 | 0.9754 | 0.9725 | 0.3668 |
+| `rank(WcWo)` | `rank=6` | 58 | 0 | 0.9092 | 0.9768 | 0.9768 | 0.3124 |
+| `rank(WcWo)` | `rank=7` | 61 | 0 | 0.9037 | 0.9725 | 0.9725 | 0.3668 |
+| `rank(WcWo)` | `rank=8` | 39 | 0 | 0.9312 | 0.9712 | 0.9712 | 0.3314 |
+| `H(out)` bits | `[0, 0.5)` | 23 | 0 | 0.9092 | 0.9823 | 0.9823 | 0.2772 |
+| `H(out)` bits | `[0.5, 0.85)` | 90 | 0 | 0.9037 | 0.9774 | 0.9760 | 0.3405 |
+| `H(out)` bits | `[0.85, 1.01)` | 199 | 0 | 0.9312 | 0.9780 | 0.9755 | 0.3463 |
+
+**Top 20 lowest-collinearity (all still rejected) fresh irreversible automata (`max_B > 0.80`):**
+
+| Rank | ID | Kind | `m` | `L` | `max_B` | `cos(WcWo, Wo)` | `cos(WcWo, G)` | `cos(WcWo, o)` | `cos(WcWo, k1_top)` | `\|Wc\|/\|Wo\|` | `cos(Wc, Wo)` | Reason |
+|---:|---:|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|
+| 1 | 542 | free | 8 | 4 | 0.9037 | 0.9005 | 0.9037 | 0.7682 | 0.3784 | 0.7769 | 0.5029 | `max_B > 0.80` |
+| 2 | 47 | free | 7 | 4 | 0.9092 | 0.9016 | 0.9092 | 0.6449 | 0.3906 | 0.6710 | 0.4105 | `max_B > 0.80` |
+| 3 | 248 | free | 6 | 4 | 0.9194 | 0.9194 | 0.9152 | 0.7656 | 0.4195 | 0.6203 | 0.4613 | `max_B > 0.80` |
+| 4 | 482 | free | 6 | 4 | 0.9205 | 0.9205 | 0.8979 | 0.7305 | 0.4287 | 0.6532 | 0.5036 | `max_B > 0.80` |
+| 5 | 395 | free | 6 | 4 | 0.9256 | 0.9256 | 0.9037 | 0.7071 | 0.4465 | 0.6479 | 0.5302 | `max_B > 0.80` |
+| 6 | 311 | free | 7 | 4 | 0.9270 | 0.9270 | 0.8696 | 0.7405 | 0.6564 | 0.5932 | 0.4808 | `max_B > 0.80` |
+| 7 | 500 | free | 9 | 4 | 0.9312 | 0.9041 | 0.9312 | 0.6883 | 0.3835 | 0.6772 | 0.4318 | `max_B > 0.80` |
+| 8 | 44 | free | 6 | 4 | 0.9320 | 0.9320 | 0.9042 | 0.8027 | 0.7310 | 0.4803 | 0.3382 | `max_B > 0.80` |
+| 9 | 86 | free | 8 | 4 | 0.9323 | 0.9323 | 0.9063 | 0.7741 | 0.7675 | 0.6930 | 0.6067 | `max_B > 0.80` |
+| 10 | 179 | free | 5 | 4 | 0.9334 | 0.9163 | 0.9334 | 0.8178 | 0.6961 | 0.5195 | 0.2751 | `max_B > 0.80` |
+| 11 | 134 | free | 5 | 3 | 0.9336 | 0.9336 | 0.9208 | 0.7346 | 0.7845 | 0.7862 | 0.6676 | `max_B > 0.80` |
+| 12 | 434 | free | 6 | 4 | 0.9342 | 0.9342 | 0.9323 | 0.6995 | 0.5389 | 0.7625 | 0.6586 | `max_B > 0.80` |
+| 13 | 272 | free | 6 | 3 | 0.9344 | 0.9082 | 0.9344 | 0.7213 | 0.4498 | 0.7166 | 0.4930 | `max_B > 0.80` |
+| 14 | 239 | free | 8 | 4 | 0.9368 | 0.9368 | 0.9253 | 0.7549 | 0.5545 | 0.6770 | 0.6214 | `max_B > 0.80` |
+| 15 | 56 | free | 6 | 3 | 0.9372 | 0.9372 | 0.8758 | 0.7390 | 0.4130 | 0.5204 | 0.4619 | `max_B > 0.80` |
+| 16 | 2 | free | 6 | 4 | 0.9373 | 0.9373 | 0.9276 | 0.8044 | 0.7689 | 0.8501 | 0.7121 | `max_B > 0.80` |
+| 17 | 143 | free | 9 | 4 | 0.9376 | 0.9353 | 0.9376 | 0.7544 | 0.5050 | 0.4628 | 0.3325 | `max_B > 0.80` |
+| 18 | 173 | free | 9 | 4 | 0.9379 | 0.9379 | 0.9339 | 0.7589 | 0.3464 | 0.5021 | 0.4386 | `max_B > 0.80` |
+| 19 | 29 | free | 7 | 4 | 0.9383 | 0.9094 | 0.9383 | 0.7200 | 0.4055 | 0.6666 | 0.4510 | `max_B > 0.80` |
+| 20 | 329 | free | 4 | 3 | 0.9388 | 0.9291 | 0.9388 | 0.7759 | 0.6572 | 0.6044 | 0.5086 | `max_B > 0.80` |
+
+*(Every one of the 600 automata with full `5 x 5` candidate cosines and explicit rejection reason list is stored in `experiments/results/spike99_candidate_audit.json:spike81_pool_audit.all_pool_records`.)*
+
+**Structural Root Cause of Zero Eligibility:**
+Because $W_c \succeq 0$ and $W_o \succeq 0$ are both positive semidefinite operators on $\operatorname{im}(P_\perp)$ (dimension $m - 1 \in \{3,\dots,8\}$), their Frobenius inner product is strictly non-negative ($\operatorname{Tr}(W_c W_o) \ge 0$; observed median $\cos(W_c, W_o) \approx 0.52$). Meanwhile, under `master_operators`, $\|W_o\|_F$ dominates $\|W_c\|_F$ on Spike 81's pool (median $\|W_c\|_F / \|W_o\|_F \approx 0.34$, max `0.8702` across fresh $\pi > 10^{-4}$). With $r = \|W_c\|/\|W_o\| < 0.87$ and $c = \cos(W_c, W_o) \ge 0$, $\cos(W_c + W_o, W_o) = \frac{1 + r c}{\sqrt{1 + r^2 + 2 r c}}$ mathematically exceeds `0.88` across the entire pool.
+
+### 7.4 Mandatory Outcome Table (H1 / H2 / H3 / Readout / Reliability Separation)
+
+| Axis | Status | Interpretation |
+|---|---|---|
+| **H1 (alignment above Null A & Null B)** | **NOT TESTED** (`0` training runs) | Halted pre-training (`N_elig = 0 < 20`). Does NOT support $W_c + W_o$. |
+| **H2 (discrimination vs $W_o, G(\lambda_0), o o^\top, k_{1,\mathrm{top}}$)** | **NOT TESTED** (`0` training runs) | Spike 81's pool contains `0` automata where $W_c + W_o$ differs from all competitors by $\cos \le 0.80$. |
+| **H3 (causal necessity)** | **NOT TESTED** (out of scope) | Spike 99 does not test causal intervention/necessity. |
+| **Readout dependence (`gru_mlp` vs `gru_lin`)** | **NOT TESTED** | No training executed. |
+| **Training reliability (fit $\ge 0.99$)** | **NOT TESTED** | No training executed. |
+| **Overall Spike 99 Verdict** | **`NO VERDICT` (`UNDERPOWERED`)** | Never promoted; Spike 81's pool lacks discriminating instances for $\max_B \cos(W_c + W_o, B) \le 0.80$. |
 
 ## 8. Commit-2 Amendments: Execution and Statistical Lock
 
@@ -247,4 +375,13 @@ Publish:
 No changes to primary thresholds,
 selection rules, or statistical procedures
 after the first training run.
+
+## 9. Deviation Log & Next Steps
+
+- **Protocol deviations:** None (`0` training runs executed; Section 8.A halted execution deterministically at `N_elig = 0 < 20` without relaxing `max_B <= 0.80`).
+- **Audit implementation notes:**
+  1. `canonical_aut_sig` checks state isomorphism up to action-letter permutations; since `0` duplicates were found even under letter permutations, `0` duplicates exist under fixed-letter order as well.
+  2. For PR #12's 12 monoids, `master_principle_raw/` centroid arrays are not committed on `master`, so Null B/C in Section 7.2 measure the spectrum-preserving self-orientation distribution of $W_c + W_o$ inside $\operatorname{im}(P_\perp)$ (verifying strict PSD preservation).
+- **Test suite scope note (`experiments/results/spike99_test_run.txt`):** All `11` tests in `tests/test_spike99.py` passed (`EXIT_STATUS=0`), and all `59` tests across the `8` Spike 99 / CERP / master-principle suites plus `cerp.register check` and `cerp.status --check` exited `0`; unfiltered `tests/test_bounds_partial.py` fails `7/10` on this host solely because optional dependency `ortools` is not installed, and unfiltered repo-wide pytest reached 15% at 300s (`0.35 GB` free RAM on this 8 GB host).
+- **Why Spike 99 cannot be powered on Spike 81's pool & next step:** Spike 81's 600-automaton pool (with scalar binary outputs and stay-identity letter) cannot separate $W_c + W_o$ from $W_o$ at $\max_B \cos \le 0.80$ because $\|W_c\|_F < \|W_o\|_F$ and $\cos(W_c, W_o) \ge 0$. Any future discriminating test must construct a **new automaton family** outside Spike 81's pool (e.g., reset/merge-heavy non-stationary-dominated or higher-state automata with engineered $\|W_c\|_F \gtrsim \|W_o\|_F$ and $\cos(W_c, W_o) \approx 0$, or relative-scale / Kubo–Ando candidates) under a new pre-registered spike (`Spike 100+`).
 
