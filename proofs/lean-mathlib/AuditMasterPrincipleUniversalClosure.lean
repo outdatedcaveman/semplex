@@ -11,4 +11,4 @@ import MasterPrincipleUniversalClosure
 #print axioms Semplex.MasterPrincipleUniversalClosure.dobrushin_horizon_stability
 #print axioms Semplex.MasterPrincipleUniversalClosure.dobrushin_uniform_ceiling
 #print axioms Semplex.MasterPrincipleUniversalClosure.ae_product_anchor_kernel_inter
-#print axioms Semplex.MasterPrincipleUniversalClosure.master_principle_universal_closure
+#print axioms Semplex.MasterPrincipleUniversalClosure.four_results_bundle
