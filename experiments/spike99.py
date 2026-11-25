@@ -882,14 +882,23 @@ def verify_selection_lock(pred_payload: dict, lock_payload: dict, pool: list[dic
     status = str(lock_payload.get("status", ""))
     if str(pred_payload.get("status", "")) != status:
         raise AssertionError(f"Lock/prediction status mismatch: {status} vs {pred_payload.get('status')}")
-    if pred_payload.get("selection_lock_sha256") and not hmac.compare_digest(
-        str(pred_payload["selection_lock_sha256"]), recorded_sha
+    lock_audit_sha = lock_payload.get("candidate_audit_commit_sha")
+    if not isinstance(lock_audit_sha, str) or not lock_audit_sha:
+        raise AssertionError("Selection lock missing non-empty candidate_audit_commit_sha.")
+    pred_lock_sha = pred_payload.get("selection_lock_sha256")
+    if (
+        not isinstance(pred_lock_sha, str)
+        or not pred_lock_sha
+        or not hmac.compare_digest(pred_lock_sha, recorded_sha)
     ):
-        raise AssertionError("Predictions file selection_lock_sha256 disagrees with selection lock.")
-    if pred_payload.get("candidate_audit_commit_sha") and (
-        str(pred_payload["candidate_audit_commit_sha"]) != str(lock_payload["candidate_audit_commit_sha"])
+        raise AssertionError("Predictions file selection_lock_sha256 missing or disagrees with selection lock.")
+    pred_audit_sha = pred_payload.get("candidate_audit_commit_sha")
+    if (
+        not isinstance(pred_audit_sha, str)
+        or not pred_audit_sha
+        or not hmac.compare_digest(pred_audit_sha, lock_audit_sha)
     ):
-        raise AssertionError("Predictions file candidate_audit_commit_sha disagrees with selection lock.")
+        raise AssertionError("Predictions file candidate_audit_commit_sha missing or disagrees with selection lock.")
 
     if status != "READY":
         return {
@@ -1210,6 +1219,46 @@ def _validated_ready_selection(P: dict) -> tuple[list[dict], list[int]]:
     return selected, selected_ids
 
 
+def validate_raw_record_provenance(
+    rec: dict,
+    lock_info: dict,
+    expected_key: tuple[str, int, int] | None = None,
+    source_desc: str = "raw record",
+) -> None:
+    """Enforce non-empty selection_lock_sha256 and candidate_audit_commit_sha on every raw run record."""
+    if not isinstance(rec, dict):
+        raise AssertionError(f"{source_desc}: raw training record must be a JSON object.")
+    exp_lock_sha = str(lock_info.get("selection_sha256", ""))
+    exp_audit_sha = str(lock_info.get("candidate_audit_commit_sha", ""))
+    if not exp_lock_sha or not exp_audit_sha:
+        raise AssertionError("Current selection lock provenance metadata is incomplete.")
+    rec_lock_sha = rec.get("selection_lock_sha256")
+    if not isinstance(rec_lock_sha, str) or not rec_lock_sha:
+        raise AssertionError(
+            f"{source_desc}: missing or empty selection_lock_sha256 (expected {exp_lock_sha})."
+        )
+    if not hmac.compare_digest(rec_lock_sha, exp_lock_sha):
+        raise AssertionError(
+            f"{source_desc}: selection_lock_sha256 mismatch ({rec_lock_sha} != {exp_lock_sha})."
+        )
+    rec_audit_sha = rec.get("candidate_audit_commit_sha")
+    if not isinstance(rec_audit_sha, str) or not rec_audit_sha:
+        raise AssertionError(
+            f"{source_desc}: missing or empty candidate_audit_commit_sha (expected {exp_audit_sha})."
+        )
+    if not hmac.compare_digest(rec_audit_sha, exp_audit_sha):
+        raise AssertionError(
+            f"{source_desc}: candidate_audit_commit_sha mismatch ({rec_audit_sha} != {exp_audit_sha})."
+        )
+    if expected_key is not None:
+        try:
+            actual_key = (str(rec["arch"]), int(rec["id"]), int(rec["seed_idx"]))
+        except (KeyError, TypeError, ValueError) as exc:
+            raise AssertionError(f"{source_desc}: missing or malformed (arch, id, seed_idx) slot key.") from exc
+        if actual_key != expected_key:
+            raise AssertionError(f"{source_desc}: slot mismatch {actual_key} != expected {expected_key}.")
+
+
 def run(
     pred_path: pathlib.Path = PRED_PATH,
     lock_path: pathlib.Path = LOCK_PATH,
@@ -1253,6 +1302,16 @@ def run(
                     raise RuntimeError(f"Stopped mid-run: free RAM {free_gb:.2f} GB < {MIN_FREE_RAM_GB:.2f} GB floor.")
                 pth = raw_dir / f"{arch}_{aid}_{s_idx}.json"
                 if pth.exists():
+                    try:
+                        existing_rec = json.loads(pth.read_text(encoding="utf-8"))
+                    except Exception as exc:
+                        raise AssertionError(f"Corrupt existing raw record cannot be skipped on resume: {pth}") from exc
+                    validate_raw_record_provenance(
+                        existing_rec,
+                        lock_info,
+                        expected_key=(arch, aid, s_idx),
+                        source_desc=str(pth),
+                    )
                     continue
                 t0 = time.perf_counter()
                 rec = _train_or_eval_one(
@@ -1339,10 +1398,16 @@ def analyse(
     if len(ordered_aids) != TARGET_N_AUTOMATA:
         raise AssertionError(f"Expected {TARGET_N_AUTOMATA} selected IDs, got {len(ordered_aids)}")
 
-    raw_runs = [json.loads(f.read_text(encoding="utf-8")) for f in sorted(raw_dir.glob("*.json")) if not f.name.endswith("_g.npy")]
-    for rec in raw_runs:
-        if rec.get("selection_lock_sha256") and rec["selection_lock_sha256"] != lock_info["selection_sha256"]:
-            raise AssertionError("Raw training record carries a different selection_lock_sha256 than current lock.")
+    raw_runs = []
+    for f in sorted(raw_dir.glob("*.json")):
+        if f.name.endswith("_g.npy"):
+            continue
+        try:
+            rec = json.loads(f.read_text(encoding="utf-8"))
+        except Exception as exc:
+            raise AssertionError(f"Corrupt raw training record: {f}") from exc
+        validate_raw_record_provenance(rec, lock_info, source_desc=str(f))
+        raw_runs.append(rec)
     runs, grid_report = validate_and_complete_seed_grid(
         raw_runs, ordered_aids, seeds_per_arm=SEEDS_PER_ARM, expected_n_automata=TARGET_N_AUTOMATA
     )

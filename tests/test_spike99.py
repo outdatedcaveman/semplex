@@ -597,3 +597,132 @@ def test_selection_lock_tamper_rejection_and_200_grid_analyse(tmp_path: pathlib.
         S99.analyse(
             out_path=out_p, pred_path=pred_p, lock_path=lock_p, raw_dir=raw_dir, pool=syn_pool, null_draws=10, bootstrap_reps=20
         )
+
+
+def test_raw_record_provenance_enforcement_on_analyse_and_resume(tmp_path: pathlib.Path, monkeypatch) -> None:
+    # Build synthetic 24-automaton READY selection lock.
+    syn_pool = []
+    eligible = []
+    for i in range(24):
+        D = np.array([[1, 2, 3, 1], [(i + 1) % 4, (i + 2) % 4, 0, 2]], dtype=int)
+        O = np.array([i % 2, 1, 0, (i + 1) % 2], dtype=int)
+        kind = "free" if i % 2 == 0 else "mixed"
+        syn_pool.append({"D": D, "O": O, "s0": 0, "kind": kind})
+        eligible.append({"id": i, "kind": kind, "m": 4, "L": 3, "s0": 0})
+
+    mock_audit = {
+        "spike81_pool_audit": {
+            "eligible_automata": eligible,
+            "n_fresh_irreversible_pi_ok": 24,
+            "n_rejected": 0,
+            "fresh_irrev_min_max_comp_cos": 0.50,
+        }
+    }
+    pred_p = tmp_path / "spike99_predictions.json"
+    lock_p = tmp_path / "spike99_selection_lock.json"
+    raw_dir = tmp_path / "spike99_raw"
+    out_p = tmp_path / "spike99.json"
+
+    pred = S99.predict(out_path=pred_p, lock_path=lock_p, audit=mock_audit, pool=syn_pool, commit_sha="cafe1234" * 5)
+    lock = json.loads(lock_p.read_text(encoding="utf-8"))
+    info = S99.verify_selection_lock(pred, lock, pool=syn_pool)
+    selected_ids = info["selected_ids"]
+
+    # Predictions file missing/empty provenance must fail verify_selection_lock().
+    for field in ("selection_lock_sha256", "candidate_audit_commit_sha"):
+        bad_missing = {k: v for k, v in pred.items() if k != field}
+        with pytest.raises(AssertionError, match=field):
+            S99.verify_selection_lock(bad_missing, lock, pool=syn_pool)
+        bad_empty = {**pred, field: ""}
+        with pytest.raises(AssertionError, match=field):
+            S99.verify_selection_lock(bad_empty, lock, pool=syn_pool)
+
+    # Populate full 200-record authenticated grid (using stub evals for fast verification).
+    raw_dir.mkdir(parents=True, exist_ok=True)
+    stub = S99.failed_seed_eval_stub()
+    for arch in ("gru_mlp", "gru_lin"):
+        for aid in selected_ids:
+            for s_idx in range(S99.SEEDS_PER_ARM):
+                rec = S99.normalize_seed_run_record(
+                    {
+                        "id": aid,
+                        "arch": arch,
+                        "seed_idx": s_idx,
+                        "fit": 0.0,
+                        "fit_ok": False,
+                        "selection_lock_sha256": info["selection_sha256"],
+                        "candidate_audit_commit_sha": info["candidate_audit_commit_sha"],
+                        "trained": {"stats": None, "eval": stub, "G_learned": None},
+                    }
+                )
+                (raw_dir / f"{arch}_{aid}_{s_idx}.json").write_text(json.dumps(rec), encoding="utf-8")
+
+    # Resuming run() across all 200 valid authenticated records skips without retraining.
+    def _fail_if_trained(*args, **kwargs):
+        raise AssertionError("Training should not run when all 200 authenticated files exist.")
+
+    monkeypatch.setattr(S99, "available_ram_gb", lambda: 4.0)
+    monkeypatch.setattr(S99, "_train_or_eval_one", _fail_if_trained)
+    resumed = S99.run(pred_path=pred_p, lock_path=lock_p, raw_dir=raw_dir, pool=syn_pool)
+    assert resumed == info
+
+    # Missing, None, empty, and mismatched values for BOTH provenance fields must fail BOTH analyse() and run().
+    target_pth = raw_dir / f"gru_mlp_{selected_ids[0]}_0.json"
+    good_rec = json.loads(target_pth.read_text(encoding="utf-8"))
+
+    bad_cases = []
+    for field in ("selection_lock_sha256", "candidate_audit_commit_sha"):
+        bad_cases.append((field, {k: v for k, v in good_rec.items() if k != field}))
+        bad_cases.append((field, {**good_rec, field: None}))
+        bad_cases.append((field, {**good_rec, field: ""}))
+        bad_cases.append((field, {**good_rec, field: "f" * 40}))
+
+    for field, bad_rec in bad_cases:
+        target_pth.write_text(json.dumps(bad_rec), encoding="utf-8")
+        with pytest.raises(AssertionError, match=field):
+            S99.analyse(
+                out_path=out_p,
+                pred_path=pred_p,
+                lock_path=lock_p,
+                raw_dir=raw_dir,
+                pool=syn_pool,
+                null_draws=10,
+                bootstrap_reps=20,
+            )
+        with pytest.raises(AssertionError, match=field):
+            S99.run(pred_path=pred_p, lock_path=lock_p, raw_dir=raw_dir, pool=syn_pool)
+
+    # Slot mismatch in existing filename must also be rejected on resume.
+    wrong_slot = {**good_rec, "seed_idx": 4}
+    target_pth.write_text(json.dumps(wrong_slot), encoding="utf-8")
+    with pytest.raises(AssertionError, match="slot mismatch"):
+        S99.run(pred_path=pred_p, lock_path=lock_p, raw_dir=raw_dir, pool=syn_pool)
+
+    # Corrupt JSON on disk must fail loudly on both resume and analyse.
+    target_pth.write_text("{not-json", encoding="utf-8")
+    with pytest.raises(AssertionError, match="Corrupt"):
+        S99.run(pred_path=pred_p, lock_path=lock_p, raw_dir=raw_dir, pool=syn_pool)
+    with pytest.raises(AssertionError, match="Corrupt"):
+        S99.analyse(
+            out_path=out_p,
+            pred_path=pred_p,
+            lock_path=lock_p,
+            raw_dir=raw_dir,
+            pool=syn_pool,
+            null_draws=10,
+            bootstrap_reps=20,
+        )
+
+    # Deleting an unstarted slot file preserves intention-to-train missing-seed normalization (no replacement seeds).
+    target_pth.unlink()
+    res_missing = S99.analyse(
+        out_path=out_p,
+        pred_path=pred_p,
+        lock_path=lock_p,
+        raw_dir=raw_dir,
+        pool=syn_pool,
+        null_draws=10,
+        bootstrap_reps=20,
+    )
+    assert res_missing["grid_report"]["n_present"] == 199
+    assert res_missing["grid_report"]["n_missing"] == 1

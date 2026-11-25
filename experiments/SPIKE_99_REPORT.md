@@ -379,6 +379,7 @@ after the first training run.
 ## 9. Deviation Log & Next Steps
 
 - **Protocol deviations:** None (`0` training runs executed; Section 8.A halted execution deterministically at `N_elig = 0 < 20` without relaxing `max_B <= 0.80`).
+- **Post-`22b0cf5` provenance hardening (Collab Thread 2 / PR #14 review):** Hardened `experiments/spike99.py` (`validate_raw_record_provenance` enforced in both `run()` prior to skipping existing raw files and `analyse()` on all raw JSON records, plus non-empty lock/audit hash checks in `verify_selection_lock()`) and added regression tests in `tests/test_spike99.py` (`test_raw_record_provenance_enforcement_on_analyse_and_resume`). Re-recorded only `experiments/spike99.py` in `experiments/FROZEN.json`; `experiments/audits/spike99_candidate_audit.py` and all frozen result/lock/test-log files (`spike99.json`, `spike99_predictions.json`, `spike99_selection_lock.json`, `spike99_candidate_audit.json`, `spike99_test_run.txt`) remain byte-identical to `22b0cf5`, and the `UNDERPOWERED / NO VERDICT` outcome is unchanged.
 - **Audit implementation notes:**
   1. `canonical_aut_sig` checks state isomorphism up to action-letter permutations; since `0` duplicates were found even under letter permutations, `0` duplicates exist under fixed-letter order as well.
   2. For PR #12's 12 monoids, `master_principle_raw/` centroid arrays are not committed on `master`, so Null B/C in Section 7.2 measure the spectrum-preserving self-orientation distribution of $W_c + W_o$ inside $\operatorname{im}(P_\perp)$ (verifying strict PSD preservation).
