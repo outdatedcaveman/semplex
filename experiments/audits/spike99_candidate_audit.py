@@ -134,12 +134,22 @@ def null_a_gaussian_draws(
 
 
 def _haar_orthogonal_batch(rng: np.random.Generator, d: int, b: int) -> np.ndarray:
-    """Sample b Haar-distributed orthogonal matrices in O(d) via sign-corrected QR."""
+    """Sample b Haar-distributed orthogonal matrices in O(d) via sign-corrected QR.
+
+    Applies Mezzadri's column sign correction Q * sign(diag(R)), using the explicit
+    zero-diagonal convention sign(0) = +1 so no column of Q is ever zeroed out.
+    Verifies orthogonality ||U^T U - I||_max < 1e-10 for every sampled matrix.
+    """
     Z = rng.normal(size=(b, d, d))
     Q, R = np.linalg.qr(Z)
     diag = np.diagonal(R, axis1=1, axis2=2)
-    signs = np.where(diag >= 0.0, 1.0, -1.0)
-    return Q * signs[:, None, :]
+    signs = np.where(diag < 0.0, -1.0, 1.0)
+    U = Q * signs[:, None, :]
+    if b > 0 and d > 0:
+        orth_err = float(np.max(np.abs(np.einsum("bij,bik->bjk", U, U) - np.eye(d)[None, :, :])))
+        if orth_err >= 1e-10:
+            raise AssertionError(f"Haar QR orthogonality check failed: max_err={orth_err:.2e}")
+    return U
 
 
 def null_b_rotation_draws(
@@ -151,16 +161,22 @@ def null_b_rotation_draws(
     return_diagnostics: bool = False,
 ) -> np.ndarray | tuple[np.ndarray, dict]:
     """Null B: spectrum-preserving random orientations Q A Q^T inside im(P_perp)."""
+    source_arr = np.asarray(source_gram, dtype=float)
+    target_arr = np.asarray(target, dtype=float)
+    pi_arr = np.asarray(pi, dtype=float)
+    if not (np.all(np.isfinite(source_arr)) and np.all(np.isfinite(target_arr)) and np.all(np.isfinite(pi_arr))):
+        raise AssertionError("Null B received non-finite source_gram, target, or pi")
     rng = np.random.default_rng(seed)
-    _, _, Q0 = centred_subspace_basis(pi)
+    _, _, Q0 = centred_subspace_basis(pi_arr)
     d = Q0.shape[1]
-    A_sub = 0.5 * (Q0.T @ (0.5 * (source_gram + source_gram.T)) @ Q0 + (Q0.T @ (0.5 * (source_gram + source_gram.T)) @ Q0).T)
-    T_sub = Q0.T @ (0.5 * (target + target.T)) @ Q0
+    A_raw = Q0.T @ (0.5 * (source_arr + source_arr.T)) @ Q0
+    A_sub = 0.5 * (A_raw + A_raw.T)
+    T_sub = Q0.T @ (0.5 * (target_arr + target_arr.T)) @ Q0
     na = float(np.linalg.norm(A_sub))
     nt = float(np.linalg.norm(T_sub))
     if na < 1e-12 or nt < 1e-12 or d == 0:
         zeros = np.zeros(draws, dtype=float)
-        diag = {"max_eig_err": 0.0, "min_rot_eig": 0.0, "orig_min_eig": 0.0}
+        diag = {"max_eig_err": 0.0, "min_rot_eig": 0.0, "orig_min_eig": 0.0, "psd_tol": 0.0}
         return (zeros, diag) if return_diagnostics else zeros
     orig_eigs = np.linalg.eigvalsh(A_sub)
     orig_min_eig = float(np.min(orig_eigs))
@@ -178,7 +194,7 @@ def null_b_rotation_draws(
         b = min(chunk, draws - start)
         U = _haar_orthogonal_batch(rng, d, b)
         rot = np.einsum("bij,jk,blk->bil", U, A_sub, U)
-        # Verify eigenvalue & PSD preservation numerically on first batch + max error tracking
+        # Verify eigenvalue & PSD preservation numerically across every single draw.
         rot_sym = 0.5 * (rot + np.swapaxes(rot, 1, 2))
         rot_eigs = np.linalg.eigvalsh(rot_sym)
         batch_err = float(np.max(np.abs(rot_eigs - orig_eigs[None, :])))
@@ -196,6 +212,7 @@ def null_b_rotation_draws(
         "max_eig_err": max_eig_err,
         "min_rot_eig": min_rot_eig,
         "orig_min_eig": orig_min_eig,
+        "psd_tol": psd_tol,
     }
     return (out, diag) if return_diagnostics else out
 

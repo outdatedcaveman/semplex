@@ -1,0 +1,215 @@
+SPIKE 99 TEST & REPOSITORY GATE RUN LOG
+Python: 3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]
+Worktree: C:\Users\bruno\Claude Code\semplex-wt-spike-99
+Host Scope Note: Unfiltered full-repo `python -m pytest -v` was attempted on this 8 GB host (15% progress at 300s, reaching `tests/test_character_hott_gauge_bridge.py` with 0.35 GB free RAM before termination); `tests/test_bounds_partial.py` fails 7/10 tests solely because optional dependency `ortools` is not installed (see last section).
+
+================================================================================
+SECTION: Spike 99 unit, statistical-identity, PSD, Haar-QR, and selection-lock suite
+COMMAND: C:\Users\bruno\AppData\Local\Programs\Python\Python312\python.exe -m pytest -v --tb=short tests/test_spike99.py
+EXIT_STATUS: 0
+--------------------------------------------------------------------------------
+============================= test session starts =============================
+platform win32 -- Python 3.12.10, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\bruno\AppData\Local\Programs\Python\Python312\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\bruno\Claude Code\semplex-wt-spike-99
+configfile: pyproject.toml
+plugins: anyio-4.16.0, langsmith-0.14.17
+collecting ... collected 11 items
+
+tests/test_spike99.py::test_pairwise_cosine_and_canonical_isomorphism PASSED [  9%]
+tests/test_spike99.py::test_null_a_b_c_properties_and_upper_tail_p PASSED [ 18%]
+tests/test_spike99.py::test_learned_gram_stats_and_split_half PASSED     [ 27%]
+tests/test_spike99.py::test_verdict_rules_underpowered_held_broken_neither_and_holm PASSED [ 36%]
+tests/test_spike99.py::test_holm_bonferroni_monotonic PASSED             [ 45%]
+tests/test_spike99.py::test_stratified_selection_and_aggregate_null_b PASSED [ 54%]
+tests/test_spike99.py::test_statistical_identity_mixed_candidate_median_and_null_b_parity PASSED [ 63%]
+tests/test_spike99.py::test_invalid_seed_parity_across_observed_bootstrap_and_null_b PASSED [ 72%]
+tests/test_spike99.py::test_seed_grid_validation_and_missing_seed_detection PASSED [ 81%]
+tests/test_spike99.py::test_null_b_psd_rejection_and_haar_orthogonal_properties PASSED [ 90%]
+tests/test_spike99.py::test_selection_lock_tamper_rejection_and_200_grid_analyse PASSED [100%]
+
+============================= 11 passed in 25.98s =============================
+
+================================================================================
+SECTION: Spike 99 + CERP core, register, status, kernel, ledger, warrants, and master-principle suites
+COMMAND: C:\Users\bruno\AppData\Local\Programs\Python\Python312\python.exe -m pytest -v --tb=short tests/test_spike99.py tests/test_register.py tests/test_status.py tests/test_kernel.py tests/test_ledger_and_pipeline.py tests/test_master_principle_final_synthesis.py tests/test_master_principle_grand_closure.py tests/test_warrants.py
+EXIT_STATUS: 0
+--------------------------------------------------------------------------------
+============================= test session starts =============================
+platform win32 -- Python 3.12.10, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\bruno\AppData\Local\Programs\Python\Python312\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\bruno\Claude Code\semplex-wt-spike-99
+configfile: pyproject.toml
+plugins: anyio-4.16.0, langsmith-0.14.17
+collecting ... collected 59 items
+
+tests/test_spike99.py::test_pairwise_cosine_and_canonical_isomorphism PASSED [  1%]
+tests/test_spike99.py::test_null_a_b_c_properties_and_upper_tail_p PASSED [  3%]
+tests/test_spike99.py::test_learned_gram_stats_and_split_half PASSED     [  5%]
+tests/test_spike99.py::test_verdict_rules_underpowered_held_broken_neither_and_holm PASSED [  6%]
+tests/test_spike99.py::test_holm_bonferroni_monotonic PASSED             [  8%]
+tests/test_spike99.py::test_stratified_selection_and_aggregate_null_b PASSED [ 10%]
+tests/test_spike99.py::test_statistical_identity_mixed_candidate_median_and_null_b_parity PASSED [ 11%]
+tests/test_spike99.py::test_invalid_seed_parity_across_observed_bootstrap_and_null_b PASSED [ 13%]
+tests/test_spike99.py::test_seed_grid_validation_and_missing_seed_detection PASSED [ 15%]
+tests/test_spike99.py::test_null_b_psd_rejection_and_haar_orthogonal_properties PASSED [ 16%]
+tests/test_spike99.py::test_selection_lock_tamper_rejection_and_200_grid_analyse PASSED [ 18%]
+tests/test_register.py::test_register_parses_every_row PASSED            [ 20%]
+tests/test_register.py::test_no_problems_in_register PASSED              [ 22%]
+tests/test_register.py::test_corrections_reach_their_dependents PASSED   [ 23%]
+tests/test_register.py::test_dependency_ranges_expand PASSED             [ 25%]
+tests/test_register.py::test_evidence_citations_resolve PASSED           [ 27%]
+tests/test_register.py::test_frozen_file_change_is_a_problem PASSED      [ 28%]
+tests/test_register.py::test_partly_mechanized_counts_as_rationale PASSED [ 30%]
+tests/test_status.py::test_sources_are_consistent PASSED                 [ 32%]
+tests/test_status.py::test_status_board_is_up_to_date PASSED             [ 33%]
+tests/test_status.py::test_every_gap_serves_a_criterion_and_has_a_closing_test PASSED [ 35%]
+tests/test_status.py::test_conjecture_states_parse PASSED                [ 37%]
+tests/test_kernel.py::test_equivalence_and_counterexample PASSED         [ 38%]
+tests/test_kernel.py::test_task_relation_only_checks_care_points PASSED  [ 40%]
+tests/test_kernel.py::test_verdicts_cannot_be_forged PASSED              [ 42%]
+tests/test_kernel.py::test_malformed_claims_raise_rather_than_verdict[claim0] PASSED [ 44%]
+tests/test_kernel.py::test_malformed_claims_raise_rather_than_verdict[claim1] PASSED [ 45%]
+tests/test_kernel.py::test_malformed_claims_raise_rather_than_verdict[claim2] PASSED [ 47%]
+tests/test_kernel.py::test_malformed_claims_raise_rather_than_verdict[claim3] PASSED [ 49%]
+tests/test_kernel.py::test_malformed_claims_raise_rather_than_verdict[claim4] PASSED [ 50%]
+tests/test_kernel.py::test_circuit_must_be_topologically_ordered PASSED  [ 52%]
+tests/test_kernel.py::test_insufficiency_certificate PASSED              [ 54%]
+tests/test_kernel.py::test_kernel_is_independent_of_the_rest_of_cerp PASSED [ 55%]
+tests/test_ledger_and_pipeline.py::test_proof_status_requires_authentic_kernel_verdict PASSED [ 57%]
+tests/test_ledger_and_pipeline.py::test_derived_claims_are_capped_by_weakest_dependency PASSED [ 59%]
+tests/test_ledger_and_pipeline.py::test_empirical_claims_need_protocol_and_uncertainty PASSED [ 61%]
+tests/test_ledger_and_pipeline.py::test_demo_end_to_end PASSED           [ 62%]
+tests/test_ledger_and_pipeline.py::test_unsound_translator_is_caught_and_recorded PASSED [ 64%]
+tests/test_ledger_and_pipeline.py::test_crashing_translator_is_recorded_not_fatal PASSED [ 66%]
+tests/test_ledger_and_pipeline.py::test_out_of_scope_returns_boundary_not_a_guess[source0-vars0-not an F0 artifact] PASSED [ 67%]
+tests/test_ledger_and_pipeline.py::test_out_of_scope_returns_boundary_not_a_guess[source1-vars1-exceeds] PASSED [ 69%]
+tests/test_ledger_and_pipeline.py::test_out_of_scope_returns_boundary_not_a_guess[source2-vars2-undeclared] PASSED [ 71%]
+tests/test_ledger_and_pipeline.py::test_task_front_never_worse_than_exact_front PASSED [ 72%]
+tests/test_master_principle_final_synthesis.py::test_final_closure_formal_artifacts_present_sorry_postulate_and_hole_free PASSED [ 74%]
+tests/test_master_principle_final_synthesis.py::test_predictions_and_results_strict_json_and_verdicts PASSED [ 76%]
+tests/test_master_principle_final_synthesis.py::test_hfs2_dobrushin_tv_contraction_unit PASSED [ 77%]
+tests/test_master_principle_final_synthesis.py::test_hfs3_contextual_ring_descent_witness_unit PASSED [ 79%]
+tests/test_master_principle_grand_closure.py::test_grand_closure_formal_files_present_and_sorry_free PASSED [ 81%]
+tests/test_master_principle_grand_closure.py::test_exact_n4_walsh_orthogonality_and_parity_kernel PASSED [ 83%]
+tests/test_master_principle_grand_closure.py::test_exact_zerovln_prop2_pythagorean_rational PASSED [ 84%]
+tests/test_master_principle_grand_closure.py::test_rift_threshold_equivalence_exact PASSED [ 86%]
+tests/test_master_principle_grand_closure.py::test_grand_closure_results_schema_and_pre_registered_hypotheses PASSED [ 88%]
+tests/test_warrants.py::test_method_order_is_a_partial_order PASSED      [ 89%]
+tests/test_warrants.py::test_kernel_and_empirical_are_incomparable PASSED [ 91%]
+tests/test_warrants.py::test_warrant_order_is_transitive_and_join_never_strengthens PASSED [ 93%]
+tests/test_warrants.py::test_conditions_and_trust_weaken PASSED          [ 94%]
+tests/test_warrants.py::test_formerly_unlabelable_outputs_now_have_honest_labels PASSED [ 96%]
+tests/test_warrants.py::test_kernel_refutation_is_strong_not_weak PASSED [ 98%]
+tests/test_warrants.py::test_projection_is_lossy PASSED                  [100%]
+
+============================== warnings summary ===============================
+<frozen importlib._bootstrap>:488
+  <frozen importlib._bootstrap>:488: DeprecationWarning: builtin type SwigPyPacked has no __module__ attribute
+
+<frozen importlib._bootstrap>:488
+  <frozen importlib._bootstrap>:488: DeprecationWarning: builtin type SwigPyObject has no __module__ attribute
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+================== 59 passed, 2 warnings in 68.89s (0:01:08) ==================
+sys:1: DeprecationWarning: builtin type swigvarlink has no __module__ attribute
+
+================================================================================
+SECTION: Repository claims register check
+COMMAND: C:\Users\bruno\AppData\Local\Programs\Python\Python312\python.exe -m cerp.register check
+EXIT_STATUS: 0
+--------------------------------------------------------------------------------
+0 problem(s), 46 status note(s); report: claims\LEDGER_CHECK.md
+
+================================================================================
+SECTION: Repository status consistency check
+COMMAND: C:\Users\bruno\AppData\Local\Programs\Python\Python312\python.exe -m cerp.status --check
+EXIT_STATUS: 0
+--------------------------------------------------------------------------------
+
+
+================================================================================
+SECTION: Host environment check explaining unfiltered test suite scope (uninstalled optional ortools)
+COMMAND: C:\Users\bruno\AppData\Local\Programs\Python\Python312\python.exe -m pytest -v --tb=short tests/test_bounds_partial.py
+EXIT_STATUS: 1
+--------------------------------------------------------------------------------
+============================= test session starts =============================
+platform win32 -- Python 3.12.10, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\bruno\AppData\Local\Programs\Python\Python312\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\bruno\Claude Code\semplex-wt-spike-99
+configfile: pyproject.toml
+plugins: anyio-4.16.0, langsmith-0.14.17
+collecting ... collected 10 items
+
+tests/test_bounds_partial.py::test_xor_certified_when_fully_specified PASSED [ 10%]
+tests/test_bounds_partial.py::test_no_certificate_when_a_dont_care_makes_it_threshold FAILED [ 20%]
+tests/test_bounds_partial.py::test_kernel_rejects_certificate_using_a_dont_care PASSED [ 30%]
+tests/test_bounds_partial.py::test_total_search_is_unsound_on_masked_tables PASSED [ 40%]
+tests/test_bounds_partial.py::test_netsolve_min_errors_and_budget FAILED [ 50%]
+tests/test_bounds_partial.py::test_not_two_halfspaces_partial_and_forgeries FAILED [ 60%]
+tests/test_bounds_partial.py::test_not_threshold_partial_lp_n8 FAILED    [ 70%]
+tests/test_bounds_partial.py::test_compile_partial_n4_and_n8 FAILED      [ 80%]
+tests/test_bounds_partial.py::test_solve_three_halfspaces_all_gates_and_w1 FAILED [ 90%]
+tests/test_bounds_partial.py::test_compile_partial_cost4_certification_and_fields FAILED [100%]
+
+================================== FAILURES ===================================
+___________ test_no_certificate_when_a_dont_care_makes_it_threshold ___________
+tests\test_bounds_partial.py:16: in test_no_certificate_when_a_dont_care_makes_it_threshold
+    assert bounds.not_threshold_cert_partial(N, XOR & care, care) is None
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+cerp\bounds.py:224: in not_threshold_cert_partial
+    return _lp_farkas_witness(n, T, F)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+cerp\bounds.py:141: in _lp_farkas_witness
+    from ortools.sat.python import cp_model
+E   ModuleNotFoundError: No module named 'ortools'
+_____________________ test_netsolve_min_errors_and_budget _____________________
+tests\test_bounds_partial.py:33: in test_netsolve_min_errors_and_budget
+    from cerp import kernel, netsolve
+cerp\netsolve.py:17: in <module>
+    from ortools.sat.python import cp_model
+E   ModuleNotFoundError: No module named 'ortools'
+________________ test_not_two_halfspaces_partial_and_forgeries ________________
+tests\test_bounds_partial.py:63: in test_not_two_halfspaces_partial_and_forgeries
+    assert bounds.not_two_halfspaces_cert_partial(n, (~parity3) & 0xFE, 0xFE) is None
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+cerp\bounds.py:342: in not_two_halfspaces_cert_partial
+    from ortools.sat.python import cp_model
+E   ModuleNotFoundError: No module named 'ortools'
+______________________ test_not_threshold_partial_lp_n8 _______________________
+tests\test_bounds_partial.py:80: in test_not_threshold_partial_lp_n8
+    assert bounds.not_threshold_cert_partial(n, f_sep & care, care) is None
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+cerp\bounds.py:224: in not_threshold_cert_partial
+    return _lp_farkas_witness(n, T, F)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+cerp\bounds.py:141: in _lp_farkas_witness
+    from ortools.sat.python import cp_model
+E   ModuleNotFoundError: No module named 'ortools'
+_______________________ test_compile_partial_n4_and_n8 ________________________
+tests\test_bounds_partial.py:91: in test_compile_partial_n4_and_n8
+    from cerp import kernel, netsolve
+cerp\netsolve.py:17: in <module>
+    from ortools.sat.python import cp_model
+E   ModuleNotFoundError: No module named 'ortools'
+________________ test_solve_three_halfspaces_all_gates_and_w1 _________________
+tests\test_bounds_partial.py:130: in test_solve_three_halfspaces_all_gates_and_w1
+    from cerp import kernel, netsolve
+cerp\netsolve.py:17: in <module>
+    from ortools.sat.python import cp_model
+E   ModuleNotFoundError: No module named 'ortools'
+_____________ test_compile_partial_cost4_certification_and_fields _____________
+tests\test_bounds_partial.py:168: in test_compile_partial_cost4_certification_and_fields
+    from cerp import kernel, kernel_bounds, netsolve
+cerp\netsolve.py:17: in <module>
+    from ortools.sat.python import cp_model
+E   ModuleNotFoundError: No module named 'ortools'
+=========================== short test summary info ===========================
+FAILED tests/test_bounds_partial.py::test_no_certificate_when_a_dont_care_makes_it_threshold
+FAILED tests/test_bounds_partial.py::test_netsolve_min_errors_and_budget - Mo...
+FAILED tests/test_bounds_partial.py::test_not_two_halfspaces_partial_and_forgeries
+FAILED tests/test_bounds_partial.py::test_not_threshold_partial_lp_n8 - Modul...
+FAILED tests/test_bounds_partial.py::test_compile_partial_n4_and_n8 - ModuleN...
+FAILED tests/test_bounds_partial.py::test_solve_three_halfspaces_all_gates_and_w1
+FAILED tests/test_bounds_partial.py::test_compile_partial_cost4_certification_and_fields
+========================= 7 failed, 3 passed in 5.37s =========================

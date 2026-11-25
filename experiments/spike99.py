@@ -27,9 +27,12 @@ Usage:
 from __future__ import annotations
 
 import ctypes
+import hashlib
+import hmac
 import json
 import os
 import pathlib
+import subprocess
 import sys
 import time
 from typing import Callable
@@ -49,6 +52,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 RESULTS = ROOT / "experiments" / "results"
 RAW = RESULTS / "spike99_raw"
 PRED_PATH = RESULTS / "spike99_predictions.json"
+LOCK_PATH = RESULTS / "spike99_selection_lock.json"
 OUT_PATH = RESULTS / "spike99.json"
 
 TARGET_KEY = "WcWo"
@@ -256,6 +260,8 @@ def evaluate_learned_gram(
             "p_upper": AUDIT.empirical_upper_p(null_b, obs_target),
             "max_eig_err": null_b_diag["max_eig_err"],
             "min_rot_eig": null_b_diag["min_rot_eig"],
+            "orig_min_eig": null_b_diag["orig_min_eig"],
+            "psd_tol": null_b_diag["psd_tol"],
         },
         "null_C": {
             "median": float(np.median(null_c)),
@@ -275,22 +281,134 @@ def failed_seed_eval_stub() -> dict:
         "max_competitor_cos": 0.0,
         "margin_D": 0.0,
         "null_A": {"median": 0.0, "p95": 1.0, "p_upper": 1.0},
-        "null_B": {"median": 0.0, "p95": 1.0, "p_upper": 1.0, "max_eig_err": 0.0, "min_rot_eig": 0.0},
+        "null_B": {
+            "median": 0.0,
+            "p95": 1.0,
+            "p_upper": 1.0,
+            "max_eig_err": 0.0,
+            "min_rot_eig": 0.0,
+            "orig_min_eig": 0.0,
+            "psd_tol": 0.0,
+        },
         "null_C": {"median": 0.0, "p95": 1.0, "p_upper": 1.0},
     }
 
 
-def seed_eval_to_cos_row(seed_eval: dict | None) -> np.ndarray:
-    """Extract ordered (5,) candidate cosine row; invalid/missing seeds map to all-zero cosines."""
-    if not seed_eval or not seed_eval.get("gram_valid", True):
-        return np.zeros(len(ALL_CAND_KEYS), dtype=float)
+def normalize_seed_eval(seed_eval: dict | None, fit_ok: bool | None = None) -> dict:
+    """Single canonical normalizer for every seed evaluation (missing/invalid -> failed stub)."""
+    if not isinstance(seed_eval, dict) or not bool(seed_eval.get("gram_valid", True)):
+        return failed_seed_eval_stub()
     cos = seed_eval.get("cosines")
-    if not isinstance(cos, dict):
+    if not isinstance(cos, dict) or not all(k in cos for k in ALL_CAND_KEYS):
+        return failed_seed_eval_stub()
+    parsed_cos: dict[str, float] = {}
+    for k in ALL_CAND_KEYS:
+        try:
+            v = float(cos[k])
+        except (TypeError, ValueError):
+            return failed_seed_eval_stub()
+        if not np.isfinite(v):
+            return failed_seed_eval_stub()
+        parsed_cos[k] = v
+
+    parsed_nulls: dict[str, dict] = {}
+    for nk in ("null_A", "null_B", "null_C"):
+        nd = seed_eval.get(nk)
+        if not isinstance(nd, dict) or "p95" not in nd or "p_upper" not in nd:
+            return failed_seed_eval_stub()
+        try:
+            p95 = float(nd["p95"])
+            pu = float(nd["p_upper"])
+            med = float(nd.get("median", 0.0))
+        except (TypeError, ValueError):
+            return failed_seed_eval_stub()
+        if not (np.isfinite(p95) and np.isfinite(pu) and np.isfinite(med)):
+            return failed_seed_eval_stub()
+        parsed_nulls[nk] = {**nd, "median": med, "p95": p95, "p_upper": pu}
+
+    eff_fit = bool(seed_eval.get("fit_ok", True)) if fit_ok is None else bool(fit_ok)
+    obs_target = parsed_cos[TARGET_KEY]
+    max_comp = max(parsed_cos[c] for c in COMPETITOR_KEYS)
+    return {
+        "gram_valid": True,
+        "fit_ok": eff_fit,
+        "cosines": parsed_cos,
+        "target_cos": obs_target,
+        "max_competitor_cos": max_comp,
+        "margin_D": float(obs_target - max_comp),
+        "null_A": parsed_nulls["null_A"],
+        "null_B": parsed_nulls["null_B"],
+        "null_C": parsed_nulls["null_C"],
+    }
+
+
+def _is_valid_finite_psd_gram(G_raw) -> tuple[bool, np.ndarray | None]:
+    """Validate learned Gram matrix shape, finiteness, non-zero norm, and PSD tolerance."""
+    if G_raw is None:
+        return False, None
+    try:
+        arr = np.asarray(G_raw, dtype=float)
+    except (TypeError, ValueError):
+        return False, None
+    if arr.ndim != 2 or arr.shape[0] != arr.shape[1] or arr.shape[0] == 0:
+        return False, None
+    if not np.all(np.isfinite(arr)):
+        return False, None
+    sym = 0.5 * (arr + arr.T)
+    if float(np.linalg.norm(sym)) < 1e-12:
+        return False, None
+    eigs = np.linalg.eigvalsh(sym)
+    scale = max(float(np.max(np.abs(eigs))), 1e-12)
+    if float(np.min(eigs)) < -1e-8 * scale:
+        return False, None
+    return True, arr
+
+
+def normalize_seed_run_record(rec: dict) -> dict:
+    """Single canonical normalizer for every seed run record (missing/invalid/failed unified)."""
+    out = dict(rec)
+    trained = dict(out.get("trained") or {})
+    if out.get("missing_record", False):
+        out["gram_valid"] = False
+        out["fit_ok"] = False
+        out["fit"] = 0.0
+        trained["eval"] = failed_seed_eval_stub()
+        trained["G_learned"] = None
+        out["trained"] = trained
+        return out
+
+    gram_ok, gl_arr = _is_valid_finite_psd_gram(trained.get("G_learned"))
+    raw_fit_ok = out.get("fit_ok", None)
+    try:
+        fit_val = float(out.get("fit", 0.0))
+    except (TypeError, ValueError):
+        fit_val = 0.0
+    fit_ok_flag = bool(raw_fit_ok) and bool(np.isfinite(fit_val)) if raw_fit_ok is not None else False
+    ev_norm = normalize_seed_eval(trained.get("eval"), fit_ok=fit_ok_flag)
+
+    if not gram_ok or not ev_norm["gram_valid"]:
+        out["gram_valid"] = False
+        out["fit_ok"] = False
+        trained["eval"] = failed_seed_eval_stub()
+        trained["G_learned"] = None
+        out["trained"] = trained
+        return out
+
+    out["gram_valid"] = True
+    out["fit"] = fit_val
+    out["fit_ok"] = fit_ok_flag
+    trained["eval"] = ev_norm
+    trained["G_learned"] = gl_arr.tolist() if isinstance(trained.get("G_learned"), list) else gl_arr
+    out["trained"] = trained
+    return out
+
+
+def seed_eval_to_cos_row(seed_eval: dict | None) -> np.ndarray:
+    """Extract ordered (5,) candidate cosine row via canonical normalize_seed_eval."""
+    ev = normalize_seed_eval(seed_eval)
+    if not ev["gram_valid"]:
         return np.zeros(len(ALL_CAND_KEYS), dtype=float)
-    row = np.array([float(cos.get(k, 0.0)) for k in ALL_CAND_KEYS], dtype=float)
-    if not np.all(np.isfinite(row)):
-        return np.zeros(len(ALL_CAND_KEYS), dtype=float)
-    return row
+    return np.array([float(ev["cosines"][k]) for k in ALL_CAND_KEYS], dtype=float)
 
 
 def compute_automaton_D_batch(cos_arr: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
@@ -324,11 +442,19 @@ def aggregate_null_b_test(
     rng = np.random.default_rng(seed)
     n_aut = len(per_automaton_seed_grams)
     if n_aut == 0:
-        return {"T_observed": None, "T_observed_from_grams": None, "p_aggregate": 1.0, "reps": 0}
+        return {
+            "T_observed": None,
+            "T_observed_from_grams": None,
+            "p_aggregate": 1.0,
+            "reps": 0,
+            "psd_diagnostics": {"orig_min_eig": 0.0, "min_rot_eig": 0.0, "max_eig_err": 0.0},
+        }
     T_null = np.empty(reps, dtype=float)
     # Precompute subspace bases and normalized target/competitor projections per automaton
     aut_pre = []
     obs_cos_mats = []
+    global_orig_min_eig = float("inf")
+    any_valid_gram = False
     for a_idx in range(n_aut):
         pi = per_automaton_pis[a_idx]
         _, _, Q0 = AUDIT.centred_subspace_basis(pi)
@@ -357,22 +483,32 @@ def aggregate_null_b_test(
                 continue
             Gs_norm = Gs / ng
             orig_eigs = np.linalg.eigvalsh(Gs_norm)
+            orig_min = float(np.min(orig_eigs))
             scale = max(float(np.max(np.abs(orig_eigs))), 1e-12)
-            if float(np.min(orig_eigs)) < -1e-8 * scale:
+            psd_tol = -1e-8 * scale
+            if orig_min < psd_tol:
                 raise AssertionError(
                     f"Aggregate Null B PSD check failed on automaton={a_idx}, seed={s_idx}: "
-                    f"min_eig={float(np.min(orig_eigs)):.2e}"
+                    f"min_eig={orig_min:.2e} < {psd_tol:.2e}"
                 )
-            seed_subs.append(Gs_norm)
+            any_valid_gram = True
+            global_orig_min_eig = min(global_orig_min_eig, orig_min)
+            seed_subs.append((Gs_norm, orig_eigs, psd_tol))
             for k_idx, k_name in enumerate(ALL_CAND_KEYS):
                 obs_rows[s_idx, k_idx] = float(np.sum(Gs_norm * C_subs[k_name]))
         obs_cos_mats.append(obs_rows)
         aut_pre.append((d, C_subs, seed_subs))
 
     obs_T_computed = float(np.median([compute_automaton_D_from_cos_matrix(m)[1] for m in obs_cos_mats]))
+    if observed_T is not None and abs(float(observed_T) - obs_T_computed) >= 1e-12:
+        raise AssertionError(
+            f"Supplied observed_T={observed_T:.12g} does not match Gram-derived T={obs_T_computed:.12g}"
+        )
     if observed_T is None:
         observed_T = obs_T_computed
 
+    max_eig_err = 0.0
+    global_min_rot_eig = float("inf")
     chunk = 500
     for start in range(0, reps, chunk):
         b = min(chunk, reps - start)
@@ -380,16 +516,34 @@ def aggregate_null_b_test(
         for a_idx, (d, C_subs, seed_subs) in enumerate(aut_pre):
             n_seeds = len(seed_subs)
             seed_cands = np.zeros((b, n_seeds, len(ALL_CAND_KEYS)), dtype=float)
-            for s_idx, Gs in enumerate(seed_subs):
-                if Gs is None:
+            for s_idx, item in enumerate(seed_subs):
+                if item is None:
                     continue
+                Gs_norm, orig_eigs, psd_tol = item
                 U = AUDIT._haar_orthogonal_batch(rng, d, b)
-                rot = np.einsum("bij,jk,blk->bil", U, Gs, U)
+                rot = np.einsum("bij,jk,blk->bil", U, Gs_norm, U)
+                rot_sym = 0.5 * (rot + np.swapaxes(rot, 1, 2))
+                rot_eigs = np.linalg.eigvalsh(rot_sym)
+                batch_err = float(np.max(np.abs(rot_eigs - orig_eigs[None, :])))
+                batch_min_rot = float(np.min(rot_eigs))
+                max_eig_err = max(max_eig_err, batch_err)
+                global_min_rot_eig = min(global_min_rot_eig, batch_min_rot)
+                if batch_err >= 1e-7:
+                    raise AssertionError(
+                        f"Aggregate Null B eigenvalue preservation failed: max_eig_err={batch_err:.2e}"
+                    )
+                if batch_min_rot < psd_tol:
+                    raise AssertionError(
+                        f"Aggregate Null B rotated PSD check failed: min_rot_eig={batch_min_rot:.2e} < {psd_tol:.2e}"
+                    )
                 for k_idx, k_name in enumerate(ALL_CAND_KEYS):
-                    seed_cands[:, s_idx, k_idx] = np.einsum("bij,ij->b", rot, C_subs[k_name])
+                    seed_cands[:, s_idx, k_idx] = np.einsum("bij,ij->b", rot_sym, C_subs[k_name])
             _, D_mat[:, a_idx] = compute_automaton_D_batch(seed_cands)
         T_null[start : start + b] = np.median(D_mat, axis=1)
 
+    if not any_valid_gram:
+        global_orig_min_eig = 0.0
+        global_min_rot_eig = 0.0
     p_agg = float((1 + int(np.sum(T_null >= observed_T))) / (reps + 1))
     return {
         "T_observed": float(observed_T),
@@ -398,6 +552,11 @@ def aggregate_null_b_test(
         "T_null_p95": float(np.percentile(T_null, 95)),
         "p_aggregate": p_agg,
         "reps": int(reps),
+        "psd_diagnostics": {
+            "orig_min_eig": float(global_orig_min_eig),
+            "min_rot_eig": float(global_min_rot_eig),
+            "max_eig_err": float(max_eig_err),
+        },
     }
 
 
@@ -474,13 +633,10 @@ def evaluate_automaton_held(seed_evals: list[dict], fit_flags: list[bool] | None
     if not seed_evals:
         return {"held": False, "n_seeds": 0}
     norm_evals = [
-        r if (isinstance(r, dict) and r.get("gram_valid", True)) else failed_seed_eval_stub()
-        for r in seed_evals
+        normalize_seed_eval(r, fit_ok=(None if fit_flags is None else bool(ok)))
+        for r, ok in zip(seed_evals, fit_flags if fit_flags is not None else [True] * len(seed_evals))
     ]
-    if fit_flags is None:
-        eff_fit = [bool(r.get("fit_ok", True)) and bool(r.get("gram_valid", True)) for r in norm_evals]
-    else:
-        eff_fit = [bool(ok) and bool(r.get("gram_valid", True)) for r, ok in zip(norm_evals, fit_flags)]
+    eff_fit = [bool(r["fit_ok"]) and bool(r["gram_valid"]) for r in norm_evals]
 
     cos_mat = np.vstack([seed_eval_to_cos_row(r) for r in norm_evals])
     med_arr, margin_D = compute_automaton_D_from_cos_matrix(cos_mat)
@@ -489,10 +645,10 @@ def evaluate_automaton_held(seed_evals: list[dict], fit_flags: list[bool] | None
 
     null_a_p95 = float(np.median([r["null_A"]["p95"] for r in norm_evals]))
     n_above_p95 = sum(
-        1 for i, r in enumerate(norm_evals) if r.get("gram_valid", True) and cos_mat[i, 0] > r["null_A"]["p95"]
+        1 for i, r in enumerate(norm_evals) if r["gram_valid"] and cos_mat[i, 0] > r["null_A"]["p95"]
     )
     n_null_b_sig = sum(
-        1 for r in norm_evals if r.get("gram_valid", True) and r["null_B"]["p_upper"] <= 0.05
+        1 for r in norm_evals if r["gram_valid"] and r["null_B"]["p_upper"] <= 0.05
     )
     n_fit_ok = sum(1 for ok in eff_fit if ok)
     med_null_a_p = float(np.median([r["null_A"]["p_upper"] for r in norm_evals]))
@@ -624,13 +780,195 @@ def select_stratified_20(eligible: list[dict], seed: int = 20261125) -> tuple[li
     return sorted(selected, key=lambda r: int(r["id"])), unselected_ids
 
 
-def predict(out_path: pathlib.Path = PRED_PATH) -> dict:
-    """Run eligibility & candidate-agreement audit and lock Spike 99 predictions before training."""
-    audit = AUDIT.run_full_audit(draws=NULL_DRAWS, hidden_dim=HIDDEN_DIM)
+def _git_head_sha() -> str:
+    """Return current HEAD commit SHA of the repository."""
+    return subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
+
+
+def _to_json_sig(sig) -> list | int:
+    """Convert nested tuple automaton canonical signature cleanly into JSON-safe nested lists."""
+    if isinstance(sig, (tuple, list)):
+        return [_to_json_sig(x) for x in sig]
+    return int(sig)
+
+
+def canonical_selection_lock_hash(lock_payload: dict) -> str:
+    """Compute SHA-256 hash over the immutable fields of spike99_selection_lock.json."""
+    keys = (
+        "spike",
+        "status",
+        "candidate_audit_commit_sha",
+        "selection_algorithm",
+        "strata_keys",
+        "selection_seed",
+        "max_competitor_threshold",
+        "min_eligible_required",
+        "eligible_count",
+        "eligible_strata_inputs",
+        "selected_ids",
+        "eligible_unselected_ids",
+        "selected_signatures",
+    )
+    body = {k: lock_payload[k] for k in keys}
+    encoded = json.dumps(body, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()
+
+
+def build_selection_lock(
+    eligible: list[dict],
+    selected: list[dict],
+    unselected_ids: list[int],
+    status: str,
+    pool: list[dict] | None = None,
+    commit_sha: str | None = None,
+    selection_seed: int = 20261125,
+) -> dict:
+    """Build an immutable cryptographic selection-lock artifact with canonical automaton signatures."""
+    sha = commit_sha or _git_head_sha()
+    eligible_inputs = [
+        {"id": int(r["id"]), "kind": str(r["kind"]), "m": int(r["m"])}
+        for r in sorted(eligible, key=lambda x: int(x["id"]))
+    ]
+    selected_ids = [int(r["id"]) for r in selected]
+    selected_sigs = []
+    if selected:
+        if pool is None:
+            pool = S81.build_pool()
+        for r in selected:
+            aid = int(r["id"])
+            A = pool[aid]
+            D = np.asarray(A["D"], dtype=int)
+            O = np.asarray(A["O"], dtype=int)
+            s0 = int(A["s0"])
+            sig = AUDIT.canonical_aut_sig(D, O, s0)
+            selected_sigs.append(
+                {
+                    "id": aid,
+                    "kind": str(A["kind"]),
+                    "m": int(D.shape[1]),
+                    "L": int(D.shape[0] + 1),
+                    "s0": s0,
+                    "canonical_sig": _to_json_sig(sig),
+                }
+            )
+    lock_payload = {
+        "spike": 99,
+        "status": str(status),
+        "candidate_audit_commit_sha": sha,
+        "selection_algorithm": "deterministic_stratified_round_robin_over_shuffled_strata",
+        "strata_keys": ["kind", "m"],
+        "selection_seed": int(selection_seed),
+        "max_competitor_threshold": MAX_COMP_THRESHOLD,
+        "min_eligible_required": MIN_ELIGIBLE_AUTOMATA,
+        "eligible_count": len(eligible),
+        "eligible_strata_inputs": eligible_inputs,
+        "selected_ids": selected_ids,
+        "eligible_unselected_ids": [int(x) for x in unselected_ids],
+        "selected_signatures": selected_sigs,
+    }
+    lock_payload["selection_sha256"] = canonical_selection_lock_hash(lock_payload)
+    return lock_payload
+
+
+def verify_selection_lock(pred_payload: dict, lock_payload: dict, pool: list[dict] | None = None) -> dict:
+    """Verify immutable selection lock against predictions file, canonical signatures, and rebuilt pool."""
+    expected_sha = canonical_selection_lock_hash(lock_payload)
+    recorded_sha = str(lock_payload.get("selection_sha256", ""))
+    if not recorded_sha or not hmac.compare_digest(expected_sha, recorded_sha):
+        raise AssertionError(
+            f"Selection lock SHA-256 mismatch: expected={expected_sha}, recorded={recorded_sha}"
+        )
+
+    status = str(lock_payload.get("status", ""))
+    if str(pred_payload.get("status", "")) != status:
+        raise AssertionError(f"Lock/prediction status mismatch: {status} vs {pred_payload.get('status')}")
+    if pred_payload.get("selection_lock_sha256") and not hmac.compare_digest(
+        str(pred_payload["selection_lock_sha256"]), recorded_sha
+    ):
+        raise AssertionError("Predictions file selection_lock_sha256 disagrees with selection lock.")
+    if pred_payload.get("candidate_audit_commit_sha") and (
+        str(pred_payload["candidate_audit_commit_sha"]) != str(lock_payload["candidate_audit_commit_sha"])
+    ):
+        raise AssertionError("Predictions file candidate_audit_commit_sha disagrees with selection lock.")
+
+    if status != "READY":
+        return {
+            "status": status,
+            "selection_sha256": recorded_sha,
+            "candidate_audit_commit_sha": str(lock_payload["candidate_audit_commit_sha"]),
+            "selected_ids": [],
+        }
+
+    selected_ids = [int(x) for x in lock_payload.get("selected_ids", [])]
+    if len(selected_ids) != TARGET_N_AUTOMATA or len(set(selected_ids)) != TARGET_N_AUTOMATA:
+        raise AssertionError(f"Selection lock must contain {TARGET_N_AUTOMATA} unique IDs, got {selected_ids}")
+    if [int(x) for x in pred_payload.get("selected_ids", [])] != selected_ids:
+        raise AssertionError("Predictions selected_ids disagree with selection lock.")
+    if [int(x["id"]) for x in pred_payload.get("selected_automata", [])] != selected_ids:
+        raise AssertionError("Predictions selected_automata IDs disagree with selection lock.")
+    if [int(x["id"]) for x in lock_payload.get("selected_signatures", [])] != selected_ids:
+        raise AssertionError("Selection lock selected_signatures IDs disagree with selected_ids.")
+    if int(pred_payload.get("selection_seed", -1)) != int(lock_payload["selection_seed"]):
+        raise AssertionError("Selection seed mismatch between predictions and selection lock.")
+    if int(pred_payload.get("n_eligible", -1)) != int(lock_payload["eligible_count"]):
+        raise AssertionError("Eligible count mismatch between predictions and selection lock.")
+    if sorted(int(x) for x in pred_payload.get("eligible_unselected_ids", [])) != sorted(
+        int(x) for x in lock_payload.get("eligible_unselected_ids", [])
+    ):
+        raise AssertionError("eligible_unselected_ids mismatch between predictions and selection lock.")
+
+    re_sel, re_unsel = select_stratified_20(
+        lock_payload["eligible_strata_inputs"], seed=int(lock_payload["selection_seed"])
+    )
+    if [int(r["id"]) for r in re_sel] != selected_ids or re_unsel != lock_payload["eligible_unselected_ids"]:
+        raise AssertionError("Deterministic stratified selection replay disagrees with selection lock.")
+
+    if pool is None:
+        pool = S81.build_pool()
+    for entry in lock_payload["selected_signatures"]:
+        aid = int(entry["id"])
+        if not (0 <= aid < len(pool)):
+            raise AssertionError(f"Selected ID {aid} out of bounds for rebuilt pool size {len(pool)}")
+        A = pool[aid]
+        D = np.asarray(A["D"], dtype=int)
+        O = np.asarray(A["O"], dtype=int)
+        s0 = int(A["s0"])
+        if str(A["kind"]) != str(entry["kind"]) or int(D.shape[1]) != int(entry["m"]) or s0 != int(entry["s0"]):
+            raise AssertionError(f"Metadata mismatch vs rebuilt pool on automaton id={aid}")
+        rebuilt_sig = _to_json_sig(AUDIT.canonical_aut_sig(D, O, s0))
+        if rebuilt_sig != entry["canonical_sig"]:
+            raise AssertionError(f"Canonical automaton signature mismatch vs rebuilt pool on id={aid}")
+
+    return {
+        "status": "READY",
+        "selection_sha256": recorded_sha,
+        "candidate_audit_commit_sha": str(lock_payload["candidate_audit_commit_sha"]),
+        "selected_ids": selected_ids,
+    }
+
+
+def predict(
+    out_path: pathlib.Path = PRED_PATH,
+    lock_path: pathlib.Path = LOCK_PATH,
+    audit: dict | None = None,
+    pool: list[dict] | None = None,
+    commit_sha: str | None = None,
+) -> dict:
+    """Run eligibility & candidate-agreement audit and lock Spike 99 predictions + selection lock."""
+    if audit is None:
+        audit = AUDIT.run_full_audit(draws=NULL_DRAWS, hidden_dim=HIDDEN_DIM)
     pool_audit = audit["spike81_pool_audit"]
     eligible = pool_audit["eligible_automata"]
 
     if len(eligible) < MIN_ELIGIBLE_AUTOMATA:
+        lock_payload = build_selection_lock(
+            eligible=eligible,
+            selected=[],
+            unselected_ids=[],
+            status="UNDERPOWERED",
+            pool=pool,
+            commit_sha=commit_sha,
+        )
         payload = {
             "spike": 99,
             "status": "UNDERPOWERED",
@@ -645,11 +983,23 @@ def predict(out_path: pathlib.Path = PRED_PATH) -> dict:
                 f"(observed minimum across fresh irreversible pool = {pool_audit['fresh_irrev_min_max_comp_cos']:.4f}). "
                 "Per pre-registered rule, threshold is NOT relaxed."
             ),
+            "selected_ids": [],
             "selected_automata": [],
+            "selection_lock_file": str(lock_path.relative_to(ROOT)).replace("\\", "/") if lock_path.is_relative_to(ROOT) else str(lock_path),
+            "selection_lock_sha256": lock_payload["selection_sha256"],
+            "candidate_audit_commit_sha": lock_payload["candidate_audit_commit_sha"],
             "audit_file": str(AUDIT.AUDIT_OUT.relative_to(ROOT)).replace("\\", "/"),
         }
     else:
         selected, unselected_ids = select_stratified_20(eligible, seed=20261125)
+        lock_payload = build_selection_lock(
+            eligible=eligible,
+            selected=selected,
+            unselected_ids=unselected_ids,
+            status="READY",
+            pool=pool,
+            commit_sha=commit_sha,
+        )
         payload = {
             "spike": 99,
             "status": "READY",
@@ -660,12 +1010,17 @@ def predict(out_path: pathlib.Path = PRED_PATH) -> dict:
             "selected_ids": [int(r["id"]) for r in selected],
             "eligible_unselected_ids": unselected_ids,
             "selected_automata": selected,
+            "selection_lock_file": str(lock_path.relative_to(ROOT)).replace("\\", "/") if lock_path.is_relative_to(ROOT) else str(lock_path),
+            "selection_lock_sha256": lock_payload["selection_sha256"],
+            "candidate_audit_commit_sha": lock_payload["candidate_audit_commit_sha"],
             "audit_file": str(AUDIT.AUDIT_OUT.relative_to(ROOT)).replace("\\", "/"),
         }
 
+    lock_path.parent.mkdir(parents=True, exist_ok=True)
+    lock_path.write_text(json.dumps(lock_payload, indent=1), encoding="utf-8")
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps(payload, indent=1), encoding="utf-8")
-    print(f"Spike 99 predict: status={payload['status']}, n_eligible={payload['n_eligible']}")
+    print(f"Spike 99 predict: status={payload['status']}, n_eligible={payload['n_eligible']}, lock_sha={lock_payload['selection_sha256'][:12]}")
     return payload
 
 
@@ -675,6 +1030,8 @@ def _train_or_eval_one(
     seed_idx: int,
     steps: int = STEPS,
     draws: int = NULL_DRAWS,
+    selection_lock_sha256: str | None = None,
+    candidate_audit_commit_sha: str | None = None,
 ) -> dict:
     """Train one GRU arm (or step-0 untrained control) and evaluate learned Gram."""
     import torch
@@ -734,8 +1091,8 @@ def _train_or_eval_one(
         if stats is not None
         else None
     )
-
-    return {
+    fit_ok = bool(fit >= FIT_GUARD)
+    raw_rec = {
         "id": int(A["id"]),
         "arch": arch,
         "seed_idx": int(seed_idx),
@@ -743,7 +1100,9 @@ def _train_or_eval_one(
         "eval_seed": int(eval_seed),
         "hidden_dim": int(mdl.hidden_dim),
         "fit": fit,
-        "fit_ok": bool(fit >= FIT_GUARD),
+        "fit_ok": fit_ok,
+        "selection_lock_sha256": selection_lock_sha256,
+        "candidate_audit_commit_sha": candidate_audit_commit_sha,
         "untrained_control": {
             "fit": fit0,
             "stats": {k: v for k, v in stats0.items() if k not in ("Ce", "G_learned")} if stats0 else None,
@@ -755,6 +1114,26 @@ def _train_or_eval_one(
             "G_learned": stats["G_learned"].tolist() if stats is not None else None,
         },
     }
+    return normalize_seed_run_record(raw_rec)
+
+
+def make_missing_seed_record(arch: str, aid: int, seed_idx: int) -> dict:
+    """Create canonical failed-run record for a missing seed grid slot via shared normalizer."""
+    return normalize_seed_run_record(
+        {
+            "id": int(aid),
+            "arch": str(arch),
+            "seed_idx": int(seed_idx),
+            "seed": 99_000 + (0 if arch == "gru_mlp" else 10_000) + 100 * int(aid) + int(seed_idx),
+            "eval_seed": 99_000_000 + 100 * int(aid) + int(seed_idx),
+            "hidden_dim": HIDDEN_DIM,
+            "fit": 0.0,
+            "fit_ok": False,
+            "missing_record": True,
+            "untrained_control": {"fit": 0.0, "stats": None, "eval": None},
+            "trained": {"stats": None, "eval": failed_seed_eval_stub(), "G_learned": None},
+        }
+    )
 
 
 def validate_and_complete_seed_grid(
@@ -762,11 +1141,16 @@ def validate_and_complete_seed_grid(
     selected_ids: list[int],
     seeds_per_arm: int = SEEDS_PER_ARM,
     strict_complete: bool = False,
+    expected_n_automata: int = TARGET_N_AUTOMATA,
 ) -> tuple[list[dict], dict]:
-    """Validate frozen (arch, id, seed_idx) grid; synthesize failed stubs for missing entries."""
+    """Validate frozen (arch, id, seed_idx) grid, normalize all runs, and enforce exact postcondition."""
     ordered_ids = sorted(int(x) for x in selected_ids)
     if len(set(ordered_ids)) != len(ordered_ids):
         raise AssertionError(f"Duplicate IDs in selected_ids: {selected_ids}")
+    if len(ordered_ids) != expected_n_automata:
+        raise AssertionError(
+            f"Expected {expected_n_automata} selected automata in grid, got {len(ordered_ids)}"
+        )
     expected_keys = {
         (arch, aid, s_idx)
         for arch in ("gru_mlp", "gru_lin")
@@ -780,7 +1164,7 @@ def validate_and_complete_seed_grid(
             raise AssertionError(f"Unexpected run record outside frozen grid: {key}")
         if key in by_key:
             raise AssertionError(f"Duplicate run record in grid: {key}")
-        by_key[key] = rec
+        by_key[key] = normalize_seed_run_record(rec)
 
     completed: list[dict] = []
     missing_keys: list[dict] = []
@@ -792,26 +1176,17 @@ def validate_and_complete_seed_grid(
                     completed.append(by_key[key])
                 else:
                     missing_keys.append({"arch": arch, "id": aid, "seed_idx": s_idx})
-                    completed.append(
-                        {
-                            "id": aid,
-                            "arch": arch,
-                            "seed_idx": s_idx,
-                            "seed": 99_000 + (0 if arch == "gru_mlp" else 10_000) + 100 * aid + s_idx,
-                            "eval_seed": 99_000_000 + 100 * aid + s_idx,
-                            "hidden_dim": HIDDEN_DIM,
-                            "fit": 0.0,
-                            "fit_ok": False,
-                            "missing_record": True,
-                            "untrained_control": {"fit": 0.0, "stats": None, "eval": None},
-                            "trained": {"stats": None, "eval": failed_seed_eval_stub(), "G_learned": None},
-                        }
-                    )
+                    completed.append(make_missing_seed_record(arch, aid, s_idx))
     if strict_complete and missing_keys:
         raise AssertionError(f"Missing {len(missing_keys)} records from required seed grid: {missing_keys[:5]}")
 
+    expected_total = 2 * expected_n_automata * seeds_per_arm
+    if len(completed) != expected_total:
+        raise AssertionError(f"Seed grid postcondition failed: expected {expected_total}, got {len(completed)}")
+
     report = {
         "n_expected": len(expected_keys),
+        "n_completed_grid": len(completed),
         "n_present": len(by_key),
         "n_missing": len(missing_keys),
         "missing_records": missing_keys,
@@ -835,32 +1210,39 @@ def _validated_ready_selection(P: dict) -> tuple[list[dict], list[int]]:
     return selected, selected_ids
 
 
-def run() -> None:
-    """Execute Spike 99 training ONLY if pre-registered eligibility >= 20 is satisfied."""
+def run(
+    pred_path: pathlib.Path = PRED_PATH,
+    lock_path: pathlib.Path = LOCK_PATH,
+    raw_dir: pathlib.Path = RAW,
+    pool: list[dict] | None = None,
+) -> dict | None:
+    """Execute Spike 99 training ONLY if pre-registered eligibility >= 20 AND selection lock verify."""
     import torch
 
     torch.set_num_threads(1)
-    if not PRED_PATH.exists():
-        predict()
-    P = json.loads(PRED_PATH.read_text(encoding="utf-8"))
+    if not pred_path.exists():
+        predict(out_path=pred_path, lock_path=lock_path, pool=pool)
+    if not lock_path.exists():
+        raise AssertionError(f"Missing immutable selection lock artifact: {lock_path}")
+    P = json.loads(pred_path.read_text(encoding="utf-8"))
+    L = json.loads(lock_path.read_text(encoding="utf-8"))
     if P["status"] != "READY":
+        verify_selection_lock(P, L, pool=pool)
         print(
             f"Spike 99 run aborted cleanly: status={P['status']}, "
             f"n_eligible={P['n_eligible']} (< {MIN_ELIGIBLE_AUTOMATA}). No training executed."
         )
-        return
+        return None
+    if pool is None:
+        pool = S81.build_pool()
+    lock_info = verify_selection_lock(P, L, pool=pool)
     selected, _ = _validated_ready_selection(P)
 
     free_gb = available_ram_gb()
     if free_gb is not None and free_gb < MIN_FREE_RAM_GB:
         raise RuntimeError(f"Aborted: free RAM {free_gb:.2f} GB < {MIN_FREE_RAM_GB:.2f} GB floor.")
 
-    pool = S81.build_pool()
-    for item in selected:
-        aid = int(item["id"])
-        assert 0 <= aid < len(pool), f"Selected id {aid} out of pool bounds"
-        assert pool[aid]["kind"] == item["kind"] and int(pool[aid]["s0"]) == int(item["s0"])
-    RAW.mkdir(parents=True, exist_ok=True)
+    raw_dir.mkdir(parents=True, exist_ok=True)
     for arch in ("gru_mlp", "gru_lin"):
         for item in selected:
             aid = int(item["id"])
@@ -869,23 +1251,42 @@ def run() -> None:
                 free_gb = available_ram_gb()
                 if free_gb is not None and free_gb < MIN_FREE_RAM_GB:
                     raise RuntimeError(f"Stopped mid-run: free RAM {free_gb:.2f} GB < {MIN_FREE_RAM_GB:.2f} GB floor.")
-                pth = RAW / f"{arch}_{aid}_{s_idx}.json"
+                pth = raw_dir / f"{arch}_{aid}_{s_idx}.json"
                 if pth.exists():
                     continue
                 t0 = time.perf_counter()
-                rec = _train_or_eval_one(A, arch, s_idx)
+                rec = _train_or_eval_one(
+                    A,
+                    arch,
+                    s_idx,
+                    selection_lock_sha256=lock_info["selection_sha256"],
+                    candidate_audit_commit_sha=lock_info["candidate_audit_commit_sha"],
+                )
                 rec["secs"] = round(time.perf_counter() - t0, 2)
                 pth.write_text(json.dumps(rec, indent=1), encoding="utf-8")
+    return lock_info
 
 
-def analyse(out_path: pathlib.Path = OUT_PATH) -> dict:
-    """Summarize Spike 99 outcome strictly under pre-registered criteria."""
-    if not PRED_PATH.exists():
-        predict()
-    P = json.loads(PRED_PATH.read_text(encoding="utf-8"))
+def analyse(
+    out_path: pathlib.Path = OUT_PATH,
+    pred_path: pathlib.Path = PRED_PATH,
+    lock_path: pathlib.Path = LOCK_PATH,
+    raw_dir: pathlib.Path = RAW,
+    pool: list[dict] | None = None,
+    null_draws: int = NULL_DRAWS,
+    bootstrap_reps: int = BOOTSTRAP_REPS,
+) -> dict:
+    """Summarize Spike 99 outcome strictly under pre-registered criteria and full 200-run grid."""
+    if not pred_path.exists():
+        predict(out_path=pred_path, lock_path=lock_path, pool=pool)
+    if not lock_path.exists():
+        raise AssertionError(f"Missing immutable selection lock artifact: {lock_path}")
+    P = json.loads(pred_path.read_text(encoding="utf-8"))
+    L = json.loads(lock_path.read_text(encoding="utf-8"))
     audit = json.loads(AUDIT.AUDIT_OUT.read_text(encoding="utf-8")) if AUDIT.AUDIT_OUT.exists() else None
 
     if P["status"] != "READY" or len(P.get("selected_automata", [])) < MIN_ELIGIBLE_AUTOMATA:
+        lock_info = verify_selection_lock(P, L, pool=pool)
         summary = {
             "spike": 99,
             "status": "UNDERPOWERED",
@@ -893,6 +1294,8 @@ def analyse(out_path: pathlib.Path = OUT_PATH) -> dict:
             "reason": P["reason"],
             "n_eligible": P["n_eligible"],
             "n_training_runs_executed": 0,
+            "selection_lock_sha256": lock_info["selection_sha256"],
+            "candidate_audit_commit_sha": lock_info["candidate_audit_commit_sha"],
             "pr12_candidate_agreement_summary": (
                 audit["pr12_candidate_agreement_audit"]["median_pairwise_diag"] if audit else None
             ),
@@ -928,48 +1331,51 @@ def analyse(out_path: pathlib.Path = OUT_PATH) -> dict:
         print(json.dumps(summary, indent=2))
         return summary
 
+    if pool is None:
+        pool = S81.build_pool()
+    lock_info = verify_selection_lock(P, L, pool=pool)
     selected, selected_ids = _validated_ready_selection(P)
     ordered_aids = sorted(selected_ids)
-    raw_runs = [json.loads(f.read_text(encoding="utf-8")) for f in sorted(RAW.glob("*.json")) if not f.name.endswith("_g.npy")]
-    runs, grid_report = validate_and_complete_seed_grid(raw_runs, ordered_aids, seeds_per_arm=SEEDS_PER_ARM)
-    pool = S81.build_pool()
+    if len(ordered_aids) != TARGET_N_AUTOMATA:
+        raise AssertionError(f"Expected {TARGET_N_AUTOMATA} selected IDs, got {len(ordered_aids)}")
+
+    raw_runs = [json.loads(f.read_text(encoding="utf-8")) for f in sorted(raw_dir.glob("*.json")) if not f.name.endswith("_g.npy")]
+    for rec in raw_runs:
+        if rec.get("selection_lock_sha256") and rec["selection_lock_sha256"] != lock_info["selection_sha256"]:
+            raise AssertionError("Raw training record carries a different selection_lock_sha256 than current lock.")
+    runs, grid_report = validate_and_complete_seed_grid(
+        raw_runs, ordered_aids, seeds_per_arm=SEEDS_PER_ARM, expected_n_automata=TARGET_N_AUTOMATA
+    )
+    if len(runs) != 2 * TARGET_N_AUTOMATA * SEEDS_PER_ARM:
+        raise AssertionError(f"Expected 200 completed grid records, got {len(runs)}")
+
     arms_out = {}
     for arch in ("gru_mlp", "gru_lin"):
         arm_runs = [r for r in runs if r["arch"] == arch]
-        # Primary intention-to-train analysis: retain ALL 5 seeds per automaton on full frozen grid.
+        if len(arm_runs) != TARGET_N_AUTOMATA * SEEDS_PER_ARM:
+            raise AssertionError(f"Expected 100 records for arm={arch}, got {len(arm_runs)}")
+        # Primary intention-to-train analysis: retain ALL 5 seeds per automaton on full 200-run grid.
         itt_by_aut: dict[int, list[dict]] = {aid: [] for aid in ordered_aids}
         fit_by_aut: dict[int, list[bool]] = {aid: [] for aid in ordered_aids}
         grams_by_aut: dict[int, list[np.ndarray | None]] = {aid: [] for aid in ordered_aids}
         sec_by_aut: dict[int, list[dict]] = {}
         for r in sorted(arm_runs, key=lambda x: (int(x["id"]), int(x["seed_idx"]))):
             aid = int(r["id"])
-            ev_raw = r["trained"].get("eval")
-            gl_raw = r["trained"].get("G_learned")
-            gl_arr = np.asarray(gl_raw, dtype=float) if gl_raw is not None else None
-            valid_gram = (
-                ev_raw is not None
-                and bool(ev_raw.get("gram_valid", True))
-                and gl_arr is not None
-                and bool(np.all(np.isfinite(gl_arr)))
-                and float(np.linalg.norm(gl_arr)) >= 1e-12
-            )
-            if valid_gram:
-                ev = ev_raw
-            else:
-                ev = failed_seed_eval_stub()
-                gl_arr = None
+            ev = r["trained"]["eval"]
+            gl_arr = np.asarray(r["trained"]["G_learned"], dtype=float) if r["gram_valid"] else None
             itt_by_aut[aid].append(ev)
-            fit_by_aut[aid].append(bool(r["fit_ok"]) and valid_gram)
+            fit_by_aut[aid].append(bool(r["fit_ok"]) and bool(r["gram_valid"]))
             grams_by_aut[aid].append(gl_arr)
-            if r["fit_ok"] and valid_gram:
+            if r["fit_ok"] and r["gram_valid"]:
                 sec_by_aut.setdefault(aid, []).append(ev)
-        for aid in ordered_aids:
-            if len(itt_by_aut[aid]) != SEEDS_PER_ARM:
-                raise AssertionError(f"Expected {SEEDS_PER_ARM} seeds for aid={aid}, got {len(itt_by_aut[aid])}")
+        if len(itt_by_aut) != TARGET_N_AUTOMATA or any(len(itt_by_aut[aid]) != SEEDS_PER_ARM for aid in ordered_aids):
+            raise AssertionError(f"Postcondition failed for arm={arch}: incomplete automaton/seed grid")
         itt_summaries = [
             evaluate_automaton_held(itt_by_aut[aid], fit_flags=fit_by_aut[aid])
             for aid in ordered_aids
         ]
+        if len(itt_summaries) != TARGET_N_AUTOMATA:
+            raise AssertionError(f"Expected {TARGET_N_AUTOMATA} ITT summaries, got {len(itt_summaries)}")
         itt_seed_evals = [itt_by_aut[aid] for aid in ordered_aids]
         obs_T = float(np.median([a["margin_D"] for a in itt_summaries]))
         aut_cands = []
@@ -987,28 +1393,43 @@ def analyse(out_path: pathlib.Path = OUT_PATH) -> dict:
             aut_cands,
             aut_pis,
             observed_T=obs_T,
-            reps=NULL_DRAWS,
+            reps=null_draws,
         )
-        if abs(obs_T - float(agg_null_b["T_observed_from_grams"])) >= 1e-10:
+        if abs(obs_T - float(agg_null_b["T_observed_from_grams"])) >= 1e-12:
             raise AssertionError(
-                f"Statistic mismatch in analyse({arch}): obs_T={obs_T:.10g} vs "
-                f"T_observed_from_grams={agg_null_b['T_observed_from_grams']:.10g}"
+                f"Statistic mismatch in analyse({arch}): obs_T={obs_T:.12g} vs "
+                f"T_observed_from_grams={agg_null_b['T_observed_from_grams']:.12g}"
             )
         itt_verdict = evaluate_aggregate_verdict(
-            itt_summaries, itt_seed_evals, n_eligible=len(selected), aggregate_null_b=agg_null_b
+            itt_summaries,
+            itt_seed_evals,
+            n_eligible=len(selected),
+            bootstrap_reps=bootstrap_reps,
+            aggregate_null_b=agg_null_b,
         )
         sec_summaries = [evaluate_automaton_held(sec_by_aut[aid]) for aid in sorted(sec_by_aut)]
         sec_seed_evals = [sec_by_aut[aid] for aid in sorted(sec_by_aut)]
         arms_out[arch] = {
             "primary_intention_to_train": itt_verdict,
             "secondary_fit_qualified": evaluate_aggregate_verdict(
-                sec_summaries, sec_seed_evals, n_eligible=len(selected)
+                sec_summaries,
+                sec_seed_evals,
+                n_eligible=len(selected),
+                bootstrap_reps=bootstrap_reps,
             ),
             "n_total_runs": len(arm_runs),
             "n_fit_ok_runs": sum(1 for r in arm_runs if r["fit_ok"]),
         }
 
-    out = {"spike": 99, "status": "COMPLETE", "arms": arms_out, "n_runs": len(runs), "grid_report": grid_report}
+    out = {
+        "spike": 99,
+        "status": "COMPLETE",
+        "arms": arms_out,
+        "n_runs": len(runs),
+        "grid_report": grid_report,
+        "selection_lock_sha256": lock_info["selection_sha256"],
+        "candidate_audit_commit_sha": lock_info["candidate_audit_commit_sha"],
+    }
     out_path.write_text(json.dumps(out, indent=1), encoding="utf-8")
     print(json.dumps(out, indent=2))
     return out

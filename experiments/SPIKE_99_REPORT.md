@@ -122,7 +122,7 @@ If N_elig < 20:
 - Report UNDERPOWERED / NO VERDICT.
 - No threshold relaxation.
 
-*(Frozen selection parameters: strata = `(kind, m)`, algorithm = deterministic round-robin over shuffled within-stratum IDs sorted ascending, `selection_seed = 20261125`. Also audit and report the exact exclusion count and `pi_min` distribution of the `min(pi_q) > 1e-4` filter.)*
+*(Frozen selection parameters: strata = `(kind, m)`, algorithm = deterministic round-robin over shuffled within-stratum IDs sorted ascending, `selection_seed = 20261125`. `predict()` also persists the immutable cryptographic selection lock `experiments/results/spike99_selection_lock.json` containing the ordered 20 `selected_ids`, canonical automaton signatures, `candidate_audit_commit_sha`, `selection_algorithm`, `selection_seed`, `eligible_strata_inputs`, and `selection_sha256`; `run()` and `analyse()` verify the lock against `spike99_predictions.json` and the rebuilt pool and stamp `selection_lock_sha256` and `candidate_audit_commit_sha` onto every training record and summary output. Also audit and report the exact exclusion count and `pi_min` distribution of the `min(pi_q) > 1e-4` filter.)*
 
 ### B. Training Seeds and Failed Runs
 
@@ -135,7 +135,7 @@ If N_elig < 20:
 - At least 4/5 seeds must achieve accuracy >= 0.99
   for individual HELD eligibility.
 
-*(Frozen training seeds: `seed = 99000 + arch_offset + 100 * aid + seed_idx` for `seed_idx in {0, 1, 2, 3, 4}`, with `arch_offset = 0` for `gru_mlp` and `10000` for `gru_lin`; PyTorch `torch.manual_seed(seed)` and NumPy `np.random.default_rng(seed)`. Analysis enforces the full `selected_ids x arm x 5-seed` grid via `validate_and_complete_seed_grid`, synthesizing explicit failed-run stubs if any grid record is absent.)*
+*(Frozen training seeds: `seed = 99000 + arch_offset + 100 * aid + seed_idx` for `seed_idx in {0, 1, 2, 3, 4}`, with `arch_offset = 0` for `gru_mlp` and `10000` for `gru_lin`; PyTorch `torch.manual_seed(seed)` and NumPy `np.random.default_rng(seed)`. Every training/missing/invalid record passes through one canonical normalizer `normalize_seed_run_record` that enforces unified `gram_valid=False, fit_ok=False` metadata on all invalid/failed/missing seeds, and `analyse()` enforces the exact 200-record `20 x 2 x 5` postcondition via `validate_and_complete_seed_grid`.)*
 
 ### C. Trajectory Generation
 
@@ -174,7 +174,7 @@ Use 10,000 independent draws per run.
 Individual Null B robustness:
 At least 4/5 seeds must have p_B <= 0.05.
 
-*(Canonical basis for Null C: standard orthonormal basis `Q0` of `im(P_perp)` constructed by symmetric eigendecomposition of `P_perp`. Zero-norm / missing-centroid / missing-grid runs are flagged `gram_valid = False` and retained as failed runs with unified zero similarity (`cosines = 0.0` across all 5 candidates, `margin_D = 0.0`, `p_upper = 1.0`) identically across observed statistics, hierarchical bootstrap, and aggregate Null B in the intention-to-train primary analysis. `null_b_rotation_draws` enforces both eigenvalue preservation (`max_eig_err < 1e-7`) and PSD (`min_eig >= -1e-8 * scale`).)*
+*(Canonical basis for Null C: standard orthonormal basis `Q0` of `im(P_perp)` constructed by symmetric eigendecomposition of `P_perp`. Both `null_b_rotation_draws` and `aggregate_null_b_test` use `_haar_orthogonal_batch` (`Q * sign(diag(R))` with explicit `sign(0) = +1` convention and `||U^T U - I||_max < 1e-10`), check every source and rotated Gram for PSD (`min_eig >= -1e-8 * scale`) and eigenvalue preservation (`max_eig_err < 1e-7`), and report PSD diagnostics in the outputs. Zero-norm / missing-centroid / non-PSD / malformed / missing-grid runs are normalized through `normalize_seed_run_record` and `normalize_seed_eval` with unified `gram_valid = False, fit_ok = False`, zero similarity (`cosines = 0.0` across all 5 candidates, `margin_D = 0.0`, `p_upper = 1.0`), identically across observed statistics, hierarchical bootstrap, and aggregate Null B in the intention-to-train primary analysis. `aggregate_null_b_test` unconditionally asserts `|observed_T - obs_T_computed| < 1e-12`.)*
 
 ### E. Aggregate Statistical Test
 
