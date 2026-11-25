@@ -94,3 +94,15 @@ lean_lib ObstructionExactSequence where
 lean_lib AuditObstructionExactSequence where
 lean_lib ContextualRingDescent where
 lean_lib AuditContextualRingDescent where
+lean_lib StochasticRepresentationGroupoid where
+lean_lib SignatureCovariantMarkovTransport where
+lean_lib AuditSignatureCovariantMarkovTransport where
+lean_lib SignatureTransportCoherence where
+lean_lib AuditSignatureTransportCoherence where
+lean_lib SignatureTransportAction where
+lean_lib TotalMarkovRepresentationGroupoid where
+lean_lib AuditTotalMarkovRepresentationGroupoid where
+lean_lib ContextualCoalgebraicRing where
+lean_lib AuditContextualCoalgebraicRing where
+lean_lib CechNerveRingBridge where
+lean_lib AuditCechNerveRingBridge where

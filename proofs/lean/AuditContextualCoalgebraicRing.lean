@@ -1,0 +1,9 @@
+import ContextualCoalgebraicRing
+
+#print axioms Cerp.ContextualCoalgebraicRing.global_coherence_implies_local
+#print axioms Cerp.ContextualCoalgebraicRing.global_coherence_implies_correspondence
+#print axioms Cerp.ContextualCoalgebraicRing.global_coherence_iff
+#print axioms Cerp.ContextualCoalgebraicRing.causal_evolution_preserves_global_coherence
+#print axioms Cerp.ContextualCoalgebraicRing.causal_evolution_preserves_all_finite_steps
+#print axioms Cerp.ContextualCoalgebraicRing.global_coherence_extends_along_paths
+#print axioms Cerp.ContextualCoalgebraicRing.connected_network_yields_global_correspondence_chains
