@@ -135,7 +135,7 @@ If N_elig < 20:
 - At least 4/5 seeds must achieve accuracy >= 0.99
   for individual HELD eligibility.
 
-*(Frozen training seeds: `seed = 99000 + arch_offset + 100 * aid + seed_idx` for `seed_idx in {0, 1, 2, 3, 4}`, with `arch_offset = 0` for `gru_mlp` and `10000` for `gru_lin`; PyTorch `torch.manual_seed(seed)` and NumPy `np.random.default_rng(seed)`.)*
+*(Frozen training seeds: `seed = 99000 + arch_offset + 100 * aid + seed_idx` for `seed_idx in {0, 1, 2, 3, 4}`, with `arch_offset = 0` for `gru_mlp` and `10000` for `gru_lin`; PyTorch `torch.manual_seed(seed)` and NumPy `np.random.default_rng(seed)`. Analysis enforces the full `selected_ids x arm x 5-seed` grid via `validate_and_complete_seed_grid`, synthesizing explicit failed-run stubs if any grid record is absent.)*
 
 ### C. Trajectory Generation
 
@@ -174,13 +174,15 @@ Use 10,000 independent draws per run.
 Individual Null B robustness:
 At least 4/5 seeds must have p_B <= 0.05.
 
-*(Canonical basis for Null C: standard orthonormal basis `Q0` of `im(P_perp)` constructed by symmetric eigendecomposition of `P_perp`. Zero-norm / missing-centroid runs are flagged `gram_valid = False` and retained as failed runs with `target_cos = 0.0, margin_D = -1.0, p_upper = 1.0` in the intention-to-train primary analysis.)*
+*(Canonical basis for Null C: standard orthonormal basis `Q0` of `im(P_perp)` constructed by symmetric eigendecomposition of `P_perp`. Zero-norm / missing-centroid / missing-grid runs are flagged `gram_valid = False` and retained as failed runs with unified zero similarity (`cosines = 0.0` across all 5 candidates, `margin_D = 0.0`, `p_upper = 1.0`) identically across observed statistics, hierarchical bootstrap, and aggregate Null B in the intention-to-train primary analysis. `null_b_rotation_draws` enforces both eigenvalue preservation (`max_eig_err < 1e-7`) and PSD (`min_eig >= -1e-8 * scale`).)*
 
 ### E. Aggregate Statistical Test
 
 Primary discrimination statistic:
 
-T = median_a(D_a)
+T = median_a(D_a), where D_a = median_s(cos_{a,s,target}) - max_c median_s(cos_{a,s,c})
+
+computed via a single shared canonical helper (`compute_automaton_D_batch`) across observed summaries, hierarchical bootstrap replicates, and aggregate Null B replicates.
 
 Construct 10,000 aggregate Null B replicates.
 
@@ -210,7 +212,7 @@ Bootstrap:
 - Resample automata first.
 - Resample their 5 seeds second.
 - Percentile 95% confidence interval.
-- Preserve candidate pairing within seeds.
+- Preserve candidate pairing within seeds and recompute `D_a = median_s(cos_{a,s,target}) - max_c median_s(cos_{a,s,c})` per replicate using the identical shared statistic function.
 
 ### G. Mandatory Interpretation
 

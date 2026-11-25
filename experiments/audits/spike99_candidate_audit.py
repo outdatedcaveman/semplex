@@ -160,9 +160,16 @@ def null_b_rotation_draws(
     nt = float(np.linalg.norm(T_sub))
     if na < 1e-12 or nt < 1e-12 or d == 0:
         zeros = np.zeros(draws, dtype=float)
-        diag = {"max_eig_err": 0.0, "min_rot_eig": 0.0}
+        diag = {"max_eig_err": 0.0, "min_rot_eig": 0.0, "orig_min_eig": 0.0}
         return (zeros, diag) if return_diagnostics else zeros
     orig_eigs = np.linalg.eigvalsh(A_sub)
+    orig_min_eig = float(np.min(orig_eigs))
+    scale = max(float(np.max(np.abs(orig_eigs))), 1e-12)
+    psd_tol = -1e-8 * scale
+    if orig_min_eig < psd_tol:
+        raise AssertionError(
+            f"Null B PSD check failed on source_gram: orig_min_eig={orig_min_eig:.2e} < {psd_tol:.2e}"
+        )
     max_eig_err = 0.0
     min_rot_eig = float("inf")
     out = np.empty(draws, dtype=float)
@@ -181,7 +188,15 @@ def null_b_rotation_draws(
         out[start : start + b] = dots / (na * nt)
     if max_eig_err >= 1e-7:
         raise AssertionError(f"Null B eigenvalue preservation failed: max_eig_err={max_eig_err:.2e}")
-    diag = {"max_eig_err": max_eig_err, "min_rot_eig": min_rot_eig}
+    if min_rot_eig < psd_tol:
+        raise AssertionError(
+            f"Null B PSD preservation failed: min_rot_eig={min_rot_eig:.2e} < {psd_tol:.2e}"
+        )
+    diag = {
+        "max_eig_err": max_eig_err,
+        "min_rot_eig": min_rot_eig,
+        "orig_min_eig": orig_min_eig,
+    }
     return (out, diag) if return_diagnostics else out
 
 

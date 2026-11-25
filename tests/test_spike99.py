@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import numpy as np
+import pytest
 
 from experiments import spike99 as S99
 from experiments.audits import spike99_candidate_audit as AUDIT
@@ -185,7 +186,7 @@ def test_stratified_selection_and_aggregate_null_b() -> None:
     pi = np.array([0.2, 0.25, 0.25, 0.3], dtype=float)
     _, _, Q0 = AUDIT.centred_subspace_basis(pi)
     Pperp = Q0 @ Q0.T
-    target = Pperp @ np.diag([2.0, 0.5, -0.5, -1.0]) @ Pperp
+    target = Pperp @ np.diag([2.0, 0.8, 0.3, 0.1]) @ Pperp
     cands = {"WcWo": target}
     for j, k in enumerate(S99.COMPETITOR_KEYS):
         M = rng.normal(size=(4, 4))
@@ -200,3 +201,191 @@ def test_stratified_selection_and_aggregate_null_b() -> None:
     )
     assert agg["reps"] == 50
     assert agg["p_aggregate"] <= 0.05
+
+
+def test_statistical_identity_mixed_candidate_median_and_null_b_parity() -> None:
+    # Distinct per-seed margin vs candidate-median D_a:
+    # WcWo = [0.6]*5 -> med=0.6; Wo=[0.9,0.9,0.1,0.1,0.1] -> med=0.1; G=[0.1,0.1,0.1,0.9,0.9] -> med=0.1.
+    # Median of seed margins = -0.30, whereas canonical D_a = 0.60 - 0.10 = +0.50.
+    seed_evals_diff = [
+        {
+            "gram_valid": True,
+            "target_cos": 0.60,
+            "cosines": {"WcWo": 0.60, "Wo": wo, "G": g, "o": 0.10, "k1_top": 0.10},
+            "max_competitor_cos": max(wo, g),
+            "margin_D": 0.60 - max(wo, g),
+            "null_A": {"median": 0.2, "p95": 0.4, "p_upper": 0.01},
+            "null_B": {"median": 0.2, "p95": 0.4, "p_upper": 0.01},
+            "null_C": {"median": 0.2, "p95": 0.4, "p_upper": 0.01},
+        }
+        for wo, g in [(0.9, 0.1), (0.9, 0.1), (0.1, 0.1), (0.1, 0.9), (0.1, 0.9)]
+    ]
+    summary = S99.evaluate_automaton_held(seed_evals_diff)
+    assert abs(summary["margin_D"] - 0.50) < 1e-12
+    boot = S99.hierarchical_bootstrap_ci(
+        [np.vstack([S99.seed_eval_to_cos_row(r) for r in seed_evals_diff])], reps=40
+    )
+    assert abs(boot["observed_median_D"] - 0.50) < 1e-12
+
+    # End-to-end PSD Gram matrices across 20 synthetic automata verify exact T identity
+    # across evaluate_automaton_held, hierarchical_bootstrap_ci, and aggregate_null_b_test.
+    pi = np.array([0.2, 0.25, 0.25, 0.3], dtype=float)
+    _, _, Q0 = AUDIT.centred_subspace_basis(pi)
+    v0, v1, v2 = Q0[:, 0], Q0[:, 1], Q0[:, 2]
+    B0 = np.outer(v0, v0)
+    B1 = np.outer(v1, v1)
+    B2 = np.outer(v2, v2)
+    B_neg = np.outer(v0 + v1, v0 + v1) * 0.5
+    cands = {"WcWo": B0, "Wo": B1, "G": B2, "o": B_neg, "k1_top": B1 + 0.25 * B2}
+
+    all_summaries = []
+    all_seed_evals = []
+    all_grams = []
+    for a_idx in range(20):
+        aut_grams = []
+        aut_evals = []
+        for s_idx in range(5):
+            w0 = 1.0 + 0.1 * ((a_idx + s_idx) % 3)
+            w1 = 0.2 if (s_idx < 3) else 0.7
+            w2 = 0.6 if (s_idx < 2) else 0.1
+            G = w0 * B0 + w1 * B1 + w2 * B2
+            ev = S99.evaluate_learned_gram(G, cands, pi, hidden_dim=16, draws=40, seed=100 * a_idx + s_idx)
+            aut_grams.append(G)
+            aut_evals.append(ev)
+        all_grams.append(aut_grams)
+        all_seed_evals.append(aut_evals)
+        all_summaries.append(S99.evaluate_automaton_held(aut_evals))
+
+    obs_T = float(np.median([s["margin_D"] for s in all_summaries]))
+    agg = S99.aggregate_null_b_test(
+        all_grams,
+        [cands for _ in range(20)],
+        [pi for _ in range(20)],
+        observed_T=None,
+        reps=30,
+        seed=777,
+    )
+    assert abs(agg["T_observed"] - obs_T) < 1e-12
+    assert abs(agg["T_observed_from_grams"] - obs_T) < 1e-12
+    verdict = S99.evaluate_aggregate_verdict(
+        all_summaries, all_seed_evals, n_eligible=20, bootstrap_reps=100, aggregate_null_b=agg
+    )
+    assert abs(verdict["median_D"] - obs_T) < 1e-12
+
+    # Mismatched T_observed must fail loudly rather than silently diverging.
+    with pytest.raises(AssertionError, match="Statistic mismatch"):
+        S99.evaluate_aggregate_verdict(
+            all_summaries,
+            all_seed_evals,
+            n_eligible=20,
+            bootstrap_reps=20,
+            aggregate_null_b={**agg, "T_observed": obs_T + 0.25},
+        )
+
+
+def test_invalid_seed_parity_across_observed_bootstrap_and_null_b() -> None:
+    pi = np.array([0.25, 0.25, 0.25, 0.25], dtype=float)
+    _, _, Q0 = AUDIT.centred_subspace_basis(pi)
+    B0 = np.outer(Q0[:, 0], Q0[:, 0])
+    B1 = np.outer(Q0[:, 1], Q0[:, 1])
+    B2 = np.outer(Q0[:, 2], Q0[:, 2])
+    cands = {"WcWo": B0, "Wo": B1, "G": B2, "o": B1, "k1_top": B2}
+
+    # 3 failed seeds out of 5 -> every candidate median is 0.0 -> D_a == 0.0 (not -1.0)
+    stub = S99.failed_seed_eval_stub()
+    assert stub["margin_D"] == 0.0
+    valid_ev = S99.evaluate_learned_gram(B0, cands, pi, hidden_dim=8, draws=30, seed=11)
+    tampered_invalid = {**valid_ev, "gram_valid": False}
+
+    sum_stub = S99.evaluate_automaton_held([valid_ev, valid_ev, stub, stub, stub])
+    sum_inv = S99.evaluate_automaton_held([valid_ev, valid_ev, tampered_invalid, stub, stub])
+    assert sum_stub["margin_D"] == 0.0
+    assert sum_inv["margin_D"] == 0.0
+    assert sum_stub["held"] is False
+
+    # Mix 2 valid + 1 None + 1 zero matrix + 1 NaN matrix -> Null B & bootstrap agree identically.
+    aut_grams = [B0 + 0.2 * B1, B0 + 0.1 * B2, None, np.zeros((4, 4)), np.full((4, 4), np.nan)]
+    aut_evals = [
+        S99.evaluate_learned_gram(aut_grams[0], cands, pi, hidden_dim=8, draws=30, seed=1),
+        S99.evaluate_learned_gram(aut_grams[1], cands, pi, hidden_dim=8, draws=30, seed=2),
+        stub,
+        stub,
+        stub,
+    ]
+    aut_sum = S99.evaluate_automaton_held(aut_evals)
+    boot = S99.hierarchical_bootstrap_ci([np.vstack([S99.seed_eval_to_cos_row(e) for e in aut_evals])], reps=25)
+    agg = S99.aggregate_null_b_test([aut_grams], [cands], [pi], observed_T=None, reps=25, seed=55)
+    assert abs(aut_sum["margin_D"] - boot["observed_median_D"]) < 1e-12
+    assert abs(aut_sum["margin_D"] - agg["T_observed_from_grams"]) < 1e-12
+
+
+def test_seed_grid_validation_and_missing_seed_detection() -> None:
+    selected_ids = list(range(10, 30))
+    stub = S99.failed_seed_eval_stub()
+    full_grid = [
+        {
+            "id": aid,
+            "arch": arch,
+            "seed_idx": s_idx,
+            "seed": 1,
+            "eval_seed": 2,
+            "fit": 1.0,
+            "fit_ok": True,
+            "trained": {"stats": {}, "eval": stub, "G_learned": None},
+        }
+        for arch in ("gru_mlp", "gru_lin")
+        for aid in selected_ids
+        for s_idx in range(S99.SEEDS_PER_ARM)
+    ]
+    comp_full, rep_full = S99.validate_and_complete_seed_grid(full_grid, selected_ids)
+    assert len(comp_full) == 200
+    assert rep_full["n_present"] == 200 and rep_full["n_missing"] == 0
+
+    incomplete = full_grid[:-3]
+    with pytest.raises(AssertionError, match="Missing 3 records"):
+        S99.validate_and_complete_seed_grid(incomplete, selected_ids, strict_complete=True)
+
+    comp_inc, rep_inc = S99.validate_and_complete_seed_grid(incomplete, selected_ids, strict_complete=False)
+    assert len(comp_inc) == 200
+    assert rep_inc["n_present"] == 197 and rep_inc["n_missing"] == 3
+    missing_recs = [r for r in comp_inc if r.get("missing_record")]
+    assert len(missing_recs) == 3
+    assert all((not r["fit_ok"]) and (r["trained"]["G_learned"] is None) and (not r["trained"]["eval"]["gram_valid"]) for r in missing_recs)
+
+    # Extra record outside frozen selected_ids or duplicate record must fail.
+    with pytest.raises(AssertionError, match="Unexpected run record"):
+        S99.validate_and_complete_seed_grid(incomplete + [{**full_grid[0], "id": 999}], selected_ids)
+    with pytest.raises(AssertionError, match="Duplicate run record"):
+        S99.validate_and_complete_seed_grid(full_grid + [full_grid[0]], selected_ids)
+
+
+def test_null_b_psd_rejection_and_haar_orthogonal_properties() -> None:
+    pi = np.array([0.2, 0.25, 0.25, 0.3], dtype=float)
+    _, one, Q0 = AUDIT.centred_subspace_basis(pi)
+    Pperp = np.eye(4) - np.outer(one, one)
+    # Construct indefinite symmetric matrix in im(P_perp) with negative eigenvalue -0.5.
+    A_neg = Q0 @ np.diag([2.0, 0.5, -0.5]) @ Q0.T
+    T = Pperp @ np.diag([1.0, 0.5, 0.2, 0.1]) @ Pperp
+    with pytest.raises(AssertionError, match="PSD"):
+        AUDIT.null_b_rotation_draws(A_neg, T, pi, draws=20, seed=1)
+
+    A_psd = Q0 @ np.diag([2.0, 0.5, 0.0]) @ Q0.T
+    nb, diag = AUDIT.null_b_rotation_draws(A_psd, T, pi, draws=100, seed=2, return_diagnostics=True)
+    assert nb.shape == (100,)
+    assert diag["orig_min_eig"] >= -1e-8
+    assert diag["min_rot_eig"] >= -1e-8
+
+    # Verify _haar_orthogonal_batch yields O(d) orthogonality, |det|=1 sign mix, zero mean & 1/d variance.
+    rng = np.random.default_rng(2026)
+    d, b = 5, 2000
+    U = AUDIT._haar_orthogonal_batch(rng, d, b)
+    assert U.shape == (b, d, d)
+    orth_err = np.max(np.abs(np.einsum("bij,bik->bjk", U, U) - np.eye(d)[None, :, :]))
+    assert orth_err < 1e-10
+    dets = np.linalg.det(U)
+    assert np.max(np.abs(np.abs(dets) - 1.0)) < 1e-10
+    pos_frac = float(np.mean(dets > 0.0))
+    assert 0.40 < pos_frac < 0.60
+    assert float(np.max(np.abs(np.mean(U, axis=0)))) < 0.08
+    var_err = np.max(np.abs(np.mean(U ** 2, axis=0) - (1.0 / d)))
+    assert float(var_err) < 0.04

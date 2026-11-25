@@ -273,18 +273,50 @@ def failed_seed_eval_stub() -> dict:
         "cosines": {k: 0.0 for k in ALL_CAND_KEYS},
         "target_cos": 0.0,
         "max_competitor_cos": 0.0,
-        "margin_D": -1.0,
+        "margin_D": 0.0,
         "null_A": {"median": 0.0, "p95": 1.0, "p_upper": 1.0},
         "null_B": {"median": 0.0, "p95": 1.0, "p_upper": 1.0, "max_eig_err": 0.0, "min_rot_eig": 0.0},
         "null_C": {"median": 0.0, "p95": 1.0, "p_upper": 1.0},
     }
 
 
+def seed_eval_to_cos_row(seed_eval: dict | None) -> np.ndarray:
+    """Extract ordered (5,) candidate cosine row; invalid/missing seeds map to all-zero cosines."""
+    if not seed_eval or not seed_eval.get("gram_valid", True):
+        return np.zeros(len(ALL_CAND_KEYS), dtype=float)
+    cos = seed_eval.get("cosines")
+    if not isinstance(cos, dict):
+        return np.zeros(len(ALL_CAND_KEYS), dtype=float)
+    row = np.array([float(cos.get(k, 0.0)) for k in ALL_CAND_KEYS], dtype=float)
+    if not np.all(np.isfinite(row)):
+        return np.zeros(len(ALL_CAND_KEYS), dtype=float)
+    return row
+
+
+def compute_automaton_D_batch(cos_arr: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+    """Canonical automaton statistic D_a = median_s(cos_{a,s,target}) - max_c median_s(cos_{a,s,c})."""
+    arr = np.asarray(cos_arr, dtype=float)
+    if arr.ndim < 2 or arr.shape[-2] == 0 or arr.shape[-1] != len(ALL_CAND_KEYS):
+        raise ValueError(f"Expected trailing shape (n_seeds>=1, {len(ALL_CAND_KEYS)}), got {arr.shape}")
+    med_cands = np.median(arr, axis=-2)
+    margin_D = med_cands[..., 0] - np.max(med_cands[..., 1:], axis=-1)
+    return med_cands, margin_D
+
+
+def compute_automaton_D_from_cos_matrix(cos_mat: np.ndarray) -> tuple[np.ndarray, float]:
+    """Single-automaton wrapper around compute_automaton_D_batch returning (med_cands_5, D_a)."""
+    arr = np.asarray(cos_mat, dtype=float)
+    if arr.ndim != 2:
+        raise ValueError(f"Expected 2D cos_mat of shape (n_seeds, {len(ALL_CAND_KEYS)}), got ndim={arr.ndim}")
+    med_cands, margin_D = compute_automaton_D_batch(arr)
+    return med_cands, float(margin_D)
+
+
 def aggregate_null_b_test(
     per_automaton_seed_grams: list[list[np.ndarray | None]],
     per_automaton_cand_mats: list[dict[str, np.ndarray]],
     per_automaton_pis: list[np.ndarray],
-    observed_T: float,
+    observed_T: float | None = None,
     reps: int = NULL_DRAWS,
     seed: int = 9950,
 ) -> dict:
@@ -292,10 +324,11 @@ def aggregate_null_b_test(
     rng = np.random.default_rng(seed)
     n_aut = len(per_automaton_seed_grams)
     if n_aut == 0:
-        return {"T_observed": None, "p_aggregate": 1.0, "reps": 0}
+        return {"T_observed": None, "T_observed_from_grams": None, "p_aggregate": 1.0, "reps": 0}
     T_null = np.empty(reps, dtype=float)
     # Precompute subspace bases and normalized target/competitor projections per automaton
     aut_pre = []
+    obs_cos_mats = []
     for a_idx in range(n_aut):
         pi = per_automaton_pis[a_idx]
         _, _, Q0 = AUDIT.centred_subspace_basis(pi)
@@ -307,14 +340,38 @@ def aggregate_null_b_test(
             nc = float(np.linalg.norm(Cs))
             C_subs[k] = (Cs / nc) if nc >= 1e-12 else np.zeros_like(Cs)
         seed_subs = []
-        for G in per_automaton_seed_grams[a_idx]:
-            if G is None or float(np.linalg.norm(G)) < 1e-12:
+        n_seeds_a = len(per_automaton_seed_grams[a_idx])
+        obs_rows = np.zeros((n_seeds_a, len(ALL_CAND_KEYS)), dtype=float)
+        for s_idx, G in enumerate(per_automaton_seed_grams[a_idx]):
+            if G is None:
                 seed_subs.append(None)
-            else:
-                Gs = 0.5 * (Q0.T @ G @ Q0 + (Q0.T @ G @ Q0).T)
-                ng = float(np.linalg.norm(Gs))
-                seed_subs.append((Gs / ng) if ng >= 1e-12 else None)
+                continue
+            G_arr = np.asarray(G, dtype=float)
+            if not np.all(np.isfinite(G_arr)) or float(np.linalg.norm(G_arr)) < 1e-12:
+                seed_subs.append(None)
+                continue
+            Gs = 0.5 * (Q0.T @ G_arr @ Q0 + (Q0.T @ G_arr @ Q0).T)
+            ng = float(np.linalg.norm(Gs))
+            if ng < 1e-12:
+                seed_subs.append(None)
+                continue
+            Gs_norm = Gs / ng
+            orig_eigs = np.linalg.eigvalsh(Gs_norm)
+            scale = max(float(np.max(np.abs(orig_eigs))), 1e-12)
+            if float(np.min(orig_eigs)) < -1e-8 * scale:
+                raise AssertionError(
+                    f"Aggregate Null B PSD check failed on automaton={a_idx}, seed={s_idx}: "
+                    f"min_eig={float(np.min(orig_eigs)):.2e}"
+                )
+            seed_subs.append(Gs_norm)
+            for k_idx, k_name in enumerate(ALL_CAND_KEYS):
+                obs_rows[s_idx, k_idx] = float(np.sum(Gs_norm * C_subs[k_name]))
+        obs_cos_mats.append(obs_rows)
         aut_pre.append((d, C_subs, seed_subs))
+
+    obs_T_computed = float(np.median([compute_automaton_D_from_cos_matrix(m)[1] for m in obs_cos_mats]))
+    if observed_T is None:
+        observed_T = obs_T_computed
 
     chunk = 500
     for start in range(0, reps, chunk):
@@ -330,13 +387,13 @@ def aggregate_null_b_test(
                 rot = np.einsum("bij,jk,blk->bil", U, Gs, U)
                 for k_idx, k_name in enumerate(ALL_CAND_KEYS):
                     seed_cands[:, s_idx, k_idx] = np.einsum("bij,ij->b", rot, C_subs[k_name])
-            med_cands = np.median(seed_cands, axis=1)
-            D_mat[:, a_idx] = med_cands[:, 0] - np.max(med_cands[:, 1:], axis=1)
+            _, D_mat[:, a_idx] = compute_automaton_D_batch(seed_cands)
         T_null[start : start + b] = np.median(D_mat, axis=1)
 
     p_agg = float((1 + int(np.sum(T_null >= observed_T))) / (reps + 1))
     return {
         "T_observed": float(observed_T),
+        "T_observed_from_grams": obs_T_computed,
         "T_null_median": float(np.median(T_null)),
         "T_null_p95": float(np.percentile(T_null, 95)),
         "p_aggregate": p_agg,
@@ -370,26 +427,40 @@ def holm_bonferroni(p_values: dict[str, float], alpha: float = 0.05) -> dict[str
 
 
 def hierarchical_bootstrap_ci(
-    per_automaton_seed_margins: list[list[float]],
+    per_automaton_seed_cos: list[np.ndarray | list[list[float]]],
     reps: int = BOOTSTRAP_REPS,
     seed: int = 9900,
 ) -> dict:
-    """Hierarchical bootstrap (automata, then seeds within automata) for median D."""
+    """Hierarchical bootstrap (automata, then seeds) recomputing canonical D_a per replicate."""
     rng = np.random.default_rng(seed)
-    n_aut = len(per_automaton_seed_margins)
+    n_aut = len(per_automaton_seed_cos)
     if n_aut == 0:
-        return {"median": None, "ci95_low": None, "ci95_high": None, "reps": 0}
-    arrs = [np.asarray(xs, dtype=float) for xs in per_automaton_seed_margins]
-    obs_med = float(np.median([np.median(a) for a in arrs]))
+        return {"observed_median_D": None, "ci95_low": None, "ci95_high": None, "reps": 0}
+    arrs = [np.asarray(xs, dtype=float) for xs in per_automaton_seed_cos]
+    obs_med = float(np.median([compute_automaton_D_from_cos_matrix(a)[1] for a in arrs]))
     boot = np.empty(reps, dtype=float)
-    for r in range(reps):
-        aut_idx = rng.integers(0, n_aut, size=n_aut)
-        aut_meds = np.empty(n_aut, dtype=float)
-        for j, ai in enumerate(aut_idx):
-            s_arr = arrs[ai]
-            s_idx = rng.integers(0, len(s_arr), size=len(s_arr))
-            aut_meds[j] = float(np.median(s_arr[s_idx]))
-        boot[r] = float(np.median(aut_meds))
+    shapes = {a.shape for a in arrs}
+    if len(shapes) == 1:
+        stacked = np.stack(arrs, axis=0)  # (n_aut, n_seeds, 5)
+        n_seeds = stacked.shape[1]
+        chunk = 1000
+        for start in range(0, reps, chunk):
+            b = min(chunk, reps - start)
+            aut_idx = rng.integers(0, n_aut, size=(b, n_aut))
+            s_idx = rng.integers(0, n_seeds, size=(b, n_aut, n_seeds))
+            sampled = stacked[aut_idx[:, :, None], s_idx]
+            _, d_boot = compute_automaton_D_batch(sampled)
+            boot[start : start + b] = np.median(d_boot, axis=1)
+    else:
+        for r in range(reps):
+            aut_idx = rng.integers(0, n_aut, size=n_aut)
+            aut_meds = np.empty(n_aut, dtype=float)
+            for j, ai in enumerate(aut_idx):
+                s_arr = arrs[ai]
+                s_idx = rng.integers(0, len(s_arr), size=len(s_arr))
+                _, d_val = compute_automaton_D_from_cos_matrix(s_arr[s_idx])
+                aut_meds[j] = d_val
+            boot[r] = float(np.median(aut_meds))
     return {
         "observed_median_D": obs_med,
         "ci95_low": float(np.percentile(boot, 2.5)),
@@ -402,18 +473,30 @@ def evaluate_automaton_held(seed_evals: list[dict], fit_flags: list[bool] | None
     """Apply Commit-2 Section 8 intention-to-train per-automaton HELD criterion across 5 seeds."""
     if not seed_evals:
         return {"held": False, "n_seeds": 0}
+    norm_evals = [
+        r if (isinstance(r, dict) and r.get("gram_valid", True)) else failed_seed_eval_stub()
+        for r in seed_evals
+    ]
     if fit_flags is None:
-        fit_flags = [bool(r.get("fit_ok", True)) for r in seed_evals]
-    med_target = float(np.median([r["target_cos"] for r in seed_evals]))
-    med_cands = {k: float(np.median([r["cosines"][k] for r in seed_evals])) for k in ALL_CAND_KEYS}
-    best_comp = max(med_cands[c] for c in COMPETITOR_KEYS)
-    margin_D = float(med_target - best_comp)
-    null_a_p95 = float(np.median([r["null_A"]["p95"] for r in seed_evals]))
-    n_above_p95 = sum(1 for r in seed_evals if r["target_cos"] > r["null_A"]["p95"])
-    n_null_b_sig = sum(1 for r in seed_evals if r["null_B"]["p_upper"] <= 0.05)
-    n_fit_ok = sum(1 for ok in fit_flags if ok)
-    med_null_a_p = float(np.median([r["null_A"]["p_upper"] for r in seed_evals]))
-    med_null_b_p = float(np.median([r["null_B"]["p_upper"] for r in seed_evals]))
+        eff_fit = [bool(r.get("fit_ok", True)) and bool(r.get("gram_valid", True)) for r in norm_evals]
+    else:
+        eff_fit = [bool(ok) and bool(r.get("gram_valid", True)) for r, ok in zip(norm_evals, fit_flags)]
+
+    cos_mat = np.vstack([seed_eval_to_cos_row(r) for r in norm_evals])
+    med_arr, margin_D = compute_automaton_D_from_cos_matrix(cos_mat)
+    med_cands = {k: float(med_arr[idx]) for idx, k in enumerate(ALL_CAND_KEYS)}
+    med_target = med_cands[TARGET_KEY]
+
+    null_a_p95 = float(np.median([r["null_A"]["p95"] for r in norm_evals]))
+    n_above_p95 = sum(
+        1 for i, r in enumerate(norm_evals) if r.get("gram_valid", True) and cos_mat[i, 0] > r["null_A"]["p95"]
+    )
+    n_null_b_sig = sum(
+        1 for r in norm_evals if r.get("gram_valid", True) and r["null_B"]["p_upper"] <= 0.05
+    )
+    n_fit_ok = sum(1 for ok in eff_fit if ok)
+    med_null_a_p = float(np.median([r["null_A"]["p_upper"] for r in norm_evals]))
+    med_null_b_p = float(np.median([r["null_B"]["p_upper"] for r in norm_evals]))
 
     c1 = med_target > null_a_p95 + 0.05
     c2 = n_above_p95 >= 4
@@ -422,7 +505,7 @@ def evaluate_automaton_held(seed_evals: list[dict], fit_flags: list[bool] | None
     c5 = n_fit_ok >= 4
     return {
         "held": bool(c1 and c2 and c3 and c4 and c5),
-        "n_seeds": len(seed_evals),
+        "n_seeds": len(norm_evals),
         "n_fit_ok": int(n_fit_ok),
         "med_target_cos": med_target,
         "med_competitor_cos": {c: med_cands[c] for c in COMPETITOR_KEYS},
@@ -460,8 +543,21 @@ def evaluate_aggregate_verdict(
         }
 
     n_held = sum(1 for a in automaton_summaries if a["held"])
-    seed_margins = [[r["margin_D"] for r in se] for se in per_automaton_seed_evals]
-    boot = hierarchical_bootstrap_ci(seed_margins, reps=bootstrap_reps)
+    seed_cos_mats = [np.vstack([seed_eval_to_cos_row(r) for r in se]) for se in per_automaton_seed_evals]
+    boot = hierarchical_bootstrap_ci(seed_cos_mats, reps=bootstrap_reps)
+    obs_T_from_summaries = float(np.median([a["margin_D"] for a in automaton_summaries]))
+    if abs(obs_T_from_summaries - float(boot["observed_median_D"])) >= 1e-12:
+        raise AssertionError(
+            f"Statistic mismatch between automaton_summaries T={obs_T_from_summaries:.12g} "
+            f"and bootstrap observed_median_D={boot['observed_median_D']:.12g}"
+        )
+    if aggregate_null_b is not None and aggregate_null_b.get("T_observed") is not None:
+        t_agg = float(aggregate_null_b["T_observed"])
+        if abs(obs_T_from_summaries - t_agg) >= 1e-12:
+            raise AssertionError(
+                f"Statistic mismatch between automaton_summaries T={obs_T_from_summaries:.12g} "
+                f"and aggregate_null_b T_observed={t_agg:.12g}"
+            )
     med_null_a_p = float(np.median([a["med_null_a_p"] for a in automaton_summaries]))
     p_aggregate_null_b = float(aggregate_null_b["p_aggregate"]) if aggregate_null_b is not None else float(
         np.median([a["med_null_b_p"] for a in automaton_summaries])
@@ -661,6 +757,84 @@ def _train_or_eval_one(
     }
 
 
+def validate_and_complete_seed_grid(
+    runs: list[dict],
+    selected_ids: list[int],
+    seeds_per_arm: int = SEEDS_PER_ARM,
+    strict_complete: bool = False,
+) -> tuple[list[dict], dict]:
+    """Validate frozen (arch, id, seed_idx) grid; synthesize failed stubs for missing entries."""
+    ordered_ids = sorted(int(x) for x in selected_ids)
+    if len(set(ordered_ids)) != len(ordered_ids):
+        raise AssertionError(f"Duplicate IDs in selected_ids: {selected_ids}")
+    expected_keys = {
+        (arch, aid, s_idx)
+        for arch in ("gru_mlp", "gru_lin")
+        for aid in ordered_ids
+        for s_idx in range(seeds_per_arm)
+    }
+    by_key: dict[tuple[str, int, int], dict] = {}
+    for rec in runs:
+        key = (str(rec["arch"]), int(rec["id"]), int(rec["seed_idx"]))
+        if key not in expected_keys:
+            raise AssertionError(f"Unexpected run record outside frozen grid: {key}")
+        if key in by_key:
+            raise AssertionError(f"Duplicate run record in grid: {key}")
+        by_key[key] = rec
+
+    completed: list[dict] = []
+    missing_keys: list[dict] = []
+    for arch in ("gru_mlp", "gru_lin"):
+        for aid in ordered_ids:
+            for s_idx in range(seeds_per_arm):
+                key = (arch, aid, s_idx)
+                if key in by_key:
+                    completed.append(by_key[key])
+                else:
+                    missing_keys.append({"arch": arch, "id": aid, "seed_idx": s_idx})
+                    completed.append(
+                        {
+                            "id": aid,
+                            "arch": arch,
+                            "seed_idx": s_idx,
+                            "seed": 99_000 + (0 if arch == "gru_mlp" else 10_000) + 100 * aid + s_idx,
+                            "eval_seed": 99_000_000 + 100 * aid + s_idx,
+                            "hidden_dim": HIDDEN_DIM,
+                            "fit": 0.0,
+                            "fit_ok": False,
+                            "missing_record": True,
+                            "untrained_control": {"fit": 0.0, "stats": None, "eval": None},
+                            "trained": {"stats": None, "eval": failed_seed_eval_stub(), "G_learned": None},
+                        }
+                    )
+    if strict_complete and missing_keys:
+        raise AssertionError(f"Missing {len(missing_keys)} records from required seed grid: {missing_keys[:5]}")
+
+    report = {
+        "n_expected": len(expected_keys),
+        "n_present": len(by_key),
+        "n_missing": len(missing_keys),
+        "missing_records": missing_keys,
+    }
+    return completed, report
+
+
+def _validated_ready_selection(P: dict) -> tuple[list[dict], list[int]]:
+    """Verify frozen READY selection lock in spike99_predictions.json."""
+    selected = P.get("selected_automata", [])
+    selected_ids = [int(x) for x in P.get("selected_ids", [])]
+    if (
+        len(selected) < MIN_ELIGIBLE_AUTOMATA
+        or len(selected) != TARGET_N_AUTOMATA
+        or len(set(selected_ids)) != TARGET_N_AUTOMATA
+        or selected_ids != [int(x["id"]) for x in selected]
+    ):
+        raise AssertionError(
+            f"Invalid READY selection lock: n_selected={len(selected)}, selected_ids={selected_ids}"
+        )
+    return selected, selected_ids
+
+
 def run() -> None:
     """Execute Spike 99 training ONLY if pre-registered eligibility >= 20 is satisfied."""
     import torch
@@ -669,21 +843,26 @@ def run() -> None:
     if not PRED_PATH.exists():
         predict()
     P = json.loads(PRED_PATH.read_text(encoding="utf-8"))
-    if P["status"] != "READY" or len(P["selected_automata"]) < MIN_ELIGIBLE_AUTOMATA:
+    if P["status"] != "READY":
         print(
             f"Spike 99 run aborted cleanly: status={P['status']}, "
             f"n_eligible={P['n_eligible']} (< {MIN_ELIGIBLE_AUTOMATA}). No training executed."
         )
         return
+    selected, _ = _validated_ready_selection(P)
 
     free_gb = available_ram_gb()
     if free_gb is not None and free_gb < MIN_FREE_RAM_GB:
         raise RuntimeError(f"Aborted: free RAM {free_gb:.2f} GB < {MIN_FREE_RAM_GB:.2f} GB floor.")
 
     pool = S81.build_pool()
+    for item in selected:
+        aid = int(item["id"])
+        assert 0 <= aid < len(pool), f"Selected id {aid} out of pool bounds"
+        assert pool[aid]["kind"] == item["kind"] and int(pool[aid]["s0"]) == int(item["s0"])
     RAW.mkdir(parents=True, exist_ok=True)
     for arch in ("gru_mlp", "gru_lin"):
-        for item in P["selected_automata"]:
+        for item in selected:
             aid = int(item["id"])
             A = {"id": aid, **pool[aid]}
             for s_idx in range(SEEDS_PER_ARM):
@@ -706,7 +885,7 @@ def analyse(out_path: pathlib.Path = OUT_PATH) -> dict:
     P = json.loads(PRED_PATH.read_text(encoding="utf-8"))
     audit = json.loads(AUDIT.AUDIT_OUT.read_text(encoding="utf-8")) if AUDIT.AUDIT_OUT.exists() else None
 
-    if P["status"] != "READY" or len(P["selected_automata"]) < MIN_ELIGIBLE_AUTOMATA:
+    if P["status"] != "READY" or len(P.get("selected_automata", [])) < MIN_ELIGIBLE_AUTOMATA:
         summary = {
             "spike": 99,
             "status": "UNDERPOWERED",
@@ -749,33 +928,50 @@ def analyse(out_path: pathlib.Path = OUT_PATH) -> dict:
         print(json.dumps(summary, indent=2))
         return summary
 
-    runs = [json.loads(f.read_text(encoding="utf-8")) for f in sorted(RAW.glob("*.json")) if not f.name.endswith("_g.npy")]
+    selected, selected_ids = _validated_ready_selection(P)
+    ordered_aids = sorted(selected_ids)
+    raw_runs = [json.loads(f.read_text(encoding="utf-8")) for f in sorted(RAW.glob("*.json")) if not f.name.endswith("_g.npy")]
+    runs, grid_report = validate_and_complete_seed_grid(raw_runs, ordered_aids, seeds_per_arm=SEEDS_PER_ARM)
     pool = S81.build_pool()
     arms_out = {}
     for arch in ("gru_mlp", "gru_lin"):
         arm_runs = [r for r in runs if r["arch"] == arch]
-        # Primary intention-to-train analysis: retain ALL 5 seeds per automaton.
-        itt_by_aut: dict[int, list[dict]] = {}
-        fit_by_aut: dict[int, list[bool]] = {}
-        grams_by_aut: dict[int, list[np.ndarray | None]] = {}
+        # Primary intention-to-train analysis: retain ALL 5 seeds per automaton on full frozen grid.
+        itt_by_aut: dict[int, list[dict]] = {aid: [] for aid in ordered_aids}
+        fit_by_aut: dict[int, list[bool]] = {aid: [] for aid in ordered_aids}
+        grams_by_aut: dict[int, list[np.ndarray | None]] = {aid: [] for aid in ordered_aids}
         sec_by_aut: dict[int, list[dict]] = {}
         for r in sorted(arm_runs, key=lambda x: (int(x["id"]), int(x["seed_idx"]))):
             aid = int(r["id"])
-            ev = r["trained"]["eval"] if r["trained"]["eval"] is not None else failed_seed_eval_stub()
+            ev_raw = r["trained"].get("eval")
             gl_raw = r["trained"].get("G_learned")
             gl_arr = np.asarray(gl_raw, dtype=float) if gl_raw is not None else None
-            itt_by_aut.setdefault(aid, []).append(ev)
-            fit_by_aut.setdefault(aid, []).append(bool(r["fit_ok"]))
-            grams_by_aut.setdefault(aid, []).append(gl_arr)
-            if r["fit_ok"] and r["trained"]["eval"] is not None:
+            valid_gram = (
+                ev_raw is not None
+                and bool(ev_raw.get("gram_valid", True))
+                and gl_arr is not None
+                and bool(np.all(np.isfinite(gl_arr)))
+                and float(np.linalg.norm(gl_arr)) >= 1e-12
+            )
+            if valid_gram:
+                ev = ev_raw
+            else:
+                ev = failed_seed_eval_stub()
+                gl_arr = None
+            itt_by_aut[aid].append(ev)
+            fit_by_aut[aid].append(bool(r["fit_ok"]) and valid_gram)
+            grams_by_aut[aid].append(gl_arr)
+            if r["fit_ok"] and valid_gram:
                 sec_by_aut.setdefault(aid, []).append(ev)
-        ordered_aids = sorted(itt_by_aut)
+        for aid in ordered_aids:
+            if len(itt_by_aut[aid]) != SEEDS_PER_ARM:
+                raise AssertionError(f"Expected {SEEDS_PER_ARM} seeds for aid={aid}, got {len(itt_by_aut[aid])}")
         itt_summaries = [
             evaluate_automaton_held(itt_by_aut[aid], fit_flags=fit_by_aut[aid])
             for aid in ordered_aids
         ]
         itt_seed_evals = [itt_by_aut[aid] for aid in ordered_aids]
-        obs_T = float(np.median([a["margin_D"] for a in itt_summaries])) if itt_summaries else 0.0
+        obs_T = float(np.median([a["margin_D"] for a in itt_summaries]))
         aut_cands = []
         aut_pis = []
         for aid in ordered_aids:
@@ -793,21 +989,26 @@ def analyse(out_path: pathlib.Path = OUT_PATH) -> dict:
             observed_T=obs_T,
             reps=NULL_DRAWS,
         )
+        if abs(obs_T - float(agg_null_b["T_observed_from_grams"])) >= 1e-10:
+            raise AssertionError(
+                f"Statistic mismatch in analyse({arch}): obs_T={obs_T:.10g} vs "
+                f"T_observed_from_grams={agg_null_b['T_observed_from_grams']:.10g}"
+            )
         itt_verdict = evaluate_aggregate_verdict(
-            itt_summaries, itt_seed_evals, n_eligible=len(P["selected_automata"]), aggregate_null_b=agg_null_b
+            itt_summaries, itt_seed_evals, n_eligible=len(selected), aggregate_null_b=agg_null_b
         )
         sec_summaries = [evaluate_automaton_held(sec_by_aut[aid]) for aid in sorted(sec_by_aut)]
         sec_seed_evals = [sec_by_aut[aid] for aid in sorted(sec_by_aut)]
         arms_out[arch] = {
             "primary_intention_to_train": itt_verdict,
             "secondary_fit_qualified": evaluate_aggregate_verdict(
-                sec_summaries, sec_seed_evals, n_eligible=len(P["selected_automata"])
+                sec_summaries, sec_seed_evals, n_eligible=len(selected)
             ),
             "n_total_runs": len(arm_runs),
             "n_fit_ok_runs": sum(1 for r in arm_runs if r["fit_ok"]),
         }
 
-    out = {"spike": 99, "status": "COMPLETE", "arms": arms_out, "n_runs": len(runs)}
+    out = {"spike": 99, "status": "COMPLETE", "arms": arms_out, "n_runs": len(runs), "grid_report": grid_report}
     out_path.write_text(json.dumps(out, indent=1), encoding="utf-8")
     print(json.dumps(out, indent=2))
     return out
