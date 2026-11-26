@@ -412,3 +412,22 @@ Four delegated readers, reading abstracts and key sections only.
 - **The heat kernel on the Cayley graph** is the most direct physics reading of C43.
   - c_ρ = 1 − (1/|S|) Σ_s Re χ_ρ(s)/d_ρ is the random-walk Laplacian eigenvalue in the ρ-block. So exp(−λ c_ρ) is the heat kernel, and λ is an effective diffusion time.
   - Prediction: random generator moves injected into the inputs shift λ linearly in their rate and leave α unchanged.
+
+### Sources read on 2026-11-25 (user-supplied)
+
+- **Yang et al., "Writing Weights or Training Them? Spatial Reasoning through Weight-Space Programming and Low-Rank Adaptation", arXiv 2611.27089** (abstract only).
+  - Setup: on Qwen3.5-0.8B, a closed-form weight edit is compared with a rank-1 LoRA.
+  - Hand edit: reference-frame task 0 → 22.1% and StepGame 19.2 → 33.7%, with neighbouring skills intact.
+  - LoRA: 100% / 98.8% on the targets, but its learned solution template takes over neighbouring distance tasks, which fall from 94/92% to 0–2%.
+  - What changes here: weak prior art for "training builds one narrow, over-general mechanism". It fits the compiled-against-trained contrast (Spike 35). It is one small model with no mechanistic analysis, so it supports no specific claim. Optional follow-up: an interference spike on the atlas, comparing compiler-written and trained weights on neighbouring Boolean functions (a basin switch).
+- **riemann-proof-map (github.com/mireklzicar/riemann-proof-map, v0.2.0, MIT)**, read in full (code not run).
+  - It is the compiled Lean 4 declaration-dependency graph of the RH / Dirichlet GRH formalisation: about 1.27M nodes, most of Mathlib.
+  - It computes the immediate-dominator tree: what every reference path to the theorem must pass through.
+  - No LLM extraction. Built from a 28.6 GB olean archive (about 130 GB of disk), `moddump`, igraph dominators and a TMAP layout. Hard-wired to one proof.
+  - What changes here: adopt the method, not the tool. A `getUsedConstants` extractor over `proofs/lean-mathlib`, joined with `claims/REGISTER.md` dependencies and spike evidence, gives three things:
+    - dominators of each headline claim;
+    - a "what breaks if Spike NN is refuted" set;
+    - a `sorry` frontier fed by `cerp/angelic.py`.
+
+    This is queued as work order G-B in GEMINI.md.
+  - For all of mathematics: Mathlib-wide graphs are feasible (this repo shows it), and module- and premise-level tools exist (Mathlib import graph, LeanDojo, blueprint `\uses` graphs). Linking declarations to the theorems of the literature at scale does not exist yet.

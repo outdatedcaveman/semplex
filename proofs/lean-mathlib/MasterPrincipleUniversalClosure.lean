@@ -22,10 +22,11 @@ Master Principle over Mathlib v4.12.0:
    Proves that a countable family of `μ`-a.e. measurable anchors stabilizes a gauge
    automorphism if and only if each coordinate anchor does, characterizing
    `⋂ j, Fix_ae(κ_j)`.
-5. **Unified Master Principle Capstone (`master_principle_universal_closure`):**
-   Packages Borel continuum profile invariance, `μ`-a.e. product-anchor trivialization,
-   observable-subspace `ker W` tube escape bounds, and Dobrushin contraction horizon
-   stability into one cohesive theorem.
+5. **Four-part bundle (`four_results_bundle`; renamed 2026-11-25 from `master_principle_universal_closure`):**
+   the conjunction of Borel continuum profile invariance, `μ`-a.e. product-anchor trivialization,
+   observable-subspace `ker W` tube escape bounds, and Dobrushin contraction horizon stability.
+   The four parts share no hypotheses and none is used to prove another, so this is a packaging
+   of independent results, not a unification.
 -/
 
 open MeasureTheory ProbabilityTheory Function Set Filter Finset
@@ -375,12 +376,12 @@ end ProductAnchorKernel
 
 section UniversalClosureCapstone
 
-/-- **Unified Semplex-Synesism Master Principle Closure:**
-    Integrates (1) continuum Standard-Borel response-profile covariance across
-    representation maps, (2) countable product-anchor `μ`-a.e. gauge trivialization,
-    (3) observable-subspace `ker W` gauge-tube escape lower bounds, and
-    (4) first-principles Markov-Dobrushin contraction horizon bounds. -/
-theorem master_principle_universal_closure
+/-- **Four independent results, stated together** (renamed 2026-11-25 from
+    `master_principle_universal_closure`): (1) continuum Standard-Borel response-profile covariance
+    across representation maps, (2) countable product-anchor `μ`-a.e. gauge trivialization,
+    (3) observable-subspace `ker W` gauge-tube escape lower bounds, and (4) Markov–Dobrushin
+    contraction horizon bounds. The parts have disjoint hypotheses; the conjunction adds no content. -/
+theorem four_results_bundle
     -- (1) Continuum response-profile covariance assumptions
     {External State₁ Intervention₁ Outcome₁ State₂ Intervention₂ Outcome₂ : Type*}
     [MeasurableSpace State₁] [MeasurableSpace Outcome₁] [StandardBorelSpace Outcome₁]
@@ -436,6 +437,10 @@ theorem master_principle_universal_closure
       exact hiff.mpr hsep g ((ae_product_anchor_kernel_inter μ obs evolve κ g).mpr hj)
   · exact gauge_escape_lower_bound W x Δpar Δperp hker hflip
   · exact dobrushin_horizon_stability μseq νseq P Q c δ hc1 hμ0 hν0 hP hQ hD hstepμ hstepν hpert
+
+/-- Deprecated name, kept so existing references still build. -/
+@[deprecated (since := "2026-11-25")]
+alias master_principle_universal_closure := four_results_bundle
 
 end UniversalClosureCapstone
 

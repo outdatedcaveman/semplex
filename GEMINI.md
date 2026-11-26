@@ -82,3 +82,27 @@ Work in `proofs/lean-mathlib/` (Mathlib: `Subgroup`, `QuotientGroup`, `MulAction
 **Done when:** both theorems compile with standard axioms only (`#print axioms`), with statements exactly as above and no weakening. The handoff should state the exact Lean statements.
 
 ### G17. (done by Claude) The Lean test timeout is read from `SEMPLEX_LEAN_TIMEOUT` (default 600 s); see `proofs/lean/README.md`.
+
+## Work order, 2026-11-25 (after the Master Principle round)
+
+Read `claims/PROPOSED_TRIAGE_2026-11-25.md` first. Its promotion checklist now applies to everything you propose. Work on one branch per task, open a PR, and never commit to `master` directly. Spike numbers continue at **99**.
+
+**G-A. Spike 99: discriminating test of the two-sided Gramian (highest priority).**
+- **Question:** on irreversible automata, does the learned state Gram follow W_c + W_o (past reachability plus future observability) better than W_o alone, G(λ) with heat, the output Gram o oᵀ, and the predictive-kernel top mode?
+- **Automata:** fresh, from Spike 81's pool, excluding every automaton already used. Keep only automata where the candidates *disagree*: pairwise cosine between candidates < 0.8.
+- **Learners:** primary arm GRU with a nonlinear (MLP) readout; secondary arm a linear readout; 3 seeds each.
+- **Metric:** cosine against each candidate, reported as a percentile against a per-automaton null of random centred π-weighted Grams (see `experiments/audits/master_principle_null.py`).
+- **Pre-register numeric held/broken criteria and commit `SPIKE_99_REPORT.md` before any run.**
+- Report every verdict. If W_c + W_o does not beat the null clearly with a nonlinear readout, say so.
+
+**G-B. Dependency graph (method of riemann-proof-map).** `cerp/depgraph.py`, plus a Lean metaprogram:
+- (a) For every declaration in `proofs/lean` and `proofs/lean-mathlib`, collect `getUsedConstants` of its type and value, collapsing Mathlib to module nodes.
+- (b) Join with `claims/REGISTER.md` (claim → dependency claims, claim → cited Lean names, claim → spike → results JSON).
+- (c) Compute dominator trees per headline claim and reverse reachability ("what breaks if X is refuted"); flag any claim that reaches `sorryAx`.
+- (d) Output JSON and a small static view under `docs/`, with tests. Add the `sorryAx` check to `python -m cerp.register check`.
+
+**G-C. Finish the triage.** Apply the checklist to §18 (GHSRT), §22–§27 and `proofs/cubical/.../SemanticUnivalence.agda`. For each: what is proved, the prior art (cite it), whether it holds by construction, the null. Rename any other grand-named conjunction the way `four_results_bundle` was renamed (deprecated alias, audit file updated).
+
+**G-D. Optional basin switch: an interference spike** after arXiv 2611.27089. Train on one family of Boolean functions and measure accuracy on neighbouring functions, compiler-written against trained weights.
+
+Never name a theorem after a principle unless the theorem uses the parts together. Never report HELD without the null and the candidate-agreement numbers.
