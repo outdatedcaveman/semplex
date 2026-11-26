@@ -1358,5 +1358,13 @@
   "verdict": "HELD",
   "measured": "12/12 vs pi-head",
   "bar": ">= 70%"
+ },
+ {
+  "key": "99:H99.1",
+  "spike": "99",
+  "id": "H99.1",
+  "verdict": "NO VERDICT",
+  "measured": "N_elig = 6 (UNDERPOWERED)",
+  "bar": "N_elig >= 20"
  }
 ]

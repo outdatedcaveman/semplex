@@ -83,6 +83,18 @@ Progress counts a closed gap as 1 and a partial one as ½. It measures the gap l
 
 ## 4. Run reports, newest first
 
+### Spike 99: On irreversible automata with stay/identity action, do learned recurrent state Grams align with the two-sided Gramian W_c + W_o better than W_o, G(lambda) with heat, o o^T, and the predictive-kernel top mode?
+
+2026-11-25 · commit `22b0cf5` · overall **NO VERDICT** · report `experiments/SPIKE_99_REPORT.md` · claims none
+
+| Hypothesis | Verdict | Measured | Criterion |
+|---|---|---|---|
+| H99.1 | **NO VERDICT** | N_elig = 6 (UNDERPOWERED) | N_elig >= 20 |
+
+**Learned.** Frozen selection pool yielded N_elig = 6 < 20 (UNDERPOWERED / NO VERDICT) because the stay-action identity letter creates structural collinearity (min_c max_B_c > 0.80); motivated Spike 100 NO_id Option A construction.
+
+- Gap A12: PARTIAL → PARTIAL. Spike 99 frozen pool halted at N_elig=6 < 20 (UNDERPOWERED / NO VERDICT); follow-up pre-registered as Spike 100..
+
 ### Spike 87: On irreversible automata, does a learner lead with the output vector (generator of its observable module), independent of the readout?
 
 2026-11-20 · commit `7ce4b01` · overall **MIXED** · report `experiments/SPIKE_87_REPORT.md` · claims P223

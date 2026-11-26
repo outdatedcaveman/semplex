@@ -438,5 +438,15 @@
   "learned": "The generator lead is real against all structural rivals but is largely produced by the linear readout; C45' is refuted as a substrate-general principle.",
   "moved": "A12: PARTIAL → PARTIAL (Irreversible-case candidate C45' refuted as substrate-general (P223))",
   "claims": "P223"
+ },
+ {
+  "spike": "99",
+  "date": "2026-11-25",
+  "commit": "22b0cf5",
+  "question": "On irreversible automata with stay/identity action, do learned recurrent state Grams align with the two-sided Gramian W_c + W_o better than W_o, G(lambda) with heat, o o^T, and the predictive-kernel top mode?",
+  "overall": "NO VERDICT",
+  "learned": "Frozen selection pool yielded N_elig = 6 < 20 (UNDERPOWERED / NO VERDICT) because the stay-action identity letter creates structural collinearity (min_c max_B_c > 0.80); motivated Spike 100 NO_id Option A construction.",
+  "moved": "A12: PARTIAL → PARTIAL (Spike 99 frozen pool halted at N_elig=6 < 20 (UNDERPOWERED / NO VERDICT); follow-up pre-registered as Spike 100.)",
+  "claims": ""
  }
 ]
